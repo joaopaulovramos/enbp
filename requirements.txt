@@ -1,0 +1,20 @@
+https://github.com/tfs4/geraldo/archive/master.zip
+https://github.com/tfs4/PySIGNFe/archive/master.zip
+Django==3.2.10
+dj-database-url==1.0.0
+python-decouple==3.1
+pytz==2018.3
+gunicorn
+six==1.16.0
+cryptography>=2.3
+lxml==4.9.1
+pyOpenSSL==22.1.0
+signxml==3.0.0
+# psycopg-binary==3.1.4
+reportlab==3.6.11
+psycopg2-binary==2.9.3
+whitenoise==6.2.0
+
+
+
+

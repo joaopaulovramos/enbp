@@ -1,0 +1,84 @@
+{%extends 'base/base.html'%}
+
+{%block title%}{{title_complete|title}}{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid lista">
+
+    {% include 'base/title_header.html' %}
+
+    {% include 'base/msg_sucesso.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
+      <div class="card">
+        <form action="" method="post">
+          {% csrf_token %}
+          <div class="header">
+            <h2>
+              {{title_complete}}
+            </h2>
+              <div class="header-btn">
+                <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> ADICIONAR</span></a>
+                <button class="btn btn-red btn-remove"><i class="material-icons">&#xE872;</i></button>
+              </div>
+          </div>
+
+          <div class="body">
+
+           {% include 'base/search.html' %}
+
+           <div class="table-responsive">
+            <table id="lista-database" class="table table-bordered table-striped lista-table">
+              <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Sai na Ficha de leitura</th>
+                    <th>Exportar Carga Mensal</th>
+                    <th>Gerar Solicitação de Desligamento</th>
+                    <th>Serviço</th>
+                    <th>Situacao</th>
+                    <th>CRM</th>
+                    <th>Tipo</th>
+
+                    <th>Remover</th>
+                </tr>
+              </thead>
+
+              <tbody>
+               {% if all_natops%}
+               {% for natop in all_natops %}
+               <tr class="clickable-row" data-href="{% url 'zeppelin:editardesligamento' natop.id %}">
+                   <td>{{natop.nome}}</td>
+                   <td>{{natop.sai_ficha_de_leitura}}</td>
+                   <td>{{natop.exporta_carga_mensal}}</td>
+                   <td>{{natop.gera_solicitacao_desligamento}}</td>
+                   <td>{{natop.servico}}</td>
+                   <td>{{natop.situacao}}</td>
+                   <td>{{natop.crm}}</td>
+                   <td>{{natop.tipo}}</td>
+
+
+               <td class="lista-remove">
+                  <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
+                  <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
+                </td>
+              </tr>
+              {% endfor %}
+              {%else%}
+              {%endif%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+</div>
+</section>
+
+
+{%endblock%}

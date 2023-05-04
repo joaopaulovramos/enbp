@@ -1,0 +1,33 @@
+[
+    { "fields": {
+            "nome": "Residencial"
+        },
+        "model": "zeppelin.classemodel",
+        "pk": 1
+    },
+
+    { "fields": {
+            "nome": "Industrial"
+        },
+        "model": "zeppelin.classemodel",
+        "pk": 2
+    },
+    { "fields": {
+            "nome": "Comercial"
+        },
+        "model": "zeppelin.classemodel",
+        "pk": 3
+    },
+    { "fields": {
+            "nome": "Rural"
+        },
+        "model": "zeppelin.classemodel",
+        "pk": 4
+    },
+    { "fields": {
+            "nome": "Poder Público"
+        },
+        "model": "zeppelin.classemodel",
+        "pk": 5
+    }
+]
