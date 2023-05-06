@@ -3,8 +3,7 @@ from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, CustomCreateViewAddUser
 
-from djangosige.apps.fiscal.forms import NaturezaOperacaoForm
-from djangosige.apps.fiscal.models import NaturezaOperacao
+
 
 
 from djangosige.apps.timesheet.forms.timesheet_forms import *
@@ -51,20 +50,30 @@ class ListTimesheetView(CustomListViewFilter):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('timesheet:listatimesheet')
     permission_codename = 'view_naturezaoperacao'
-
-
     def get_queryset(self):
         current_user = self.request.user
         querry = HorasSemanais.objects.filter(solicitante=current_user)
-        querry = querry.filter(submetida=False)
-
+        #querry = querry.filter(submetida=False)
         return querry
-
-
 
     def get_object(self):
         current_user = self.request.user
         return HorasSemanais.objects.all(user='1')
+
+
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if value == "on":
+                acao = request.POST['acao']
+                if acao == 'submeter_horas':
+                    instance = self.model.objects.get(id=key)
+                    instance.situacao = 1
+                    instance.save()
+                elif acao == 'excluir':
+                    instance = self.model.objects.get(id=key)
+                    if instance.situacao == 0:
+                        instance.delete()
+        return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
         context = super(ListTimesheetView, self).get_context_data(**kwargs, object_list=None)
@@ -106,61 +115,146 @@ class AdicionarTimesheetView(CustomCreateViewAddUser):
 
 
 
-class EditarTimesheetView(CustomUpdateView):
-    form_class = HorasSemanaisForm
+
+
+class AprovarTimesheetView(CustomListViewFilter):
+    template_name = 'timesheet/timesheet_aprovar.html'
     model = HorasSemanais
-    template_name = 'timesheet/redirect_minhas_horas.html'
+    context_object_name = 'all_natops'
     success_url = reverse_lazy('timesheet:aprovartimesheet')
-    success_message = "Natureza da operação <b>%(cfop)s </b>editada com sucesso."
-    permission_codename = 'change_naturezaoperacao'
+    permission_codename = 'view_naturezaoperacao'
+    def get_queryset(self):
+        current_user = self.request.user
+        querry = HorasSemanais.objects.filter(situacao=1)
+        #querry = querry.filter(submetida=False)
+        return querry
+
+    def get_object(self):
+        current_user = self.request.user
+        return HorasSemanais.objects.all(user='1')
+
+
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if value == "on":
+                acao = request.POST['acao']
+
+                instance = self.model.objects.get(id=key)
+                instance.situacao = 2
+                instance.save()
+
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super(AprovarTimesheetView, self).get_context_data(**kwargs, object_list=None)
+        #context = self.get_object()
+        context['title_complete'] = 'Sub-Grupo'
+        context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
+        return context
+
+
+
+class AprovarGastosView(CustomListViewFilter):
+    template_name = 'timesheet/aprovar_gastos.html'
+    model = Gastos
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('timesheet:aprovargastos')
+    permission_codename = 'view_naturezaoperacao'
+    def get_queryset(self):
+        current_user = self.request.user
+        querry = Gastos.objects.filter(situacao='1')
+        #querry = querry.filter(submetida=False)
+        return querry
+
+    def post(self, request, *args, **kwargs):
+        if self.check_user_delete_permission(request, self.model):
+            for key, value in request.POST.items():
+                if value == "on":
+
+
+                    if 'acao' in request.POST:
+                        acao = request.POST['acao']
+                        if acao == 'aprovar_gastos':
+                            instance = self.model.objects.get(id=key)
+                            instance.situacao = 2
+                            instance.save()
+                        elif acao == 'reprovar_gastos':
+                            instance = self.model.objects.get(id=key)
+                            instance.situacao = 3
+                            instance.save()
+
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super(AprovarGastosView, self).get_context_data(**kwargs, object_list=None)
+        #context = self.get_object()
+        context['title_complete'] = 'Listar Gastos'
+        context['add_url'] = reverse_lazy('timesheet:incluirgastos')
+        return context
+
+
+class ListGastosView(CustomListViewFilter):
+    template_name = 'timesheet/listar_gastos.html'
+    model = Gastos
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('timesheet:listargastos')
+    permission_codename = 'view_naturezaoperacao'
+    def get_queryset(self):
+        current_user = self.request.user
+        querry = Gastos.objects.filter(solicitante=current_user)
+        #querry = querry.filter(submetida=False)
+        return querry
+
+    def post(self, request, *args, **kwargs):
+        if self.check_user_delete_permission(request, self.model):
+            for key, value in request.POST.items():
+                if value == "on":
+
+
+                    if 'acao' in request.POST:
+                        acao = request.POST['acao']
+                        if acao == 'submeter_gastos':
+                            instance = self.model.objects.get(id=key)
+                            instance.situacao = 1
+                            instance.save()
+                    else:
+                        instance = self.model.objects.get(id=key)
+                        instance.delete()
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListGastosView, self).get_context_data(**kwargs, object_list=None)
+        #context = self.get_object()
+        context['title_complete'] = 'Listar Gastos'
+        context['add_url'] = reverse_lazy('timesheet:incluirgastos')
+        return context
+
+
+
+class AdicionarGastoView(CustomCreateView):
+
+    form_class = GastosForm
+    template_name = 'timesheet/add.html'
+    success_url = reverse_lazy('timesheet:listargastos')
+    success_message = "Adicionar Exemplo <b>%(cfop)s </b>adicionado com sucesso."
+    permission_codename = 'add_naturezaoperacao'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        form.request_user = self.request.user
+        if form.is_valid():
+            self.object = form.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
-    def get_queryset(self):
-        querry = self.model.objects.filter(submetida=True)
-        return querry
-    # def get_queryset(self):
-    #     return self.model.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
-        context = super(EditarTimesheetView, self).get_context_data(**kwargs)
-        context['object'].submetida = True
-
-        context['object'].save()
-        context['return_url'] = reverse_lazy('timesheet:aprovartimesheet')
-
+        context = super(AdicionarGastoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR EXEMPLO'
+        context['return_url'] = reverse_lazy('timesheet:listargastos')
         return context
-
-class AprovarHorasView(CustomUpdateView):
-         form_class = HorasSemanaisForm
-         model = HorasSemanais
-         template_name = 'timesheet/redirect.html'
-         success_url = reverse_lazy('timesheet:aprovartimesheet')
-         success_message = "Natureza da operação <b>%(cfop)s </b>editada com sucesso."
-         permission_codename = 'change_naturezaoperacao'
-
-         def get_success_message(self, cleaned_data):
-             return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
-         def get_queryset(self):
-             querry = HorasSemanais.objects.filter(submetida=True)
-             return querry
-
-         def get(self, request, *args, **kwargs):
-             self.object = self.get_object()
-             return super().get(request, *args, **kwargs)
-
-         def get_context_data(self, **kwargs):
-             context = super(AprovarHorasView, self).get_context_data(**kwargs)
-             context['object'].aprovada = True
-             context['object'].reprovada = False
-             context['object'].save()
-             context['return_url'] = reverse_lazy('timesheet:aprovartimesheet')
-
-             return context
-
