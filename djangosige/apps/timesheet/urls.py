@@ -8,18 +8,11 @@ urlpatterns = [
 
     url(r'timesheet/lista/$', views.ListTimesheetView.as_view(), name='listatimesheet'),
     url(r'timesheet/adicionar/$', views.AdicionarTimesheetView.as_view(), name='adicionatimesheet'),
-    url(r'timesheet/editar/(?P<pk>[0-9]+)/$', views.EditarTimesheetView.as_view(), name='editatimesheet'),
+    url(r'timesheet/aprovar/$', views.AprovarTimesheetView.as_view(), name='aprovartimesheet'),
 
-
-    url(r'timesheet/aprovar_submissao/$', views.AprovarTimesheetView.as_view(), name='aprovartimesheet'),
-
-
-
-    url(r'timesheet/aprovar_submissao_horas/(?P<pk>[0-9]+)/$', views.AprovarHorasView.as_view(), name='aprovarhoras'),
-
-
-
-
+    url(r'timesheet/listargastos/$', views.ListGastosView.as_view(), name='listargastos'),
+    url(r'timesheet/incluirgastos/$', views.AdicionarGastoView.as_view(), name='incluirgastos'),
+    url(r'timesheet/aprovargastos/$', views.AprovarGastosView.as_view(), name='aprovargastos'),
 
 
 ]

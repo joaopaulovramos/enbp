@@ -32,6 +32,20 @@ urlpatterns = [
     #url(r'viagem/editarviagem/(?P<pk>[0-9]+)/$', views.EditarViagemView.as_view(), name='editarviagem'),
     url(r'viagem/listarautorizarviagem/$', views.ListAutorizarViagensView.as_view(), name='listaautorizarviagem'),
     url(r'viagem/listarhomologarviagem/$', views.ListHomologarViagensView.as_view(), name='listahomologacaoviagem'),
+    url(r'viagem/prestar_contas/(?P<pk>[0-9]+)/$', views.PrestarContasView.as_view(), name='prestar_contas'),
+    url(r'viagem/prestar_contas_arquivos/(?P<pk>[0-9]+)/$', views.PrestarContasArquivosView.as_view(), name='prestar_contas_arquivos'),
+
+    url(r'viagem/remover_arquivo/(?P<pk>[0-9]+)/(?P<viagem>[0-9]+)/$', views.RemoverArquivoView.as_view(), name='remover_arquivo'),
+
+    url(r'viagem/enviar_arquivos/$', views.EnviarArquivosView.as_view(), name='enviar_arquivos'),
+   # url(r'viagem/arquivosviagem/(?P<pk>[0-9]+)/$', views.ArquivosViagemView.as_view(), name='arquivosviagem'),
+    url(r'viagem/arquivosviagem/$', views.ArquivosViagemView.as_view(), name='arquivosviagem'),
+
+    url(r'viagem/listaraprovarpcviagem/$', views.ListAprovarPCViagensView.as_view(), name='listaaprovarpcviagem'),
+
+    url(r'viagem/avaliar_prestacao_de_contas/(?P<pk>[0-9]+)/$', views.AvaliarPrestacaoDeContas.as_view(), name='avaliar_prestacao_de_contas'),
+    url(r'viagem/avaliar_solicitacao_viagem/(?P<pk>[0-9]+)/$', views.AvaliarSolicitacaoViagem.as_view(), name='avaliar_solicitacao_viagem'),
+    url(r'viagem/avaliar_arquivos/(?P<pk>[0-9]+)/$', views.AvaliarArquivosView.as_view(), name='avaliar_arquivos'),
 
 
 ]

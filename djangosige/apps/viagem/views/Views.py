@@ -8,6 +8,10 @@ from django.shortcuts import redirect
 
 from djangosige.apps.viagem.forms import *
 from djangosige.apps.viagem.models import *
+import random
+import string
+
+
 
 
 #### Tipos de Viagens
@@ -216,6 +220,16 @@ class ListViagensView(CustomListView):
 
         return user_viagens
 
+    def post(self, request, *args, **kwargs):
+        if self.check_user_delete_permission(request, self.model):
+            for key, value in request.POST.items():
+                if value == "on":
+                    instance = self.model.objects.get(id=key)
+                    if not instance.autorizada and  not instance.homologada:
+                        instance.delete()
+
+        return redirect(self.success_url)
+
     def get_object(self):
         current_user = self.request.user
         return ViagemModel.objects.get(user=current_user)
@@ -343,3 +357,455 @@ class ListHomologarViagensView(CustomListView):
         context = super(ListHomologarViagensView, self).get_context_data(**kwargs)
         context['title_complete'] = 'Viagens'
         return context
+
+
+
+
+class PrestarContasView(CustomUpdateView):
+    form_class = PrestacaoContaForm
+    model = ViagemModel
+    form_2 = ArquivosForm
+    template_name = 'viagem/prestacao_de_contas.html'
+    success_url = reverse_lazy('viagem:listaviagem')
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+
+    def post(self, request, *args, **kwargs):
+        #arquivo = request.FILES['file']
+        if request.FILES:
+            self.object = None
+            form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+
+            letters = string.ascii_lowercase
+            name = ''.join(random.choice(letters) for i in range(20))
+            nome_antigo = request.FILES['file'].name
+            nome_antigo = nome_antigo.split('.')
+            ext = nome_antigo[-1]
+
+            if form.is_valid():
+                request.FILES['file'].name = name + '.' + ext
+
+                self.object = self.get_object()
+                form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+                self.object = form.save()
+                return redirect(self.success_url)
+            #return self.form_invalid(form)
+        else:
+            self.object = self.get_object()
+            form_class = self.get_form_class()
+            form = form_class(request.POST, instance=self.object)
+            if form.is_valid():
+                self.object = form.save()
+                return redirect(self.success_url)
+            return self.form_invalid(form)
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(PrestarContasView, self).get_context_data(**kwargs)
+        context['form_2'] = self.form_2
+        context['return_url'] = reverse_lazy('viagem:listaviagem')
+        #Arquivos.objects.get(pk=kwargs['pk'])
+        #viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+
+
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        return context
+
+
+#######################################################################################
+
+
+
+class RemoverArquivoView(CustomUpdateView):
+    form_class = ArquivosForm
+    model = Arquivos
+    template_name = 'viagem/remove_file_control.html'
+    success_url = reverse_lazy('viagem:listaviagem')
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+    def get_success_message(self, cleaned_data):
+        objetos = self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return objetos
+
+    def get_context_data(self, **kwargs):
+        context = super(RemoverArquivoView, self).get_context_data(**kwargs)
+        context['object'].delete()
+        context['viagem'] = self.kwargs['viagem']
+        url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': self.kwargs['viagem']}, )
+        return context
+
+
+
+class PrestarContasArquivosView(CustomUpdateView):
+    form_class = PrestacaoContaForm
+    model = ViagemModel
+    form_2 = ArquivosForm
+    template_name = 'viagem/prestacao_de_contas_arquivos.html'
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+
+    def post(self, request, *args, **kwargs):
+
+
+
+        self.object = None
+        form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+        letters = string.ascii_lowercase
+        name = ''.join(random.choice(letters) for i in range(20))
+        nome_antigo = request.FILES['file'].name
+        nome_antigo = nome_antigo.split('.')
+        ext = nome_antigo[-1]
+
+        if form.is_valid():
+
+            request.FILES['file'].name = name + '.' + ext
+            self.object = self.get_object()
+            form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+            self.object = form.save()
+            url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
+            return redirect(url)
+            #return self.form_invalid(form)
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
+        context = super(PrestarContasArquivosView, self).get_context_data(**kwargs)
+        context['form_2'] = self.form_2
+        context['return_url'] = reverse_lazy('viagem:listaviagem')
+        context['viagem_pk'] = pk
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        return context
+
+#######################################################################################
+
+
+class EnviarArquivosView(CustomUpdateView):
+    form_class = ArquivosForm
+    model = ViagemModel
+    form_2 = ArquivosForm
+    template_name = 'viagem/enviar_arquivos.html'
+    success_url = reverse_lazy('viagem:listaviagem')
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+
+        letters = string.ascii_lowercase
+        name = ''.join(random.choice(letters) for i in range(20))
+        nome_antigo = request.FILES['file'].name
+        nome_antigo = nome_antigo.split('.')
+        ext = nome_antigo[-1]
+
+        if form.is_valid():
+            request.FILES['file'].name = name + '.' + ext
+
+            self.object = self.get_object()
+            form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+            self.object = form.save()
+            return redirect(self.success_url)
+        #return self.form_invalid(form)
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(EnviarArquivosView, self).get_context_data(**kwargs)
+        context['form_2'] = self.form_2
+        context['return_url'] = reverse_lazy('viagem:listaviagem')
+        #Arquivos.objects.get(pk=kwargs['pk'])
+        #viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+
+
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        return context
+
+
+
+class ArquivosViagemView(CustomCreateView):
+    form_class = ArquivosForm
+    template_name = 'viagem/add_files.html'
+    success_url = reverse_lazy('viagem:arquivosviagem')
+    success_message = "Arquivos da Viagem"
+    permission_codename = 'cadastrar_item_viagens'
+
+
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        obj = super().get(request, *args, **kwargs)
+        # viagem = ViagemModel.objects.get(id=45)
+        # # form_class = ArquivosForm(initial={'viagem': viagem})
+        # obj.context_data['form'](initial={'viagem': viagem})
+
+        # current_user = self.request.user
+        # lviagems = ViagemModel.objects.get(id=45)
+        # #lviagems = ViagemModel.objects.filter(solicitante=current_user)
+        # valor = obj.context_data['form'].fields['viagem'] = lviagems
+        return obj
+
+    # def get_queryset(self):
+    #     # # return self.model.objects.all()
+    #     # current_user = self.request.user
+    #     # user_viagens = ArquivosForm.objects.filter(autorizada=True)
+    #     # user_viagens = user_viagens.filter(homologada=False)
+    #     return self.model.objects.all()
+
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+
+
+        form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+        form.instance.viagem = ViagemModel.objects.get(pk=45)
+        letters = string.ascii_lowercase
+        name = ''.join(random.choice(letters) for i in range(20))
+        nome_antigo = request.FILES['file'].name
+        nome_antigo = nome_antigo.split('.')
+        ext = nome_antigo[-1]
+
+        if form.is_valid():
+            request.FILES['file'].name = name+'.'+ext
+            self.object = form.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(ArquivosViagemView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR ARQUIVOS'
+        context['return_url'] = reverse_lazy('viagem:arquivosviagem')
+        return context
+
+
+
+class ListAprovarPCViagensView(CustomListView):
+    template_name = 'viagem/list_aprovar_pc_viagens.html'
+    model = ViagemModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listaaprovarpcviagem')
+    permission_codename = 'homologar_viagens'
+
+    def get_queryset(self):
+        # return self.model.objects.all()
+        current_user = self.request.user
+        user_viagens = ViagemModel.objects.filter(autorizada=True)
+        user_viagens = user_viagens.filter(homologada=True)
+        user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
+
+
+
+
+        return user_viagens
+    # Remover items selecionados da database
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+                if value == "on":
+                    acao = request.POST['acao']
+                    if acao == 'aprovar_pc':
+                        instance = self.model.objects.get(id=key)
+                        instance.aprovar_pc = 1
+                        instance.save()
+                    if acao == 'reprovar_pc':
+                        instance = self.model.objects.get(id=key)
+                        instance.aprovar_pc = 2
+                        instance.finalizar_pc = 0
+                        instance.save()
+        return redirect(self.success_url)
+
+
+
+    def get_object(self):
+        current_user = self.request.user
+        return ViagemModel.objects.get(user=current_user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListAprovarPCViagensView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Viagens'
+        return context
+
+
+
+class AvaliarPrestacaoDeContas(CustomUpdateView):
+    form_class = AvaliarPrestacaoContaForm
+    model = ViagemModel
+    form_2 = ArquivosForm
+    template_name = 'viagem/ver_prestacao_de_contas.html'
+    success_url = reverse_lazy('viagem:listaaprovarpcviagem')
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+
+    def post(self, request, *args, **kwargs):
+        #arquivo = request.FILES['file']
+        if request.FILES:
+            self.object = None
+            form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+
+            letters = string.ascii_lowercase
+            name = ''.join(random.choice(letters) for i in range(20))
+            nome_antigo = request.FILES['file'].name
+            nome_antigo = nome_antigo.split('.')
+            ext = nome_antigo[-1]
+
+            if form.is_valid():
+                request.FILES['file'].name = name + '.' + ext
+
+                self.object = self.get_object()
+                form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+                self.object = form.save()
+                return redirect(self.success_url)
+            #return self.form_invalid(form)
+        else:
+            self.object = self.get_object()
+            form_class = self.get_form_class()
+            form = form_class(request.POST, instance=self.object)
+            if form.is_valid():
+                self.object = form.save()
+                return redirect(self.success_url)
+            return self.form_invalid(form)
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(AvaliarPrestacaoDeContas, self).get_context_data(**kwargs)
+        context['form_2'] = self.form_2
+        context['return_url'] = reverse_lazy('viagem:listaaprovarpcviagem')
+        #Arquivos.objects.get(pk=kwargs['pk'])
+        #viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+
+
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        return context
+
+
+
+
+class AvaliarSolicitacaoViagem(CustomUpdateView):
+    form_class = AvaliarSolicitacaoViagemForm
+    model = ViagemModel
+    form_2 = ArquivosForm
+    template_name = 'viagem/ver_prestacao_de_contas.html'
+    success_url = reverse_lazy('viagem:listaaprovarpcviagem')
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+
+    def post(self, request, *args, **kwargs):
+        #arquivo = request.FILES['file']
+        if request.FILES:
+            self.object = None
+            form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+
+            letters = string.ascii_lowercase
+            name = ''.join(random.choice(letters) for i in range(20))
+            nome_antigo = request.FILES['file'].name
+            nome_antigo = nome_antigo.split('.')
+            ext = nome_antigo[-1]
+
+            if form.is_valid():
+                request.FILES['file'].name = name + '.' + ext
+
+                self.object = self.get_object()
+                form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+                self.object = form.save()
+                return redirect(self.success_url)
+            #return self.form_invalid(form)
+        else:
+            self.object = self.get_object()
+            form_class = self.get_form_class()
+            form = form_class(request.POST, instance=self.object)
+            if form.is_valid():
+                self.object = form.save()
+                return redirect(self.success_url)
+            return self.form_invalid(form)
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(AvaliarSolicitacaoViagem, self).get_context_data(**kwargs)
+        context['form_2'] = self.form_2
+        context['return_url'] = reverse_lazy('viagem:listaaprovarpcviagem')
+        #Arquivos.objects.get(pk=kwargs['pk'])
+        #viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+
+
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        return context
+
+
+
+
+class AvaliarArquivosView(CustomUpdateView):
+    form_class = PrestacaoContaForm
+    model = ViagemModel
+    form_2 = ArquivosForm
+    template_name = 'viagem/avaliar_arquivos.html'
+    success_message = "Viagem Editada com Sucesso."
+    permission_codename = 'solicitar_viagens'
+
+
+    def post(self, request, *args, **kwargs):
+
+
+
+        self.object = None
+        form = ArquivosForm(request.POST, request.FILES, instance=self.object)
+        letters = string.ascii_lowercase
+        name = ''.join(random.choice(letters) for i in range(20))
+        nome_antigo = request.FILES['file'].name
+        nome_antigo = nome_antigo.split('.')
+        ext = nome_antigo[-1]
+
+        if form.is_valid():
+
+            request.FILES['file'].name = name + '.' + ext
+            self.object = self.get_object()
+            form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+            self.object = form.save()
+            url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
+            return redirect(url)
+            #return self.form_invalid(form)
+
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
+        context = super(AvaliarArquivosView, self).get_context_data(**kwargs)
+        context['form_2'] = self.form_2
+        context['return_url'] = reverse_lazy('viagem:listaaprovarpcviagem')
+        context['viagem_pk'] = pk
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        return context
+
+
+
+
+

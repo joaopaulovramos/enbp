@@ -145,12 +145,10 @@ $.Admin.messages = {
 
 
     //Mensagem pergunta antes de fonfirmação
-    msgConfirm: function(message, mensagem_2){
+    msgConfirm: function(message){
         $('#modal-msg .modal-header span i').text('error_outline').addClass('icon-alert');
         $('#modal-msg .modal-body #primeira_mensagem').text(message);
-        $('#modal-msg .modal-body #segunda_mensagem').text(mensagem_2);
-        $('#modal-msg .modal-title').text('Antes de continuar, confirme se realizou os itens abaixo:');
-
+        $('#modal-msg .modal-title').text('Antes de continuar, confirme os itens abaixo:');
         $('#modal-msg #confirme_check_1').show();
         $('#modal-msg #confirme_check_2').show();
         $('#modal-msg').modal('show');
@@ -3350,27 +3348,336 @@ $.Admin.dinamicMenu = {
 //DataTable
 $.Admin.alert = {
    init: function() {
-        var $btnRemove = $('.btn-alert');
+        var $btnRemove = $('.btn-remove-alert');
 
 
 //Confirmou se temos independência para emitir esta proposta?
 //
 // Você fez uma anális de background check para aceitar esse cliente?
 
+       //Mudar o background do tr quando remover for selecionado
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnRemove.show()
+        });
+
         $btnRemove.on('click',function(event){
             event.preventDefault();
             //|hidden|collapse|initial|inherit
             $('#confirm_check_item_1').css("visibility", "visible");
-            $('#confirm_check_item_2').css("visibility", "visible");
             var form = $(this).parents('form');
-            $.Admin.messages.msgConfirm("Confirmou se temos independência para emitir esta proposta?", "Você fez uma anális de background check para aceitar esse cliente?");
+            $.Admin.messages.msgConfirm("Tem certeza que deseja excluir este item?");
             $('#btn-sim').one('click', function(){
-                if($('#confirme_check_1').is(':checked') && $('#confirme_check_2').is(':checked'))
+                if($('#confirme_check_1').is(':checked'))
                 {
                     form.submit();
                 }
             });
         });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+
+
+$.Admin.autirizar_viagem = {
+   init: function() {
+        var $btnAutoriza = $('.btn-autorizar-viagem');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+
+$.Admin.submeter_horas = {
+   init: function() {
+        var $btnAutoriza = $('.btn-submeter-horas');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("submeter_horas");
+
+            form.append($(input));
+
+
+            form.submit();
+        });
+
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+
+$.Admin.reover_opcao = {
+   init: function() {
+        var $btnAutoriza = $('.btn-remover-submeter-horas');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("excluir");
+
+            form.append($(input));
+
+
+            form.submit();
+
+
+
+        });
+
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+$.Admin.alert_file = {
+   init: function() {
+        var $btnRemove = $('.btn-remove-alert-file');
+
+
+//Confirmou se temos independência para emitir esta proposta?
+//
+// Você fez uma anális de background check para aceitar esse cliente?
+
+       //Mudar o background do tr quando remover for selecionado
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnRemove.show()
+        });
+
+        $btnRemove.on('click',function(event){
+            event.preventDefault();
+            //|hidden|collapse|initial|inherit
+            $('#confirm_check_item_1').css("visibility", "visible");
+            var form = $(this).parents('form');
+            $.Admin.messages.msgConfirm("Tem certeza que deseja excluir este item?");
+            $('#btn-sim').one('click', function(){
+                if($('#confirme_check_1').is(':checked'))
+                {
+
+                    var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("excluir_arquivo");
+
+
+                    form.submit();
+                }
+            });
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+//
+//
+
+$.Admin.reprovar_gastos = {
+   init: function() {
+        var $btnAutoriza = $('.btn-reprovar-gastos');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+             var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("reprovar_gastos");
+
+            form.append($(input));
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+$.Admin.aprovar_gastos = {
+   init: function() {
+        var $btnAutoriza = $('.btn-aprovar-gastos');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+             var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("aprovar_gastos");
+
+            form.append($(input));
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+
+
+$.Admin.submeter_gastos = {
+   init: function() {
+        var $btnAutoriza = $('.btn-submeter-gastos');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+             var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("submeter_gastos");
+
+            form.append($(input));
+            form.submit();
+        });
+
+
 
         //Fazer a linha da table um link para a detail view
         $('body').on('click', '.clickable-row:not(.popup)', function(event){
@@ -3386,6 +3693,91 @@ $.Admin.alert = {
 
 
 
+$.Admin.aprovar_pc = {
+   init: function() {
+        var $btnAutoriza = $('.btn-aprovar_pc');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+             var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("aprovar_pc");
+
+            form.append($(input));
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+$.Admin.reprovar_pc = {
+   init: function() {
+        var $btnAutoriza = $('.btn-reprovar_pc');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("reprovar_pc");
+
+            form.append($(input));
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+
+
+
+
 $(function () {
     $.Admin.barraLateral.init();
     $.Admin.navbar.init();
@@ -3394,6 +3786,19 @@ $(function () {
     $.Admin.validation.init();
     $.Admin.dinamicMenu.init();
     $.Admin.alert.init();
+    $.Admin.autirizar_viagem.init();
+    $.Admin.submeter_horas.init();
+    $.Admin.reover_opcao.init();
+    $.Admin.alert_file.init();
+    $.Admin.aprovar_pc.init();
+    $.Admin.reprovar_pc.init();
+    $.Admin.submeter_gastos.init();
+    $.Admin.aprovar_gastos.init();
+    $.Admin.reprovar_gastos.init();
+
+
+
+
 
     setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
 });
