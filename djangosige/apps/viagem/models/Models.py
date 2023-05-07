@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.template.defaultfilters import date
+from django import forms
 
 PAGAMENTO = [
     ('RECURSOS DA EMPRESA', 'RECURSOS DA EMPRESA'),
@@ -83,7 +84,9 @@ class ViagemModel(models.Model):
             ("cadastrar_item_viagens", "Cadastrar Items de Viagem")
         )
 
-
+    @property
+    def format_data_pagamento(self):
+        return '%s' % date(self.dada_inicio, "d/m/Y")
 
 
 
