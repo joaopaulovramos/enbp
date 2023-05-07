@@ -187,6 +187,113 @@
 
                         </ul>
                     </li>
+                <!-- timesheet-->
+<li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">timelapse</i>
+                            <span>TimeSheet</span>
+                        </a>
+                        <ul class="ml-menu">
+                                 <li>
+                                    <a href="{% url 'timesheet:listatimesheet' %}">
+                                        <span>Minhas Horas</span>
+                                    </a>
+                                 </li>
+
+                                <li>
+                                    <a href="{% url 'timesheet:listargastos' %}">
+                                        <span>Meus Gastos</span>
+                                    </a>
+                                 </li>
+
+
+
+                                <li>
+                                    <a href="{% url 'timesheet:aprovartimesheet' %}">
+                                        <span>Aprovar Horas</span>
+                                    </a>
+                                 </li>
+
+                                <li>
+                                    <a href="{% url 'timesheet:aprovargastos' %}">
+                                        <span>Aprovar Gastos</span>
+                                    </a>
+                                 </li>
+
+
+                        </ul>
+                    </li>
+<!-- fim timesheet-->
+                 <!-- Viagens-->
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">flight_takeoff</i>
+                            <span>Viagens</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">check_circle</i>
+                            <span>Itens de Viagem</span>
+                        </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <li>
+                                            <a href="{% url 'viagem:listatiposviagens' %}">
+                                                 <span>Tipos de Viagens</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatiposolicitacao' %}">
+                                                 <span>Tipos de Solicitação</span>
+                                            </a>
+                                        </li>
+
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipotransporte' %}">
+                                                 <span>Tipos de Transporte</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listamotivos' %}">
+                                                 <span>Motivos De Viagem</span>
+                                            </a>
+                                        </li>
+                                </ul>
+
+                                <li>
+                                    <a href="{% url 'viagem:listaviagem' %}">
+                                         <span>Minhas Solicitação de Viagens</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listaautorizarviagem' %}">
+                                         <span>Autorizar Viagens</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listahomologacaoviagem' %}">
+                                         <span>Homologar Viagens</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listaaprovarpcviagem' %}">
+                                         <span>Aprovar Prestação de Contas</span>
+                                    </a>
+                                </li>
+
+
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Fim Viagens-->
+
 
                     <!-- Tattica -->
 
@@ -609,120 +716,7 @@
 
                         </ul>
                     </li>
-<!-- timesheet-->
-<li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">face</i>
-                            <span>TimeSheet</span>
-                        </a>
-                        <ul class="ml-menu">
-                                 <li>
-                                    <a href="{% url 'timesheet:listatimesheet' %}">
-                                        <span>Lançar Horas</span>
-                                    </a>
-                                 </li>
 
-                                <li>
-                                    <a href="{% url 'timesheet:listargastos' %}">
-                                        <span>Meus Gastos</span>
-                                    </a>
-                                 </li>
-
-
-
-                                <li>
-                                    <a href="{% url 'timesheet:aprovartimesheet' %}">
-                                        <span>Aprovar Horas</span>
-                                    </a>
-                                 </li>
-
-                                <li>
-                                    <a href="{% url 'timesheet:aprovargastos' %}">
-                                        <span>Aprovar Gastos</span>
-                                    </a>
-                                 </li>
-
-
-                        </ul>
-                    </li>
-<!-- fim timesheet-->
-                 <!-- Viagens-->
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">flight_takeoff</i>
-                            <span>Viagens</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">check_circle</i>
-                            <span>Itens de Viagem</span>
-                        </a>
-                                <ul class="ml-menu">
-                                    <li>
-
-
-
-                                        <li>
-                                            <a href="{% url 'viagem:arquivosviagem' %}">
-                                                 <span>Arquivos de Viagem</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'viagem:listatiposviagens' %}">
-                                                 <span>Tipos de Viagens</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="{% url 'viagem:listatiposolicitacao' %}">
-                                                 <span>Tipos de Solicitação</span>
-                                            </a>
-                                        </li>
-
-
-                                        <li>
-                                            <a href="{% url 'viagem:listatipotransporte' %}">
-                                                 <span>Tipos de Transporte</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href="{% url 'viagem:listamotivos' %}">
-                                                 <span>Motivos De Viagem</span>
-                                            </a>
-                                        </li>
-                                </ul>
-
-                                <li>
-                                    <a href="{% url 'viagem:listaviagem' %}">
-                                         <span>Solicitação de Viagens</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="{% url 'viagem:listaautorizarviagem' %}">
-                                         <span>Autorizar Viagens</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="{% url 'viagem:listahomologacaoviagem' %}">
-                                         <span>Homologar Viagens</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="{% url 'viagem:listaaprovarpcviagem' %}">
-                                         <span>Aprovar Prestação de Contas</span>
-                                    </a>
-                                </li>
-
-
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Fim Viagens-->
 
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">

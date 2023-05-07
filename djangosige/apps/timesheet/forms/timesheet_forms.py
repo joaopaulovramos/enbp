@@ -16,12 +16,12 @@ class HorasSemanaisForm(forms.ModelForm):
         model = HorasSemanais
 
 # 'projeto'
-        fields = ('semanas', 'hr_seg','hr_ter', 'hr_qua','hr_qui','hr_sex', 'hr_sab', 'hr_dom',  )
+        fields = ('projeto', 'semanas', 'hr_seg','hr_ter', 'hr_qua','hr_qui','hr_sex', 'hr_sab', 'hr_dom',  )
 
         widgets = {
 
             'semanas': forms.Select(attrs={'class': 'form-control'}),
-            #'projeto': forms.Select(attrs={'class': 'form-control'}),
+            'projeto': forms.Select(attrs={'class': 'form-control'}),
 
             'hr_seg': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control decimal-mask'}),
             'hr_ter': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control decimal-mask'}),
@@ -33,6 +33,7 @@ class HorasSemanaisForm(forms.ModelForm):
 
         }
         labels = {
+            'projeto' :_('Projeto'),
             'horas': _('Horas Trabalhadas'),
             'semanas': _('Semana'),
             'hr_seg': _('Horas Trabalhadas na Segunda'),
@@ -70,19 +71,18 @@ class GastosForm(forms.ModelForm):
         # valor = models.CharField(max_length=10, null=False, blank=False)
         # file = models.FileField(upload_to='files/', null=False, blank=False)
 
-        fields = ('descricao', 'valor','file',  )
+        fields = ('projeto', 'descricao', 'valor','file',  )
 
         widgets = {
-
-            #'projeto': forms.Select(attrs={'class': 'form-control'}),
-
+            'projeto': forms.Select(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '500'}),
-            'valor': forms.TextInput(attrs={'class': 'form-control', 'size': '500'}),
+            'valor':  forms.TextInput(attrs={'class': 'form-control decimal-mask'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
 
 
         }
         labels = {
+            'projeto': _('Projeto'),
             'descricao': _('Descrição'),
             'valor': _('Valor'),
             'file': _('Comprovante'),

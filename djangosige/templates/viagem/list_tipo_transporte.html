@@ -1,12 +1,12 @@
-{%extends 'base/base.html' %}
+{%extends 'base/base.html'%}
 
 {%block title%}{{title_complete|title}}{%endblock%}
 {%block content%}
 <section class="content">
   <div class="container-fluid lista">
-
+  
     {% include 'base/title_header.html' %}
-
+    
     {% include 'base/msg_sucesso.html' %}
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
@@ -19,7 +19,9 @@
             </h2>
               <div class="header-btn">
                 <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> ADICIONAR</span></a>
-                <button class="btn btn-red btn-remove-alert"><i class="material-icons">&#xE872;</i></button>
+                <!--<button class="btn btn-red btn-remove"><i class="material-icons">&#xE872;</i></button> -->
+                <button class="btn btn-red btn-remove-alert" ><i class="material-icons">&#xE872;</i></button>
+
               </div>
           </div>
 
@@ -39,7 +41,8 @@
               <tbody>
                {% if all_natops%}
                {% for natop in all_natops %}
-               <tr class="clickable-row" data-href="{% url 'norli_projeto:editartipo' natop.id %}">
+
+               <tr class="clickable-row"  data-href="{% url 'viagem:editartipotransporte' natop.id %}">
                 <td>{{natop.nome}}</td>
                 <td class="lista-remove">
                   <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>

@@ -100,7 +100,7 @@ class ViagemForm(forms.ModelForm):
             'tipo_transporte': forms.Select(attrs={'class': 'form-control select-produto'}),
         }
         labels = {
-            'valor_passagem': _('Valor da Passagem'),
+           'valor_passagem': _('Valor da Passagem'),
             'dada_inicio': _('Data Inicio'),
             'dada_fim': _('Data Fim'),
             'origem': _('Origem'),

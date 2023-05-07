@@ -59,7 +59,7 @@ class HorasSemanais(models.Model):
     pode_null = False
     branco = True
 
-    hr_seg = models.TimeField(null=True)
+    hr_seg = models.CharField(max_length=200, null=pode_null, blank=branco)
     hr_ter = models.CharField(max_length=200, null=pode_null, blank=branco)
     hr_qua = models.CharField(max_length=200, null=pode_null, blank=branco)
     hr_qui = models.CharField(max_length=200, null=pode_null, blank=branco)
@@ -68,7 +68,7 @@ class HorasSemanais(models.Model):
     hr_dom = models.CharField(max_length=200, null=pode_null, blank=branco)
 
     semanas = models.CharField(max_length=200, null=False, blank=False, choices=SEMANAS)
-    #projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="certificados_user", on_delete=models.CASCADE, null=True, blank=True)
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="certificados_user", on_delete=models.CASCADE, null=False, blank=False)
     solicitante = models.ForeignKey(User, related_name="timesheet_user", on_delete=models.CASCADE, null=True, blank=True)
     # 0 - não submetida
     # 1 - submetida aguardando aprovação
@@ -90,7 +90,7 @@ SITUACAO = [
 class Gastos(models.Model):
 
     descricao = models.CharField(max_length=500, null=False, blank=False)
-    #projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="certificados_user", on_delete=models.CASCADE, null=True, blank=True)
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_gastos", on_delete=models.CASCADE, null=True, blank=True)
     solicitante = models.ForeignKey(User, related_name="gastos_user", on_delete=models.CASCADE, null=True, blank=True)
     valor = models.CharField(max_length=10, null=False, blank=False)
     file = models.FileField(upload_to='files/', null=False, blank=False)

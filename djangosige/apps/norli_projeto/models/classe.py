@@ -53,6 +53,7 @@ class ExemploModel(models.Model):
     tipo = models.ForeignKey(TipoModel, related_name="tipo_projeto", on_delete=models.CASCADE, null=True, blank=True)
     parcelas = models.IntegerField( null=True, blank=True)
 
+
     valor_proposta = models.IntegerField( null=True, blank=True)
     desconto = models.IntegerField( null=True, blank=True)
     valor_final = models.IntegerField( null=True, blank=True)
