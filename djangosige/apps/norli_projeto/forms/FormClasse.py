@@ -52,12 +52,12 @@ class ExemploForm(forms.ModelForm):
             'tipo'    : forms.Select(attrs={'class': 'form-control'}),
             'filial': forms.Select(attrs={'class': 'form-control'}),
 
-            'valor_proposta': forms.TextInput(attrs={'class': 'form-control'}),
+            'valor_proposta': forms.TextInput(attrs={'class': 'form-control decimal-mask', 'placeholder': 'R$ 0,00'} ),
             'parcelas': forms.NumberInput(attrs={'class': 'form-control'}),
-            'desconto': forms.TextInput(attrs={'class': 'form-control'}),
-            'valor_proposta': forms.TextInput(attrs={'class': 'form-control'}),
 
-            'valor_final' : forms.TextInput(attrs={'class': 'form-control'}),
+            'desconto': forms.TextInput( attrs={'class': 'form-control decimal-mask', 'placeholder': 'R$ 0,00'}),
+
+            'valor_final' : forms.TextInput( attrs={'class': 'form-control decimal-mask', 'placeholder': 'R$ 0,00'}),
 
         }
 

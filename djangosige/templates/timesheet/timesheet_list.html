@@ -18,7 +18,7 @@
               {{title_complete}}
             </h2>
               <div class="header-btn">
-                  <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> ADICIONAR</span></a>
+                  <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> LANÇAR HORAS</span></a>
                   <button class="btn btn-success btn-submeter-horas"><i class="material-icons">check</i><span> SUBMETER</span></button>
                   <button class="btn btn-red btn-remover-submeter-horas"><i class="material-icons">&#xE872;</i></button>
               </div>
@@ -61,11 +61,17 @@
                    <td>{{natop.semanas}}</td>
                    <td>{{natop.projeto}}</td>
                    <td>
-                    {% if natop.situacao == 1  %}
-                        <a class="btn btn-success"><span> SUBMETIDA</span></a>
+                    {% if natop.situacao == 0  %}
+                        <a class="btn"><span> NÃO SUBMETIDA</span></a>
+                    {% endif %}
+                     {% if natop.situacao == 1  %}
+                        <a class="btn btn-yellow"><span> SUBMETIDA</span></a>
                     {% endif %}
                     {% if natop.situacao == 2  %}
                         <a class="btn btn-success"><span> APROVADA</span></a>
+                    {% endif %}
+                   {% if natop.situacao == 3  %}
+                        <a class="btn btn-red"><span> REPROVADA</span></a>
                     {% endif %}
                    </td>
 

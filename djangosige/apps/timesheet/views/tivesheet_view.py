@@ -138,10 +138,14 @@ class AprovarTimesheetView(CustomListViewFilter):
         for key, value in request.POST.items():
             if value == "on":
                 acao = request.POST['acao']
-
-                instance = self.model.objects.get(id=key)
-                instance.situacao = 2
-                instance.save()
+                if acao == 'reprovar-horas':
+                    instance = self.model.objects.get(id=key)
+                    instance.situacao = 3
+                    instance.save()
+                else:
+                    instance = self.model.objects.get(id=key)
+                    instance.situacao = 2
+                    instance.save()
 
         return redirect(self.success_url)
 

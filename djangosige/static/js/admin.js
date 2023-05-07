@@ -3511,6 +3511,49 @@ $.Admin.reover_opcao = {
     },
 }
 
+$.Admin.reover_reprovar_horas_submetidas = {
+   init: function() {
+        var $btnAutoriza = $('.btn-reprovar-horas-submetidas');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("reprovar-horas");
+
+            form.append($(input));
+
+
+            form.submit();
+
+
+
+        });
+
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
+
 $.Admin.alert_file = {
    init: function() {
         var $btnRemove = $('.btn-remove-alert-file');
@@ -3795,6 +3838,9 @@ $(function () {
     $.Admin.submeter_gastos.init();
     $.Admin.aprovar_gastos.init();
     $.Admin.reprovar_gastos.init();
+    $.Admin.reover_reprovar_horas_submetidas.init();
+
+
 
 
 
