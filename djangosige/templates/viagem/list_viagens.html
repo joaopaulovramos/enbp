@@ -1,0 +1,134 @@
+{%extends 'base/base.html'%}
+
+{%block title%}{{title_complete|title}}{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid lista">
+  
+    {% include 'base/title_header.html' %}
+    
+    {% include 'base/msg_sucesso.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
+      <div class="card">
+        <form action="" method="post">
+          {% csrf_token %}
+          <div class="header">
+            <h2>
+              {{title_complete}}
+            </h2>
+              <div class="header-btn">
+
+
+                <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> SOLICITAR VIAGEM</span></a>
+                <button class="btn btn-red btn-remove-alert" ><i class="material-icons">&#xE872;</i></button>
+
+              </div>
+          </div>
+
+          <div class="body">
+
+           {% include 'base/search.html' %}
+
+           <div class="table-responsive">
+            <table id="lista-database" class="table table-bordered table-striped lista-table">
+              <thead>
+                <tr>
+
+                    <th>Data Inicio</th>
+                    <th>Data Fim</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Autorizada</th>
+                    <th>Homologada</th>
+                    <th>PRESTAR CONTAS</th>
+                    <th>ARQUIVOS</th>
+                     <th>AVALIAÇÃO</th>
+                    <th>Remover</th>
+                </tr>
+              </thead>
+
+              <tbody>
+               {% if all_natops%}
+               {% for natop in all_natops %}
+
+               <tr >
+                   <td>{{natop.dada_inicio}}</td>
+                   <td>{{natop.dada_fim}}</td>
+                   <td>{{natop.origem}}</td>
+                   <td>{{natop.destino}}</td>
+                  <td>
+                        {% if natop.autorizada  %}
+                            <a class="btn btn-success"><span> SIM</span></a>
+                        {% else %}
+                            <a class="btn btn-red btn-success"><span> NAO</span></a>
+                        {% endif %}
+
+
+                    </td>
+                    <td>
+                        {% if natop.homologada  %}
+                            <a class="btn btn-success"><span> SIM</span></a>
+                        {% else %}
+                            <a class="btn btn-red btn-success"><span> NAO</span></a>
+                        {% endif %}
+
+
+                    </td>
+                   <td>
+                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '0' %}
+                            <a href="{% url 'viagem:prestar_contas' natop.id %}" class="btn btn-success"><span> PRESTAR CONTAS</span></a>
+                       {% endif %}
+                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '1' %}
+                           Enviado Para Aprovação
+                       {% endif %}
+                   </td>
+                    <td>
+                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '0' %}
+                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-success"><span> ENVIAR ARQUIVOS </span></a>
+                       {% endif %}
+                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '1' %}
+                            Enviado Para Aprovação
+                       {% endif %}
+                   </td>
+               <td>
+                       {% if natop.aprovar_pc == '1' %}
+                            <a class="btn btn-success"><span> PROVADA</span></a>
+
+                       {% endif %}
+                       {% if natop.aprovar_pc == '2' %}
+                           <a class="btn btn-red btn-success"><span>REPROVADA</span></a>
+
+                       {% endif %}
+                   </td>
+
+                <td class="lista-remove">
+                                {% if natop.autorizada or natop.homologada %}
+
+                                {% else %}
+                                    <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
+                                    <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
+                                {% endif %}
+
+
+                </td>
+              </tr>
+              {% endfor %}
+              {%else%}
+              {%endif%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+</div>
+</section>
+
+
+{%endblock%}
