@@ -74,7 +74,7 @@ class ListCarroView(CustomListView):
     model = CarroModel
     context_object_name = 'all_natops'
     success_url = reverse_lazy('exemplo:listacarro') ### ligar com url
-    permission_codename = 'listar_carro'
+    permission_codename = 'view_carromodel'
 
     def get_context_data(self, **kwargs):
         context = super(ListCarroView, self).get_context_data(**kwargs)
@@ -90,7 +90,7 @@ class AdicionarCarroView(CustomCreateView):
     template_name = "exemplo/add.html"
     success_url = reverse_lazy('exemplo:listacarro')
     success_message = "Carro adicionado com sucesso"
-    permission_codename = 'cadastrar_carro'
+    permission_codename = 'add_carromodel'
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
@@ -109,7 +109,7 @@ class EditarCarroView(CustomUpdateView):
     template_name = "exemplo/edit.html"
     success_url = reverse_lazy('exemplo:listacarro')
     success_message = "Carro editado com sucesso."
-    permission_codename = 'editar_carro'
+    permission_codename = 'change_carromodel'
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
