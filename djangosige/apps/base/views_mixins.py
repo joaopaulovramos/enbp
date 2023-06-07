@@ -42,8 +42,7 @@ class CheckPermissionMixin(object):
                 permission = str(
                     request.resolver_match.app_name) + '.' + str(permission)
             perms.append(permission)
-            # modificar antes de ir para produção
-        return True #len(self.permission_codename) and (request.user.is_superuser or request.user.has_perms(perms))
+        return len(self.permission_codename) and (request.user.is_superuser or request.user.has_perms(perms))
 
     def check_user_delete_permission(self, request, object):
         codename = str(object._meta.app_label) + '.delete_' + \

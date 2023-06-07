@@ -41,7 +41,8 @@ DEFAULT_PERMISSION_MODELS = ['cliente', 'fornecedor', 'produto',
                              'naturezaoperacao', 'notafiscalentrada', 'notafiscalsaida', 'grupofiscal', 'lancamento', 'planocontasgrupo', 'localestoque', 'movimentoestoque', 'cadastrodefinalidademodel','cvmodel',]
 
 CUSTOM_PERMISSIONS = ['configurar_nfe', 'emitir_notafiscal', 'cancelar_notafiscal', 'gerar_danfe', 'consultar_cadastro', 'inutilizar_notafiscal', 'consultar_notafiscal',
-                      'baixar_notafiscal', 'manifestacao_destinatario', 'faturar_pedidovenda', 'faturar_pedidocompra', 'acesso_fluxodecaixa', 'consultar_estoque', 'solicitar_viagens', 'autorizar_viagens', 'homologar_viagens', 'cadastrar_item_viagens' ]
+                      'baixar_notafiscal', 'manifestacao_destinatario', 'faturar_pedidovenda', 'faturar_pedidocompra', 'acesso_fluxodecaixa', 'consultar_estoque', 'solicitar_viagens',
+                      'autorizar_viagens', 'homologar_viagens', 'cadastrar_item_viagens', 'editar_carro', 'cadastrar_carro', 'listar_carro' ]
 
 
 class UserFormView(View):

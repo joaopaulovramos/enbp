@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^estoque/', include('djangosige.apps.estoque.urls')),
 
 #zeppelin
-    #url(r'^exemplo/', include('djangosige.apps.exemplo.urls')),
+    url(r'^exemplo/', include('djangosige.apps.exemplo.urls')),
     url(r'^zeppelin/', include('djangosige.apps.zeppelin.urls')),
     url(r'^zeppelin/', include('djangosige.apps.zpfaturamento.urls')),
     url(r'^zeppelin/', include('djangosige.apps.taticca_cv.urls')),
