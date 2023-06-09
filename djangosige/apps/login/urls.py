@@ -47,4 +47,14 @@ urlpatterns = [
     # selecionar empresa
     url(r'selecionarempresa/$', views.SelecionarMinhaEmpresaView.as_view(),
         name='selecionarempresaview'),
+
+
+    # inativa usuario
+    url(r'inativauser/(?P<pk>[0-9]+)/$',
+        views.InativarUsuarioView.as_view(), name='inativaview'),
+
+    # inativa usuario
+    url(r'ativauser/(?P<pk>[0-9]+)/$',
+        views.AtivarUsuarioView.as_view(), name='ativaview'),
+
 ]

@@ -389,7 +389,10 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
         try:
             usr = User.objects.get(pk=self.kwargs['pk'])
             context['user_match'] = usr
+            context['user_ativo'] = usr.is_active
             context['user_foto'] = Usuario.objects.get(user=usr).user_foto
+
+
         except:
             pass
         return context
@@ -398,6 +401,9 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
 class DeletarUsuarioView(SuperUserRequiredMixin, DeleteView):
     model = User
     success_url = reverse_lazy('login:usuariosview')
+
+
+
 
 
 class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
@@ -464,3 +470,38 @@ class AlterarSenhaView(UpdateView):
         return redirect(self.success_url)
 
 
+
+
+
+class InativarUsuarioView(UpdateView):
+    template_name = 'login/detalhe_users.html'
+    success_url = reverse_lazy('login:usuariosview')
+    success_message = "Perfil editado com sucesso."
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        user = User.objects.get(pk=self.kwargs['pk'])
+        user.is_active = False
+        user.save()
+        return redirect(self.success_url)
+
+
+
+
+class AtivarUsuarioView(UpdateView):
+    template_name = 'login/detalhe_users.html'
+    success_url = reverse_lazy('login:usuariosview')
+    success_message = "Perfil editado com sucesso."
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        user = User.objects.get(pk=self.kwargs['pk'])
+        if user.is_active:
+            user.is_active = False
+            user.save()
+        else:
+            user.is_active = True
+            user.save()
+        return redirect(self.success_url)
