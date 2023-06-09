@@ -22,7 +22,7 @@ from django.template import loader
 
 from djangosige.apps.base.views_mixins import SuperUserRequiredMixin
 
-from .forms import UserLoginForm, UserRegistrationForm, PasswordResetForm, SetPasswordForm, PerfilUsuarioForm
+from .forms import UserLoginForm, UserRegistrationForm, PasswordResetForm, SetPasswordForm, PerfilUsuarioForm, AlteraSenhaForm
 from .models import Usuario
 from djangosige.configs.settings import DEFAULT_FROM_EMAIL
 
@@ -389,7 +389,10 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
         try:
             usr = User.objects.get(pk=self.kwargs['pk'])
             context['user_match'] = usr
+            context['user_ativo'] = usr.is_active
             context['user_foto'] = Usuario.objects.get(user=usr).user_foto
+
+
         except:
             pass
         return context
@@ -398,6 +401,9 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
 class DeletarUsuarioView(SuperUserRequiredMixin, DeleteView):
     model = User
     success_url = reverse_lazy('login:usuariosview')
+
+
+
 
 
 class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
@@ -427,3 +433,75 @@ class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
         messages.success(
             self.request, 'Permissões do usuário <b>{0}</b> atualizadas com sucesso.'.format(user.username))
         return redirect(reverse_lazy('login:usuariodetailview', kwargs={'pk': self.kwargs['pk']}))
+
+
+class AlterarSenhaView(UpdateView):
+    form_class = AlteraSenhaForm
+    template_name = 'login/editar_senha.html'
+    success_url = reverse_lazy('login:perfilview')
+    success_message = "Perfil editado com sucesso."
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message
+
+    def get_object(self, queryset=None):
+        obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+        return obj
+
+    def get_success_url(self, *args, **kwargs):
+        return self.success_url
+
+        # Add support for browsers which only accept GET and POST for now.
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            new_password = form.cleaned_data['password']
+            new_password_confirm = form.cleaned_data['confirm']
+            if new_password == new_password_confirm:
+                current_user = self.request.user
+                current_user.set_password(new_password)
+                current_user.save()
+                messages.success(request, u"Senha trocada com sucesso - Realize um novo login para continuar utilizando o sistema.")
+            else:
+                messages.success(request, u"ERRO - Senhas diferentes.")
+        return redirect(self.success_url)
+
+
+
+
+
+class InativarUsuarioView(UpdateView):
+    template_name = 'login/detalhe_users.html'
+    success_url = reverse_lazy('login:usuariosview')
+    success_message = "Perfil editado com sucesso."
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        user = User.objects.get(pk=self.kwargs['pk'])
+        user.is_active = False
+        user.save()
+        return redirect(self.success_url)
+
+
+
+
+class AtivarUsuarioView(UpdateView):
+    template_name = 'login/detalhe_users.html'
+    success_url = reverse_lazy('login:usuariosview')
+    success_message = "Perfil editado com sucesso."
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        user = User.objects.get(pk=self.kwargs['pk'])
+        if user.is_active:
+            user.is_active = False
+            user.save()
+        else:
+            user.is_active = True
+            user.save()
+        return redirect(self.success_url)

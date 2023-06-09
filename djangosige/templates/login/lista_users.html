@@ -34,6 +34,7 @@
                 <tr>
                   <th>#ID</th>                   
                   <th>Nome de usuário</th>
+                  <th>Ativo</th>
                   <th>Nome</th>
                   <th>Sobrenome</th>
                   <th>Status</th>
@@ -47,6 +48,13 @@
                <tr class="clickable-row" data-href="{% url 'login:usuariodetailview' usr.id %}">
                 <td>{{usr.id}}</td>
                 <td>{{usr.username}}</td>
+                <td>
+                    {% if usr.is_active %}
+                            SIM
+                        {%else%}
+                            NÃO
+                        {%endif%}
+                </td>
                 <td>{{usr.first_name|default_if_none:""}}</td>
                 <td>{{usr.last_name|default_if_none:""}}</td>
                 <td>{%if usr.is_superuser%}Administrador{%else%}Usuário{%endif%}</td>

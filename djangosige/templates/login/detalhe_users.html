@@ -16,19 +16,31 @@
           <h2>
             <a href="{%url 'login:usuariosview'%}"><i class="material-icons">&#xE5C4;</i></a>
             <span><b>Usuário: </b>{{user_match.username}}{% if user_match.is_superuser %} (Admin){% endif %}</span>
+
+
           </h2>
+
+
           <div class="header-btn">
             {%if not user_match.is_superuser%} 
             <form action="{% url 'login:deletarusuarioview' user_match.id %}" method="post">
               {% csrf_token %}
-              <input type="hidden" name="user_id" value="{{user_match.id}}">
-              <button class="btn btn-red" type="submit"><i class="material-icons">&#xE872;</i><span> REMOVER</span></button>
+               <input type="hidden" name="user_id" value="{{user_match.id}}">
+                <button class="btn btn-red" type="submit"><i class="material-icons">&#xE872;</i><span> REMOVER</span></button>
             </form>
+
+
+
+
+
+
+
             {%endif%}
           </div>
         </div>
         <div class="body perfil-user">
-            <div class="col-md-3 foto-perfil">  
+            <div class="col-md-3 foto-perfil">
+
               {% if user_foto %}
               <img src="/media/{{user_foto}}"/>
               {%else%}
@@ -45,6 +57,29 @@
                   <tr>
                     <td>Nome:</td>
                     <td>{{user_match.first_name}}</td>
+                  </tr>
+                  <tr>
+                    <td>Ativo:</td>
+                    <td>
+                        {% if user_match.is_active %}
+                            <form action="{% url 'login:ativaview' user_match.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{user_match.id}}">
+                                <button class="btn btn-yellow" type="submit"><i class="material-icons">autorenew</i><span> SIM -  CLIQUE PARA INATIVAR</span></button>
+                            </form>
+
+                        {%else%}
+                            <form action="{% url 'login:ativaview' user_match.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{user_match.id}}">
+                                <button class="btn btn-yellow" type="submit"><i class="material-icons">autorenew</i><span>  NÃO -  CLIQUE PARA ATIVAR</span></button>
+                            </form>
+                        {%endif%}
+
+
+
+
+                    </td>
                   </tr>
                   <tr>
                     <td>Sobrenome:</td>

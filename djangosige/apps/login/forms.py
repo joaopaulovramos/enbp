@@ -89,3 +89,15 @@ class PerfilUsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ('first_name', 'last_name', 'username', 'email', 'user_foto',)
+
+
+
+class AlteraSenhaForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control line-input', 'placeholder': 'Senha'}), min_length=6, label='Nova Senha')
+    confirm = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control line-input', 'placeholder': 'Confirme a senha'}), min_length=6, label='Confirmar Nova Senha')
+
+    class Meta:
+        model = User
+        fields = ( 'password',)
