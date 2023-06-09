@@ -57,6 +57,7 @@ class EditarTipoViagemView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoViagemView, self).get_context_data(**kwargs)
+        context['id'] = self.object.id
         context['return_url'] = reverse_lazy('viagem:listatiposviagens')
         return context
 
