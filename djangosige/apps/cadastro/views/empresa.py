@@ -30,7 +30,7 @@ class AdicionarEmpresaView(AdicionarPessoaView):
                            prefix='empresa_form', request=request)
         return super(AdicionarEmpresaView, self).post(request, form, *args, **kwargs)
 
-
+#teste
 class EmpresasListView(PessoasListView):
     template_name = 'cadastro/pessoa_list.html'
     model = Empresa
