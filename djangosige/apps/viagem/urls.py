@@ -26,6 +26,11 @@ urlpatterns = [
     url(r'viagem/adicionarmotivo/$', views.AdicionarMotivoView.as_view(), name='adicionarmotivo'),
     url(r'viagem/editarmotivo/(?P<pk>[0-9]+)/$', views.EditarMotivoView.as_view(), name='editarmotivo'),
 
+    # Tipo de Despesa
+    url(r'viagem/listatipodespesa/$', views.ListTipoDespesaView.as_view(), name='listatipodespesa'),
+    url(r'viagem/adicionartipodespesa/$', views.AdicionarTipoDespesaView.as_view(), name='adicionartipodespesa'),
+    url(r'viagem/editartipodespesa/(?P<pk>[0-9]+)/$', views.EditarTipoDespesaView.as_view(), name='editartipodespesa'),
+
     # Viagens
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),
     url(r'viagem/adicionarviagem/$', views.AdicionarViagemView.as_view(), name='adicionarviagem'),
