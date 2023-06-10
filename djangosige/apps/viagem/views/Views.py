@@ -315,6 +315,58 @@ class EditarMoedaView(CustomUpdateView):
         context['id'] = self.object.id
         return context
 
+
+#### Categoria Passagem
+class ListCategoriaPassagemView(CustomListView):
+    template_name = 'viagem/list_categoria_passagem.html'
+    model = CategoriaPassagemModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listacategoriapassagem')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListCategoriaPassagemView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Categorias de Passagem'
+        context['add_url'] = reverse_lazy('viagem:adicionarcategoriapassagem')
+        return context
+
+
+class AdicionarCategoriaPassagemView(CustomCreateView):
+    form_class = CategoriaPassagemForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listacategoriapassagem')
+    success_message = "Categoria de passagem adicionada com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarCategoriaPassagemView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR CATEGORIA DE PASSAGEM'
+        context['return_url'] = reverse_lazy('viagem:listacategoriapassagem')
+        return context
+
+
+class EditarCategoriaPassagemView(CustomUpdateView):
+    form_class = CategoriaPassagemForm
+    model = CategoriaPassagemModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listacategoriapassagem')
+    success_message = "Categoria de Passagem Editada com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarCategoriaPassagemView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Categoria de Passagem'
+        context['return_url'] = reverse_lazy('viagem:listacategoriapassagem')
+        context['id'] = self.object.id
+        return context
+
+
 #### Viagem
 class ListViagensView(CustomListView):
     template_name = 'viagem/list_viagens.html'

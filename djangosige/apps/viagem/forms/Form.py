@@ -91,6 +91,18 @@ class MoedaForm(forms.ModelForm):
         }
 
 
+class CategoriaPassagemForm(forms.ModelForm):
+    class Meta:
+        model = CategoriaPassagemModel
+        fields = ('descricao',)
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+        }
+        labels = {
+            'descricao': _('Descrição'),
+        }
+
+
 class ViagemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
