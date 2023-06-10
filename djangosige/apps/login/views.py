@@ -8,7 +8,8 @@ from django.views.generic.edit import UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.models import Permission
-
+from datetime import datetime
+from datetime import date
 from django.db import DatabaseError
 from django.db.models.query_utils import Q
 from django.core.exceptions import ValidationError
@@ -98,7 +99,10 @@ class UserRegistrationFormView(SuperUserRequiredMixin, SuccessMessageMixin, Form
 
 
                 user.set_password(password)
+
                 user.save()
+                obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+
 
                 cv = CVModel.objects.create()
                 cv.email = user.email
@@ -390,7 +394,15 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             usr = User.objects.get(pk=self.kwargs['pk'])
             context['user_match'] = usr
             context['user_ativo'] = usr.is_active
-            context['user_foto'] = Usuario.objects.get(user=usr).user_foto
+
+            usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+
+            data_python = date.today()
+            formata_data = data_python.strftime('%d/%m/%Y')
+            context['data_inclusao'] = usuario.data_inclusao.strftime( '%d/%m/%Y às %H:%M:%S' )
+            context['date_ultima_modificacao'] = usuario.date_ultima_modificacao.strftime( '%d/%m/%Y às %H:%M:%S' )
+            context['data_inativacao'] = usuario.data_inativacao.strftime( '%d/%m/%Y às %H:%M:%S' )
+            context['user_foto'] = usuario.user_foto
 
 
         except:
@@ -498,10 +510,15 @@ class AtivarUsuarioView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = None
         user = User.objects.get(pk=self.kwargs['pk'])
+        usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
         if user.is_active:
             user.is_active = False
+            usuario.data_inativacao = datetime.now()
+            usuario.save()
             user.save()
         else:
             user.is_active = True
+            usuario.data_inativacao = None
+            usuario.save()
             user.save()
         return redirect(self.success_url)

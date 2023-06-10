@@ -17,6 +17,9 @@ def user_directory_path(instance, filename):
 class Usuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_foto = models.ImageField(upload_to=user_directory_path, default='imagens/user.png', blank=True)
+    data_inclusao = models.DateTimeField(auto_now_add=True)
+    date_ultima_modificacao = models.DateTimeField(auto_now=True)
+    data_inativacao = models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Deletar user_foto se ja existir uma
