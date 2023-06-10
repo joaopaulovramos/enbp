@@ -374,7 +374,7 @@ class UsuariosListView(SuperUserRequiredMixin, ListView):
     success_url = reverse_lazy('login:usuariosview')
 
     def get_queryset(self):
-        return User.objects.all()
+            return User.objects.all()
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
@@ -396,7 +396,7 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             context['user_ativo'] = usr.is_active
 
 
-            usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+            usuario = Usuario.objects.get_or_create(user=usr)[0]
             us_perfil = usuario.perfil
             context['data_inclusao'] = usuario.data_inclusao.strftime( '%d/%m/%Y às %H:%M:%S' )
             context['date_ultima_modificacao'] = usuario.date_ultima_modificacao.strftime( '%d/%m/%Y às %H:%M:%S' )
@@ -432,7 +432,10 @@ class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
         context['custom_permissions'] = Permission.objects.filter( codename__in=CUSTOM_PERMISSIONS)
 
         context['perfis'] = Usuario.PERFIS
+        obj = Usuario.objects.get_or_create(user=self.request.user)[0]
 
+
+        context['perfil_user'] = Usuario.PERFIS[int(obj.perfil)][1]
         return context
 
     def post(self, request, *args, **kwargs):
@@ -537,8 +540,8 @@ class AlteraPerfilView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = None
         user = User.objects.get(pk=self.kwargs['pk'])
-        usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+        usuario = Usuario.objects.get_or_create(user=user)[0]
         permicao = request.POST.get('permicao')
-        usuario.perfil = Usuario.PERFIS[0][int(permicao)]
+        usuario.perfil = Usuario.PERFIS[int(permicao)][0]
         usuario.save()
         return redirect(self.success_url)
