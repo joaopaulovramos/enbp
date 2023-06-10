@@ -28,7 +28,7 @@ class Usuario(models.Model):
     user_foto = models.ImageField(upload_to=user_directory_path, default='imagens/user.png', blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     date_ultima_modificacao = models.DateTimeField(auto_now=True)
-    data_inativacao = models.DateTimeField(blank=True, null=True)
+    data_inativacao = models.DateTimeField(auto_now_add=True)
     perfil = models.CharField(max_length=50, null=True, blank=True, choices=PERFIS, default=PERFIS[0][0])
 
     def save(self, *args, **kwargs):

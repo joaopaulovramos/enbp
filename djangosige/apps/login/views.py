@@ -401,9 +401,10 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             context['data_inclusao'] = usuario.data_inclusao.strftime( '%d/%m/%Y às %H:%M:%S' )
             context['date_ultima_modificacao'] = usuario.date_ultima_modificacao.strftime( '%d/%m/%Y às %H:%M:%S' )
             context['perfil'] =  Usuario.PERFIS[int(us_perfil)][1]
-            context['user_foto'] = usuario.user_foto
-            # data inativação sempre por ultimo
             context['data_inativacao'] = usuario.data_inativacao.strftime('%d/%m/%Y às %H:%M:%S')
+            context['user_foto'] = usuario.user_foto
+
+
 
         except:
             pass
@@ -522,7 +523,6 @@ class AtivarUsuarioView(UpdateView):
             user.save()
         else:
             user.is_active = True
-            usuario.data_inativacao = None
             usuario.save()
             user.save()
         return redirect(self.success_url)
