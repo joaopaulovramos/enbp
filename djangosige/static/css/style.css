@@ -1720,3 +1720,23 @@ section.content {
 .btn-remove-alert{
         display: none;
 }
+
+.form-top-select-perfil{
+  width: 700px;
+  margin-left: 20px;
+  height: 70px;
+}
+.form-top-select-perfil label{
+  float: left;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#perfis{
+  width: 350px!important;
+  margin-left: 30px;
+  float: left;
+}
+#brn_perfis{
+  float: left;
+  margin-left: 30px;
+}

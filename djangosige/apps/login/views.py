@@ -395,15 +395,15 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             context['user_match'] = usr
             context['user_ativo'] = usr.is_active
 
-            usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
 
-            data_python = date.today()
-            formata_data = data_python.strftime('%d/%m/%Y')
+            usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+            us_perfil = usuario.perfil
             context['data_inclusao'] = usuario.data_inclusao.strftime( '%d/%m/%Y às %H:%M:%S' )
             context['date_ultima_modificacao'] = usuario.date_ultima_modificacao.strftime( '%d/%m/%Y às %H:%M:%S' )
-            context['data_inativacao'] = usuario.data_inativacao.strftime( '%d/%m/%Y às %H:%M:%S' )
+            context['perfil'] =  Usuario.PERFIS[int(us_perfil)][1]
             context['user_foto'] = usuario.user_foto
-
+            # data inativação sempre por ultimo
+            context['data_inativacao'] = usuario.data_inativacao.strftime('%d/%m/%Y às %H:%M:%S')
 
         except:
             pass
@@ -429,8 +429,9 @@ class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
         condition = reduce(operator.or_, [Q(codename__icontains=s) for s in [
                            'add_', 'change_', 'view_', 'delete_']])
         context['default_permissions'] = Permission.objects.filter( condition, content_type__model__in=DEFAULT_PERMISSION_MODELS)
-        #context['default_permissions'] = Permission.objects.all()
         context['custom_permissions'] = Permission.objects.filter( codename__in=CUSTOM_PERMISSIONS)
+
+        context['perfis'] = Usuario.PERFIS
 
         return context
 
@@ -521,4 +522,23 @@ class AtivarUsuarioView(UpdateView):
             usuario.data_inativacao = None
             usuario.save()
             user.save()
+        return redirect(self.success_url)
+
+
+
+
+
+class AlteraPerfilView(UpdateView):
+    template_name = 'login/detalhe_users.html'
+    success_url = reverse_lazy('login:usuariosview')
+    success_message = "Perfil editado com sucesso."
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        user = User.objects.get(pk=self.kwargs['pk'])
+        usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+        permicao = request.POST.get('permicao')
+        usuario.perfil = Usuario.PERFIS[0][int(permicao)]
+        usuario.save()
         return redirect(self.success_url)

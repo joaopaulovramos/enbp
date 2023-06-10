@@ -16,6 +16,20 @@
           </h2>
         </div>
         <div class="body">
+                            <form action="{% url 'login:alteraperfil' user.id %}" method="post" class="form-top-select-perfil">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{user.id}}">
+                                <label>Perfil</label>
+                                <select class="form-control line-input"  name="permicao"  id="perfis">
+                                    {% for perfil in perfis %}
+                                        <option value="{{ perfil.0 }}">{{ perfil.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-success" id="brn_perfis" type="submit"><i class="material-icons">autorenew</i><span>ALTERAR PERFIL</span></button>
+                            </form>
+
+
+
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <form action="" method="post">
               {% csrf_token %}

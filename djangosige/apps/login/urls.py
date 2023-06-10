@@ -57,4 +57,8 @@ urlpatterns = [
     url(r'ativauser/(?P<pk>[0-9]+)/$',
         views.AtivarUsuarioView.as_view(), name='ativaview'),
 
+    # altera perfil
+    url(r'alteraperfil/(?P<pk>[0-9]+)/$',
+        views.AlteraPerfilView.as_view(), name='alteraperfil'),
+
 ]
