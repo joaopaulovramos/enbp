@@ -41,6 +41,12 @@ urlpatterns = [
     url(r'viagem/adicionarcategoriapassagem/$', views.AdicionarCategoriaPassagemView.as_view(), name='adicionarcategoriapassagem'),
     url(r'viagem/editarcategoriapassagem/(?P<pk>[0-9]+)/$', views.EditarCategoriaPassagemView.as_view(), name='editarcategoriapassagem'),
 
+    # Horário Prefencial
+    url(r'viagem/listahorariopreferencial/$', views.ListHorarioPreferencialView.as_view(), name='listahorariopreferencial'),
+    url(r'viagem/adicionarhorariopreferencial/$', views.AdicionarHorarioPreferencialView.as_view(), name='adicionarhorariopreferencial'),
+    url(r'viagem/editarhorariopreferencial/(?P<pk>[0-9]+)/$', views.EditarHorarioPreferencialView.as_view(), name='editarhorariopreferencial'),
+
+
     # Viagens
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),
     url(r'viagem/adicionarviagem/$', views.AdicionarViagemView.as_view(), name='adicionarviagem'),

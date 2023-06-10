@@ -265,6 +265,7 @@ class EditarTipoDespesaView(CustomUpdateView):
         context['id'] = self.object.id
         return context
 
+
 #### Moeda
 class ListMoedaView(CustomListView):
     template_name = 'viagem/list_moeda.html'
@@ -367,6 +368,57 @@ class EditarCategoriaPassagemView(CustomUpdateView):
         return context
 
 
+#### Horário Prefencial
+class ListHorarioPreferencialView(CustomListView):
+    template_name = 'viagem/list_horario_preferencial.html'
+    model = HorarioPreferencialModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listahorarioprefencial')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListHorarioPreferencialView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Horários Prefenciais'
+        context['add_url'] = reverse_lazy('viagem:adicionarhorariopreferencial')
+        return context
+
+
+class AdicionarHorarioPreferencialView(CustomCreateView):
+    form_class = HorarioPreferencialForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listahorariopreferencial')
+    success_message = "Horário Preferencial adicionado com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarHorarioPreferencialView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR HORÁRIO PREFERENCIAL'
+        context['return_url'] = reverse_lazy('viagem:listahorariopreferencial')
+        return context
+
+
+class EditarHorarioPreferencialView(CustomUpdateView):
+    form_class = HorarioPreferencialForm
+    model = HorarioPreferencialModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listahorariopreferencial')
+    success_message = "Horário Prefencial Editado com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarHorarioPreferencialView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Horário Preferencial'
+        context['return_url'] = reverse_lazy('viagem:listahorariopreferencial')
+        context['id'] = self.object.id
+        return context
+
+
 #### Viagem
 class ListViagensView(CustomListView):
     template_name = 'viagem/list_viagens.html'
@@ -400,6 +452,7 @@ class ListViagensView(CustomListView):
         context = super(ListViagensView, self).get_context_data(**kwargs)
         context['title_complete'] = 'Viagens'
         context['add_url'] = reverse_lazy('viagem:adicionarviagem')
+        context['login'] = self.request.user
         return context
 
 

@@ -63,7 +63,15 @@ class MoedaModel(models.Model):
     def __str__(self):
         return self.descricao
 
+
 class CategoriaPassagemModel(models.Model):
+    descricao = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.descricao
+
+
+class HorarioPreferencialModel(models.Model):
     descricao = models.CharField(max_length=200)
 
     def __str__(self):
@@ -72,18 +80,30 @@ class CategoriaPassagemModel(models.Model):
 
 class ViagemModel(models.Model):
     solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.CASCADE, null=True, blank=True)
+    data_inclusao = models.DateTimeField(auto_now_add=True)
     valor_passagem = models.CharField(max_length=200)
+
+    escala_direto = models.BooleanField(default=True)
+    escala_1 = models.BooleanField(default=False)
+    escala_2_mais = models.BooleanField(default=False)
+
     dada_inicio = models.DateTimeField()
     dada_fim = models.DateField()
     origem = models.CharField(max_length=200)
     destino = models.CharField(max_length=200)
     objetivo = models.CharField(max_length=200)
+
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
                                          on_delete=models.CASCADE)
     motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.CASCADE)
     tipo_transporte = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_transporte",
                                         on_delete=models.CASCADE)
+    categoria_passagem = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_passagem",
+                                           on_delete=models.CASCADE)
+    horario_preferencial = models.ForeignKey(HorarioPreferencialModel, related_name="viagem_horario",
+                                           on_delete=models.CASCADE)
+
     autorizada = models.BooleanField(default=False)
     homologada = models.BooleanField(default=False)
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)

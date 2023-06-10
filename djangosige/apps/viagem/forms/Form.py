@@ -103,6 +103,18 @@ class CategoriaPassagemForm(forms.ModelForm):
         }
 
 
+class HorarioPreferencialForm(forms.ModelForm):
+    class Meta:
+        model = HorarioPreferencialModel
+        fields = ('descricao',)
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+        }
+        labels = {
+            'descricao': _('Descrição'),
+        }
+
+
 class ViagemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -120,9 +132,10 @@ class ViagemForm(forms.ModelForm):
                   'tipo_viagem',
                   'tipo_solicitacao',
                   'motivo',
-                  'tipo_transporte',)
+                  'tipo_transporte',
+                  'categoria_passagem',
+                  'horario_preferencial',)
         widgets = {
-
             'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
@@ -133,6 +146,8 @@ class ViagemForm(forms.ModelForm):
             'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-produto'}),
             'motivo': forms.Select(attrs={'class': 'form-control select-produto'}),
             'tipo_transporte': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'categoria_passagem': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'horario_preferencial': forms.Select(attrs={'class': 'form-control select-produto'}),
         }
         labels = {
             'valor_passagem': _('Valor da Passagem'),
@@ -145,6 +160,8 @@ class ViagemForm(forms.ModelForm):
             'tipo_solicitacao': _('Tipo de Solicitação'),
             'motivo': _('Motivo'),
             'tipo_transporte': _('Tipo de Transporte'),
+            'categoria_passagem': _('Catergoria da Passagem'),
+            'horario_preferencial': _('Horário Preferencial'),
 
         }
 
