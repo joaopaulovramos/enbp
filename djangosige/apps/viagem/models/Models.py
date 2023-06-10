@@ -57,6 +57,13 @@ class TipoDeDespesaModel(models.Model):
         return self.sigla
 
 
+class MoedaModel(models.Model):
+    descricao = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.descricao
+
+
 class ViagemModel(models.Model):
     solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.CASCADE, null=True, blank=True)
     valor_passagem = models.CharField(max_length=200)

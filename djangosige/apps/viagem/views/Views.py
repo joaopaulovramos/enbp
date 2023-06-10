@@ -265,6 +265,55 @@ class EditarTipoDespesaView(CustomUpdateView):
         context['id'] = self.object.id
         return context
 
+#### Moeda
+class ListMoedaView(CustomListView):
+    template_name = 'viagem/list_moeda.html'
+    model = MoedaModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listamoeda')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListMoedaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Tipos de Moeda'
+        context['add_url'] = reverse_lazy('viagem:adicionarmoeda')
+        return context
+
+
+class AdicionarMoedaView(CustomCreateView):
+    form_class = MoedaForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listamoeda')
+    success_message = "Tipo de moeda adicionado com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarMoedaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR TIPO DE MOEDA'
+        context['return_url'] = reverse_lazy('viagem:listamoeda')
+        return context
+
+
+class EditarMoedaView(CustomUpdateView):
+    form_class = MoedaForm
+    model = MoedaModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listamoeda')
+    success_message = "Tipo de Moeda Editado com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarMoedaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de tipo de Moeda'
+        context['return_url'] = reverse_lazy('viagem:listamoeda')
+        context['id'] = self.object.id
+        return context
 
 #### Viagem
 class ListViagensView(CustomListView):
