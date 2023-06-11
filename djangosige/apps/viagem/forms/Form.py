@@ -114,6 +114,17 @@ class HorarioPreferencialForm(forms.ModelForm):
             'descricao': _('Descrição'),
         }
 
+class TiposNecessidadeEspecialForm(forms.ModelForm):
+    class Meta:
+        model = TiposNecessidadeEspecialModel
+        fields = ('descricao',)
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+        }
+        labels = {
+            'descricao': _('Descrição'),
+        }
+
 
 class ViagemForm(forms.ModelForm):
 
@@ -123,45 +134,63 @@ class ViagemForm(forms.ModelForm):
 
     class Meta:
         model = ViagemModel
-        fields = ('valor_passagem',
+        fields = ('escalas',
+                  'valor_passagem',
                   'dada_inicio',
                   'dada_fim',
                   'origem',
                   'destino',
+                  'acompanhante',
                   'objetivo',
+                  'justificativa',
                   'tipo_viagem',
                   'tipo_solicitacao',
                   'motivo',
                   'tipo_transporte',
                   'categoria_passagem',
-                  'horario_preferencial',)
+                  'horario_preferencial',
+                  'bagagem_tecnica',
+                  'bagagem_despachada',
+                  'crianca_colo',)
         widgets = {
+            'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
             'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
-            'objetivo': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'acompanhante': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'objetivo': forms.Textarea(attrs={'class': 'form-control', 'size': '200'}),
+            'justificativa': forms.Textarea(attrs={'class': 'form-control', 'size': '200'}),
             'tipo_viagem': forms.Select(attrs={'class': 'form-control select-produto'}),
             'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-produto'}),
             'motivo': forms.Select(attrs={'class': 'form-control select-produto'}),
             'tipo_transporte': forms.Select(attrs={'class': 'form-control select-produto'}),
             'categoria_passagem': forms.Select(attrs={'class': 'form-control select-produto'}),
             'horario_preferencial': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'bagagem_tecnica': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'bagagem_despachada': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'crianca_colo': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }
         labels = {
+            'escalas': _('Escalas'),
             'valor_passagem': _('Valor da Passagem'),
             'dada_inicio': _('Data Inicio'),
             'dada_fim': _('Data Fim'),
             'origem': _('Origem'),
             'destino': _('Destino'),
+            'acompanhante': _(''),
             'objetivo': _('Objetivo'),
+            'justificativa': _('Justificativa de Excepcionalidade'),
             'tipo_viagem': _('Tipo de Viagem'),
             'tipo_solicitacao': _('Tipo de Solicitação'),
             'motivo': _('Motivo'),
             'tipo_transporte': _('Tipo de Transporte'),
             'categoria_passagem': _('Catergoria da Passagem'),
             'horario_preferencial': _('Horário Preferencial'),
+            'bagagem_tecnica': _('Bagagem Técnica'),
+            'bagagem_despachada': _('Bagagem Despachada'),
+            'crianca_colo': _('Criança de Colo'),
 
         }
 

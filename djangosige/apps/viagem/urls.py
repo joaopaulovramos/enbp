@@ -46,6 +46,11 @@ urlpatterns = [
     url(r'viagem/adicionarhorariopreferencial/$', views.AdicionarHorarioPreferencialView.as_view(), name='adicionarhorariopreferencial'),
     url(r'viagem/editarhorariopreferencial/(?P<pk>[0-9]+)/$', views.EditarHorarioPreferencialView.as_view(), name='editarhorariopreferencial'),
 
+    # Necessidades Especiais
+    url(r'viagem/listatiposnecessidadeespecial/$', views.ListTiposNecessidadeEspecialView.as_view(), name='listatiposnecessidadeespecial'),
+    url(r'viagem/adicionartiponecessidadeespecial/$', views.AdicionarTipoNecessidadeEspecialView.as_view(), name='adicionartiponecessidadeespecial'),
+    url(r'viagem/editartiponecessidadeespecial/(?P<pk>[0-9]+)/$', views.EditarTipoNecessidadeEspecialView.as_view(), name='editartiponecessidadeespecial'),
+
 
     # Viagens
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),
