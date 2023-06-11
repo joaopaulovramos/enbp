@@ -26,9 +26,9 @@ class Usuario(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_foto = models.ImageField(upload_to=user_directory_path, default='imagens/user.png', blank=True)
-    data_inclusao = models.DateTimeField(auto_now_add=True)
-    date_ultima_modificacao = models.DateTimeField(auto_now=True)
-    data_inativacao = models.DateTimeField(auto_now_add=True)
+    data_inclusao = models.DateTimeField(auto_now_add=True, null=True, blank=True,)
+    date_ultima_modificacao = models.DateTimeField(auto_now=True, null=True, blank=True,)
+    data_inativacao = models.DateTimeField(auto_now_add=True, null=True, blank=True,)
     perfil = models.CharField(max_length=50, null=True, blank=True, choices=PERFIS, default=PERFIS[0][0])
 
     def save(self, *args, **kwargs):

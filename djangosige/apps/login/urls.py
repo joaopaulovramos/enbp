@@ -61,4 +61,9 @@ urlpatterns = [
     url(r'alteraperfil/(?P<pk>[0-9]+)/$',
         views.AlteraPerfilView.as_view(), name='alteraperfil'),
 
+
+    # selecionar empresa
+    url(r'addempresauser/$', views.AddEmpresaUserView.as_view(), name='addempresauserview'),
+
+
 ]

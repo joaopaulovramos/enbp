@@ -27,7 +27,7 @@ from .forms import UserLoginForm, UserRegistrationForm, PasswordResetForm, SetPa
 from .models import Usuario
 from djangosige.configs.settings import DEFAULT_FROM_EMAIL
 
-from djangosige.apps.cadastro.forms import MinhaEmpresaForm
+from djangosige.apps.cadastro.forms import MinhaEmpresaForm, EmpresaUsuarioForm
 from djangosige.apps.cadastro.models import MinhaEmpresa
 
 from djangosige.apps.taticca_cv.models import CVModel
@@ -515,14 +515,16 @@ class AtivarUsuarioView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = None
         user = User.objects.get(pk=self.kwargs['pk'])
-        usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+        usuario = Usuario.objects.get_or_create(user=user)[0]
         if user.is_active:
             user.is_active = False
+            inativacao = datetime.now()
             usuario.data_inativacao = datetime.now()
             usuario.save()
             user.save()
         else:
             user.is_active = True
+            usuario.data_inativacao = None
             usuario.save()
             user.save()
         return redirect(self.success_url)
@@ -544,4 +546,72 @@ class AlteraPerfilView(UpdateView):
         permicao = request.POST.get('permicao')
         usuario.perfil = Usuario.PERFIS[int(permicao)][0]
         usuario.save()
+        return redirect(self.success_url)
+
+
+class AddEmpresaUserView(FormView):
+    form_class = EmpresaUsuarioForm
+    template_name = "login/empresa_usuario.html"
+    success_url = reverse_lazy('login:addempresauserview')
+
+    context_object_name = 'all_natops'
+
+
+    def get_queryset(self):
+        # return self.model.objects.all()
+        current_user = self.request.user
+        obj = self.objects.filter(solicitante=current_user)
+        return obj
+
+    def get_form(self, form_class):
+        try:
+            usuario = Usuario.objects.get(user=self.request.user)
+            return form_class(instance=usuario, **self.get_form_kwargs())
+        except Usuario.DoesNotExist:
+            return form_class(**self.get_form_kwargs())
+
+    def get(self, request):
+        try:
+            #all_natops
+            usuario = Usuario.objects.get(user=self.request.user)
+            empresa_instance = MinhaEmpresa.objects.get(m_usuario=usuario.id)
+            form = MinhaEmpresaForm(instance=empresa_instance)
+
+        except MinhaEmpresa.DoesNotExist:
+            form = MinhaEmpresaForm()
+        except Usuario.DoesNotExist:
+            usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+            form = MinhaEmpresaForm()
+
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+
+        # form_class = self.get_form_class()
+        # form = self.get_form(form_class)
+        # if form.is_valid():
+        #     self.object = form.save()
+        try:
+            usuario = Usuario.objects.get(user=self.request.user)
+            #empresa_instance = MinhaEmpresa.objects.get(m_usuario=usuario.id)
+            #form = MinhaEmpresaForm(request.POST, instance=empresa_instance)
+            form = MinhaEmpresaForm()
+        except MinhaEmpresa.DoesNotExist:
+            form = MinhaEmpresaForm(request.POST, instance=None)
+        usuario = Usuario.objects.get(user=request.user)
+        minha_empresa = form.save(commit=False)
+        minha_empresa.m_usuario = usuario
+        minha_empresa.m_empresa = ''
+        minha_empresa.save()
+
+        # if form.is_valid():
+        #     usuario = Usuario.objects.get(user=request.user)
+        #     minha_empresa = form.save(commit=False)
+        #     minha_empresa.m_usuario = usuario
+        #     minha_empresa.save()
+        #     return self.form_valid(form)
+
+        return render(request, self.template_name, {'form': form})
+
+    def form_valid(self, form):
         return redirect(self.success_url)
