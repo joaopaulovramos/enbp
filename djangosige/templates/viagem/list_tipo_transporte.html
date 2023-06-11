@@ -33,7 +33,8 @@
             <table id="lista-database" class="table table-bordered table-striped lista-table">
               <thead>
                 <tr>
-                  <th>Nome</th>
+                  <th>Código</th>
+                  <th>Descrição</th>
                   <th>Remover</th>
                 </tr>
               </thead>
@@ -43,8 +44,9 @@
                {% for natop in all_natops %}
 
                <tr class="clickable-row"  data-href="{% url 'viagem:editartipotransporte' natop.id %}">
-                <td>{{natop.nome}}</td>
-                <td class="lista-remove">
+                   <td>{{ natop.id }}</td>
+                   <td>{{natop.nome}}</td>
+                   <td class="lista-remove">
                   <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
                   <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
                 </td>
