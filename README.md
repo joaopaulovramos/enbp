@@ -32,6 +32,7 @@ python contrib/env_gen.py
 ```bash
 python manage.py migrate
 ```
+teste
 
 5. Crie um usuário (Administrador do sistema):
 

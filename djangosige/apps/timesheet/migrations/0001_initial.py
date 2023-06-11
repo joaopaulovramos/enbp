@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('norli_projeto', '0002_auto_20230417_2223'),
+        ('norli_projeto', '0002_auto_20230417_2223'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
