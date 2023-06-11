@@ -8,63 +8,111 @@ from djangosige.apps.viagem.models import *
 
 class DateInput(forms.DateInput):
     input_type = "date"
+
     def __init__(self, **kwargs):
         kwargs["format"] = "%d-%m-%Y"
         super().__init__(**kwargs)
 
-class TipoViagemForm(forms.ModelForm):
 
+class TipoViagemForm(forms.ModelForm):
     class Meta:
         model = TiposDeViagemModel
-        fields = ('nome', )
+        fields = ('nome',)
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
 
         }
         labels = {
-            'nome': _('Nome'),
+            'nome': _('Descrição'),
         }
 
 
 class TipoDeSolicitacaoForm(forms.ModelForm):
-
     class Meta:
         model = TiposDeSolicitacaoModel
-        fields = ('nome', )
+        fields = ('nome',)
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
 
         }
         labels = {
-            'nome': _('Nome'),
+            'nome': _('Descrição'),
         }
+
 
 class TipoDeTransporteForm(forms.ModelForm):
-
     class Meta:
         model = TipoDeTransporteModel
-        fields = ('nome', )
+        fields = ('nome',)
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
 
         }
         labels = {
-            'nome': _('Nome'),
+            'nome': _('Descrição'),
         }
+
 
 class TipoMotivoForm(forms.ModelForm):
-
     class Meta:
         model = MotivoDeViagemModel
-        fields = ('nome', )
+        fields = ('nome',)
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
-
         }
         labels = {
-            'nome': _('Nome'),
+            'nome': _('Descrição'),
         }
 
+
+class TipoDespesaForm(forms.ModelForm):
+    class Meta:
+        model = TipoDeDespesaModel
+        fields = ('sigla', 'descricao',)
+        widgets = {
+            'sigla': forms.TextInput(attrs={'class': 'form-control', 'size': '10'}),
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '300'}),
+        }
+        labels = {
+            'sigla': _('Silga'),
+            'descricao': _('Descrição'),
+        }
+
+
+class MoedaForm(forms.ModelForm):
+    class Meta:
+        model = MoedaModel
+        fields = ('descricao',)
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '300'}),
+        }
+        labels = {
+            'descricao': _('Descrição'),
+        }
+
+
+class CategoriaPassagemForm(forms.ModelForm):
+    class Meta:
+        model = CategoriaPassagemModel
+        fields = ('descricao',)
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+        }
+        labels = {
+            'descricao': _('Descrição'),
+        }
+
+
+class HorarioPreferencialForm(forms.ModelForm):
+    class Meta:
+        model = HorarioPreferencialModel
+        fields = ('descricao',)
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+        }
+        labels = {
+            'descricao': _('Descrição'),
+        }
 
 
 class ViagemForm(forms.ModelForm):
@@ -72,7 +120,6 @@ class ViagemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(ViagemForm, self).__init__(*args, **kwargs)
-
 
     class Meta:
         model = ViagemModel
@@ -85,9 +132,10 @@ class ViagemForm(forms.ModelForm):
                   'tipo_viagem',
                   'tipo_solicitacao',
                   'motivo',
-                  'tipo_transporte',    )
+                  'tipo_transporte',
+                  'categoria_passagem',
+                  'horario_preferencial',)
         widgets = {
-
             'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
@@ -98,9 +146,11 @@ class ViagemForm(forms.ModelForm):
             'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-produto'}),
             'motivo': forms.Select(attrs={'class': 'form-control select-produto'}),
             'tipo_transporte': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'categoria_passagem': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'horario_preferencial': forms.Select(attrs={'class': 'form-control select-produto'}),
         }
         labels = {
-           'valor_passagem': _('Valor da Passagem'),
+            'valor_passagem': _('Valor da Passagem'),
             'dada_inicio': _('Data Inicio'),
             'dada_fim': _('Data Fim'),
             'origem': _('Origem'),
@@ -110,8 +160,11 @@ class ViagemForm(forms.ModelForm):
             'tipo_solicitacao': _('Tipo de Solicitação'),
             'motivo': _('Motivo'),
             'tipo_transporte': _('Tipo de Transporte'),
+            'categoria_passagem': _('Catergoria da Passagem'),
+            'horario_preferencial': _('Horário Preferencial'),
 
         }
+
     def save(self, commit=True):
         instance = super(ViagemForm, self).save(commit=False)
         instance.solicitante = self.request_user
@@ -120,11 +173,7 @@ class ViagemForm(forms.ModelForm):
         return instance
 
 
-
-
-
 class PrestacaoContaForm(forms.ModelForm):
-
     '''
      dada_inicio_realizada = models.DateTimeField()
     dada_fim_realizada   = models.DateField()
@@ -141,7 +190,7 @@ class PrestacaoContaForm(forms.ModelForm):
                   'descricao',
                   'finalizar_pc',
 
-                 )
+                  )
         widgets = {
             'pagamento': forms.Select(attrs={'class': 'form-control select-produto'}),
             'dada_inicio_realizada': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
@@ -159,35 +208,32 @@ class PrestacaoContaForm(forms.ModelForm):
             'descricao': _('Descrição da Viagem'),
             'finalizar_pc': _('Finalizar Prestação de Contas'),
 
-
-
         }
 
-class ArquivosForm(forms.ModelForm):
 
+class ArquivosForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):
     #     super(ArquivosForm, self).__init__(*args, **kwargs)
     #     self.fields['viagem'].initial = ViagemModel.objects.get(id=45)
 
     class Meta:
         model = Arquivos
-        #'viagem',
-        fields = ('descricao', 'file', )
+        # 'viagem',
+        fields = ('descricao', 'file',)
 
         widgets = {
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
-            #'viagem': forms.Select(attrs={'class': 'form-control select-produto'}),
+            # 'viagem': forms.Select(attrs={'class': 'form-control select-produto'}),
         }
         labels = {
             'descricao': _('Descrição'),
             'file': _('Arquivo'),
-            #'viagem': _('Viagem'),
+            # 'viagem': _('Viagem'),
         }
 
 
 class AvaliarPrestacaoContaForm(forms.ModelForm):
-
     # def __init__(self, *args, **kwargs):
     #     super(AvaliarPrestacaoContaForm, self).__init__(*args, **kwargs)
     #     self.fields['<field_to_disable>'].disabled = True
@@ -209,12 +255,18 @@ class AvaliarPrestacaoContaForm(forms.ModelForm):
 
                   )
         widgets = {
-            'pagamento': forms.Select(attrs={'class': 'form-control select-produto' , "disabled":"disabled"}),
-            'dada_inicio_realizada': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'dada_fim_realizada': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200', 'style': 'disabled: true;', "disabled":"disabled"}),
-            'remarcacao_interesse_particular': forms.Select(attrs={'class': 'form-control select-produto', 'style': 'disabled: true;', "disabled":"disabled"}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'size': '200', 'style': 'disabled: true;', "disabled":"disabled"}),
-            'finalizar_pc': forms.Select(attrs={'class': 'form-control select-produto', 'style': 'disabled: true;', "disabled":"disabled"}),
+            'pagamento': forms.Select(attrs={'class': 'form-control select-produto', "disabled": "disabled"}),
+            'dada_inicio_realizada': DateInput(format=["%d-%m-%Y"],
+                                               attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'dada_fim_realizada': DateInput(format=["%d-%m-%Y"],
+                                            attrs={'class': 'form-control', 'size': '200', 'style': 'disabled: true;',
+                                                   "disabled": "disabled"}),
+            'remarcacao_interesse_particular': forms.Select(
+                attrs={'class': 'form-control select-produto', 'style': 'disabled: true;', "disabled": "disabled"}),
+            'descricao': forms.Textarea(
+                attrs={'class': 'form-control', 'size': '200', 'style': 'disabled: true;', "disabled": "disabled"}),
+            'finalizar_pc': forms.Select(
+                attrs={'class': 'form-control select-produto', 'style': 'disabled: true;', "disabled": "disabled"}),
 
         }
         labels = {
@@ -228,9 +280,7 @@ class AvaliarPrestacaoContaForm(forms.ModelForm):
         }
 
 
-
 class AvaliarSolicitacaoViagemForm(forms.ModelForm):
-
     # def __init__(self, *args, **kwargs):
     #     super(AvaliarPrestacaoContaForm, self).__init__(*args, **kwargs)
     #     self.fields['<field_to_disable>'].disabled = True
@@ -255,15 +305,17 @@ class AvaliarSolicitacaoViagemForm(forms.ModelForm):
                   'tipo_transporte',)
         widgets = {
 
-            'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'objetivo': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled":"disabled"}),
-            'tipo_viagem': forms.Select(attrs={'class': 'form-control select-produto', "disabled":"disabled"}),
+            'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'dada_inicio': DateInput(format=["%d-%m-%Y"],
+                                     attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'dada_fim': DateInput(format=["%d-%m-%Y"],
+                                  attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'objetivo': forms.TextInput(attrs={'class': 'form-control', 'size': '200', "disabled": "disabled"}),
+            'tipo_viagem': forms.Select(attrs={'class': 'form-control select-produto', "disabled": "disabled"}),
             'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-produto, "disabled":"disabled"'}),
-            'motivo': forms.Select(attrs={'class': 'form-control select-produto', "disabled":"disabled"}),
+            'motivo': forms.Select(attrs={'class': 'form-control select-produto', "disabled": "disabled"}),
             'tipo_transporte': forms.Select(attrs={'class': 'form-control select-produto, "disabled":"disabled"'}),
         }
         labels = {
