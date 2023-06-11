@@ -107,6 +107,8 @@ class ViagemModel(models.Model):
 
     acompanhante = models.ForeignKey(User, related_name="viagem_acompanhante", on_delete=models.CASCADE, null=True,
                                      blank=True)
+    necessidade_especial = models.ForeignKey(TiposNecessidadeEspecialModel, related_name="viagem_necessidade_especial", on_delete=models.CASCADE, null=True,
+                                     blank=True)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
