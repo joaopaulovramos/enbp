@@ -59,8 +59,19 @@
                     <td>{{user_match.first_name}}</td>
                   </tr>
                   <tr>
+                    <td>Cadastrado em :</td>
+                    <td>{{data_inclusao}}</td>
+                  </tr>
+                  <tr>
+                    <td>Ultima modificação :</td>
+                    <td>{{date_ultima_modificacao}}</td>
+                  </tr>
+                  <tr>
                     <td>Ativo:</td>
                     <td>
+                    {%if user_match.is_superuser%}
+                        SIM
+                    {%else%}
                         {% if user_match.is_active %}
                             <form action="{% url 'login:ativaview' user_match.id %}" method="post">
                                 {% csrf_token %}
@@ -75,12 +86,25 @@
                                 <button class="btn btn-yellow" type="submit"><i class="material-icons">autorenew</i><span>  NÃO -  CLIQUE PARA ATIVAR</span></button>
                             </form>
                         {%endif%}
-
+                    {%endif%}
 
 
 
                     </td>
                   </tr>
+                  {%if not user_match.is_active%}
+                  <tr>
+                    <td>Data Inativação:</td>
+                    <td>{{data_inativacao}}</td>
+                  </tr>
+                  {%endif%}
+                   <tr>
+                    <td>Perfil:</td>
+                    <td>{{perfil}}</td>
+                  </tr>
+
+
+
                   <tr>
                     <td>Sobrenome:</td>
                     <td>{{user_match.last_name}}</td>
