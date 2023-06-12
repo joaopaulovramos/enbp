@@ -48,10 +48,10 @@
 
                     <label>Itinerário</label><br>
 
-                      <input type="radio" name="itinerario" id="radio_ida" value="ida" />
+                      <input type="radio" name="itinerario" id="radio_ida" value="ida" required />
                       <label for="radio_ida"><strong>Somente Ida</strong></label>
 
-                        <input type="radio" name="itinerario" id="radio_idavolta" value="idavalta" />
+                        <input type="radio" name="itinerario" id="radio_idavolta" value="idavolta" />
                       <label for="radio_idavolta"><strong>Ida e Volta</strong></label>
 
 
@@ -108,7 +108,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>{{form.dada_fim.label}}</label><strong style="color:red;"> *</strong>
+                      <label>{{form.dada_fim.label}}</label><strong style="color:red;"> </strong>
                       {% if form.dada_fim.errors %}<label class="error">{% for error in form.dada_fim.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.dada_fim}}
                     </div>

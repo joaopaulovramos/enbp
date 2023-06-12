@@ -546,39 +546,42 @@ class AdicionarViagemView(CustomCreateView):
         form.request_user = self.request.user
 
         data_hoje = datetime.datetime.now().date()
-        data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
         data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+        data_fim = False
+
+        if request.POST['dada_fim']:
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+
+        if request.POST['itinerario'] == 'idavolta':
+            form.add_error('dada_fim', 'Informe a data da volta')
+
+        if eval(request.POST['valor_passagem']) <= 0:
+            form.add_error('valor_passagem', 'Valor da passagem não pode ser menor ou igual a zero.')
+
+        if data_fim and data_fim < data_inicio:
+            form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
+
+        if data_inicio < data_hoje:
+            form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
+
+        # checando se a solicitação é "regular" (id=1)
+        if request.POST['tipo_solicitacao'] == '1':
+            diff_dias = data_inicio - data_hoje
+            if diff_dias.days < 15:
+                form.add_error('dada_inicio',
+                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+
+        # checando se a solicitação é do tipo nacional (id=1)
+        if request.POST['tipo_viagem'] == '1':
+            diff_dias = data_fim - data_inicio
+
+            if 'bagagem_despachada' in request.POST.keys():
+                if diff_dias.days < 3 and request.POST['bagagem_despachada']:
+                    form.add_error('bagagem_despachada',
+                                   'Você não pode despachar bagagem para esta viagem.')
 
         if form.is_valid():
             self.object = form.save(commit=False)
-            # return redirect(self.success_url)
-
-            if data_fim < data_inicio:
-                form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
-                return self.form_invalid(form)
-
-            if data_inicio < data_hoje:
-                form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
-                return self.form_invalid(form)
-
-            # checando se a solicitação é "regular" (id=1)
-            if request.POST['tipo_solicitacao'] == '1':
-                diff_dias = data_inicio - data_hoje
-                if diff_dias.days < 15:
-                    form.add_error('dada_inicio',
-                                   'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
-                    return self.form_invalid(form)
-
-            # checando se a solicitação é do tipo nacional (id=1)
-            if request.POST['tipo_viagem'] == '1':
-                diff_dias = data_fim - data_inicio
-
-                if 'bagagem_despachada' in request.POST.keys():
-                    if diff_dias.days < 3 and request.POST['bagagem_despachada']:
-                        form.add_error('bagagem_despachada',
-                                       'Você não pode despachar bagagem para esta viagem.')
-                        return self.form_invalid(form)
-
             self.object.save()
             return self.form_valid(form)
         return self.form_invalid(form)
