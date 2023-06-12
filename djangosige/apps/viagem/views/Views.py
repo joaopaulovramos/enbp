@@ -561,12 +561,23 @@ class AdicionarViagemView(CustomCreateView):
                 form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
                 return self.form_invalid(form)
 
+            # checando se a solicitação é "regular" (id=1)
             if request.POST['tipo_solicitacao'] == '1':
                 diff_dias = data_inicio - data_hoje
                 if diff_dias.days < 15:
-                    form.add_error('dada_inicio', 'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+                    form.add_error('dada_inicio',
+                                   'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
                     return self.form_invalid(form)
 
+            # checando se a solicitação é do tipo nacional (id=1)
+            if request.POST['tipo_viagem'] == '1':
+                diff_dias = data_fim - data_inicio
+
+                if 'bagagem_despachada' in request.POST.keys():
+                    if diff_dias.days < 3 and request.POST['bagagem_despachada']:
+                        form.add_error('bagagem_despachada',
+                                       'Você não pode despachar bagagem para esta viagem.')
+                        return self.form_invalid(form)
 
             self.object.save()
             return self.form_valid(form)
