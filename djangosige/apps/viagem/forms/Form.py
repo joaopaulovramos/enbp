@@ -136,7 +136,7 @@ class ViagemForm(forms.ModelForm):
                   'categoria_passagem',
                   'horario_preferencial',)
         widgets = {
-            'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'valor_passagem': forms.TextInput(attrs={'id':'valor_passagem_viagem', 'class': 'form-control', 'size': '200'}),
             'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
