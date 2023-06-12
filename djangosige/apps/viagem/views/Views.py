@@ -363,8 +363,7 @@ class EditarHorarioPreferencialView(CustomUpdateView):
     success_message = "Horário Prefencial Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, descricao=self.object.descricao)
+
 
     def get_context_data(self, **kwargs):
         context = super(EditarHorarioPreferencialView, self).get_context_data(**kwargs)
@@ -482,13 +481,12 @@ class ListViagensView(CustomListView):
 
 class AdicionarViagemView(CustomCreateView):
     form_class = ViagemForm
-    template_name = 'viagem/add_viagem.html'
+    template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Tipo de Viagem adicionado com sucesso."
     permission_codename = 'solicitar_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, dada_inicio=self.object.dada_inicio)
+
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -497,43 +495,9 @@ class AdicionarViagemView(CustomCreateView):
         form = self.get_form(form_class)
         form.request_user = self.request.user
 
-        data_hoje = datetime.datetime.now().date()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
-        data_fim = False
-
-        if request.POST['dada_fim']:
-            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
-
-        if 'itinerario' in request.POST.keys():
-            if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
-                form.add_error('dada_fim', 'Informe a data da volta')
-
-        if data_fim and data_fim < data_inicio:
-            form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
-
-        if data_inicio < data_hoje:
-            form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
-
-        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == '1':
-            diff_dias = data_inicio - data_hoje
-            if diff_dias.days < 15:
-                form.add_error('dada_inicio',
-                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
-
-        # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
-        if request.POST['tipo_viagem'] == '1' and data_fim:
-            diff_dias = data_fim - data_inicio
-
-            if 'bagagem_despachada' in request.POST.keys():
-                if diff_dias.days < 3 and request.POST['bagagem_despachada']:
-                    form.add_error('bagagem_despachada',
-                                   'Você não pode despachar bagagem para esta viagem.')
-
         if form.is_valid():
-            self.object = form.save(commit=False)
-            self.object.save()
-            return self.form_valid(form)
+            self.object = form.save()
+            return redirect(self.success_url)
         return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -546,66 +510,17 @@ class AdicionarViagemView(CustomCreateView):
 class EditarViagemView(CustomUpdateView):
     form_class = ViagemForm
     model = ViagemModel
-    template_name = 'viagem/edit_viagem.html'
+    template_name = 'viagem/edit.html'
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(EditarViagemView, self).get_context_data(**kwargs)
         context['return_url'] = reverse_lazy('viagem:listaviagem')
-        context['title_complete'] = 'Edição de viagem'
-        context['id'] = self.object.id
-        context['user'] = self.request.user
-        context['data_inclusao'] = self.object.data_inclusao
         return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form_class = self.get_form_class()
-        form = form_class(request.POST, instance=self.object)
-        form.request_user = self.request.user
-
-        data_hoje = datetime.datetime.now().date()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
-        data_fim = False
-
-        if request.POST['dada_fim']:
-            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
-
-        if 'itinerario' in request.POST.keys():
-            if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
-                form.add_error('dada_fim', 'Informe a data da volta')
-
-        if data_fim and data_fim < data_inicio:
-            form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
-
-        if data_inicio < data_hoje:
-            form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
-
-        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == '1':
-            diff_dias = data_inicio - data_hoje
-            if diff_dias.days < 15:
-                form.add_error('dada_inicio',
-                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
-
-        # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
-        if request.POST['tipo_viagem'] == '1' and data_fim:
-            diff_dias = data_fim - data_inicio
-
-            if 'bagagem_despachada' in request.POST.keys():
-                if diff_dias.days < 3 and request.POST['bagagem_despachada']:
-                    form.add_error('bagagem_despachada',
-                                   'Você não pode despachar bagagem para esta viagem.')
-
-        if form.is_valid():
-            self.object = form.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
 
 
 class ListAutorizarViagensView(CustomListView):
@@ -752,9 +667,7 @@ class RemoverArquivoView(CustomUpdateView):
     success_message = "Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
 
-    def get_success_message(self, cleaned_data):
-        objetos = self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-        return objetos
+
 
     def get_context_data(self, **kwargs):
         context = super(RemoverArquivoView, self).get_context_data(**kwargs)
@@ -790,8 +703,7 @@ class PrestarContasArquivosView(CustomUpdateView):
             return redirect(url)
             # return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
@@ -835,8 +747,7 @@ class EnviarArquivosView(CustomUpdateView):
             return redirect(self.success_url)
         # return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(EnviarArquivosView, self).get_context_data(**kwargs)
@@ -877,8 +788,7 @@ class ArquivosViagemView(CustomCreateView):
     #     # user_viagens = user_viagens.filter(homologada=False)
     #     return self.model.objects.all()
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -984,8 +894,7 @@ class AvaliarPrestacaoDeContas(CustomUpdateView):
                 return redirect(self.success_url)
             return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(AvaliarPrestacaoDeContas, self).get_context_data(**kwargs)
@@ -1037,8 +946,7 @@ class AvaliarSolicitacaoViagem(CustomUpdateView):
                 return redirect(self.success_url)
             return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(AvaliarSolicitacaoViagem, self).get_context_data(**kwargs)
@@ -1078,8 +986,7 @@ class AvaliarArquivosView(CustomUpdateView):
             return redirect(url)
             # return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
