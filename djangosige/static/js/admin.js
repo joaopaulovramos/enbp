@@ -481,6 +481,7 @@ $.Admin.validation = {
 $.Admin.maskInput = {
     maskEmpresa: function() {
         $('input[name$="cnpj"]').mask('99.999.999/9999-99', {reverse: true});
+        $('.datepicker').mask('00/00/0000', {reverse: true});
         $(document).on('focus', 'input[name$="-telefone"]', function(){
             $(this).mask('(99) 9999-9999A', {translation:{'A': {pattern: /[0-9]/, optional: true}}}).focusout(function (event) {
                 var target, phone, element;
