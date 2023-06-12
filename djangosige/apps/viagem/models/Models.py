@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import date
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 from django import forms
 
 PAGAMENTO = [
@@ -94,7 +96,8 @@ class TiposNecessidadeEspecialModel(models.Model):
 class ViagemModel(models.Model):
     solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.CASCADE, null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
-    valor_passagem = models.CharField(max_length=200)
+    valor_passagem = models.DecimalField(max_digits=16, decimal_places=2, validators=[
+                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
 
     escalas = models.CharField(max_length=1, choices=ESCALAS)
 

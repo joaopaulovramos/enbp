@@ -127,6 +127,9 @@ class TiposNecessidadeEspecialForm(forms.ModelForm):
 
 
 class ViagemForm(forms.ModelForm):
+    valor_passagem = forms.DecimalField(max_digits=16, decimal_places=2, localize=True, widget=forms.TextInput(
+        attrs={'class': 'form-control decimal-mask', 'placeholder': 'R$ 0,00'}), initial=Decimal('0.00'),
+                                        label='Valor da Passagem', required=False)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -135,7 +138,6 @@ class ViagemForm(forms.ModelForm):
     class Meta:
         model = ViagemModel
         fields = ('escalas',
-                  'valor_passagem',
                   'dada_inicio',
                   'dada_fim',
                   'origem',
@@ -155,7 +157,6 @@ class ViagemForm(forms.ModelForm):
                   'crianca_colo',)
         widgets = {
             'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
-            'valor_passagem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
@@ -176,7 +177,6 @@ class ViagemForm(forms.ModelForm):
         }
         labels = {
             'escalas': _('Escalas'),
-            'valor_passagem': _('Valor da Passagem'),
             'dada_inicio': _('Data Inicio'),
             'dada_fim': _('Data Fim'),
             'origem': _('Origem'),

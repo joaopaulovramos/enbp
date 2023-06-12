@@ -409,7 +409,7 @@ class EditarHorarioPreferencialView(CustomUpdateView):
     permission_codename = 'cadastrar_item_viagens'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, descricao=self.object.descricao)
 
     def get_context_data(self, **kwargs):
         context = super(EditarHorarioPreferencialView, self).get_context_data(**kwargs)
@@ -442,13 +442,34 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
     permission_codename = 'cadastrar_item_viagens'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, descricao=self.object.descricao)
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR NECESSIDADE ESPECIAL'
         context['return_url'] = reverse_lazy('viagem:listatiposnecessidadeespecial')
         return context
+
+    def get(self, request, *args, **kwargs):
+        return super(AdicionarTipoNecessidadeEspecialView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        if form.is_valid():
+            self.object = form.save(commit=False)
+
+            if len(self.object.descricao) > 5:
+                self.object.save()
+            else:
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+
+        return self.form_invalid(form)
 
 
 class EditarTipoNecessidadeEspecialView(CustomUpdateView):
@@ -515,7 +536,7 @@ class AdicionarViagemView(CustomCreateView):
     permission_codename = 'solicitar_viagens'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, dada_inicio=self.object.dada_inicio)
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -524,9 +545,31 @@ class AdicionarViagemView(CustomCreateView):
         form = self.get_form(form_class)
         form.request_user = self.request.user
 
+        data_hoje = datetime.datetime.now().date()
+        data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+
         if form.is_valid():
-            self.object = form.save()
-            return redirect(self.success_url)
+            self.object = form.save(commit=False)
+            # return redirect(self.success_url)
+
+            if data_fim < data_inicio:
+                form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
+                return self.form_invalid(form)
+
+            if data_inicio < data_hoje:
+                form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
+                return self.form_invalid(form)
+
+            if request.POST['tipo_solicitacao'] == '1':
+                diff_dias = data_inicio - data_hoje
+                if diff_dias.days < 15:
+                    form.add_error('dada_inicio', 'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+                    return self.form_invalid(form)
+
+
+            self.object.save()
+            return self.form_valid(form)
         return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
