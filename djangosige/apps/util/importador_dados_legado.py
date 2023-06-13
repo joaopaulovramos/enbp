@@ -3,9 +3,14 @@ import datetime
 import re
 from decimal import Decimal
 from sys import stdout
+
 from django.conf import settings
-from djangosige.apps.cadastro.models import Cliente, PessoaFisica, PessoaJuridica, Endereco, Telefone, Fornecedor
 from django.contrib.auth.models import User
+
+from djangosige.apps.cadastro.models import (Cliente, Endereco, Fornecedor,
+                                             PessoaFisica, PessoaJuridica,
+                                             Telefone, Email)
+
 
 class ImportadorLegado:
     def get_connection(self):
@@ -30,6 +35,7 @@ class ImportadorLegado:
             'nome_fantasia': row['ds_fantasia'],
             'inscricao_estadual': row['inscricao_estadual'],
             'classificacao': row['cd_classificacao'],
+            'email': row['ds_email'],
             'ddd_telefone': row['nr_ddd'],
             'numero_telefone': row['nr_telefone'],
             'endereco_logradouro': row['ds_endereco'],
@@ -74,6 +80,12 @@ class ImportadorLegado:
         ender_cliente.pessoa_end = pessoa
         ender_cliente.save()
         pessoa.endereco_padrao = ender_cliente
+        if rcliente['email']:
+            email_cliente = Email()
+            email_cliente.email = rcliente['email']
+            email_cliente.pessoa_email = pessoa
+            email_cliente.save()
+            pessoa.email_padrao = email_cliente
         if rcliente['numero_telefone']:
             tel_cliente = Telefone()
             tel_cliente.telefone = rcliente['ddd_telefone'] + rcliente['numero_telefone']
@@ -86,7 +98,7 @@ class ImportadorLegado:
             Select et.cd_entidade as id_legado, 
             et.nr_cpfcnpj, et.nr_ie as inscricao_estadual, et.cd_classificacao, et.dt_abertura,
             et.ds_entidade, et.ds_fantasia, 
-            et.nr_ddd, et.nr_telefone,
+            et.nr_ddd, et.nr_telefone, ds_email,
             et.ds_endereco, et.ds_bairro, et.nr_cep, et.nr_numero, et.ds_complemento, cid.ds_cidade, cid.ds_uf
             from tbl_entidades et 
             left join TBL_ENDERECO_CIDADES cid on cid.CD_CIDADE = et.CD_CIDADE
@@ -118,7 +130,7 @@ class ImportadorLegado:
             Select et.cd_entidade as id_legado, 
             et.nr_cpfcnpj, et.nr_ie as inscricao_estadual, et.cd_classificacao, et.dt_abertura,
             et.ds_entidade, et.ds_fantasia, 
-            et.nr_ddd, et.nr_telefone,
+            et.nr_ddd, et.nr_telefone, ds_email,
             et.ds_endereco, et.ds_bairro, et.nr_cep, et.nr_numero, et.ds_complemento, cid.ds_cidade, cid.ds_uf
             from tbl_entidades et 
             left join TBL_ENDERECO_CIDADES cid on cid.CD_CIDADE = et.CD_CIDADE
@@ -158,8 +170,8 @@ class ImportadorLegado:
         
         while row:
             rcliente = {
-                'usuario': row['usuario'],
-                'login': row['login'],
+                'usuario': str(row['usuario']).title(),
+                'login': str(row['login']).lower(),
                 'senha': row['senha'],
                 'email': row['email']
             }
