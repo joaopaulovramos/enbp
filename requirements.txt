@@ -1,0 +1,29 @@
+asgiref==3.7.2
+certifi==2023.5.7
+cffi==1.15.1
+charset-normalizer==3.1.0
+cryptography==38.0.4
+dj-database-url==1.0.0
+Django==3.2.10
+django-cpf==0.1.0
+django-cpf-cnpj==1.0.0
+Geraldo @ https://github.com/tfs4/geraldo/archive/master.zip
+gunicorn==20.1.0
+idna==3.4
+lxml==4.9.1
+Pillow==9.5.0
+psycopg2-binary==2.9.3
+Py-Cep==1.0.5
+pycparser==2.21
+pyOpenSSL==22.1.0
+PySIGNFe @ https://github.com/tfs4/PySIGNFe/archive/master.zip
+python-decouple==3.1
+pytz==2018.3
+reportlab==3.6.11
+requests==2.31.0
+signxml==3.0.0
+six==1.16.0
+sqlparse==0.4.4
+typing_extensions==4.6.3
+urllib3==2.0.3
+whitenoise==6.2.0
