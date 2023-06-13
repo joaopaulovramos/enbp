@@ -761,13 +761,26 @@ class PrestarContasView(CustomUpdateView):
                 return redirect(self.success_url)
             return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(PrestarContasView, self).get_context_data(**kwargs)
         context['form_2'] = self.form_2
         context['return_url'] = reverse_lazy('viagem:listaviagem')
+        context['title_complete'] = "Realizando prestação de contas"
+
+        context['id'] = self.object.id
+        context['origem'] = self.object.origem
+        context['destino'] = self.object.destino
+        context['data_inicio'] = self.object.dada_inicio
+        context['data_fim'] = self.object.dada_fim
+        context['data_inclusao'] = self.object.data_inclusao
+
+        usuario_solicitante_id = self.object.solicitante_id
+        usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
+
+        context['solicitante'] = f'{usuario_solicitante.get_username()} - {usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
+
+        # User.objects.get(id='1').get_username()
+
         # Arquivos.objects.get(pk=kwargs['pk'])
         # viagem = ViagemModel.objects.get(pk=kwargs['pk'])
 
