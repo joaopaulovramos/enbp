@@ -552,11 +552,9 @@ class AdicionarViagemView(CustomCreateView):
         if request.POST['dada_fim']:
             data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
 
-        if request.POST['itinerario'] == 'idavolta':
-            form.add_error('dada_fim', 'Informe a data da volta')
-
-        if eval(request.POST['valor_passagem']) <= 0:
-            form.add_error('valor_passagem', 'Valor da passagem não pode ser menor ou igual a zero.')
+        if 'itinerario' in request.POST.keys():
+            if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
+                form.add_error('dada_fim', 'Informe a data da volta')
 
         if data_fim and data_fim < data_inicio:
             form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
@@ -564,14 +562,14 @@ class AdicionarViagemView(CustomCreateView):
         if data_inicio < data_hoje:
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
-        # checando se a solicitação é "regular" (id=1)
+        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
         if request.POST['tipo_solicitacao'] == '1':
             diff_dias = data_inicio - data_hoje
             if diff_dias.days < 15:
                 form.add_error('dada_inicio',
                                'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
 
-        # checando se a solicitação é do tipo nacional (id=1)
+        # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
         if request.POST['tipo_viagem'] == '1':
             diff_dias = data_fim - data_inicio
 
@@ -596,7 +594,7 @@ class AdicionarViagemView(CustomCreateView):
 class EditarViagemView(CustomUpdateView):
     form_class = ViagemForm
     model = ViagemModel
-    template_name = 'viagem/edit.html'
+    template_name = 'viagem/edit_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
@@ -607,7 +605,55 @@ class EditarViagemView(CustomUpdateView):
     def get_context_data(self, **kwargs):
         context = super(EditarViagemView, self).get_context_data(**kwargs)
         context['return_url'] = reverse_lazy('viagem:listaviagem')
+        context['title_complete'] = 'Edição de viagem'
+        context['id'] = self.object.id
+        context['user'] = self.request.user
+        context['data_inclusao'] = self.object.data_inclusao
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = form_class(request.POST, instance=self.object)
+        form.request_user = self.request.user
+
+        data_hoje = datetime.datetime.now().date()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+        data_fim = False
+
+        if request.POST['dada_fim']:
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+
+        if 'itinerario' in request.POST.keys():
+            if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
+                form.add_error('dada_fim', 'Informe a data da volta')
+
+        if data_fim and data_fim < data_inicio:
+            form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
+
+        if data_inicio < data_hoje:
+            form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
+
+        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
+        if request.POST['tipo_solicitacao'] == '1':
+            diff_dias = data_inicio - data_hoje
+            if diff_dias.days < 15:
+                form.add_error('dada_inicio',
+                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+
+        # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
+        if request.POST['tipo_viagem'] == '1':
+            diff_dias = data_fim - data_inicio
+
+            if 'bagagem_despachada' in request.POST.keys():
+                if diff_dias.days < 3 and request.POST['bagagem_despachada']:
+                    form.add_error('bagagem_despachada',
+                                   'Você não pode despachar bagagem para esta viagem.')
+
+        if form.is_valid():
+            self.object = form.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
 
 
 class ListAutorizarViagensView(CustomListView):

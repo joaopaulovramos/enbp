@@ -54,7 +54,10 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr>
+               <tr {% if not natop.autorizada and not natop.homologada %}
+                       class="clickable-row"  data-href="{% url 'viagem:editarviagem' natop.id %}"
+                    {% endif %}
+               >
                    <td>{{natop.id}}</td>
                    <td>{{login}}</td>
                    <td>{{natop.dada_inicio}}</td>

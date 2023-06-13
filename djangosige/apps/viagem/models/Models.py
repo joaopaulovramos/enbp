@@ -27,6 +27,11 @@ ESCALAS = [
     ('2', '2+ escalas'),
 ]
 
+ITINERARIO = [
+    ('0', 'Ida'),
+    ('1', 'Ida e Volta'),
+]
+
 
 class TiposDeViagemModel(models.Model):
     nome = models.CharField(max_length=200)
@@ -99,10 +104,11 @@ class ViagemModel(models.Model):
     valor_passagem = models.DecimalField(max_digits=16, decimal_places=2, validators=[
                                 MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
 
+    itinerario = models.CharField(max_length=2, choices=ITINERARIO)
     escalas = models.CharField(max_length=1, choices=ESCALAS)
 
     dada_inicio = models.DateTimeField()
-    dada_fim = models.DateField(blank=True)
+    dada_fim = models.DateField(blank=True, null=True)
     origem = models.CharField(max_length=200)
     destino = models.CharField(max_length=200)
     objetivo = models.TextField(max_length=512)

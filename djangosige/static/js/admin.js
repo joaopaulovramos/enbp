@@ -555,7 +555,10 @@ $.Admin.maskInput = {
     maskMovimentoEstoque: function(){
         $('.decimal-mask').mask('000.000.000.000,00', {reverse: true});
         $('.datepicker').mask('00/00/0000', {reverse: true});
-    }
+    },
+    maskViagem: function(){
+         $('#valor_passagem_viagem').mask('000000000.00', {reverse: true});
+     }
 }
 
 
@@ -3816,10 +3819,29 @@ $.Admin.reprovar_pc = {
     },
 }
 
+$.Admin.viagemForm = {
+
+     init: function () {
+         $.Admin.maskInput.maskViagem();
+         esconder_mostrar_campo($('input[type="radio"][name$="itinerario"]:checked'))
+
+         $('input[type="radio"][name$="itinerario"]').change(function(){
+            esconder_mostrar_campo($(this))
+        });
+
+         function esconder_mostrar_campo(valor_radio){
+             if (valor_radio.val() == '0'){
+                 /* Usar datepicker para resertar data preenchida */
+                 $('#id_dada_fim').parent().hide()
+             }
+             else{
+                 $('#id_dada_fim').parent().show()
+             }
+         }
+     },
 
 
-
-
+ }
 
 $(function () {
     $.Admin.barraLateral.init();
