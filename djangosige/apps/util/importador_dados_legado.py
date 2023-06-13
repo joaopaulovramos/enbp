@@ -5,7 +5,7 @@ from decimal import Decimal
 from sys import stdout
 from django.conf import settings
 from djangosige.apps.cadastro.models import Cliente, PessoaFisica, PessoaJuridica, Endereco, Telefone, Fornecedor
-
+from django.contrib.auth.models import User
 
 class ImportadorLegado:
     def get_connection(self):
@@ -40,7 +40,6 @@ class ImportadorLegado:
             'endereco_cidade': row['ds_cidade'],
             'endereco_uf': row['ds_uf'],
         }
-
         return rcliente
 
     def importar_pessoa(self, rcliente, pessoa):
@@ -63,7 +62,8 @@ class ImportadorLegado:
         ender_cliente.complemento = rcliente['endereco_complemento']
         # ender_cliente.pais =
         # ender_cliente.cpais =
-        ender_cliente.municipio = rcliente['endereco_cidade']
+        if rcliente['endereco_cidade']:
+            ender_cliente.municipio = str(rcliente['endereco_cidade']).title()
         # ender_cliente.cmun =
         ender_cliente.cep = rcliente['endereco_cep']
         ender_cliente.uf = rcliente['endereco_uf']
@@ -144,3 +144,32 @@ class ImportadorLegado:
         cur.close()
         if verbose:
             stdout.write("\rImportando fornecedor: 100%\r\n")
+
+    def importar_usuarios(self, verbose=True):
+        sql = """
+            Select u.ds_usuario as usuario, u.ds_login as login, u.ds_senha as senha, u.ds_email as email
+            from TBL_USUARIOS u 
+            where X_ATIVO = 1
+            """
+        cur = self.get_connection().cursor()
+        cur.execute(sql)
+
+        row = cur.fetchone()
+        
+        while row:
+            rcliente = {
+                'usuario': row['usuario'],
+                'login': row['login'],
+                'senha': row['senha'],
+                'email': row['email']
+            }
+            if not User.objects.filter(username=rcliente['login']).exists():
+                user = User.objects.create_user(username=rcliente['login'], email=rcliente['email'], password=rcliente['senha'])
+                user.first_name = rcliente['usuario']
+                user.save()
+            row = cur.fetchone()
+
+        cur.close()
+        if verbose:
+            stdout.write("\rImportando usuarios: 100%\r\n")
+

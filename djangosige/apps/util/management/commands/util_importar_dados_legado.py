@@ -8,5 +8,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         verbose = options.get('verbosity', '0') != '0'
         dao = ImportadorLegado()
-        # dao.importar_clientes(verbose)
+        dao.importar_usuarios(verbose)
+        dao.importar_clientes(verbose)
         dao.importar_fornecedores(verbose)
