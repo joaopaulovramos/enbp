@@ -81,6 +81,14 @@
 
                     </td>
                   </tr>
+                  {%if not user_match.is_active%}
+                  <tr>
+                    <td>Data Inativação:</td>
+                    <td>{{data_inativacao}}</td>
+                  </tr>
+                  {%endif%}
+                  {% if not user_match.is_superuser %}
+
                   <tr>
                     <td>
                         {% if user_match.is_active %}
@@ -90,6 +98,7 @@
                         {%endif%}
                     </td>
                     <td>
+
 
                         {% if user_match.is_active %}
                             <form action="{% url 'login:ativaview' user_match.id %}" method="post">
@@ -111,12 +120,7 @@
 
                     </td>
                   </tr>
-                  {%if not user_match.is_active%}
-                  <tr>
-                    <td>Data Inativação:</td>
-                    <td>{{data_inativacao}}</td>
-                  </tr>
-                  {%endif%}
+{%endif%}
                    <tr>
                     <td>Perfil:</td>
                     <td>{{perfil}}</td>
