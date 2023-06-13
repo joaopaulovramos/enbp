@@ -145,6 +145,10 @@ class ViagemModel(models.Model):
     bagagem_tecnica = models.BooleanField(blank=True, default=False)
     bagagem_despachada = models.BooleanField(blank=True, default=False)
     crianca_colo = models.BooleanField(blank=True, default=False)
+    local_risco = models.BooleanField(blank=True, default=False)
+    exige_vacina = models.BooleanField(blank=True, default=False)
+    reservar_hotel = models.BooleanField(blank=True, default=False)
+    alimentacao_terceiros = models.BooleanField(blank=True, default=False)
 
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'

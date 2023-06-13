@@ -137,7 +137,9 @@ class ViagemForm(forms.ModelForm):
 
     class Meta:
         model = ViagemModel
-        fields = ('itinerario',
+        fields = (
+                  'valor_passagem',
+                  'itinerario',
                   'escalas',
                   'dada_inicio',
                   'dada_fim',
@@ -156,8 +158,13 @@ class ViagemForm(forms.ModelForm):
                   'bagagem_tecnica',
                   'bagagem_despachada',
                   'crianca_colo',
-                  'valor_passagem',)
+                  'local_risco',
+                  'exige_vacina',
+                  'reservar_hotel',
+                  'alimentacao_terceiros',
+                  )
         widgets = {
+            'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
             'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
@@ -177,7 +184,11 @@ class ViagemForm(forms.ModelForm):
             'bagagem_tecnica': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'bagagem_despachada': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'crianca_colo': forms.CheckboxInput(attrs={'class': 'form-control'}),
-            'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
+            'local_risco': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'exige_vacina': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'reservar_hotel': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'alimentacao_terceiros': forms.CheckboxInput(attrs={'class': 'form-control'}),
+
         }
         labels = {
             'itinerario': _('Itinerário'),
@@ -199,6 +210,10 @@ class ViagemForm(forms.ModelForm):
             'bagagem_tecnica': _('Bagagem Técnica'),
             'bagagem_despachada': _('Bagagem Despachada'),
             'crianca_colo': _('Criança de Colo'),
+            'local_risco': _('Local de risco'),
+            'exige_vacina': _('Exige comprovante de vacina'),
+            'reservar_hotel': _('Reservar hotel'),
+            'alimentacao_terceiros': _('Alimentação Terceiros'),
 
         }
 

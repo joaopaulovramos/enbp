@@ -570,7 +570,7 @@ class AdicionarViagemView(CustomCreateView):
                                'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
-        if request.POST['tipo_viagem'] == '1':
+        if request.POST['tipo_viagem'] == '1' and data_fim:
             diff_dias = data_fim - data_inicio
 
             if 'bagagem_despachada' in request.POST.keys():
@@ -642,7 +642,7 @@ class EditarViagemView(CustomUpdateView):
                                'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
-        if request.POST['tipo_viagem'] == '1':
+        if request.POST['tipo_viagem'] == '1' and data_fim:
             diff_dias = data_fim - data_inicio
 
             if 'bagagem_despachada' in request.POST.keys():
