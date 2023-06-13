@@ -94,7 +94,7 @@ class PerfilUsuarioForm(forms.ModelForm):
             'pcd': forms.Select(attrs={'class': 'form-control select-produto'}),
             'certificado_digital': forms.Select(attrs={'class': 'form-control select-produto'}),
             'grupo_funcional': forms.Select(attrs={'class': 'form-control select-produto'}),
-            #'cpf': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
             'telefone': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
             'matricula': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
 
