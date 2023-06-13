@@ -14,6 +14,7 @@ signxml==3.0.0
 reportlab==3.6.11
 psycopg2-binary==2.9.3
 whitenoise==6.2.0
+pymssql==2.2.7
 
 
 
