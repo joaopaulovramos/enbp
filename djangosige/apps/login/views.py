@@ -8,7 +8,8 @@ from django.views.generic.edit import UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.models import Permission
-
+from datetime import datetime
+from datetime import date
 from django.db import DatabaseError
 from django.db.models.query_utils import Q
 from django.core.exceptions import ValidationError
@@ -98,7 +99,10 @@ class UserRegistrationFormView(SuperUserRequiredMixin, SuccessMessageMixin, Form
 
 
                 user.set_password(password)
+
                 user.save()
+                obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+
 
                 cv = CVModel.objects.create()
                 cv.email = user.email
@@ -370,7 +374,7 @@ class UsuariosListView(SuperUserRequiredMixin, ListView):
     success_url = reverse_lazy('login:usuariosview')
 
     def get_queryset(self):
-        return User.objects.all()
+            return User.objects.all()
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
@@ -390,7 +394,16 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             usr = User.objects.get(pk=self.kwargs['pk'])
             context['user_match'] = usr
             context['user_ativo'] = usr.is_active
-            context['user_foto'] = Usuario.objects.get(user=usr).user_foto
+
+
+            usuario = Usuario.objects.get_or_create(user=usr)[0]
+            us_perfil = usuario.perfil
+            context['data_inclusao'] = usuario.data_inclusao.strftime( '%d/%m/%Y às %H:%M:%S' )
+            context['date_ultima_modificacao'] = usuario.date_ultima_modificacao.strftime( '%d/%m/%Y às %H:%M:%S' )
+            context['perfil'] =  Usuario.PERFIS[int(us_perfil)][1]
+            context['data_inativacao'] = usuario.data_inativacao.strftime('%d/%m/%Y às %H:%M:%S')
+            context['user_foto'] = usuario.user_foto
+
 
 
         except:
@@ -417,9 +430,13 @@ class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
         condition = reduce(operator.or_, [Q(codename__icontains=s) for s in [
                            'add_', 'change_', 'view_', 'delete_']])
         context['default_permissions'] = Permission.objects.filter( condition, content_type__model__in=DEFAULT_PERMISSION_MODELS)
-        #context['default_permissions'] = Permission.objects.all()
         context['custom_permissions'] = Permission.objects.filter( codename__in=CUSTOM_PERMISSIONS)
 
+        context['perfis'] = Usuario.PERFIS
+        obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+
+
+        context['perfil_user'] = Usuario.PERFIS[int(obj.perfil)][1]
         return context
 
     def post(self, request, *args, **kwargs):
@@ -498,10 +515,104 @@ class AtivarUsuarioView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = None
         user = User.objects.get(pk=self.kwargs['pk'])
+        usuario = Usuario.objects.get_or_create(user=user)[0]
         if user.is_active:
             user.is_active = False
+            inativacao = datetime.now()
+            usuario.data_inativacao = datetime.now()
+            usuario.save()
             user.save()
         else:
             user.is_active = True
+            usuario.data_inativacao = None
+            usuario.save()
             user.save()
         return redirect(self.success_url)
+
+
+
+
+
+class AlteraPerfilView(UpdateView):
+    template_name = 'login/detalhe_users.html'
+    success_url = reverse_lazy('login:usuariosview')
+    success_message = "Perfil editado com sucesso."
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        user = User.objects.get(pk=self.kwargs['pk'])
+        usuario = Usuario.objects.get_or_create(user=user)[0]
+        permicao = request.POST.get('permicao')
+        usuario.perfil = Usuario.PERFIS[int(permicao)][0]
+        usuario.save()
+        return redirect(self.success_url)
+
+
+class AddEmpresaUserView(FormView):
+    print('ok')
+    # form_class = EmpresaUsuarioForm
+    # template_name = "login/empresa_usuario.html"
+    # success_url = reverse_lazy('login:addempresauserview')
+    #
+    # context_object_name = 'all_natops'
+    #
+    #
+    # def get_queryset(self):
+    #     # return self.model.objects.all()
+    #     current_user = self.request.user
+    #     obj = self.objects.filter(solicitante=current_user)
+    #     return obj
+    #
+    # def get_form(self, form_class):
+    #     try:
+    #         usuario = Usuario.objects.get(user=self.request.user)
+    #         return form_class(instance=usuario, **self.get_form_kwargs())
+    #     except Usuario.DoesNotExist:
+    #         return form_class(**self.get_form_kwargs())
+    #
+    # def get(self, request):
+    #     try:
+    #         #all_natops
+    #         usuario = Usuario.objects.get(user=self.request.user)
+    #         empresa_instance = MinhaEmpresa.objects.get(m_usuario=usuario.id)
+    #         form = MinhaEmpresaForm(instance=empresa_instance)
+    #
+    #     except MinhaEmpresa.DoesNotExist:
+    #         form = MinhaEmpresaForm()
+    #     except Usuario.DoesNotExist:
+    #         usuario = Usuario.objects.get_or_create(user=self.request.user)[0]
+    #         form = MinhaEmpresaForm()
+    #
+    #     return render(request, self.template_name, {'form': form})
+    #
+    # def post(self, request):
+    #
+    #     # form_class = self.get_form_class()
+    #     # form = self.get_form(form_class)
+    #     # if form.is_valid():
+    #     #     self.object = form.save()
+    #     try:
+    #         usuario = Usuario.objects.get(user=self.request.user)
+    #         #empresa_instance = MinhaEmpresa.objects.get(m_usuario=usuario.id)
+    #         #form = MinhaEmpresaForm(request.POST, instance=empresa_instance)
+    #         form = MinhaEmpresaForm()
+    #     except MinhaEmpresa.DoesNotExist:
+    #         form = MinhaEmpresaForm(request.POST, instance=None)
+    #     usuario = Usuario.objects.get(user=request.user)
+    #     minha_empresa = form.save(commit=False)
+    #     minha_empresa.m_usuario = usuario
+    #     minha_empresa.m_empresa = ''
+    #     minha_empresa.save()
+    #
+    #     # if form.is_valid():
+    #     #     usuario = Usuario.objects.get(user=request.user)
+    #     #     minha_empresa = form.save(commit=False)
+    #     #     minha_empresa.m_usuario = usuario
+    #     #     minha_empresa.save()
+    #     #     return self.form_valid(form)
+    #
+    #     return render(request, self.template_name, {'form': form})
+    #
+    # def form_valid(self, form):
+    #     return redirect(self.success_url)

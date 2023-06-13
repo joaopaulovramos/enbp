@@ -43,11 +43,11 @@ DATABASES = {
 
 
 
-#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'norli_3',
+#         'NAME': 'norli',
 #         'USER': 'postgres',
 #         'PASSWORD': 'postgres',
 #         'HOST': '127.0.0.1',

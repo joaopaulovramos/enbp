@@ -26,6 +26,27 @@ urlpatterns = [
     url(r'viagem/adicionarmotivo/$', views.AdicionarMotivoView.as_view(), name='adicionarmotivo'),
     url(r'viagem/editarmotivo/(?P<pk>[0-9]+)/$', views.EditarMotivoView.as_view(), name='editarmotivo'),
 
+    # Tipo de Despesa
+    url(r'viagem/listatipodespesa/$', views.ListTipoDespesaView.as_view(), name='listatipodespesa'),
+    url(r'viagem/adicionartipodespesa/$', views.AdicionarTipoDespesaView.as_view(), name='adicionartipodespesa'),
+    url(r'viagem/editartipodespesa/(?P<pk>[0-9]+)/$', views.EditarTipoDespesaView.as_view(), name='editartipodespesa'),
+
+    # Moeda
+    url(r'viagem/listamoeda/$', views.ListMoedaView.as_view(), name='listamoeda'),
+    url(r'viagem/adicionarmoeda/$', views.AdicionarMoedaView.as_view(), name='adicionarmoeda'),
+    url(r'viagem/editarmoeda/(?P<pk>[0-9]+)/$', views.EditarMoedaView.as_view(), name='editarmoeda'),
+
+    # Categoria de passagem
+    url(r'viagem/listacategoriapassagem/$', views.ListCategoriaPassagemView.as_view(), name='listacategoriapassagem'),
+    url(r'viagem/adicionarcategoriapassagem/$', views.AdicionarCategoriaPassagemView.as_view(), name='adicionarcategoriapassagem'),
+    url(r'viagem/editarcategoriapassagem/(?P<pk>[0-9]+)/$', views.EditarCategoriaPassagemView.as_view(), name='editarcategoriapassagem'),
+
+    # Horário Prefencial
+    url(r'viagem/listahorariopreferencial/$', views.ListHorarioPreferencialView.as_view(), name='listahorariopreferencial'),
+    url(r'viagem/adicionarhorariopreferencial/$', views.AdicionarHorarioPreferencialView.as_view(), name='adicionarhorariopreferencial'),
+    url(r'viagem/editarhorariopreferencial/(?P<pk>[0-9]+)/$', views.EditarHorarioPreferencialView.as_view(), name='editarhorariopreferencial'),
+
+
     # Viagens
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),
     url(r'viagem/adicionarviagem/$', views.AdicionarViagemView.as_view(), name='adicionarviagem'),

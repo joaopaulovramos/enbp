@@ -1,7 +1,7 @@
 {%extends 'base/base.html'%}
 
 
-{%block title%} {{form.cfop.value}} {%endblock%}
+{%block title%} {{title_complete|title}} {%endblock%}
 {%block content%}
 <section class="content">
   <div class="container-fluid">
@@ -16,7 +16,7 @@
           <div class="header">
 
             <h2>
-              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{form.cfop.value}}
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
             <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
 
@@ -28,34 +28,18 @@
             <!-- Body-->
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-               
-                {% for field in form %}
-                <div class="col-sm-6">
+
+              <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
-                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}
-                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{field}}
+                        <label>Código</label>
+                        <input type="text" name="nome" value="{{ id }}" class="form-control" size="200" maxlength="200" required="" id="id_codigo" readonly>
+
                     </div>
                   </div>
                 </div>
-                {% endfor %}
-                
-              </div>
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
-            </div>
-            <!--#Body-->
-          </form>
-
-
-
-         <form id="" role="form" action="" enctype="multipart/form-data"  method="post">
-            {% csrf_token %}
-            <!-- Body-->
-            <div class="body">
-              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-                {% for field in form_2 %}
+               
+                {% for field in form %}
                 <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">

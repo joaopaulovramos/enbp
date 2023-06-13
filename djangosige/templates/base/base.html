@@ -89,7 +89,8 @@
                         <ul class="dropdown-menu pull-right">
                             <li><a href="{% url 'login:perfilview' %}"><i class="material-icons">&#xE55A;</i>Perfil</a></li>
                             <li role="seperator" class="divider"></li>
-                            <li><a {% if user_empresa %} href="{% url 'cadastro:editarempresaview' user_empresa.id %}"{%else%} class="popup" title="Selecionar Empresa" href="{% url 'login:selecionarempresaview' %}" {%endif%}><i class="material-icons">&#xE0AF;</i>Minha Empresa</a></li>
+                            <!-- <li><a {% if user_empresa %} href="{% url 'cadastro:editarempresaview' user_empresa.id %}"{%else%} class="popup" title="Selecionar Empresa" href="{% url 'login:selecionarempresaview' %}" {%endif%}><i class="material-icons">&#xE0AF;</i>Minha Empresa</a></li> -->
+                            <li><a class="popup" title="Selecionar Empresa" href="{% url 'login:selecionarempresaview' %}"><i class="material-icons">&#xE0AF;</i>Minha Empresa</a></li>
                             <li role="seperator" class="divider"></li>
                             <li><a href="{% url 'login:usuariosview' %}"><i class="material-icons">&#xE7FB;</i>Usuários</a></li>
                             <li role="seperator" class="divider"></li>
@@ -267,11 +268,35 @@
                                                  <span>Motivos De Viagem</span>
                                             </a>
                                         </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipodespesa' %}">
+                                                 <span>Tipos de Despesa</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listamoeda' %}">
+                                                 <span>Moeda</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listahorariopreferencial' %}">
+                                                 <span>Horários Preferenciais</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listacategoriapassagem' %}">
+                                                 <span>Categoria de Passagem</span>
+                                            </a>
+                                        </li>
                                 </ul>
 
                                 <li>
                                     <a href="{% url 'viagem:listaviagem' %}">
-                                         <span>Minhas Solicitação de Viagens</span>
+                                         <span>Minhas Solicitações de Viagens</span>
                                     </a>
                                 </li>
 
