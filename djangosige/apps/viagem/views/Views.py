@@ -33,9 +33,6 @@ class AdicionarTipoViagemView(CustomCreateView):
     success_message = "Tipo de Viagem adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoViagemView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE VIAGEM'
@@ -50,9 +47,6 @@ class EditarTipoViagemView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatiposviagens')
     success_message = "Tipo de Viagem Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoViagemView, self).get_context_data(**kwargs)
@@ -84,9 +78,6 @@ class AdicionarTipoSolicitacaoView(CustomCreateView):
     success_message = "Tipo de Solicitação adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoSolicitacaoView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE SOLICITAÇÃO'
@@ -101,9 +92,6 @@ class EditarTipoSolicitacaoView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatiposolicitacao')
     success_message = "Tipo de Solicitacao Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoSolicitacaoView, self).get_context_data(**kwargs)
@@ -135,9 +123,6 @@ class AdicionarTipoTransporteView(CustomCreateView):
     success_message = "Tipo de Transporte adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoTransporteView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE TRANSPORTE'
@@ -152,9 +137,6 @@ class EditarTipoTransporteView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatipotransporte')
     success_message = "Tipo de Transporte Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoTransporteView, self).get_context_data(**kwargs)
@@ -186,9 +168,6 @@ class AdicionarMotivoView(CustomCreateView):
     success_message = "Motivo de Viagem adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarMotivoView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR VIAGEM'
@@ -203,9 +182,6 @@ class EditarMotivoView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listamotivos')
     success_message = "Motivo de Viagem Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarMotivoView, self).get_context_data(**kwargs)
@@ -237,9 +213,6 @@ class AdicionarTipoDespesaView(CustomCreateView):
     success_message = "Tipo de despesa adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoDespesaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE DESPESA'
@@ -254,9 +227,6 @@ class EditarTipoDespesaView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatipodespesa')
     success_message = "Tipo de Despesa Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoDespesaView, self).get_context_data(**kwargs)
@@ -288,9 +258,6 @@ class AdicionarMoedaView(CustomCreateView):
     success_message = "Tipo de moeda adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarMoedaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE MOEDA'
@@ -305,9 +272,6 @@ class EditarMoedaView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listamoeda')
     success_message = "Tipo de Moeda Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarMoedaView, self).get_context_data(**kwargs)
@@ -339,9 +303,6 @@ class AdicionarCategoriaPassagemView(CustomCreateView):
     success_message = "Categoria de passagem adicionada com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarCategoriaPassagemView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR CATEGORIA DE PASSAGEM'
@@ -356,9 +317,6 @@ class EditarCategoriaPassagemView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listacategoriapassagem')
     success_message = "Categoria de Passagem Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarCategoriaPassagemView, self).get_context_data(**kwargs)
@@ -389,9 +347,6 @@ class AdicionarHorarioPreferencialView(CustomCreateView):
     success_url = reverse_lazy('viagem:listahorariopreferencial')
     success_message = "Horário Preferencial adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarHorarioPreferencialView, self).get_context_data(**kwargs)
@@ -479,9 +434,6 @@ class EditarTipoNecessidadeEspecialView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
     success_message = "Tipo de Necessidade EspeciaL Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
