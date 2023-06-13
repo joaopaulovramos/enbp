@@ -7,7 +7,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-
+from cpf_field.models import CPFField
+from django_cpf_cnpj.fields import CPFField, CNPJField
 
 
 
@@ -23,6 +24,15 @@ class Usuario(models.Model):
         ('1', 'Diretor da Unidade Solicitante (DUS)'),
         ('2', 'Superintendente'),
     ]
+    BOOLEAN = [
+        ('0', 'NÃO'),
+        ('1', 'SIM'),
+    ]
+
+    GRUPO_FUNCIONAL = [
+        ('0', 'A - DIRETORES e CONSELHEIROS'),
+        ('1', 'B – PROFISSIONAIS'),
+    ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_foto = models.ImageField(upload_to=user_directory_path, default='imagens/user.png', blank=True)
@@ -30,6 +40,12 @@ class Usuario(models.Model):
     date_ultima_modificacao = models.DateTimeField(auto_now=True, null=True, blank=True,)
     data_inativacao = models.DateTimeField(auto_now_add=True, null=True, blank=True,)
     perfil = models.CharField(max_length=50, null=True, blank=True, choices=PERFIS, default=PERFIS[0][0])
+    pcd = models.CharField(max_length=1, null=True, blank=True, choices=BOOLEAN, default=BOOLEAN[0][0])
+    certificado_digital = models.CharField(max_length=1, null=True, blank=True, choices=BOOLEAN, default=BOOLEAN[0][0])
+    grupo_funcional = models.CharField(max_length=1, null=True, blank=True, choices=GRUPO_FUNCIONAL, default=GRUPO_FUNCIONAL[0][0])
+    cpf = CPFField(masked=True)
+    telefone = models.CharField(max_length=50)
+    matricula = models.CharField(max_length=10)
 
     def save(self, *args, **kwargs):
         # Deletar user_foto se ja existir uma

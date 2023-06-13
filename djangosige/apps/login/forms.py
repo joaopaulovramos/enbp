@@ -88,7 +88,25 @@ class PerfilUsuarioForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('first_name', 'last_name', 'username', 'email', 'user_foto',)
+        fields = ('first_name', 'last_name', 'username', 'email', 'user_foto', 'pcd', 'certificado_digital', 'cpf', 'grupo_funcional', 'telefone', 'matricula', )
+
+        widgets = {
+            'pcd': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'certificado_digital': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'grupo_funcional': forms.Select(attrs={'class': 'form-control select-produto'}),
+            #'cpf': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
+            'matricula': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
+
+        }
+        labels = {
+            'pcd': _('PCD'),
+            'cpf': _('CPF'),
+            'certificado_digital': _('Certificado Digital'),
+            'grupo_funcional': _('Grupo Funcional'),
+            'telefone': _('Telefone'),
+            'matricula': _('Matrícula'),
+        }
 
 
 
