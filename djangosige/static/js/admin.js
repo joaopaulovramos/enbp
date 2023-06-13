@@ -556,9 +556,10 @@ $.Admin.maskInput = {
         $('.decimal-mask').mask('000.000.000.000,00', {reverse: true});
         $('.datepicker').mask('00/00/0000', {reverse: true});
     },
+
     maskViagem: function(){
-         $('#valor_passagem_viagem').mask('000000000.00', {reverse: true});
-     }
+        $('#valor_passagem_viagem').mask('00000,00', {reverse: true});
+    }
 }
 
 
