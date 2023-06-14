@@ -34,15 +34,17 @@
             <table id="lista-database" class="table table-bordered table-striped lista-table">
               <thead>
                 <tr>
-
+                    <th>Código</th>
+                    <th>Solicitante</th>
                     <th>Data Inicio</th>
                     <th>Data Fim</th>
+                    <th>Tipo</th>
                     <th>Origem</th>
                     <th>Destino</th>
                     <th>Autorizada</th>
                     <th>Homologada</th>
                     <th>PRESTAR CONTAS</th>
-                    <th>ARQUIVOS</th>
+{#                    <th>ARQUIVOS</th>#}
                      <th>AVALIAÇÃO</th>
                     <th>Remover</th>
                 </tr>
@@ -52,9 +54,15 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr >
+               <tr {% if not natop.autorizada and not natop.homologada %}
+                       class="clickable-row"  data-href="{% url 'viagem:editarviagem' natop.id %}"
+                    {% endif %}
+               >
+                   <td>{{natop.id}}</td>
+                   <td>{{login}}</td>
                    <td>{{natop.dada_inicio}}</td>
-                   <td>{{natop.dada_fim}}</td>
+                   <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
+                   <td>{%if natop.tipo_viagem%}{{natop.tipo_viagem}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
                   <td>
@@ -87,18 +95,18 @@
                             <a class="btn btn-success"><span> APROVADA</span></a>
                        {% endif %}
                    </td>
-                    <td>
-                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '0' %}
-                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> ENVIAR ARQUIVOS </span></a>
-                       {% endif %}
-                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
-                            <a class="btn"><span> Enviado Para Aprovação</span></a>
-                       {% endif %}
-                        {% if natop.aprovar_pc == '1' %}
-                            <a class="btn btn-success"><span> APROVADA</span></a>
-                       {% endif %}
-
-                   </td>
+{#                    <td>#}
+{#                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '0' %}#}
+{#                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> ENVIAR ARQUIVOS </span></a>#}
+{#                       {% endif %}#}
+{#                       {% if natop.autorizada and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}#}
+{#                            <a class="btn"><span> Enviado Para Aprovação</span></a>#}
+{#                       {% endif %}#}
+{#                        {% if natop.aprovar_pc == '1' %}#}
+{#                            <a class="btn btn-success"><span> APROVADA</span></a>#}
+{#                       {% endif %}#}
+{##}
+{#                   </td>#}
                <td>
                        {% if natop.aprovar_pc == '1' %}
                             <a class="btn btn-success"><span> APROVADA</span></a>

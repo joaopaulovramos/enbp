@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import date
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 from django import forms
 
 PAGAMENTO = [
@@ -17,6 +19,17 @@ PC = [
     ('2', 'REPROVADO'),
     ('1', 'APROVADO'),
     ('0', 'EM ANÁLISE'),
+]
+
+ESCALAS = [
+    ('0', 'Direto'),
+    ('1', '1 escala'),
+    ('2', '2+ escalas'),
+]
+
+ITINERARIO = [
+    ('0', 'Ida'),
+    ('1', 'Ida e Volta'),
 ]
 
 
@@ -78,20 +91,33 @@ class HorarioPreferencialModel(models.Model):
         return self.descricao
 
 
+class TiposNecessidadeEspecialModel(models.Model):
+    descricao = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.descricao
+
+
 class ViagemModel(models.Model):
     solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.CASCADE, null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
-    valor_passagem = models.CharField(max_length=200)
+    valor_passagem = models.DecimalField(max_digits=16, decimal_places=2, validators=[
+                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
 
-    escala_direto = models.BooleanField(default=True)
-    escala_1 = models.BooleanField(default=False)
-    escala_2_mais = models.BooleanField(default=False)
+    itinerario = models.CharField(max_length=2, choices=ITINERARIO)
+    escalas = models.CharField(max_length=1, choices=ESCALAS)
 
     dada_inicio = models.DateTimeField()
-    dada_fim = models.DateField()
+    dada_fim = models.DateField(blank=True, null=True)
     origem = models.CharField(max_length=200)
     destino = models.CharField(max_length=200)
-    objetivo = models.CharField(max_length=200)
+    objetivo = models.TextField(max_length=512)
+    justificativa = models.TextField(max_length=512, blank=True)
+
+    acompanhante = models.ForeignKey(User, related_name="viagem_acompanhante", on_delete=models.CASCADE, null=True,
+                                     blank=True)
+    necessidade_especial = models.ForeignKey(TiposNecessidadeEspecialModel, related_name="viagem_necessidade_especial", on_delete=models.CASCADE, null=True,
+                                     blank=True)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
@@ -102,7 +128,7 @@ class ViagemModel(models.Model):
     categoria_passagem = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_passagem",
                                            on_delete=models.CASCADE)
     horario_preferencial = models.ForeignKey(HorarioPreferencialModel, related_name="viagem_horario",
-                                           on_delete=models.CASCADE)
+                                             on_delete=models.CASCADE)
 
     autorizada = models.BooleanField(default=False)
     homologada = models.BooleanField(default=False)
@@ -115,6 +141,14 @@ class ViagemModel(models.Model):
                                                        default=0)
     finalizar_pc = models.CharField(max_length=50, null=True, blank=True, choices=BOOLEANO, default='0')
     aprovar_pc = models.CharField(max_length=50, null=True, blank=True, choices=PC, default='0')
+
+    bagagem_tecnica = models.BooleanField(blank=True, default=False)
+    bagagem_despachada = models.BooleanField(blank=True, default=False)
+    crianca_colo = models.BooleanField(blank=True, default=False)
+    local_risco = models.BooleanField(blank=True, default=False)
+    exige_vacina = models.BooleanField(blank=True, default=False)
+    reservar_hotel = models.BooleanField(blank=True, default=False)
+    alimentacao_terceiros = models.BooleanField(blank=True, default=False)
 
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'

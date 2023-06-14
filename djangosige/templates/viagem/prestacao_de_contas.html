@@ -16,7 +16,7 @@
           <div class="header">
 
             <h2>
-              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{form.cfop.value}}
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
             <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
 
@@ -28,6 +28,79 @@
             <!-- Body-->
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+              <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Código</label>
+                    <input disabled type="text" name="data_fim" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Inclusão</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Usuário</label>
+                    <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-6">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Origem</label>
+                    <input disabled type="text" name="data_fim" value="{{origem}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-6">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Destino</label>
+                     <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-6">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data Início</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-6">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data fim</label>
+                    <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
+
+                </div>
+              </div>
+            </div>
+
+
+                </div>
+              </div>
+
+
                
                 {% for field in form %}
                 <div class="col-sm-6">

@@ -33,9 +33,6 @@ class AdicionarTipoViagemView(CustomCreateView):
     success_message = "Tipo de Viagem adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoViagemView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE VIAGEM'
@@ -50,9 +47,6 @@ class EditarTipoViagemView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatiposviagens')
     success_message = "Tipo de Viagem Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoViagemView, self).get_context_data(**kwargs)
@@ -84,9 +78,6 @@ class AdicionarTipoSolicitacaoView(CustomCreateView):
     success_message = "Tipo de Solicitação adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoSolicitacaoView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE SOLICITAÇÃO'
@@ -101,9 +92,6 @@ class EditarTipoSolicitacaoView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatiposolicitacao')
     success_message = "Tipo de Solicitacao Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoSolicitacaoView, self).get_context_data(**kwargs)
@@ -135,9 +123,6 @@ class AdicionarTipoTransporteView(CustomCreateView):
     success_message = "Tipo de Transporte adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoTransporteView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE TRANSPORTE'
@@ -152,9 +137,6 @@ class EditarTipoTransporteView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatipotransporte')
     success_message = "Tipo de Transporte Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoTransporteView, self).get_context_data(**kwargs)
@@ -186,9 +168,6 @@ class AdicionarMotivoView(CustomCreateView):
     success_message = "Motivo de Viagem adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarMotivoView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR VIAGEM'
@@ -203,9 +182,6 @@ class EditarMotivoView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listamotivos')
     success_message = "Motivo de Viagem Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarMotivoView, self).get_context_data(**kwargs)
@@ -237,9 +213,6 @@ class AdicionarTipoDespesaView(CustomCreateView):
     success_message = "Tipo de despesa adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoDespesaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE DESPESA'
@@ -254,9 +227,6 @@ class EditarTipoDespesaView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatipodespesa')
     success_message = "Tipo de Despesa Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoDespesaView, self).get_context_data(**kwargs)
@@ -288,9 +258,6 @@ class AdicionarMoedaView(CustomCreateView):
     success_message = "Tipo de moeda adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarMoedaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR TIPO DE MOEDA'
@@ -305,9 +272,6 @@ class EditarMoedaView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listamoeda')
     success_message = "Tipo de Moeda Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarMoedaView, self).get_context_data(**kwargs)
@@ -339,9 +303,6 @@ class AdicionarCategoriaPassagemView(CustomCreateView):
     success_message = "Categoria de passagem adicionada com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarCategoriaPassagemView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR CATEGORIA DE PASSAGEM'
@@ -356,9 +317,6 @@ class EditarCategoriaPassagemView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listacategoriapassagem')
     success_message = "Categoria de Passagem Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarCategoriaPassagemView, self).get_context_data(**kwargs)
@@ -390,9 +348,6 @@ class AdicionarHorarioPreferencialView(CustomCreateView):
     success_message = "Horário Preferencial adicionado com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarHorarioPreferencialView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR HORÁRIO PREFERENCIAL'
@@ -409,12 +364,81 @@ class EditarHorarioPreferencialView(CustomUpdateView):
     permission_codename = 'cadastrar_item_viagens'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, descricao=self.object.descricao)
 
     def get_context_data(self, **kwargs):
         context = super(EditarHorarioPreferencialView, self).get_context_data(**kwargs)
         context['title_complete'] = 'Edição de Horário Preferencial'
         context['return_url'] = reverse_lazy('viagem:listahorariopreferencial')
+        context['id'] = self.object.id
+        return context
+
+
+#### Tipos Necessidade Especial
+class ListTiposNecessidadeEspecialView(CustomListView):
+    template_name = 'viagem/list_tipo_necessidade_especial.html'
+    model = TiposNecessidadeEspecialModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListTiposNecessidadeEspecialView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Tipos de Necessidades Especiais'
+        context['add_url'] = reverse_lazy('viagem:adicionartiponecessidadeespecial')
+        return context
+
+
+class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
+    form_class = TiposNecessidadeEspecialForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
+    success_message = "Tipo de Necessidade Especial adicionado com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, descricao=self.object.descricao)
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR NECESSIDADE ESPECIAL'
+        context['return_url'] = reverse_lazy('viagem:listatiposnecessidadeespecial')
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return super(AdicionarTipoNecessidadeEspecialView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        if form.is_valid():
+            self.object = form.save(commit=False)
+
+            if len(self.object.descricao) > 5:
+                self.object.save()
+            else:
+                return self.form_invalid(form)
+
+            return self.form_valid(form)
+
+        return self.form_invalid(form)
+
+
+class EditarTipoNecessidadeEspecialView(CustomUpdateView):
+    form_class = TiposNecessidadeEspecialForm
+    model = TiposNecessidadeEspecialModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
+    success_message = "Tipo de Necessidade EspeciaL Editado com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Tipo de Necessidade Especial'
+        context['return_url'] = reverse_lazy('viagem:listatiposnecessidadeespecial')
         context['id'] = self.object.id
         return context
 
@@ -458,13 +482,13 @@ class ListViagensView(CustomListView):
 
 class AdicionarViagemView(CustomCreateView):
     form_class = ViagemForm
-    template_name = 'viagem/add.html'
+    template_name = 'viagem/add_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Tipo de Viagem adicionado com sucesso."
     permission_codename = 'solicitar_viagens'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, dada_inicio=self.object.dada_inicio)
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -473,9 +497,43 @@ class AdicionarViagemView(CustomCreateView):
         form = self.get_form(form_class)
         form.request_user = self.request.user
 
+        data_hoje = datetime.datetime.now().date()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+        data_fim = False
+
+        if request.POST['dada_fim']:
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+
+        if 'itinerario' in request.POST.keys():
+            if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
+                form.add_error('dada_fim', 'Informe a data da volta')
+
+        if data_fim and data_fim < data_inicio:
+            form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
+
+        if data_inicio < data_hoje:
+            form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
+
+        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
+        if request.POST['tipo_solicitacao'] == '1':
+            diff_dias = data_inicio - data_hoje
+            if diff_dias.days < 15:
+                form.add_error('dada_inicio',
+                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+
+        # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
+        if request.POST['tipo_viagem'] == '1' and data_fim:
+            diff_dias = data_fim - data_inicio
+
+            if 'bagagem_despachada' in request.POST.keys():
+                if diff_dias.days < 3 and request.POST['bagagem_despachada']:
+                    form.add_error('bagagem_despachada',
+                                   'Você não pode despachar bagagem para esta viagem.')
+
         if form.is_valid():
-            self.object = form.save()
-            return redirect(self.success_url)
+            self.object = form.save(commit=False)
+            self.object.save()
+            return self.form_valid(form)
         return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -488,7 +546,7 @@ class AdicionarViagemView(CustomCreateView):
 class EditarViagemView(CustomUpdateView):
     form_class = ViagemForm
     model = ViagemModel
-    template_name = 'viagem/edit.html'
+    template_name = 'viagem/edit_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
@@ -499,7 +557,55 @@ class EditarViagemView(CustomUpdateView):
     def get_context_data(self, **kwargs):
         context = super(EditarViagemView, self).get_context_data(**kwargs)
         context['return_url'] = reverse_lazy('viagem:listaviagem')
+        context['title_complete'] = 'Edição de viagem'
+        context['id'] = self.object.id
+        context['user'] = self.request.user
+        context['data_inclusao'] = self.object.data_inclusao
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = form_class(request.POST, instance=self.object)
+        form.request_user = self.request.user
+
+        data_hoje = datetime.datetime.now().date()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+        data_fim = False
+
+        if request.POST['dada_fim']:
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+
+        if 'itinerario' in request.POST.keys():
+            if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
+                form.add_error('dada_fim', 'Informe a data da volta')
+
+        if data_fim and data_fim < data_inicio:
+            form.add_error('dada_fim', 'A data fim não pode ser anterior à data início')
+
+        if data_inicio < data_hoje:
+            form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
+
+        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
+        if request.POST['tipo_solicitacao'] == '1':
+            diff_dias = data_inicio - data_hoje
+            if diff_dias.days < 15:
+                form.add_error('dada_inicio',
+                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+
+        # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
+        if request.POST['tipo_viagem'] == '1' and data_fim:
+            diff_dias = data_fim - data_inicio
+
+            if 'bagagem_despachada' in request.POST.keys():
+                if diff_dias.days < 3 and request.POST['bagagem_despachada']:
+                    form.add_error('bagagem_despachada',
+                                   'Você não pode despachar bagagem para esta viagem.')
+
+        if form.is_valid():
+            self.object = form.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
 
 
 class ListAutorizarViagensView(CustomListView):
@@ -607,13 +713,26 @@ class PrestarContasView(CustomUpdateView):
                 return redirect(self.success_url)
             return self.form_invalid(form)
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def get_context_data(self, **kwargs):
         context = super(PrestarContasView, self).get_context_data(**kwargs)
         context['form_2'] = self.form_2
         context['return_url'] = reverse_lazy('viagem:listaviagem')
+        context['title_complete'] = "Realizando prestação de contas"
+
+        context['id'] = self.object.id
+        context['origem'] = self.object.origem
+        context['destino'] = self.object.destino
+        context['data_inicio'] = self.object.dada_inicio
+        context['data_fim'] = self.object.dada_fim
+        context['data_inclusao'] = self.object.data_inclusao
+
+        usuario_solicitante_id = self.object.solicitante_id
+        usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
+
+        context['solicitante'] = f'{usuario_solicitante.get_username()} - {usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
+
+        # User.objects.get(id='1').get_username()
+
         # Arquivos.objects.get(pk=kwargs['pk'])
         # viagem = ViagemModel.objects.get(pk=kwargs['pk'])
 
