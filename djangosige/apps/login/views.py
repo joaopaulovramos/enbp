@@ -237,6 +237,18 @@ class MeuPerfilView(TemplateView):
     model = Usuario
     template_name = 'login/perfil.html'
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+
+
+        # usr = User.objects.get(pk=self.kwargs['pk'])
+        # usuario = Usuario.objects.get_or_create(user=usr)[0]
+        # us_perfil = usuario.perfil
+        context['perfil'] = Usuario.PERFIS[int(self.request.user.usuario.perfil)][1]
+        return self.render_to_response(context)
+
+
 
 class EditarPerfilView(UpdateView):
     form_class = PerfilUsuarioForm

@@ -74,6 +74,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cpf_field',
+    'django_cpf_cnpj',
 
     # djangosige apps:
     'djangosige.apps.base',

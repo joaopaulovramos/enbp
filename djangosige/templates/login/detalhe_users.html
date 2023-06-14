@@ -69,26 +69,15 @@
                   <tr>
                     <td>Ativo:</td>
                     <td>
-                    {%if user_match.is_superuser%}
+                         {%if user_match.is_superuser%}
                         SIM
                     {%else%}
                         {% if user_match.is_active %}
-                            <form action="{% url 'login:ativaview' user_match.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="user_id" value="{{user_match.id}}">
-                                <button class="btn btn-yellow" type="submit"><i class="material-icons">autorenew</i><span> SIM -  CLIQUE PARA INATIVAR</span></button>
-                            </form>
-
+                            SIM
                         {%else%}
-                            <form action="{% url 'login:ativaview' user_match.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="user_id" value="{{user_match.id}}">
-                                <button class="btn btn-yellow" type="submit"><i class="material-icons">autorenew</i><span>  NÃO -  CLIQUE PARA ATIVAR</span></button>
-                            </form>
+                            NÃO
                         {%endif%}
                     {%endif%}
-
-
 
                     </td>
                   </tr>
@@ -98,6 +87,40 @@
                     <td>{{data_inativacao}}</td>
                   </tr>
                   {%endif%}
+                  {% if not user_match.is_superuser %}
+
+                  <tr>
+                    <td>
+                        {% if user_match.is_active %}
+                            Deseja INATIVAR este usuário?
+                        {%else%}
+                            Deseja ATIVAR este usuário?
+                        {%endif%}
+                    </td>
+                    <td>
+
+
+                        {% if user_match.is_active %}
+                            <form action="{% url 'login:ativaview' user_match.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{user_match.id}}">
+                                <button class="btn btn-red" type="submit"><i class="material-icons">autorenew</i><span> INATIVAR USUÁRIO </span></button>
+                            </form>
+
+                        {%else%}
+                            <form action="{% url 'login:ativaview' user_match.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{user_match.id}}">
+                                <button class="btn btn-success" type="submit"><i class="material-icons">autorenew</i><span> ATIVAR USUÁRIO</span></button>
+                            </form>
+                        {%endif%}
+
+
+
+
+                    </td>
+                  </tr>
+{%endif%}
                    <tr>
                     <td>Perfil:</td>
                     <td>{{perfil}}</td>

@@ -51,6 +51,18 @@
                     <td>{{request.user.username}}</td>
                   </tr>
                   <tr>
+                    <td>PCD:</td>
+                    <td>{% if request.user.usuario.pcd == '0' %}NÃO{%else%}SIM{%endif%}</td>
+                  </tr>
+                  <tr>
+                    <td>Certificado Digital:</td>
+                    <td>{% if request.user.usuario.certificado_digital == '0' %}NÃO{%else%}SIM{%endif%}</td>
+                  </tr>
+                   <tr>
+                    <td>Perfil:</td>
+                    <td>{{ perfil }}</td>
+                  </tr>
+                  <tr>
                     <td>Email:</td>
                     <td>{{request.user.email}}</td>
                   </tr>
