@@ -3824,11 +3824,38 @@ $.Admin.viagemForm = {
 
      init: function () {
          $.Admin.maskInput.maskViagem();
-         esconder_mostrar_campo($('input[type="radio"][name$="itinerario"]:checked'))
+
+         // Encontra o itinerário selecionado
+         let itinerario_selecionado = $('input[type="radio"][name$="itinerario"]:checked')
+         esconder_mostrar_campo(itinerario_selecionado)
+
+         // Ocultando os select cujos check_ estejam desmarcados
+         $('input[type="checkbox"][name^="check_"]').each(function(){
+             if(!$(this).is(':checked')) {
+                 $(this).parent().find('select').hide()
+                 $(this).parent().find('select option:first').attr('selected','selected');
+             }
+         });
+
 
          $('input[type="radio"][name$="itinerario"]').change(function(){
             esconder_mostrar_campo($(this))
         });
+
+
+         $('input[type="checkbox"][name^="check_"]').change(function(){
+             esconder_mostrar_select($(this))
+         });
+
+         function esconder_mostrar_select(checkbox){
+
+             if(checkbox.is(':checked')){
+                     checkbox.parent().find('select').show()
+                 } else {
+                      checkbox.parent().find('select').hide()
+                      checkbox.parent().find('select option:first').attr('selected','selected');
+                 }
+         }
 
          function esconder_mostrar_campo(valor_radio){
              if (valor_radio.val() == '0'){
@@ -3839,6 +3866,9 @@ $.Admin.viagemForm = {
                  $('#id_dada_fim').parent().show()
              }
          }
+
+
+
      },
 
 
