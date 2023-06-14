@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django.urls import reverse_lazy
 
@@ -65,6 +66,10 @@ class EditarEmpresaView(EditarPessoaView):
         form_class = self.get_form_class()
         form_class.prefix = "empresa_form"
         form = self.get_form(form_class)
+
+        form = self.get_form(form_class)
+        form.initial['ini_atividades'] = form.initial['ini_atividades'].strftime('%d/%m/%Y')
+        form.initial['data_sit_cadastral'] = form.initial['data_sit_cadastral'].strftime('%d/%m/%Y')
 
         logo_file = Empresa.objects.get(pk=self.object.pk).logo_file
         return super(EditarEmpresaView, self).get(request, form, logo_file=logo_file, *args, **kwargs)

@@ -15,7 +15,9 @@ class EmpresaForm(forms.ModelForm):
     class Meta:
         model = Empresa
         fields = ('nome_razao_social', 'inscricao_municipal', 'cnae',
-                  'logo_file', 'iest', 'informacoes_adicionais',)
+                  'logo_file', 'iest', 'informacoes_adicionais', 'inativo',
+                  'codigo_legado', 'forma_tributacao', 'sit_cadastral', 'ini_atividades',
+                  'data_sit_cadastral', 'indi_ini_periodo', 'indi_sit_especial', 'qualificacao')
 
         widgets = {
             'nome_razao_social': forms.TextInput(attrs={'class': 'form-control'}),
@@ -24,6 +26,15 @@ class EmpresaForm(forms.ModelForm):
             'logo_file': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'iest': forms.TextInput(attrs={'class': 'form-control'}),
             'informacoes_adicionais': forms.Textarea(attrs={'class': 'form-control'}),
+            'inativo' :  forms.Select(attrs={'class': 'form-control'}),
+            'codigo_legado': forms.TextInput(attrs={'class': 'form-control'}),
+            'forma_tributacao': forms.Select(attrs={'class': 'form-control'}),
+            'sit_cadastral': forms.Select(attrs={'class': 'form-control'}),
+            'ini_atividades': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+            'data_sit_cadastral': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+            'indi_ini_periodo': forms.Select(attrs={'class': 'form-control'}),
+            'indi_sit_especial': forms.Select(attrs={'class': 'form-control'}),
+            'qualificacao': forms.Select(attrs={'class': 'form-control'}),
         }
         labels = {
             'nome_razao_social': _('Razão Social'),
@@ -32,6 +43,14 @@ class EmpresaForm(forms.ModelForm):
             'logo_file': _('Logo'),
             'iest': _('IE do substituto tributário'),
             'informacoes_adicionais': _('Informações Adicionais'),
+            'codigo_legado': _('Código Legado'),
+            'forma_tributacao': _('Forma de Tributação'),
+            'sit_cadastral': _('Situação Cadastral'),
+            'ini_atividades': _('Início das Atividades'),
+            'data_sit_cadastral': _('Data Situação Cadastral'),
+            'indi_ini_periodo': _('Indicador de Início de Período'),
+            'indi_sit_especial': _('Indicador de Situação Especial'),
+            'qualificacao': _('Qualificação'),
         }
 
     def save(self, commit=True):
