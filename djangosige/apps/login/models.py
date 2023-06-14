@@ -7,7 +7,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from cpf_field.models import CPFField
 from django_cpf_cnpj.fields import CPFField, CNPJField
 
 
@@ -43,9 +42,9 @@ class Usuario(models.Model):
     pcd = models.CharField(max_length=1, null=True, blank=True, choices=BOOLEAN, default=BOOLEAN[0][0])
     certificado_digital = models.CharField(max_length=1, null=True, blank=True, choices=BOOLEAN, default=BOOLEAN[0][0])
     grupo_funcional = models.CharField(max_length=1, null=True, blank=True, choices=GRUPO_FUNCIONAL, default=GRUPO_FUNCIONAL[0][0])
-    cpf = CPFField(masked=True)
-    telefone = models.CharField(max_length=50)
-    matricula = models.CharField(max_length=10)
+    cpf = CPFField(masked=True, null=True)
+    telefone = models.CharField(max_length=50, null=True)
+    matricula = models.CharField(max_length=10, null=True)
 
     def save(self, *args, **kwargs):
         # Deletar user_foto se ja existir uma
