@@ -430,24 +430,6 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
     def get(self, request, *args, **kwargs):
         return super(AdicionarTipoNecessidadeEspecialView, self).get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        self.object = None
-
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-
-        if form.is_valid():
-            self.object = form.save(commit=False)
-
-            if len(self.object.descricao) > 5:
-                self.object.save()
-            else:
-                return self.form_invalid(form)
-
-            return self.form_valid(form)
-
-        return self.form_invalid(form)
-
 
 class EditarTipoNecessidadeEspecialView(CustomUpdateView):
     form_class = TiposNecessidadeEspecialForm
@@ -456,9 +438,6 @@ class EditarTipoNecessidadeEspecialView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
     success_message = "Tipo de Necessidade EspeciaL Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
