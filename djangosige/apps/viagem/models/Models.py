@@ -134,7 +134,8 @@ class ViagemModel(models.Model):
     horario_preferencial = models.ForeignKey(HorarioPreferencialModel, related_name="viagem_horario",
                                              on_delete=models.CASCADE)
 
-    autorizada = models.BooleanField(default=False)
+    autorizada_sup = models.BooleanField(default=False)
+    autorizada_dus = models.BooleanField(default=False)
     homologada = models.BooleanField(default=False)
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)
     descricao = models.TextField(blank=True, null=True)
@@ -161,7 +162,8 @@ class ViagemModel(models.Model):
         verbose_name = "Viagens"
         permissions = (
             ("solicitar_viagens", "Pode solicitar viagens"),
-            ("autorizar_viagens", "Pode autorizar viagens"),
+            ("autorizar_viagens_sup", "Pode autorizar viagens - Superintendente"),
+            ("autorizar_viagens_dus", "Pode autorizar viagens - Diretor de Unidade de Serviço"),
             ("homologar_viagens", "Pode homologar viagens"),
             ("cadastrar_item_viagens", "Cadastrar Items de Viagem")
         )
