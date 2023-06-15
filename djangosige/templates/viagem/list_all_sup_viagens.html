@@ -62,7 +62,7 @@
                    <td>{{natop.solicitante}}</td>
                    <td>{{natop.valor_passagem}}</td>
                    <td>{{natop.dada_inicio}}</td>
-                   <td>{{natop.dada_fim}}</td>
+                   <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
                    <td>{{natop.objetivo}}</td>
