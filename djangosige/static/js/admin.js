@@ -3886,8 +3886,6 @@ $.Admin.viagemForm = {
 
          function Handle_definir_categoria_passagem(){
 
-             // definir_categoria_passagem(false)
-
              $('#id_check_acompanhante').on('change', function (){
                  if($(this).is(':checked')){
                     definir_categoria_passagem(false)
@@ -3911,7 +3909,6 @@ $.Admin.viagemForm = {
              }
 
          }
-
 
      },
 
