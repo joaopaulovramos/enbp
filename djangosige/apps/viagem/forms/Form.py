@@ -134,6 +134,7 @@ class ViagemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(ViagemForm, self).__init__(*args, **kwargs)
+        self.fields['dada_fim'].input_formats = ('%d/%m/%Y',)
 
     class Meta:
         model = ViagemModel

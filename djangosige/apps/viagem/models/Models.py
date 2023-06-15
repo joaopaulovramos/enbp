@@ -5,6 +5,10 @@ from django.core.validators import MinValueValidator
 from decimal import Decimal
 from django import forms
 
+from djangosige.apps.login.models import Usuario
+
+GRUPO_FUNCIONAL_DIRETOR = '0'
+
 PAGAMENTO = [
     ('RECURSOS DA EMPRESA', 'RECURSOS DA EMPRESA'),
     ('RECURSOS PRÓPRIOS', 'RECURSOS PRÓPRIOS'),
@@ -108,14 +112,14 @@ class ViagemModel(models.Model):
     escalas = models.CharField(max_length=1, choices=ESCALAS)
 
     dada_inicio = models.DateTimeField()
-    dada_fim = models.DateField(blank=True, null=True)
+    dada_fim = models.DateTimeField(blank=True, null=True)
     origem = models.CharField(max_length=200)
     destino = models.CharField(max_length=200)
     objetivo = models.TextField(max_length=512)
     justificativa = models.TextField(max_length=512, blank=True)
 
-    acompanhante = models.ForeignKey(User, related_name="viagem_acompanhante", on_delete=models.CASCADE, null=True,
-                                     blank=True)
+    acompanhante = models.ForeignKey(Usuario, related_name="viagem_acompanhante", on_delete=models.CASCADE, null=True,
+                                     blank=True, limit_choices_to={'grupo_funcional': GRUPO_FUNCIONAL_DIRETOR})
     necessidade_especial = models.ForeignKey(TiposNecessidadeEspecialModel, related_name="viagem_necessidade_especial", on_delete=models.CASCADE, null=True,
                                      blank=True)
 
