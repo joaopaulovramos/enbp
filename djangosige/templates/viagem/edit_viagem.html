@@ -261,7 +261,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                        <input type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante">
+                        <input type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante" {% if form.acompanhante %}checked="checked"{% endif %}>
                         <label for="id_check_acompanhante"
                                style="font-weight: bold;"
                                title=""> Acompanhante/convocado/Substituto
