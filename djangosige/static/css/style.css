@@ -361,7 +361,7 @@ class="collapse navbar-collapse"
     overflow-y: auto;
     height: 90vh;
     overflow-y: scroll;
-    height: 450px; }
+    }
     .sidebar .menu .list {
       list-style: none;
       padding-left: 0; }
@@ -1342,7 +1342,7 @@ fieldset[disabled] .form-control {
       font-weight: normal;
       font-size: 20px; }
   .lista .lista-table thead th{
-    background-color: lightblue !important; }
+    background-color: rgb(177, 217, 248); }
   .lista .lista-content,
   .lista .lista-alert{
     padding: 0px; }
