@@ -3827,6 +3827,7 @@ $.Admin.viagemForm = {
 
          $.Admin.maskInput.maskViagem();
          define_cod_descricao_para_selects()
+         Handle_definir_categoria_passagem()
 
          // Encontra o itinerário selecionado
          let itinerario_selecionado = $('input[type="radio"][name$="itinerario"]:checked')
@@ -3855,7 +3856,8 @@ $.Admin.viagemForm = {
              if(checkbox.is(':checked')){
                      checkbox.parent().find('select').show()
                  } else {
-                      checkbox.parent().find('select').hide()
+                      checkbox.parent().find('select').hide();
+                      checkbox.parent().find('select option:selected').removeAttr('selected');
                       checkbox.parent().find('select option:first').attr('selected','selected');
                  }
          }
@@ -3882,6 +3884,33 @@ $.Admin.viagemForm = {
 
          }
 
+         function Handle_definir_categoria_passagem(){
+
+             // definir_categoria_passagem(false)
+
+             $('#id_check_acompanhante').on('change', function (){
+                 if($(this).is(':checked')){
+                    definir_categoria_passagem(false)
+                 } else {
+                     definir_categoria_passagem(true)
+                 }
+             })
+
+         }
+
+         function definir_categoria_passagem(reset){
+
+             if(reset){
+                 $('#id_categoria_passagem option:selected').removeAttr('selected');
+                 $('#id_categoria_passagem option:first').attr('selected','selected')
+                 $('#id_categoria_passagem').focus()
+             } else {
+                 $('#id_categoria_passagem option:selected').removeAttr('selected');
+                 $('#id_categoria_passagem option:contains(executiva)').attr('selected', 'selected')
+                 $('#id_categoria_passagem').focus()
+             }
+
+         }
 
 
      },
