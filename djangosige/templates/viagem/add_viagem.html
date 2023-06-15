@@ -173,6 +173,40 @@
                   <div class="form-group">
                     <div class="form-line">
 
+                        <input type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante">
+                        <label for="id_check_acompanhante"
+                               style="font-weight: bold;"
+                               title=""> Acompanhante/convocado/Substituto
+                        </label>
+
+                      <label>{{form.acompanhante.label}}</label>
+                      {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.acompanhante}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <input type="checkbox" name="check_pcd" class="form-control" id="id_check_pcd" {% if pcd == '1' %}checked="checked"{% endif %}>
+                        <label for="id_check_pcd"
+                               style="font-weight: bold;"
+                               title=""> PCD (Pessoa com deficiência)
+                        </label>
+
+                      <label>{{form.necessidade_especial.label}}</label>
+                      {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.necessidade_especial}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+
                       <label>{{form.tipo_viagem.label}}</label><strong style="color:red;"> *</strong>
                       {% if form.tipo_viagem.errors %}<label class="error">{% for error in form.tipo_viagem.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.tipo_viagem}}
@@ -253,40 +287,6 @@
                       <label>{{form.justificativa.label}}</label>
                       {% if form.justificativa.errors %}<label class="error">{% for error in form.justificativa.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.justificativa}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                        <input type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante">
-                        <label for="id_check_acompanhante"
-                               style="font-weight: bold;"
-                               title=""> Acompanhante/convocado/Substituto
-                        </label>
-
-                      <label>{{form.acompanhante.label}}</label>
-                      {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.acompanhante}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                        <input type="checkbox" name="check_pcd" class="form-control" id="id_check_pcd" {% if pcd == '1' %}checked="checked"{% endif %}>
-                        <label for="id_check_pcd"
-                               style="font-weight: bold;"
-                               title=""> PCD (Pessoa com deficiência)
-                        </label>
-
-                      <label>{{form.necessidade_especial.label}}</label>
-                      {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.necessidade_especial}}
                     </div>
                   </div>
                 </div>

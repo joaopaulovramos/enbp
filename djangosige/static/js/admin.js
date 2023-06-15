@@ -3824,7 +3824,9 @@ $.Admin.reprovar_pc = {
 $.Admin.viagemForm = {
 
      init: function () {
+
          $.Admin.maskInput.maskViagem();
+         define_cod_descricao_para_selects()
 
          // Encontra o itinerário selecionado
          let itinerario_selecionado = $('input[type="radio"][name$="itinerario"]:checked')
@@ -3866,6 +3868,18 @@ $.Admin.viagemForm = {
              else{
                  $('#id_dada_fim').parent().show()
              }
+         }
+
+
+         function define_cod_descricao_para_selects(){
+
+             $(".select-cod-descricao option").each(function (){
+                 let cod = $(this).val()
+                 let descricao = $(this).html()
+                 $(this).html(cod + " - " + descricao)
+
+             })
+
          }
 
 

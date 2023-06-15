@@ -134,7 +134,6 @@ class ViagemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(ViagemForm, self).__init__(*args, **kwargs)
-        self.fields['dada_fim'].input_formats = ('%d/%m/%Y',)
 
     class Meta:
         model = ViagemModel
@@ -172,16 +171,16 @@ class ViagemForm(forms.ModelForm):
             'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
-            'acompanhante': forms.Select(attrs={'class': 'form-control select-produto'}),
-            'necessidade_especial': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'acompanhante': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'necessidade_especial': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'objetivo': forms.Textarea(attrs={'class': 'form-control', 'size': '200'}),
             'justificativa': forms.Textarea(attrs={'class': 'form-control', 'size': '200'}),
-            'tipo_viagem': forms.Select(attrs={'class': 'form-control select-produto'}),
-            'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-produto'}),
-            'motivo': forms.Select(attrs={'class': 'form-control select-produto'}),
-            'tipo_transporte': forms.Select(attrs={'class': 'form-control select-produto'}),
-            'categoria_passagem': forms.Select(attrs={'class': 'form-control select-produto'}),
-            'horario_preferencial': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'tipo_viagem': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'tipo_transporte': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'categoria_passagem': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'horario_preferencial': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'bagagem_tecnica': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'bagagem_despachada': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'crianca_colo': forms.CheckboxInput(attrs={'class': 'form-control'}),
