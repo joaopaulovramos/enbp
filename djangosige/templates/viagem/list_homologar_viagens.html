@@ -4,9 +4,9 @@
 {%block content%}
 <section class="content">
   <div class="container-fluid lista">
-  
+
     {% include 'base/title_header.html' %}
-    
+
     {% include 'base/msg_sucesso.html' %}
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
@@ -58,7 +58,7 @@
                {% for natop in all_natops %}
 
                <tr
-                       class="clickable-row"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
+                       class="clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
 
                >
                    <td>{{natop.id}}</td>
@@ -115,8 +115,25 @@
   </div>
 </div>
 
+  {#  Modal para detalhes #}
+
+        {% include 'base/modal_viagem.html' %}
+
+        {#  Modal para detalhes #}
+
 </div>
 </section>
 
 
 {%endblock%}
+
+{% block js %}
+
+  {% load static %}
+
+  <script src="{% static 'js/jquery.mask.js' %}"></script>
+  <script type="text/javascript">
+      $.Admin.viagemForm.init()
+  </script>
+
+{% endblock %}

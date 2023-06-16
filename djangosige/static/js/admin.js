@@ -3826,8 +3826,25 @@ $.Admin.viagemForm = {
      init: function () {
 
          $.Admin.maskInput.maskViagem();
-         define_cod_descricao_para_selects()
-         Handle_definir_categoria_passagem()
+         define_cod_descricao_para_selects();
+         Handle_definir_categoria_passagem();
+
+         // Lida com a modal para mostrar detalhes de solicitação de viagem
+         $('.clickable-row-modal').click(function(event){
+
+              if(!$(event.target).is("input, label, i, .prevent-click-row")) {
+
+                  let url = $(this).data("href")
+                  let id = $(this).data("norli-id")
+
+                  $.get(url, function (data, status) {
+                      $('.modal-body').html(data);
+                      $('.modal-title').html("Solicitação de viagem - Código: " + id);
+                      $('#modal_viagem').modal('show');
+                  });
+              }
+
+        });
 
          // Encontra o itinerário selecionado
          let itinerario_selecionado = $('input[type="radio"][name$="itinerario"]:checked')

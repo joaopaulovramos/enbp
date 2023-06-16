@@ -58,7 +58,7 @@
                {% for natop in all_natops %}
 
                <tr
-                       class="clickable-row"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
+                       class="clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
 
                >
                    <td>{{natop.id}}</td>
@@ -113,8 +113,25 @@
   </div>
 </div>
 
+        {#  Modal para detalhes #}
+
+        {% include 'base/modal_viagem.html' %}
+
+        {#  Modal para detalhes #}
+
 </div>
 </section>
 
 
 {%endblock%}
+
+{% block js %}
+
+  {% load static %}
+
+  <script src="{% static 'js/jquery.mask.js' %}"></script>
+  <script type="text/javascript">
+      $.Admin.viagemForm.init()
+  </script>
+
+{% endblock %}
