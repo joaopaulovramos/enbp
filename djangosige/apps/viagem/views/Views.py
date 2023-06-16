@@ -12,6 +12,9 @@ import random
 import string
 
 
+ID_TIPO_VIAGEM_REGULAR = '1'
+ID_TIPO_VIAGEM_NACIONAL = '1'
+
 #### Tipos de Viagens
 class ListTipoViagensView(CustomListView):
     template_name = 'viagem/list_tipo_viagem.html'
@@ -492,14 +495,14 @@ class AdicionarViagemView(CustomCreateView):
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
         # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == '1':
+        if request.POST['tipo_solicitacao'] == ID_TIPO_VIAGEM_REGULAR:
             diff_dias = data_inicio - data_hoje
             if diff_dias.days < 15:
                 form.add_error('dada_inicio',
                                'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
-        if request.POST['tipo_viagem'] == '1' and data_fim:
+        if request.POST['tipo_viagem'] == ID_TIPO_VIAGEM_NACIONAL and data_fim:
             diff_dias = data_fim - data_inicio
 
             if 'bagagem_despachada' in request.POST.keys():
@@ -569,14 +572,14 @@ class EditarViagemView(CustomUpdateView):
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
         # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == '1':
+        if request.POST['tipo_solicitacao'] == ID_TIPO_VIAGEM_REGULAR:
             diff_dias = data_inicio - data_hoje
             if diff_dias.days < 15:
                 form.add_error('dada_inicio',
                                'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
-        if request.POST['tipo_viagem'] == '1' and data_fim:
+        if request.POST['tipo_viagem'] == ID_TIPO_VIAGEM_NACIONAL and data_fim:
             diff_dias = data_fim - data_inicio
 
             if 'bagagem_despachada' in request.POST.keys():
