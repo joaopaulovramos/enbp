@@ -57,12 +57,15 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr>
+               <tr
+                       class="clickable-row"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
+
+               >
                    <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
-                   <td>{{natop.valor_passagem}}</td>
+                   <td>R$ {{natop.valor_passagem}}</td>
                    <td>{{natop.dada_inicio}}</td>
-                   <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
+                   <td>{{natop.dada_fim}}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
                    <td>{{natop.objetivo}}</td>

@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),
     url(r'viagem/adicionarviagem/$', views.AdicionarViagemView.as_view(), name='adicionarviagem'),
     url(r'viagem/editarviagem/(?P<pk>[0-9]+)/$', views.EditarViagemView.as_view(), name='editarviagem'),
+    url(r'viagem/ver_solicitacao_viagem/(?P<pk>[0-9]+)/$', views.VerSolicitacaoViagem.as_view(), name='ver_solicitacao_viagem'),
 
     url(r'viagem/listasupautorizarviagem/$', views.ListSupAutorizarViagensView.as_view(), name='listasupautorizarviagem'),
 

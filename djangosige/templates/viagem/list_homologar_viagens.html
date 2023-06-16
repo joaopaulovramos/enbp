@@ -34,6 +34,7 @@
             <table id="lista-database" class="table table-bordered table-striped lista-table">
               <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Solicitante</th>
                     <th>Valor Da Passagem</th>
                     <th>Data Inicio</th>
@@ -45,7 +46,8 @@
                     <th>Tipo de Solicitação</th>
                     <th>Motivo</th>
                     <th>Tipo de Transporte</th>
-                    <th>Autorizada</th>
+                    <th>Superintendente</th>
+                    <th>DUS</th>
                     <th>Homologada</th>
                   <th>Selecionar</th>
                 </tr>
@@ -55,9 +57,13 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr >
+               <tr
+                       class="clickable-row"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
+
+               >
+                   <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
-                   <td>{{natop.valor_passagem}}</td>
+                   <td>R$ {{natop.valor_passagem}}</td>
                    <td>{{natop.dada_inicio}}</td>
                    <td>{{natop.dada_fim}}</td>
                    <td>{{natop.origem}}</td>
@@ -68,19 +74,26 @@
                    <td>{{natop.motivo}}</td>
                    <td>{{natop.tipo_transporte}}</td>
                    <td>
-                        {% if natop.autorizada  %}
-                            <a class="btn btn-success"><span> SIM</span></a>
+                        {% if natop.autorizada_sup  %}
+                            <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
                         {% endif %}
 
+                    </td>
+                   <td>
+                        {% if natop.autorizada_dus  %}
+                            <a class="btn btn-success disabled"><span> SIM</span></a>
+                        {% else %}
+                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                        {% endif %}
 
                     </td>
                    <td>
                         {% if natop.homologada  %}
-                            <a class="btn btn-success"><span> SIM</span></a>
+                            <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
                         {% endif %}
                    </td>
                 <td class="lista-remove">

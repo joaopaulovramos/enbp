@@ -224,6 +224,101 @@ class ViagemForm(forms.ModelForm):
             instance.save()
         return instance
 
+class VerViagemForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(VerViagemForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = ViagemModel
+        fields = (
+                  'valor_passagem',
+                  'itinerario',
+                  'escalas',
+                  'dada_inicio',
+                  'dada_fim',
+                  'origem',
+                  'destino',
+                  'acompanhante',
+                  'necessidade_especial',
+                  'objetivo',
+                  'justificativa',
+                  'tipo_viagem',
+                  'tipo_solicitacao',
+                  'motivo',
+                  'tipo_transporte',
+                  'categoria_passagem',
+                  'horario_preferencial',
+                  'bagagem_tecnica',
+                  'bagagem_despachada',
+                  'crianca_colo',
+                  'local_risco',
+                  'exige_vacina',
+                  'reservar_hotel',
+                  'alimentacao_terceiros',
+                  )
+        widgets = {
+            'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem', 'disabled': 'disabled'}),
+            'itinerario': forms.RadioSelect(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'escalas': forms.RadioSelect(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'acompanhante': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'necessidade_especial': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'objetivo': forms.Textarea(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'justificativa': forms.Textarea(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'tipo_viagem': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'tipo_transporte': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'categoria_passagem': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'horario_preferencial': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'bagagem_tecnica': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'bagagem_despachada': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'crianca_colo': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'local_risco': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'exige_vacina': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'reservar_hotel': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'alimentacao_terceiros': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+
+        }
+        labels = {
+            'itinerario': _('Itinerário'),
+            'escalas': _('Escalas'),
+            'dada_inicio': _('Data Inicio'),
+            'dada_fim': _('Data Fim'),
+            'origem': _('Origem'),
+            'destino': _('Destino'),
+            'acompanhante': _(''),
+            'necessidade_especial': _(''),
+            'objetivo': _('Objetivo'),
+            'justificativa': _('Justificativa de Excepcionalidade'),
+            'tipo_viagem': _('Tipo de Viagem'),
+            'tipo_solicitacao': _('Tipo de Solicitação'),
+            'motivo': _('Motivo'),
+            'tipo_transporte': _('Tipo de Transporte'),
+            'categoria_passagem': _('Catergoria da Passagem'),
+            'horario_preferencial': _('Horário Preferencial'),
+            'bagagem_tecnica': _('Bagagem Técnica'),
+            'bagagem_despachada': _('Bagagem Despachada'),
+            'crianca_colo': _('Criança de Colo'),
+            'local_risco': _('Local de risco'),
+            'exige_vacina': _('Exige comprovante de vacina'),
+            'reservar_hotel': _('Reservar hotel'),
+            'alimentacao_terceiros': _('Alimentação Terceiros'),
+
+        }
+
+    def save(self, commit=True):
+        instance = super(ViagemForm, self).save(commit=False)
+        instance.solicitante = self.request_user
+        if commit:
+            instance.save()
+        return instance
+
 
 class PrestacaoContaForm(forms.ModelForm):
     '''

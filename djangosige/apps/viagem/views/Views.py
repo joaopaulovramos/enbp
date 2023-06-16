@@ -590,6 +590,39 @@ class EditarViagemView(CustomUpdateView):
         return self.form_invalid(form)
 
 
+class VerSolicitacaoViagem(CustomUpdateView):
+    form_class = VerViagemForm
+    model = ViagemModel
+    template_name = 'viagem/ver_solicitacao.html'
+    success_url = reverse_lazy('viagem:listaviagem')
+    success_message = "Visualização."
+    permission_codename = 'solicitar_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(VerSolicitacaoViagem, self).get_context_data(**kwargs)
+        context['return_url'] = reverse_lazy('viagem:listaviagem')
+        context['title_complete'] = 'Visualizando solicitação de viagem'
+        context['id'] = self.object.id
+        context['user'] = self.request.user
+        context['data_inclusao'] = self.object.data_inclusao
+
+        usuario = Usuario.objects.get(id=self.object.solicitante_id)
+        context['pcd'] = usuario.pcd
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = form_class(request.POST, instance=self.object)
+        form.request_user = self.request.user
+
+        if form.is_valid():
+            self.object = form.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+
 class ListSupAutorizarViagensView(CustomListView):
     template_name = 'viagem/list_all_sup_viagens.html'
     model = ViagemModel
