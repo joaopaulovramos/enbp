@@ -155,6 +155,8 @@ class ViagemModel(models.Model):
     reservar_hotel = models.BooleanField(blank=True, default=False)
     alimentacao_terceiros = models.BooleanField(blank=True, default=False)
 
+    qtd_diarias = models.FloatField(blank=True)
+
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
 

@@ -11,6 +11,7 @@ from djangosige.apps.viagem.models import *
 import random
 import string
 
+from djangosige.apps.viagem.utils import *
 
 ID_TIPO_VIAGEM_REGULAR = '1'
 ID_TIPO_VIAGEM_NACIONAL = '1'
@@ -480,6 +481,7 @@ class AdicionarViagemView(CustomCreateView):
         data_hoje = datetime.datetime.now().date()
         data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
         data_fim = False
+        qtd_diarias = 0
 
         if request.POST['dada_fim']:
             data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
@@ -510,8 +512,12 @@ class AdicionarViagemView(CustomCreateView):
                     form.add_error('bagagem_despachada',
                                    'Você não pode despachar bagagem para esta viagem.')
 
+        if data_fim:
+            qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+
         if form.is_valid():
             self.object = form.save(commit=False)
+            self.object.qtd_diarias = qtd_diarias
             self.object.save()
             return self.form_valid(form)
         return self.form_invalid(form)
@@ -557,6 +563,7 @@ class EditarViagemView(CustomUpdateView):
         data_hoje = datetime.datetime.now().date()
         data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
         data_fim = False
+        qtd_diarias = 0
 
         if request.POST['dada_fim']:
             data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
@@ -586,9 +593,13 @@ class EditarViagemView(CustomUpdateView):
                 if diff_dias.days < 3 and request.POST['bagagem_despachada']:
                     form.add_error('bagagem_despachada',
                                    'Você não pode despachar bagagem para esta viagem.')
+        if data_fim:
+            qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
 
         if form.is_valid():
-            self.object = form.save()
+            self.object = form.save(commit=False)
+            self.object.qtd_diarias = qtd_diarias
+            self.object.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
 
