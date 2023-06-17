@@ -16,7 +16,7 @@
           <div class="header">
 
             <h2>
-              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{form.cfop.value}}
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
             <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
 
@@ -28,6 +28,77 @@
             <!-- Body-->
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+              <div class="panel panel-default">
+                <div class="panel-body" style="background:#f5f5f5">
+
+                    <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Código</label>
+                    <input disabled type="text" name="data_fim" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Inclusão</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Usuário</label>
+                    <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Origem</label>
+                    <input disabled type="text" name="data_fim" value="{{origem}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Destino</label>
+                     <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data Início</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data fim</label>
+                    <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
+
+                </div>
+              </div>
+            </div>
+
+
+                </div>
+              </div>
                
                 {% for field in form_2 %}
                 <div class="col-sm-6">
@@ -42,7 +113,7 @@
                 {% endfor %}
                 
               </div>
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ENVIAR</span></button>
             </div>
             <!--#Body-->
           </form>
@@ -50,19 +121,74 @@
 
 
         <!-- ###################################################################### -->
+        <div class="footer">
           <form role="form" action=""  method="post">
             {% csrf_token %}
+
+
               <div class="body">
 
-                   {% include 'base/search.html' %}
+              <div class="row">
+
+            <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos próprios</label>
+                        <input disabled type="text" name="recusos_proprioss" value="{{ id }}" class="form-control" id="id_recursos_proprios" readonly>
+                    </div>
+                  </div>
+                </div>
+
+          <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos da empresa</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ id }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                 <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <label>{{form.itinerario.label}}</label><strong style="color:red;"> *</strong> <br>
+
+                      <input type="radio" name="itinerario" id="radio_ida" value="0" {% if form.itinerario.value == '0' %}checked="checked"{% endif %} checked="checked" />
+                      <label for="radio_ida"><strong>Aprovada</strong></label>
+
+                        <input type="radio" name="itinerario" id="radio_idavolta" value="1" {% if form.itinerario.value == '1' %}checked="checked"{% endif %} />
+                      <label for="radio_idavolta"><strong>Rejeitada</strong></label>
+
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Motivo da recusa</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ id }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+{#                   {% include 'base/search.html' %}#}
 
                    <div class="table-responsive">
                     <table id="lista-database" class="table table-bordered table-striped lista-table">
                       <thead>
                         <tr>
-                          <th>Descrição</th>
-                          <th>Arquivo</th>
-                          <th>Remover</th>
+                            <th>Item</th>
+                            <th>Tipo de Despesa</th>
+                            <th>Valor</th>
+                            <th>Anexo</th>
+                            <th>Remover</th>
                         </tr>
                       </thead>
 
@@ -71,11 +197,13 @@
                        {% for natop in arquivos %}
 
                        <tr>
-                        <td>{{natop.descricao}}</td>
-                        <td><a href="{{natop.file.url}}">Download</a></td>
-                        <td class="lista-remove">
-                          <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
-                        </td>
+                           <td>{{natop.numero_item}}</td>
+                           <td>{{natop.tipo_despesa_id}}</td>
+                           <td>{{natop.valor_pago_reais}}</td>
+                           <td><a href="{{natop.file.url}}">Download</a></td>
+                           <td class="lista-remove">
+                               <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
+                           </td>
                       </tr>
                       {% endfor %}
                       {%else%}
@@ -85,6 +213,7 @@
                 </div>
               </div>
           </form>
+        </div>
         <!-- ###################################################################### -->
         </div>
       </div>
@@ -95,18 +224,3 @@
 
 
 {%endblock%}
-
-{% block js %}
-    
-  {% load static %}
-  <!-- JQuery UI Css/Js -->
-  <link href="{% static 'css/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
-  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-
-  <script type="text/javascript">
-    var cfop_path = '{% static 'tabelas/cfop/cfop_2015_002.csv' %}'
-    $.Admin.autocompleteField.autocompleteCfop(cfop_path);
-    
-  </script>
-  
-{% endblock %}

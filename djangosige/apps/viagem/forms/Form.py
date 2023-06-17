@@ -167,8 +167,8 @@ class ViagemForm(forms.ModelForm):
             'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
-            'dada_inicio': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
-            'dada_fim': DateInput(format=["%d-%m-%Y"], attrs={'class': 'form-control', 'size': '200'}),
+            'dada_inicio': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
+            'dada_fim': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'acompanhante': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
@@ -366,17 +366,41 @@ class ArquivosForm(forms.ModelForm):
     class Meta:
         model = Arquivos
         # 'viagem',
-        fields = ('descricao', 'file',)
+        fields = ('descricao',
+                  'file',
+                  'numero_item',
+                  'tipo_despesa',
+                  'moeda',
+                  'data_evento',
+                  'pagamento',
+                  'valor_pago',
+                  'cotacao',
+                  'valor_pago_reais',
+                  )
 
         widgets = {
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
-            # 'viagem': forms.Select(attrs={'class': 'form-control select-produto'}),
+            'numero_item': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
+            'tipo_despesa': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'moeda': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'data_evento': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
+            'pagamento': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'valor_pago': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
+            'cotacao': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
+            'valor_pago_reais': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
         }
         labels = {
-            'descricao': _('Descrição'),
+            'descricao': _('Descrição do Item'),
             'file': _('Arquivo'),
-            # 'viagem': _('Viagem'),
+            'numero_item': _('Item'),
+            'tipo_despesa': _('Tipo de Despesa'),
+            'moeda': _('Moeda'),
+            'data_evento': _('Data do evento'),
+            'pagamento': _('Forma de Pagamento'),
+            'valor_pago': _('Valor Pago'),
+            'cotacao': _('Cotação do Dia'),
+            'valor_pago_reais': _('Valor pago em Reais'),
         }
 
 

@@ -479,7 +479,7 @@ class AdicionarViagemView(CustomCreateView):
         form.request_user = self.request.user
 
         data_hoje = datetime.datetime.now().date()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S").date()
         data_fim = False
         qtd_diarias = 0
 
@@ -561,12 +561,12 @@ class EditarViagemView(CustomUpdateView):
         form.request_user = self.request.user
 
         data_hoje = datetime.datetime.now().date()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d").date()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S").date()
         data_fim = False
         qtd_diarias = 0
 
         if request.POST['dada_fim']:
-            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d %H:%M:%S").date()
 
         if 'itinerario' in request.POST.keys():
             if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
@@ -850,10 +850,24 @@ class PrestarContasArquivosView(CustomUpdateView):
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
         context = super(PrestarContasArquivosView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Adicionando itens de prestação de contras'
         context['form_2'] = self.form_2
         context['return_url'] = reverse_lazy('viagem:listaviagem')
         context['viagem_pk'] = pk
         context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+
+        context['id'] = self.object.id
+        context['origem'] = self.object.origem
+        context['destino'] = self.object.destino
+        context['data_inicio'] = self.object.dada_inicio
+        context['data_fim'] = self.object.dada_fim
+        context['data_inclusao'] = self.object.data_inclusao
+
+        usuario_solicitante_id = self.object.solicitante_id
+        usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
+
+        context[
+            'solicitante'] = f'{usuario_solicitante.get_username()} - {usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
 
         return context
 

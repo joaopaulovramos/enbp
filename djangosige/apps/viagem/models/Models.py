@@ -179,3 +179,18 @@ class Arquivos(models.Model):
     descricao = models.TextField(blank=False, null=False)
     file = models.FileField(upload_to='files/', null=False, blank=False)
     viagem = models.ForeignKey(ViagemModel, related_name="arquivos_viagem", null=True, on_delete=models.CASCADE)
+
+    numero_item = models.IntegerField(null=False)
+    tipo_despesa = models.ForeignKey(TipoDeDespesaModel, related_name="arquivos_despesa", on_delete=models.CASCADE)
+    moeda = models.ForeignKey(MoedaModel, related_name="arquivos_moeda", on_delete=models.CASCADE)
+
+    data_evento = models.DateField()
+    pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
+    valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[
+                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+    cotacao = models.DecimalField(max_digits=16, decimal_places=2, validators=[
+                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2, validators=[
+                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+
+

@@ -968,6 +968,15 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   margin-bottom: 30px;
 }
+.card .footer {
+  color: #555;
+  padding: 20px;
+  position: relative;
+  border-top: 1px solid rgba(66, 58, 58, 0.35);
+  overflow: hidden;
+  background: #f5f5f5;
+ }
+
 .card .header {
   color: #555;
   padding: 20px;
