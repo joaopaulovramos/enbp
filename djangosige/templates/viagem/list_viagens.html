@@ -45,7 +45,7 @@
                     <th>DUS</th>
                     <th>Homologada</th>
                     <th>Prestar Contas</th>
-                    <th>ARQUIVOS</th>
+{#                    <th>ARQUIVOS</th>#}
                      <th>Avaliação</th>
                     <th>Remover</th>
                 </tr>
@@ -93,37 +93,41 @@
 
 
                     </td>
-                   <td>
-                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '0' %}
-                            <a href="{% url 'viagem:prestar_contas' natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS</span></a>
-                       {% endif %}
-
-                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
-                           <a class="btn"><span> Enviado Para Aprovação</span></a>
-                       {% endif %}
-
-                       {% if natop.aprovar_pc == '1' %}
-                            <a class="btn btn-success"><span> APROVADA</span></a>
-                       {% endif %}
-                   </td>
+{#                   <td>#}
+{#                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '0' %}#}
+{#                            <a href="{% url 'viagem:prestar_contas' natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS</span></a>#}
+{#                       {% endif %}#}
+{##}
+{#                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}#}
+{#                           <a class="btn"><span> Enviado Para Aprovação</span></a>#}
+{#                       {% endif %}#}
+{##}
+{#                       {% if natop.aprovar_pc == '1' %}#}
+{#                            <a class="btn btn-success"><span> APROVADA</span></a>#}
+{#                       {% endif %}#}
+{#                   </td>#}
                     <td>
                        {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '0' %}
-                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> ENVIAR ARQUIVOS </span></a>
+                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONSTAS </span></a>
                        {% endif %}
                        {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
                             <a class="btn"><span> Enviado Para Aprovação</span></a>
                        {% endif %}
                         {% if natop.aprovar_pc == '1' %}
-                            <a class="btn btn-success"><span> APROVADA</span></a>
+                            <a class="btn btn-success disabled"><span> APROVADA</span></a>
                        {% endif %}
 
                    </td>
                <td>
                        {% if natop.aprovar_pc == '1' %}
-                            <a class="btn btn-success"><span> APROVADA</span></a>
+                            <a class="btn btn-success disabled"><span> APROVADA</span></a>
                        {% endif %}
                        {% if natop.aprovar_pc == '2' %}
-                           <a class="btn btn-red btn-success"><span>REPROVADA</span></a>
+                           <a class="btn btn-red btn-success disabled"><span>REPROVADA</span></a>
+
+                       {% endif %}
+                       {% if natop.finalizar_pc == '1' and natop.aprovar_pc == '0' %}
+                           <a class="btn btn-warning btn-success disabled"><span>EM ANÁLISE</span></a>
 
                        {% endif %}
                    </td>

@@ -16,6 +16,7 @@ from djangosige.apps.viagem.utils import *
 ID_TIPO_VIAGEM_REGULAR = '1'
 ID_TIPO_VIAGEM_NACIONAL = '1'
 
+
 #### Tipos de Viagens
 class ListTipoViagensView(CustomListView):
     template_name = 'viagem/list_tipo_viagem.html'
@@ -830,6 +831,26 @@ class PrestarContasArquivosView(CustomUpdateView):
     permission_codename = 'solicitar_viagens'
 
     def post(self, request, *args, **kwargs):
+
+        viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+
+        # Verifica a submimissão do botão finalizar
+        if 'finalizar':
+            url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
+
+            if 'check_remarcacao' in request.POST.keys():
+                viagem.remarcacao_interesse_particular = '1'
+            else:
+                viagem.remarcacao_interesse_particular = '0'
+
+            if 'finalizar_pc' in request.POST.keys():
+                viagem.finalizar_pc = '1'
+                viagem.aprovar_pc = '0'
+                url = reverse_lazy('viagem:listaviagem')
+
+            viagem.save()
+            return redirect(url)
+
         self.object = None
         form = ArquivosForm(request.POST, request.FILES, instance=self.object)
         letters = string.ascii_lowercase
@@ -841,33 +862,52 @@ class PrestarContasArquivosView(CustomUpdateView):
         if form.is_valid():
             request.FILES['file'].name = name + '.' + ext
             self.object = self.get_object()
-            form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
+            form.instance.viagem = viagem
             self.object = form.save()
             url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
             return redirect(url)
-            # return self.form_invalid(form)
+        else:
+            print(form.errors)
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
         context = super(PrestarContasArquivosView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Adicionando itens de prestação de contras'
+        context['title_complete'] = 'Prestação de contras'
         context['form_2'] = self.form_2
         context['return_url'] = reverse_lazy('viagem:listaviagem')
         context['viagem_pk'] = pk
-        context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
+        context['arquivos'] = Arquivos.objects.filter(viagem=context['viagem_pk'])
 
-        context['id'] = self.object.id
-        context['origem'] = self.object.origem
-        context['destino'] = self.object.destino
-        context['data_inicio'] = self.object.dada_inicio
-        context['data_fim'] = self.object.dada_fim
-        context['data_inclusao'] = self.object.data_inclusao
+        total_recursos_proprios = 0
+        total_recursos_empresa = 0
+        for arquivo in context['arquivos']:
+            if arquivo.pagamento == 'RECURSOS PRÓPRIOS':
+                total_recursos_proprios += arquivo.valor_pago_reais
+            if arquivo.pagamento == 'RECURSOS DA EMPRESA':
+                total_recursos_empresa += arquivo.valor_pago_reais
 
-        usuario_solicitante_id = self.object.solicitante_id
+        context['totais_pagos'] = {'recursos_proprios': total_recursos_proprios,
+                                   'recursos_empresa': total_recursos_empresa}
+
+        viagem_solicitada = ViagemModel.objects.get(pk=pk)
+
+        context['id'] = viagem_solicitada.id
+        context['origem'] = viagem_solicitada.origem
+        context['destino'] = viagem_solicitada.destino
+        context['data_inicio'] = viagem_solicitada.dada_inicio
+        context['data_fim'] = viagem_solicitada.dada_fim
+        context['data_inclusao'] = viagem_solicitada.data_inclusao
+        context['aprovar_pc'] = viagem_solicitada.aprovar_pc
+        context['motivo_pc_reprovacao'] = viagem_solicitada.motivo_reprovacao_pc
+        context['remarcacao_interesse_particular'] = viagem_solicitada.remarcacao_interesse_particular
+        context['finalizar_pc'] = viagem_solicitada.finalizar_pc
+
+        usuario_solicitante_id = viagem_solicitada.solicitante_id
         usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
 
-        context[
-            'solicitante'] = f'{usuario_solicitante.get_username()} - {usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
+        context['solicitante'] = f'{usuario_solicitante.get_username()} - ' \
+                                 f'{usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
 
         return context
 

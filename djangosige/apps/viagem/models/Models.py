@@ -10,8 +10,8 @@ from djangosige.apps.login.models import Usuario
 GRUPO_FUNCIONAL_DIRETOR = '0'
 
 PAGAMENTO = [
-    ('RECURSOS DA EMPRESA', 'RECURSOS DA EMPRESA'),
-    ('RECURSOS PRÓPRIOS', 'RECURSOS PRÓPRIOS'),
+    ('RECURSOS DA EMPRESA', 'Recursos da Empresa'),
+    ('RECURSOS PRÓPRIOS', 'Recursos Próprios'),
 ]
 
 BOOLEANO = [
@@ -146,6 +146,7 @@ class ViagemModel(models.Model):
                                                        default=0)
     finalizar_pc = models.CharField(max_length=50, null=True, blank=True, choices=BOOLEANO, default='0')
     aprovar_pc = models.CharField(max_length=50, null=True, blank=True, choices=PC, default='0')
+    motivo_reprovacao_pc = models.TextField(max_length=512, null=True, blank=True)
 
     bagagem_tecnica = models.BooleanField(blank=True, default=False)
     bagagem_despachada = models.BooleanField(blank=True, default=False)
@@ -184,7 +185,7 @@ class Arquivos(models.Model):
     tipo_despesa = models.ForeignKey(TipoDeDespesaModel, related_name="arquivos_despesa", on_delete=models.CASCADE)
     moeda = models.ForeignKey(MoedaModel, related_name="arquivos_moeda", on_delete=models.CASCADE)
 
-    data_evento = models.DateField()
+    data_evento = models.DateField(null=True, blank=True)
     pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
     valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[
                                 MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))

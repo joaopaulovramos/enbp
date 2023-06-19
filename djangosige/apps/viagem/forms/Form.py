@@ -379,13 +379,13 @@ class ArquivosForm(forms.ModelForm):
                   )
 
         widgets = {
-            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '250'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
             'numero_item': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'tipo_despesa': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'moeda': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
-            'data_evento': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
-            'pagamento': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'data_evento': DateInput(attrs={'class': 'form-control', 'size': '200'}),
+            'pagamento': forms.Select(attrs={'class': 'form-control'}),
             'valor_pago': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'cotacao': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'valor_pago_reais': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
