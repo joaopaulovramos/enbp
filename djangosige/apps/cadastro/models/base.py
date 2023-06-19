@@ -136,14 +136,14 @@ class Pessoa(models.Model):
 
     @property
     def cpf_cnpj_apenas_digitos(self):
+        cpf_cnpj = None
         if self.tipo_pessoa == 'PF':
-            if self.pessoa_fis_info.cpf:
-                return re.sub('[./-]', '', self.pessoa_fis_info.cpf)
-
+            cpf_cnpj = self.pessoa_fis_info.cpf.raw_input
         elif self.tipo_pessoa == 'PJ':
-            if self.pessoa_jur_info.cnpj:
-                return re.sub('[./-]', '', self.pessoa_jur_info.cnpj)
+            cpf_cnpj = self.pessoa_jur_info.cnpj.raw_input
 
+        if cpf_cnpj:
+            return re.sub('[./-]', '', cpf_cnpj)
         else:
             return ''
 
@@ -220,7 +220,7 @@ class PessoaFisica(models.Model):
 class PessoaJuridica(models.Model):
     pessoa_id = models.OneToOneField(
         Pessoa, on_delete=models.CASCADE, primary_key=True, related_name='pessoa_jur_info')
-    cnpj = CNPJField(masked=True, null=True)
+    cnpj = CNPJField(masked=True, null=True, unique=True)
     nome_fantasia = models.CharField(max_length=255, null=True, blank=True)
     inscricao_estadual = models.CharField(max_length=32, null=True, blank=True)
     responsavel = models.CharField(max_length=32, null=True, blank=True)

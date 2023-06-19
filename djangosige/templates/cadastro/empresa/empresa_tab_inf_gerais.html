@@ -21,14 +21,22 @@
   </div>
 </div>
 
-<div class="col-sm-4">
+<div class="col-sm-3">
   <div class="form-group">
     <div class="form-line">
-      <label>{{pessoa_juridica_form.cnpj.label}}</label>
+      <label>{{pessoa_juridica_form.cnpj.label}}</label><strong style="color:red;"> *</strong>
       {% if pessoa_juridica_form.cnpj.errors %}<label class="error">{% for error in pessoa_juridica_form.cnpj.errors %}{{error}}{% endfor %}</label>{% endif %}
       {{pessoa_juridica_form.cnpj}}
     </div>
   </div>
+</div>
+
+<div class="col-sm-1 ">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <button class="btn btn-success" type="submit" name="cnpj_sync_btn"><i class="material-icons">&#xE148;</i><span> SYNC</span></button>
+      </div>
+    </div>
 </div>
 
 <div class="col-sm-2">
