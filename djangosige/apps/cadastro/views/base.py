@@ -3,6 +3,7 @@ import json
 import re
 
 import requests
+from bradocs4py import ValidadorInscricaoEstadual
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
 
@@ -324,6 +325,10 @@ class EditarPessoaView(CustomUpdateView):
 
         if (not self.suframaActive(request.POST)):
             pessoa_juridica_form.add_error('suframa', 'Inscricão inválida')
+
+        if (request.POST['pessoa_jur_form-inscricao_estadual'] and request.POST['endereco_form-0-uf']):
+            if (not ValidadorInscricaoEstadual.validarStr(request.POST['pessoa_jur_form-inscricao_estadual'], request.POST['endereco_form-0-uf'])):
+                pessoa_juridica_form.add_error('inscricao_estadual', 'Inscricão inválida para ' + request.POST['endereco_form-0-uf'])
 
         return self.form_invalid(form=form,
                                  pessoa_juridica_form=pessoa_juridica_form,
