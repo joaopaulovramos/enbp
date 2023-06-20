@@ -572,13 +572,16 @@ class AdicionarViagemView(CustomCreateView):
         form = self.get_form(form_class)
         form.request_user = self.request.user
 
-        data_hoje = datetime.datetime.now().date()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S").date()
+        data_hoje = datetime.datetime.now()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S")
         data_fim = False
-        qtd_diarias = 0
+
+        _qtd_diarias = 0
+        _valor_diaria = 0
+        _valor_total_diarias = 0
 
         if request.POST['dada_fim']:
-            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d").date()
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d %H:%M:%S")
 
         if 'itinerario' in request.POST.keys():
             if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
@@ -607,11 +610,18 @@ class AdicionarViagemView(CustomCreateView):
                                    'Você não pode despachar bagagem para esta viagem.')
 
         if data_fim:
-            qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+            _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+            usuario = Usuario.objects.get(id=self.request.user.id)
+            tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
+            tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+            _valor_diaria = tabela_diaria.valor_diaria
+            _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
         if form.is_valid():
             self.object = form.save(commit=False)
-            self.object.qtd_diarias = qtd_diarias
+            self.object.qtd_diarias = _qtd_diarias
+            self.object.valor_diaria = _valor_diaria
+            self.object.valor_total_diarias = _valor_total_diarias
             self.object.save()
             return self.form_valid(form)
         return self.form_invalid(form)

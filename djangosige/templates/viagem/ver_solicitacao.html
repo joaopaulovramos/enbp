@@ -270,62 +270,100 @@
 
 
                <div class="col-sm-12">
-                  <div class="form-group">
-                    <div class="form-line">
 
-                        {{form.bagagem_tecnica}}
-                        <label for="id_bagagem_tecnica"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, o viajante terá direito a uma bagagem técnica.">
-                            {{ form.bagagem_tecnica.label }}
-                        </label> <br>
+                   <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                        {{form.bagagem_despachada}}
-                        <label for="id_bagagem_despachada"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, o viajante terá direito a uma bagagem despachada.">
-                            {{ form.bagagem_despachada.label }}
-                            {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
-                        </label> <br>
+                            {{form.bagagem_tecnica}}
+                            <label for="id_bagagem_tecnica"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, o viajante terá direito a uma bagagem técnica.">
+                                {{ form.bagagem_tecnica.label }}
+                            </label> <br>
 
-                        {{form.crianca_colo}}
-                        <label for="id_crianca_colo"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.crianca_colo.label }}
-                        </label> <br>
+                            {{form.bagagem_despachada}}
+                            <label for="id_bagagem_despachada"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, o viajante terá direito a uma bagagem despachada.">
+                                {{ form.bagagem_despachada.label }}
+                                {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
+                            </label> <br>
 
-                        {{form.local_risco}}
-                        <label for="id_local_risco"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.local_risco.label }}
-                        </label> <br>
+                            {{form.crianca_colo}}
+                            <label for="id_crianca_colo"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, viajará com uma criança de colo.">
+                                {{ form.crianca_colo.label }}
+                            </label> <br>
 
-                        {{form.exige_vacina}}
-                        <label for="id_exige_vacina"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.exige_vacina.label }}
-                        </label> <br>
+                            {{form.local_risco}}
+                            <label for="id_local_risco"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, viajará com uma criança de colo.">
+                                {{ form.local_risco.label }}
+                            </label> <br>
 
-                        {{form.reservar_hotel}}
-                        <label for="id_reservar_hotel"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.reservar_hotel.label }}
-                        </label> <br>
+                            {{form.exige_vacina}}
+                            <label for="id_exige_vacina"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, viajará com uma criança de colo.">
+                                {{ form.exige_vacina.label }}
+                            </label> <br>
 
-                        {{form.alimentacao_terceiros}}
-                        <label for="id_alimentacao_terceiros"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.alimentacao_terceiros.label }}
-                        </label>
+                            {{form.reservar_hotel}}
+                            <label for="id_reservar_hotel"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, viajará com uma criança de colo.">
+                                {{ form.reservar_hotel.label }}
+                            </label> <br>
+
+                            {{form.alimentacao_terceiros}}
+                            <label for="id_alimentacao_terceiros"
+                                   style="font-weight: bold;"
+                                   title="Caso selecionado, viajará com uma criança de colo.">
+                                {{ form.alimentacao_terceiros.label }}
+                            </label>
+
+                        </div>
+                      </div>
+                   </div>
+
+                    <div class="col-sm-8">
+
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <div class="form-line">
+
+                              <label>{{form.qtd_diarias.label}}</label>
+                              {{form.qtd_diarias}}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <div class="form-line">
+
+                              <label>{{form.valor_diaria.label}}</label>
+                              {{form.valor_diaria}}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <div class="form-line">
+
+                              <label>{{form.valor_total_diarias.label}}</label>
+                              {{form.valor_total_diarias}}
+                            </div>
+                          </div>
+                        </div>
 
                     </div>
-                  </div>
-                </div>
+
+               </div>
 
                   
               </div>

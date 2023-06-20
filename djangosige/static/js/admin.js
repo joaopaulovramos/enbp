@@ -3882,7 +3882,7 @@ $.Admin.viagemForm = {
          function esconder_mostrar_campo(valor_radio){
              if (valor_radio.val() == '0'){
                  /* Usar datepicker para resertar data preenchida */
-                 // $('#id_dada_fim').val("")
+                 $('#id_dada_fim').val("")
                  $('#id_dada_fim').parent().hide()
              }
              else{

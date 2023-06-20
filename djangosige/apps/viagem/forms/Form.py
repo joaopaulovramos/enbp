@@ -303,16 +303,17 @@ class VerViagemForm(forms.ModelForm):
             'exige_vacina',
             'reservar_hotel',
             'alimentacao_terceiros',
+            'qtd_diarias',
+            'valor_diaria',
+            'valor_total_diarias',
         )
         widgets = {
             'valor_passagem': forms.NumberInput(
                 attrs={'class': 'form-control', 'id': 'valor_passagem_viagem', 'disabled': 'disabled'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control', 'disabled': 'disabled'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control', 'disabled': 'disabled'}),
-            'dada_inicio': DateInput(format=["%d-%m-%Y"],
-                                     attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
-            'dada_fim': DateInput(format=["%d-%m-%Y"],
-                                  attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
+            'dada_inicio': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200', 'disabled': 'disabled'}),
+            'dada_fim': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
             'acompanhante': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
@@ -337,6 +338,9 @@ class VerViagemForm(forms.ModelForm):
             'exige_vacina': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
             'reservar_hotel': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
             'alimentacao_terceiros': forms.CheckboxInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'qtd_diarias': forms.NumberInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'valor_diaria': forms.NumberInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'valor_total_diarias': forms.NumberInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
 
         }
         labels = {
@@ -363,6 +367,9 @@ class VerViagemForm(forms.ModelForm):
             'exige_vacina': _('Exige comprovante de vacina'),
             'reservar_hotel': _('Reservar hotel'),
             'alimentacao_terceiros': _('Alimentação Terceiros'),
+            'qtd_diarias': _('Qtd. de Diárias'),
+            'valor_diaria': _('Valor diária'),
+            'valor_total_diarias': _('Valor Total'),
 
         }
 
