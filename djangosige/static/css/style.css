@@ -1296,6 +1296,18 @@ fieldset[disabled] .form-control {
     width: 40%; }
 }
 
+@media (min-width: 768px) and (max-width: 1660.98px){
+  .modal-md{
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px){
+  .modal-md{
+    width: 90%;
+  }
+}
+
 
 /* Block ==============================*/
 .block-header {

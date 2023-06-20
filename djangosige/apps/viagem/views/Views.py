@@ -835,7 +835,8 @@ class PrestarContasArquivosView(CustomUpdateView):
         viagem = ViagemModel.objects.get(pk=kwargs['pk'])
 
         # Verifica a submimissão do botão finalizar
-        if 'finalizar':
+        if 'finalizar' in request.POST.keys():
+            print("Aqui")
             url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
 
             if 'check_remarcacao' in request.POST.keys():
@@ -1047,7 +1048,6 @@ class ListAprovarPCViagensView(CustomListView):
         context['title_complete'] = 'Viagens'
         return context
 
-
 class AvaliarPrestacaoDeContas(CustomUpdateView):
     form_class = AvaliarPrestacaoContaForm
     model = ViagemModel
@@ -1177,9 +1177,36 @@ class AvaliarArquivosView(CustomUpdateView):
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
         context = super(AvaliarArquivosView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Visualizando Prestação de Contas'
         context['form_2'] = self.form_2
         context['return_url'] = reverse_lazy('viagem:listaaprovarpcviagem')
         context['viagem_pk'] = pk
         context['arquivos'] = Arquivos.objects.filter(viagem=context['object'])
 
+        viagem_solicitada = ViagemModel.objects.get(pk=pk)
+
+        total_recursos_proprios = 0
+        total_recursos_empresa = 0
+        for arquivo in context['arquivos']:
+            if arquivo.pagamento == 'RECURSOS PRÓPRIOS':
+                total_recursos_proprios += arquivo.valor_pago_reais
+            if arquivo.pagamento == 'RECURSOS DA EMPRESA':
+                total_recursos_empresa += arquivo.valor_pago_reais
+
+        context['totais_pagos'] = {'recursos_proprios': total_recursos_proprios,
+                                   'recursos_empresa': total_recursos_empresa}
+
+        context['id'] = viagem_solicitada.id
+        context['origem'] = viagem_solicitada.origem
+        context['destino'] = viagem_solicitada.destino
+        context['data_inicio'] = viagem_solicitada.dada_inicio
+        context['data_fim'] = viagem_solicitada.dada_fim
+        context['data_inclusao'] = viagem_solicitada.data_inclusao
+        context['remarcacao_interesse_particular'] = viagem_solicitada.remarcacao_interesse_particular
+
+        usuario_solicitante_id = viagem_solicitada.solicitante_id
+        usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
+
+        context['solicitante'] = f'{usuario_solicitante.get_username()} - ' \
+                                 f'{usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
         return context

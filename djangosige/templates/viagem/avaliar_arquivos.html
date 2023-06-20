@@ -9,6 +9,9 @@
     {% include 'base/title_header.html' %}
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+
       <div class="row">
         <div class="card">
 
@@ -16,23 +19,136 @@
           <div class="header">
 
             <h2>
-              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{form.cfop.value}}
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
             <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
 
           </div>
+
+
+
           <form role="form" action=""  method="post">
             {% csrf_token %}
               <div class="body">
 
+              <div class="panel panel-default">
+                <div class="panel-body" style="background:#f5f5f5">
+
+                    <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Código da Solicitação</label>
+                    <input disabled type="text" name="data_fim" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Inclusão</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Usuário</label>
+                    <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Origem</label>
+                    <input disabled type="text" name="data_fim" value="{{origem}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Destino</label>
+                     <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data Início</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data fim</label>
+                    <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
+
+                </div>
+              </div>
+            </div>
+
+
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos próprios</label>
+                        <input disabled type="text" name="recusos_proprioss" value="{{ totais_pagos.recursos_proprios }}" class="form-control" id="id_recursos_proprios" readonly>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos da empresa</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ totais_pagos.recursos_empresa }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <label>Outros</label><br>
+                        <input disabled type="checkbox" name="check_remarcacao" class="form-control" id="id_check_remarcacao" {% if remarcacao_interesse_particular == '1' %}checked="checked"{% endif %}>
+                        <label for="id_check_remarcacao"
+                               style="font-weight: bold;"
+                               title=""> Remarcação por Interesse particular
+                        </label>
+                    </div>
+                  </div>
+                </div>
+
                    {% include 'base/search.html' %}
 
                    <div class="table-responsive">
-                    <table id="lista-database" class="table table-bordered table-striped lista-table">
+                    <table id="lista-database" class="table table-bordered table-striped table-hover lista-table">
                       <thead>
                         <tr>
-                          <th>Descrição</th>
-                          <th>Arquivo</th>
+                            <th>Item</th>
+                            <th>Descrição</th>
+                            <th>Data</th>
+                            <th>Tipo de Despesa</th>
+                            <th>Valor</th>
+                            <th>Pagamento</th>
+                            <th>Anexo</th>
 
                         </tr>
                       </thead>
@@ -42,8 +158,13 @@
                        {% for natop in arquivos %}
 
                        <tr>
-                        <td>{{natop.descricao}}</td>
-                        <td><a href="{{natop.file.url}}">Download</a></td>
+                           <td>{{natop.numero_item}}</td>
+                           <td>{{natop.descricao}}</td>
+                           <td>{{natop.data_evento}}</td>
+                           <td>{{natop.tipo_despesa}}</td>
+                           <td>R$ {{natop.valor_pago_reais}}</td>
+                           <td>{{natop.pagamento}}</td>
+                           <td><a href="{{natop.file.url}}">Download</a></td>
                       </tr>
                       {% endfor %}
                       {%else%}

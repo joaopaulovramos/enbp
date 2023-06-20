@@ -217,7 +217,7 @@
                 </div>
 
               </div>
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
+              <button name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
             </div>
             <!--#Body-->
           </form>
@@ -340,7 +340,7 @@
                            <td>{{natop.valor_pago_reais}}</td>
                            <td><a href="{{natop.file.url}}">Download</a></td>
                            <td class="lista-remove">
-                               <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
+                               <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success btn-xs"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
                            </td>
                       </tr>
                       {% endfor %}

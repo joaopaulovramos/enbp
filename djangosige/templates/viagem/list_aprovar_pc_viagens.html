@@ -35,6 +35,7 @@
             <table id="lista-database" class="table table-bordered table-striped lista-table">
               <thead>
                 <tr>
+                    <th>Código</th>
                     <th>Solicitante</th>
                     <th>Valor Da Passagem</th>
                     <th>Data Inicio</th>
@@ -47,7 +48,7 @@
                     <th>Motivo</th>
                     <th>Solicitado</th>
                     <th>Prestação de Contas</th>
-                    <th>Arquivos</th>
+{#                    <th>Arquivos</th>#}
                   <th>Selecionar</th>
                 </tr>
               </thead>
@@ -57,8 +58,9 @@
                {% for natop in all_natops %}
 
                <tr >
+                   <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
-                   <td>{{natop.valor_passagem}}</td>
+                   <td>R$ {{natop.valor_passagem}}</td>
                    <td>{{natop.dada_inicio}}</td>
                    <td>{{natop.dada_fim}}</td>
                    <td>{{natop.origem}}</td>
@@ -67,9 +69,9 @@
                    <td>{{natop.tipo_viagem}}</td>
                    <td>{{natop.tipo_solicitacao}}</td>
                    <td>{{natop.motivo}}</td>
-                   <td><a href="{% url 'viagem:avaliar_solicitacao_viagem' natop.id %}" class="btn btn-success"><span> Ver Solicitação </span></a></td>
-                   <td><a href="{% url 'viagem:avaliar_prestacao_de_contas' natop.id %}" class="btn btn-success"><span> Ver Prestação de Contas </span></a></td>
-                   <td><a href="{% url 'viagem:avaliar_arquivos'  natop.id %}" class="btn btn-success"><span> Arquivos Enviados </span></a></td>
+                   <td><a class="btn btn-success clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"><span> Ver Solicitação </span></a></td>
+{#                   <td><a href="{% url 'viagem:avaliar_prestacao_de_contas' natop.id %}" class="btn btn-success"><span> Ver Prestação de Contas </span></a></td>#}
+                   <td><a href="{% url 'viagem:avaliar_arquivos'  natop.id %}" class="btn btn-success"><span> Ver Prestação de Contas </span></a></td>
 
                 <td class="lista-remove">
                   <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
@@ -90,8 +92,25 @@
   </div>
 </div>
 
+  {#  Modal para detalhes #}
+
+        {% include 'base/modal_viagem.html' %}
+
+        {#  Modal para detalhes #}
+
 </div>
 </section>
 
 
 {%endblock%}
+
+{% block js %}
+
+  {% load static %}
+
+  <script src="{% static 'js/jquery.mask.js' %}"></script>
+  <script type="text/javascript">
+      $.Admin.viagemForm.init()
+  </script>
+
+{% endblock %}
