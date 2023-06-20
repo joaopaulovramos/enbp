@@ -36,6 +36,11 @@ ITINERARIO = [
     ('1', 'Ida e Volta'),
 ]
 
+GRUPO_FUNCIONAL = [
+    ('0', 'A - DIRETORES e CONSELHEIROS'),
+    ('1', 'B – PROFISSIONAIS'),
+]
+
 
 class TiposDeViagemModel(models.Model):
     nome = models.CharField(max_length=200)
@@ -102,11 +107,29 @@ class TiposNecessidadeEspecialModel(models.Model):
         return self.descricao
 
 
+class LocalidadeModel(models.Model):
+    descricao = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.descricao
+
+
+class TabelaDiariaModel(models.Model):
+    grupo_funcional = models.CharField(max_length=1, choices=GRUPO_FUNCIONAL, default=GRUPO_FUNCIONAL[1][0])
+    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="diaria_localidade", on_delete=models.CASCADE)
+    moeda = models.ForeignKey(MoedaModel, related_name="diaria_moeda", on_delete=models.CASCADE)
+    valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
+                                       validators=[MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+
+    def __str__(self):
+        return f'{self.localidade_destino} - {self.valor_diaria}'
+
+
 class ViagemModel(models.Model):
     solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.CASCADE, null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     valor_passagem = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
 
     itinerario = models.CharField(max_length=2, choices=ITINERARIO)
     escalas = models.CharField(max_length=1, choices=ESCALAS)
@@ -120,8 +143,11 @@ class ViagemModel(models.Model):
 
     acompanhante = models.ForeignKey(Usuario, related_name="viagem_acompanhante", on_delete=models.CASCADE, null=True,
                                      blank=True, limit_choices_to={'grupo_funcional': GRUPO_FUNCIONAL_DIRETOR})
-    necessidade_especial = models.ForeignKey(TiposNecessidadeEspecialModel, related_name="viagem_necessidade_especial", on_delete=models.CASCADE, null=True,
-                                     blank=True)
+    necessidade_especial = models.ForeignKey(TiposNecessidadeEspecialModel, related_name="viagem_necessidade_especial",
+                                             on_delete=models.CASCADE, null=True,
+                                             blank=True)
+
+    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino", on_delete=models.CASCADE)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
@@ -157,6 +183,12 @@ class ViagemModel(models.Model):
     alimentacao_terceiros = models.BooleanField(blank=True, default=False)
 
     qtd_diarias = models.FloatField(blank=True)
+    valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
+                                       validators=[MinValueValidator(Decimal('0.01'))],
+                                       default=Decimal('0.00'), blank=True, null=True)
+    valor_total_diarias = models.DecimalField(max_digits=16, decimal_places=2,
+                                              validators=[MinValueValidator(Decimal('0.01'))],
+                                              default=Decimal('0.00'), blank=True, null=True)
 
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
@@ -188,10 +220,8 @@ class Arquivos(models.Model):
     data_evento = models.DateField(null=True, blank=True)
     pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
     valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
     cotacao = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
     valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-                                MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
-
-
+        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))

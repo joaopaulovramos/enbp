@@ -51,6 +51,15 @@ urlpatterns = [
     url(r'viagem/adicionartiponecessidadeespecial/$', views.AdicionarTipoNecessidadeEspecialView.as_view(), name='adicionartiponecessidadeespecial'),
     url(r'viagem/editartiponecessidadeespecial/(?P<pk>[0-9]+)/$', views.EditarTipoNecessidadeEspecialView.as_view(), name='editartiponecessidadeespecial'),
 
+    # Localidades
+    url(r'viagem/listalocalidade/$', views.ListLocalidadeView.as_view(), name='listalocalidades'),
+    url(r'viagem/adicionarlocalidade/$', views.AdicionarLocalidadeView.as_view(), name='adicionarlocalidade'),
+    url(r'viagem/editarlocalidade/(?P<pk>[0-9]+)/$', views.EditarLocalidadeView.as_view(), name='editarlocalidade'),
+
+    # Tabela Diárias
+    url(r'viagem/listatabeladiaria/$', views.ListTabelaDiariaView.as_view(), name='listatabeladiarias'),
+    url(r'viagem/adicionartabeladiaria/$', views.AdicionarTabelaDiariaView.as_view(), name='adicionartabeladiaria'),
+    url(r'viagem/editartabeladiaria/(?P<pk>[0-9]+)/$', views.EditarTabelaDiariaView.as_view(), name='editartabeladiaria'),
 
     # Viagens
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),

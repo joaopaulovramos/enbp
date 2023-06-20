@@ -411,7 +411,6 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
     def get(self, request, *args, **kwargs):
         return super(AdicionarTipoNecessidadeEspecialView, self).get(request, *args, **kwargs)
 
-
 class EditarTipoNecessidadeEspecialView(CustomUpdateView):
     form_class = TiposNecessidadeEspecialForm
     model = TiposNecessidadeEspecialModel
@@ -427,6 +426,100 @@ class EditarTipoNecessidadeEspecialView(CustomUpdateView):
         context['id'] = self.object.id
         return context
 
+#### Localidades
+class ListLocalidadeView(CustomListView):
+    template_name = 'viagem/list_localidades.html'
+    model = LocalidadeModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listalocalidades')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListLocalidadeView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Localidades'
+        context['add_url'] = reverse_lazy('viagem:adicionarlocalidade')
+        return context
+
+
+class AdicionarLocalidadeView(CustomCreateView):
+    form_class = LocalidadeForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listalocalidades')
+    success_message = "Localidade adicionada com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarLocalidadeView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR LOCALIDADE'
+        context['return_url'] = reverse_lazy('viagem:listalocalidades')
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return super(AdicionarLocalidadeView, self).get(request, *args, **kwargs)
+
+
+class EditarLocalidadeView(CustomUpdateView):
+    form_class = LocalidadeForm
+    model = LocalidadeModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listalocalidades')
+    success_message = "Localidade Editada com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarLocalidadeView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Localidades'
+        context['return_url'] = reverse_lazy('viagem:listalocalidades')
+        context['id'] = self.object.id
+        return context
+
+
+#### Tabela de Diárias
+class ListTabelaDiariaView(CustomListView):
+    template_name = 'viagem/list_tabela_diarias.html'
+    model = TabelaDiariaModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listatabeladiarias')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListTabelaDiariaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Tabela de Diárias'
+        context['add_url'] = reverse_lazy('viagem:adicionartabeladiaria')
+        return context
+
+
+class AdicionarTabelaDiariaView(CustomCreateView):
+    form_class = TabelaDiariaForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listatabeladiarias')
+    success_message = "Localidade adicionada com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarTabelaDiariaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR TABELA DIÁRIA'
+        context['return_url'] = reverse_lazy('viagem:listatabeladiarias')
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return super(AdicionarTabelaDiariaView, self).get(request, *args, **kwargs)
+
+
+class EditarTabelaDiariaView(CustomUpdateView):
+    form_class = TabelaDiariaForm
+    model = TabelaDiariaModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listatabeladiarias')
+    success_message = "Tabela de Diária Editada com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarTabelaDiariaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Tabela de Diárias'
+        context['return_url'] = reverse_lazy('viagem:listatabeladiarias')
+        context['id'] = self.object.id
+        return context
 
 #### Viagem
 class ListViagensView(CustomListView):
@@ -564,7 +657,10 @@ class EditarViagemView(CustomUpdateView):
         data_hoje = datetime.datetime.now().date()
         data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S").date()
         data_fim = False
-        qtd_diarias = 0
+
+        _qtd_diarias = 0
+        _valor_diaria = 0
+        _valor_total_diarias = 0
 
         if request.POST['dada_fim']:
             data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d %H:%M:%S").date()
@@ -595,11 +691,21 @@ class EditarViagemView(CustomUpdateView):
                     form.add_error('bagagem_despachada',
                                    'Você não pode despachar bagagem para esta viagem.')
         if data_fim:
-            qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+            _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+            usuario = Usuario.objects.get(id=self.object.solicitante_id)
+            tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
+            tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+            _valor_diaria = tabela_diaria.valor_diaria
+            _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+
+            print(f'{_valor_total_diarias} * {_qtd_diarias} = {_valor_total_diarias}')
+
 
         if form.is_valid():
             self.object = form.save(commit=False)
-            self.object.qtd_diarias = qtd_diarias
+            self.object.qtd_diarias = _qtd_diarias
+            self.object.valor_diaria = _valor_diaria
+            self.object.valor_total_diarias = _valor_total_diarias
             self.object.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
