@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import json
+import re
+
+import requests
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
 
@@ -318,6 +322,9 @@ class EditarPessoaView(CustomUpdateView):
             pessoa_fisica_form = PessoaFisicaForm(
                 request.POST, prefix='pessoa_fis_form', instance=self.object)
 
+        if (not self.suframaActive(request.POST)):
+            pessoa_juridica_form.add_error('suframa', 'Inscricão inválida')
+
         return self.form_invalid(form=form,
                                  pessoa_juridica_form=pessoa_juridica_form,
                                  pessoa_fisica_form=pessoa_fisica_form,
@@ -328,6 +335,25 @@ class EditarPessoaView(CustomUpdateView):
                                  veiculo_form=veiculo_form,
                                  logo_file=logo_file)
 
+    def suframaActive(self, post):
+        suframa = post['pessoa_jur_form-suframa']
+        if (not suframa):
+            return True
+        cnpj = re.sub('[./-]', '', post['pessoa_jur_form-cnpj'])
+        url = "https://publica.cnpj.ws/suframa"
+        payload = json.dumps({
+            "cnpj": cnpj,
+            "inscricao": suframa
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        resp = requests.request("POST", url, headers=headers, data=payload)
+        json_object = json.loads(resp.text)
+        if "ativo" in json_object:
+            return json_object["ativo"]
+        return False
 
 ## regional
 

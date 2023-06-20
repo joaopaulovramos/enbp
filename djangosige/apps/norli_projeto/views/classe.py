@@ -134,7 +134,7 @@ class AddFilialView(CustomCreateView):
     permission_codename = 'controle_projeto'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, descricao=str(self.object))
 
     def get_context_data(self, **kwargs):
         context = super(AddFilialView, self).get_context_data(**kwargs)
@@ -153,7 +153,7 @@ class EditFilialView(CustomUpdateView):
     permission_codename = 'controle_projeto'
 
     def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+        return self.success_message % dict(cleaned_data, descricao=str(self.object))
 
     def get_context_data(self, **kwargs):
         context = super(EditFilialView, self).get_context_data(**kwargs)

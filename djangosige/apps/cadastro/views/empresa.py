@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 from django.contrib import messages
+from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
@@ -65,14 +66,22 @@ class EmpresasListView(PessoasListView):
             for key, value in request.POST.items():
                 if value == "on":
                     instance = self.model.objects.get(id=key)
-                    if (instance.codigo_legado != None or instance.inativo == '1'):#TODO verificar se existem movimentações?
+                    if (instance.codigo_legado != None or instance.inativo == '1'):
                         messages.add_message(
                             request,
                             messages.WARNING,
                             u'Empresa ' + instance.nome_razao_social + ' não pode ser excluída.',
                             'permission_warning')
                         break
-                    instance.delete()
+                    try:
+                        instance.delete()
+                    except ProtectedError as exception:
+                        messages.add_message(
+                            request,
+                            messages.WARNING,
+                            u'Empresa ' + instance.nome_razao_social + ' não pode ser excluída pois existem movimentações.',
+                            'permission_warning')
+
         return redirect(self.success_url)
 
 
