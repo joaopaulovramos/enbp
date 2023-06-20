@@ -196,6 +196,9 @@ class ViagemForm(forms.ModelForm):
             'exige_vacina',
             'reservar_hotel',
             'alimentacao_terceiros',
+            'qtd_diarias',
+            'valor_diaria',
+            'valor_total_diarias',
         )
         widgets = {
             'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
@@ -223,6 +226,9 @@ class ViagemForm(forms.ModelForm):
             'exige_vacina': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'reservar_hotel': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'alimentacao_terceiros': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'qtd_diarias': forms.NumberInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'valor_diaria': forms.NumberInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
+            'valor_total_diarias': forms.NumberInput(attrs={'class': 'form-control', 'disabled': 'disabled'}),
 
         }
         labels = {
@@ -250,6 +256,9 @@ class ViagemForm(forms.ModelForm):
             'exige_vacina': _('Exige comprovante de vacina'),
             'reservar_hotel': _('Reservar hotel'),
             'alimentacao_terceiros': _('Alimentação Terceiros'),
+            'qtd_diarias': _('Qtd. de Diárias'),
+            'valor_diaria': _('Valor diária'),
+            'valor_total_diarias': _('Valor Total'),
 
         }
 

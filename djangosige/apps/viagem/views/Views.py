@@ -654,8 +654,8 @@ class EditarViagemView(CustomUpdateView):
         form = form_class(request.POST, instance=self.object)
         form.request_user = self.request.user
 
-        data_hoje = datetime.datetime.now().date()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S").date()
+        data_hoje = datetime.datetime.now()
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%Y-%m-%d %H:%M:%S")
         data_fim = False
 
         _qtd_diarias = 0
@@ -663,7 +663,7 @@ class EditarViagemView(CustomUpdateView):
         _valor_total_diarias = 0
 
         if request.POST['dada_fim']:
-            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d %H:%M:%S").date()
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%Y-%m-%d %H:%M:%S")
 
         if 'itinerario' in request.POST.keys():
             if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
@@ -699,6 +699,8 @@ class EditarViagemView(CustomUpdateView):
             _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
             print(f'{_valor_total_diarias} * {_qtd_diarias} = {_valor_total_diarias}')
+
+            print(form.errors)
 
 
         if form.is_valid():

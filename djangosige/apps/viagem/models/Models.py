@@ -184,10 +184,10 @@ class ViagemModel(models.Model):
 
     qtd_diarias = models.FloatField(blank=True)
     valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
-                                       validators=[MinValueValidator(Decimal('0.01'))],
+                                       validators=[MinValueValidator(Decimal('0.00'))],
                                        default=Decimal('0.00'), blank=True, null=True)
     valor_total_diarias = models.DecimalField(max_digits=16, decimal_places=2,
-                                              validators=[MinValueValidator(Decimal('0.01'))],
+                                              validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
 
     def __str__(self):
