@@ -120,8 +120,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.numero_item.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.numero_item.errors %}<label class="error">{% for error in form_2.numero_item.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.numero_item}}
+                      {% if form.numero_item.errors %}<label class="error">{% for error in form.numero_item.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -130,8 +130,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.tipo_despesa.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.tipo_despesa.errors %}<label class="error">{% for error in form_2.tipo_despesa.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.tipo_despesa}}
+                      {% if form.tipo_despesa.errors %}<label class="error">{% for error in form.tipo_despesa.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -140,8 +140,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.descricao.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.descricao.errors %}<label class="error">{% for error in form_2.descricao.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.descricao}}
+                      {% if form.descricao.errors %}<label class="error">{% for error in form.descricao.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -150,8 +150,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.file.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.file.errors %}<label class="error">{% for error in form_2.file.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.file}}
+                      {% if form.file.errors %}<label class="error">{% for error in form.file.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -160,8 +160,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.data_evento.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.data_evento.errors %}<label class="error">{% for error in form_2.data_evento.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.data_evento}}
+                      {% if form.data_evento.errors %}<label class="error">{% for error in form.data_evento.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -170,8 +170,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.pagamento.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.pagamento.errors %}<label class="error">{% for error in form_2.pagamento.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.pagamento}}
+                      {% if form.pagamento.errors %}<label class="error">{% for error in form.pagamento.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -180,8 +180,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.moeda.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.moeda.errors %}<label class="error">{% for error in form_2.moeda.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.moeda}}
+                      {% if form.moeda.errors %}<label class="error">{% for error in form.moeda.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -190,8 +190,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.valor_pago.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.valor_pago.errors %}<label class="error">{% for error in form_2.valor_pago.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.valor_pago}}
+                      {% if form.valor_pago.errors %}<label class="error">{% for error in form.valor_pago.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -200,8 +200,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.cotacao.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.cotacao.errors %}<label class="error">{% for error in form_2.cotacao.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.cotacao}}
+                      {% if form.cotacao.errors %}<label class="error">{% for error in form.cotacao.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
@@ -210,12 +210,12 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.valor_pago_reais.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form_2.valor_pago_reais.errors %}<label class="error">{% for error in form_2.valor_pago_reais.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form_2.valor_pago_reais}}
+                      {% if form.valor_pago_reais.errors %}<label class="error">{% for error in form.valor_pago_reais.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
-
+{#                {{ form.errors }}#}
               </div>
               <button name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
             </div>

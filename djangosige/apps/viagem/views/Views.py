@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
 from django.shortcuts import redirect
 
+from django.contrib import messages
 from djangosige.apps.login.models import Usuario
 from djangosige.apps.viagem.forms import *
 from djangosige.apps.viagem.models import *
