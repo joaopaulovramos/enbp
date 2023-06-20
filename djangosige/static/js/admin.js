@@ -3824,7 +3824,27 @@ $.Admin.reprovar_pc = {
 $.Admin.viagemForm = {
 
      init: function () {
+
          $.Admin.maskInput.maskViagem();
+         define_cod_descricao_para_selects();
+         Handle_definir_categoria_passagem();
+
+         // Lida com a modal para mostrar detalhes de solicitação de viagem
+         $('.clickable-row-modal').click(function(event){
+
+              if(!$(event.target).is("input, label, i, .prevent-click-row")) {
+
+                  let url = $(this).data("href")
+                  let id = $(this).data("norli-id")
+
+                  $.get(url, function (data, status) {
+                      $('.modal-body').html(data);
+                      $('.modal-title').html("Solicitação de viagem - Código: " + id);
+                      $('#modal_viagem').modal('show');
+                  });
+              }
+
+        });
 
          // Encontra o itinerário selecionado
          let itinerario_selecionado = $('input[type="radio"][name$="itinerario"]:checked')
@@ -3853,7 +3873,8 @@ $.Admin.viagemForm = {
              if(checkbox.is(':checked')){
                      checkbox.parent().find('select').show()
                  } else {
-                      checkbox.parent().find('select').hide()
+                      checkbox.parent().find('select').hide();
+                      checkbox.parent().find('select option:selected').removeAttr('selected');
                       checkbox.parent().find('select option:first').attr('selected','selected');
                  }
          }
@@ -3861,6 +3882,7 @@ $.Admin.viagemForm = {
          function esconder_mostrar_campo(valor_radio){
              if (valor_radio.val() == '0'){
                  /* Usar datepicker para resertar data preenchida */
+                 $('#id_dada_fim').val("")
                  $('#id_dada_fim').parent().hide()
              }
              else{
@@ -3869,6 +3891,42 @@ $.Admin.viagemForm = {
          }
 
 
+         function define_cod_descricao_para_selects(){
+
+             $(".select-cod-descricao option").each(function (){
+                 let cod = $(this).val()
+                 let descricao = $(this).html()
+                 $(this).html(cod + " - " + descricao)
+
+             })
+
+         }
+
+         function Handle_definir_categoria_passagem(){
+
+             $('#id_check_acompanhante').on('change', function (){
+                 if($(this).is(':checked')){
+                    definir_categoria_passagem(false)
+                 } else {
+                     definir_categoria_passagem(true)
+                 }
+             })
+
+         }
+
+         function definir_categoria_passagem(reset){
+
+             if(reset){
+                 $('#id_categoria_passagem option:selected').removeAttr('selected');
+                 $('#id_categoria_passagem option:first').attr('selected','selected')
+                 $('#id_categoria_passagem').focus()
+             } else {
+                 $('#id_categoria_passagem option:selected').removeAttr('selected');
+                 $('#id_categoria_passagem option:contains(executiva)').attr('selected', 'selected')
+                 $('#id_categoria_passagem').focus()
+             }
+
+         }
 
      },
 

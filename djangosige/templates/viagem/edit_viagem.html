@@ -114,17 +114,6 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.valor_passagem.errors %}<label class="error">{% for error in form.valor_passagem.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.valor_passagem}}
-                    </div>
-                  </div>
-                </div>
-
               <div class="col-sm-3">
                   <div class="form-group">
                     <div class="form-line">
@@ -147,6 +136,28 @@
                   </div>
                 </div>
 
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form.valor_passagem.errors %}<label class="error">{% for error in form.valor_passagem.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.valor_passagem}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.localidade_destino.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form.localidade_destino.errors %}<label class="error">{% for error in form.localidade_destino.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.localidade_destino}}
+                    </div>
+                  </div>
+                </div>
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -165,6 +176,40 @@
                       <label>{{form.destino.label}}</label><strong style="color:red;"> *</strong>
                       {% if form.destino.errors %}<label class="error">{% for error in form.destino.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.destino}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <input type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante" {% if form.acompanhante.value %}checked="checked"{% endif %}>
+                        <label for="id_check_acompanhante"
+                               style="font-weight: bold;"
+                               title=""> Acompanhante/convocado/Substituto
+                        </label>
+
+                      <label>{{form.acompanhante.label}}</label>
+                      {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.acompanhante}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <input type="checkbox" name="check_pcd" class="form-control" id="id_check_pcd" {% if pcd == '1' %}checked="checked"{% endif %}>
+                        <label for="id_check_pcd"
+                               style="font-weight: bold;"
+                               title=""> PCD (Pessoa com deficiência)
+                        </label>
+
+                      <label>{{form.necessidade_especial.label}}</label>
+                      {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.necessidade_especial}}
                     </div>
                   </div>
                 </div>
@@ -257,41 +302,11 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
 
-                        <input type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante">
-                        <label for="id_check_acompanhante"
-                               style="font-weight: bold;"
-                               title=""> Acompanhante/convocado/Substituto
-                        </label>
-
-                      <label>{{form.acompanhante.label}}</label>
-                      {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.acompanhante}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                        <input type="checkbox" name="check_pcd" class="form-control" id="id_check_pcd" checked>
-                        <label for="id_check_pcd"
-                               style="font-weight: bold;"
-                               title=""> PCD (Pessoa com deficiência)
-                        </label>
-
-                      <label>{{form.necessidade_especial.label}}</label>
-                      {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.necessidade_especial}}
-                    </div>
-                  </div>
-                </div>
 
                <div class="col-sm-12">
+                  <div class="col-sm-6">
+
                   <div class="form-group">
                     <div class="form-line">
 
@@ -347,6 +362,41 @@
 
                     </div>
                   </div>
+
+                  </div>
+                   <div class="col-sm-6">
+
+                       <div class="col-sm-4">
+                          <div class="form-group">
+                            <div class="form-line">
+
+                              <label>{{form.qtd_diarias.label}}</label>
+                              {{form.qtd_diarias}}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <div class="form-line">
+
+                              <label>{{form.valor_diaria.label}}</label>
+                              {{form.valor_diaria}}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                          <div class="form-group">
+                            <div class="form-line">
+
+                              <label>{{form.valor_total_diarias.label}}</label>
+                              {{form.valor_total_diarias}}
+                            </div>
+                          </div>
+                        </div>
+
+                    </div>
                 </div>
 
                   
@@ -372,8 +422,12 @@
   {% load static %}
 
   <script src="{% static 'js/jquery.mask.js' %}"></script>
+    <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
   <script type="text/javascript">
       $.Admin.viagemForm.init()
+      {#$(function () {#}
+      {#       $('#id_dada_inicio').datetimepicker();#}
+      {#   });#}
   </script>
 
 {% endblock %}

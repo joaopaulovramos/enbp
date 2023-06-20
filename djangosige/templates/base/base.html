@@ -237,10 +237,11 @@
                             <span>Viagens</span>
                         </a>
                         <ul class="ml-menu">
+                            <li>
                             <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">check_circle</i>
                             <span>Itens de Viagem</span>
-                        </a>
+                            </a>
                                 <ul class="ml-menu">
                                     <li>
                                         <li>
@@ -297,7 +298,22 @@
                                                  <span>Tipos de Necessidade Especial</span>
                                             </a>
                                         </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listalocalidades' %}">
+                                                 <span>Localidades de destino</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatabeladiarias' %}">
+                                                 <span>Tabela de Diárias</span>
+                                            </a>
+                                        </li>
                                 </ul>
+
+                        </li>
+
 
                                 <li>
                                     <a href="{% url 'viagem:listaviagem' %}">
@@ -306,8 +322,14 @@
                                 </li>
 
                                 <li>
+                                    <a href="{% url 'viagem:listasupautorizarviagem' %}">
+                                         <span>Autorizar Viagens - Sup</span>
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="{% url 'viagem:listaautorizarviagem' %}">
-                                         <span>Autorizar Viagens</span>
+                                         <span>Autorizar Viagens - DUS</span>
                                     </a>
                                 </li>
 

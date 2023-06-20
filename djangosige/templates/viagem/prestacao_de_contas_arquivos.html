@@ -16,7 +16,7 @@
           <div class="header">
 
             <h2>
-              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{form.cfop.value}}
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
             <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
 
@@ -27,42 +27,306 @@
             {% csrf_token %}
             <!-- Body-->
             <div class="body">
+
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+              <div class="panel panel-default">
+                <div class="panel-body" style="background:#f5f5f5">
+
+                    <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Código da Solicitação</label>
+                    <input disabled type="text" name="data_fim" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Inclusão</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Usuário</label>
+                    <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Origem</label>
+                    <input disabled type="text" name="data_fim" value="{{origem}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Destino</label>
+                     <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data Início</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data fim</label>
+                    <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
+
+                </div>
+              </div>
+            </div>
+
+
+                </div>
+              </div>
                
-                {% for field in form_2 %}
-                <div class="col-sm-6">
+{#                {% for field in form_2 %}#}
+{#                <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{#                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}#}
+{#                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{field}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{#                {% endfor %}#}
+
+
+              <div class="sep"><h5>Adicionar itens de prestação de contas</h5><hr/></div>
+
+              <div class="col-sm-2">
                   <div class="form-group">
                     <div class="form-line">
-                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}
-                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{field}}
+                      <label>{{form_2.numero_item.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.numero_item.errors %}<label class="error">{% for error in form_2.numero_item.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.numero_item}}
                     </div>
                   </div>
                 </div>
-                {% endfor %}
-                
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.tipo_despesa.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.tipo_despesa.errors %}<label class="error">{% for error in form_2.tipo_despesa.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.tipo_despesa}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.descricao.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.descricao.errors %}<label class="error">{% for error in form_2.descricao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.descricao}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.file.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.file.errors %}<label class="error">{% for error in form_2.file.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.file}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.data_evento.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.data_evento.errors %}<label class="error">{% for error in form_2.data_evento.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.data_evento}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.pagamento.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.pagamento.errors %}<label class="error">{% for error in form_2.pagamento.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.pagamento}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.moeda.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.moeda.errors %}<label class="error">{% for error in form_2.moeda.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.moeda}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.valor_pago.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.valor_pago.errors %}<label class="error">{% for error in form_2.valor_pago.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.valor_pago}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.cotacao.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.cotacao.errors %}<label class="error">{% for error in form_2.cotacao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.cotacao}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.valor_pago_reais.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form_2.valor_pago_reais.errors %}<label class="error">{% for error in form_2.valor_pago_reais.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form_2.valor_pago_reais}}
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+              <button name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
             </div>
             <!--#Body-->
           </form>
 
+        <hr/>
+
+        <form action="" method="post">
+         {% csrf_token %}
+
+            <div class="body">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <input type="checkbox" name="check_remarcacao" class="form-control" id="id_check_remarcacao" {% if remarcacao_interesse_particular == '1' %}checked="checked"{% endif %}>
+                        <label for="id_check_remarcacao"
+                               style="font-weight: bold;"
+                               title=""> Remarcação por Interesse particular
+                        </label>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <input type="checkbox" name="finalizar_pc" class="form-control" id="id_finalizar_pc">
+                        <label for="id_finalizar_pc"
+                               style="font-weight: bold;"
+                               title=""> Finalizar Prestação de contas
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <button name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVA PRESTAÇÃO DE CONTAS</span></button>
+            </div>
+
+        </form>
 
 
         <!-- ###################################################################### -->
+        <div class="footer">
           <form role="form" action=""  method="post">
             {% csrf_token %}
+
+
               <div class="body">
 
-                   {% include 'base/search.html' %}
+              <div class="row">
+
+            <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos próprios</label>
+                        <input disabled type="text" name="recusos_proprioss" value="{{ totais_pagos.recursos_proprios }}" class="form-control" id="id_recursos_proprios" readonly>
+                    </div>
+                  </div>
+                </div>
+
+          <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos da empresa</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ totais_pagos.recursos_empresa }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                 <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <label>Avaliação</label><br>
+                        <input disabled type="radio" name="avaliacao_pc" id="radio_pc_aprovada" value="0" {% if aprovar_pc == '1' %}checked="checked"{% endif %} />
+                        <label for="radio_ida"><strong>Aprovada</strong></label>
+
+                        <input disabled type="radio" name="avaliacao_pc" id="radio_pc_rejeitada" value="1" {% if aprovar_pc == '2' %}checked="checked"{% endif %} />
+                      <label for="radio_idavolta"><strong>Rejeitada</strong></label>
+
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Motivo da recusa</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ motivo_reprovacao_pc }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+{#                   {% include 'base/search.html' %}#}
 
                    <div class="table-responsive">
                     <table id="lista-database" class="table table-bordered table-striped lista-table">
                       <thead>
                         <tr>
-                          <th>Descrição</th>
-                          <th>Arquivo</th>
-                          <th>Remover</th>
+                            <th>Item</th>
+                            <th>Tipo de Despesa</th>
+                            <th>Valor</th>
+                            <th>Anexo</th>
+                            <th>Remover</th>
                         </tr>
                       </thead>
 
@@ -71,11 +335,13 @@
                        {% for natop in arquivos %}
 
                        <tr>
-                        <td>{{natop.descricao}}</td>
-                        <td><a href="{{natop.file.url}}">Download</a></td>
-                        <td class="lista-remove">
-                          <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
-                        </td>
+                           <td>{{natop.numero_item}}</td>
+                           <td>{{natop.tipo_despesa}}</td>
+                           <td>{{natop.valor_pago_reais}}</td>
+                           <td><a href="{{natop.file.url}}">Download</a></td>
+                           <td class="lista-remove">
+                               <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success btn-xs"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
+                           </td>
                       </tr>
                       {% endfor %}
                       {%else%}
@@ -85,6 +351,7 @@
                 </div>
               </div>
           </form>
+        </div>
         <!-- ###################################################################### -->
         </div>
       </div>
@@ -97,16 +364,13 @@
 {%endblock%}
 
 {% block js %}
-    
-  {% load static %}
-  <!-- JQuery UI Css/Js -->
-  <link href="{% static 'css/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
-  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
 
+  {% load static %}
+
+  <script src="{% static 'js/jquery.mask.js' %}"></script>
+    <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
   <script type="text/javascript">
-    var cfop_path = '{% static 'tabelas/cfop/cfop_2015_002.csv' %}'
-    $.Admin.autocompleteField.autocompleteCfop(cfop_path);
-    
+      $.Admin.viagemForm.init()
   </script>
-  
+
 {% endblock %}
