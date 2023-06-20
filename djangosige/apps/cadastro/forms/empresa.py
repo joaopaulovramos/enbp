@@ -28,7 +28,7 @@ class EmpresaForm(forms.ModelForm):
             'logo_file': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'iest': forms.TextInput(attrs={'class': 'form-control'}),
             'informacoes_adicionais': forms.Textarea(attrs={'class': 'form-control'}),
-            'inativo' :  forms.Select(attrs={'class': 'form-control'}),
+            'inativo':  forms.Select(attrs={'class': 'form-control'}),
             'codigo_legado': forms.TextInput(attrs={'class': 'form-control'}),
             'forma_tributacao': forms.Select(attrs={'class': 'form-control'}),
             'sit_cadastral': forms.Select(attrs={'class': 'form-control'}),
