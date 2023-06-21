@@ -273,7 +273,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>Valor total recursos próprios</label>
+                      <label>Valor total recursos próprios (R$)</label>
                         <input disabled type="text" name="recusos_proprioss" value="{{ totais_pagos.recursos_proprios }}" class="form-control" id="id_recursos_proprios" readonly>
                     </div>
                   </div>
@@ -283,7 +283,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>Valor total recursos da empresa</label>
+                      <label>Valor total recursos da empresa (R$)</label>
                         <input disabled type="text" name="recursos_empresa" value="{{ totais_pagos.recursos_empresa }}" class="form-control" id="id_recursos_empresa" readonly>
                     </div>
                   </div>
@@ -325,6 +325,7 @@
                             <th>Item</th>
                             <th>Tipo de Despesa</th>
                             <th>Valor</th>
+                            <th>Pagamento</th>
                             <th>Anexo</th>
                             <th>Remover</th>
                         </tr>
@@ -337,7 +338,8 @@
                        <tr>
                            <td>{{natop.numero_item}}</td>
                            <td>{{natop.tipo_despesa}}</td>
-                           <td>{{natop.valor_pago_reais}}</td>
+                           <td>R$ {{natop.valor_pago_reais}}</td>
+                           <td>{{natop.pagamento}}</td>
                            <td><a href="{{natop.file.url}}">Download</a></td>
                            <td class="lista-remove">
                                <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success btn-xs"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
@@ -371,6 +373,13 @@
     <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
   <script type="text/javascript">
       $.Admin.viagemForm.init()
+
+        $('#id_cotacao, #id_valor_pago').on('change', function (){
+            let valor_pago = parseFloat($('#id_valor_pago').val())
+            let cotacao = parseFloat($('#id_cotacao').val())
+            $('#id_valor_pago_reais').val((valor_pago * cotacao).toFixed(2))
+        })
+
   </script>
 
 {% endblock %}

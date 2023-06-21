@@ -449,7 +449,7 @@ class ArquivosForm(forms.ModelForm):
             'pagamento': forms.Select(attrs={'class': 'form-control'}),
             'valor_pago': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'cotacao': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
-            'valor_pago_reais': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
+            'valor_pago_reais': forms.NumberInput(attrs={'class': 'form-control', 'size': '200', 'readonly': 'readonly'}),
         }
         labels = {
             'descricao': _('Descrição do Item'),

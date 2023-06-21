@@ -955,7 +955,6 @@ class PrestarContasArquivosView(CustomUpdateView):
 
         # Verifica a submimissão do botão finalizar
         if 'finalizar' in request.POST.keys():
-            print("Aqui")
             url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
 
             if 'check_remarcacao' in request.POST.keys():
@@ -987,7 +986,6 @@ class PrestarContasArquivosView(CustomUpdateView):
             url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
             return redirect(url)
         else:
-            print(form.errors)
             return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
