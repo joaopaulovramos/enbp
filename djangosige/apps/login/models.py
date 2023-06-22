@@ -45,6 +45,7 @@ class Usuario(models.Model):
     cpf = CPFField(masked=True, null=True)
     telefone = models.CharField(max_length=50, null=True)
     matricula = models.CharField(max_length=10, null=True)
+    banco_padrao = models.ForeignKey('cadastro.ContaBancaria', related_name="banco_usuario", on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Deletar user_foto se ja existir uma

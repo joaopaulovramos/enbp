@@ -32,6 +32,10 @@ from djangosige.apps.cadastro.models import MinhaEmpresa
 
 from djangosige.apps.taticca_cv.models import CVModel
 
+from djangosige.apps.cadastro.forms import PessoaJuridicaForm, PessoaFisicaForm, EnderecoFormSet, TelefoneFormSet, EmailFormSet, \
+    SiteFormSet, BancoFormSet, ContaBancariaFormSet, DocumentoFormSet, EnderecoUsuarioFormSet
+
+from djangosige.apps.cadastro.models import PessoaFisica, PessoaJuridica, Endereco, Telefone, Email, Site, Banco, ContaBancaria, EnderecoUsuario , Documento
 
 import operator
 from functools import reduce
@@ -43,7 +47,7 @@ DEFAULT_PERMISSION_MODELS = ['cliente', 'fornecedor', 'produto',
 
 CUSTOM_PERMISSIONS = ['configurar_nfe', 'emitir_notafiscal', 'cancelar_notafiscal', 'gerar_danfe', 'consultar_cadastro', 'inutilizar_notafiscal', 'consultar_notafiscal',
                       'baixar_notafiscal', 'manifestacao_destinatario', 'faturar_pedidovenda', 'faturar_pedidocompra', 'acesso_fluxodecaixa', 'consultar_estoque', 'solicitar_viagens',
-                      'autorizar_viagens_dus', 'autorizar_viagens_sup', 'homologar_viagens', 'cadastrar_item_viagens']
+                      'autorizar_viagens', 'homologar_viagens', 'cadastrar_item_viagens']
 
 
 #, 'editar_carro', 'cadastrar_carro', 'listar_carro'
@@ -67,7 +71,7 @@ class UserFormView(View):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = form.authenticate_user(username=username, password=password)
-            usuario = Usuario.objects.get_or_create(user=user)
+            obj = Usuario.objects.get_or_create(user=user)[0]
             if user:
                 if not request.POST.get('remember_me', None):
                     request.session.set_expiry(0)
@@ -117,7 +121,6 @@ class UserRegistrationFormView(SuperUserRequiredMixin, SuccessMessageMixin, Form
                 return self.form_invalid(form)
 
             return redirect("login:usuariosview")
-
         return render(request, self.template_name, {'form': form})
 
 
@@ -241,11 +244,8 @@ class MeuPerfilView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
 
-
-
-        # usr = User.objects.get(pk=self.kwargs['pk'])
-        # usuario = Usuario.objects.get_or_create(user=usr)[0]
-        # us_perfil = usuario.perfil
+        user = self.request.user
+        usuario = Usuario.objects.get_or_create(user=user)
         context['perfil'] = Usuario.PERFIS[int(self.request.user.usuario.perfil)][1]
         return self.render_to_response(context)
 
@@ -253,7 +253,9 @@ class MeuPerfilView(TemplateView):
 
 class EditarPerfilView(UpdateView):
     form_class = PerfilUsuarioForm
-    template_name = 'login/editar_perfil.html'
+    #template_name = 'login/editar_perfil.html'
+    template_name = 'login/editar_perfil/editar_perfil_tabs.html'
+
     success_url = reverse_lazy('login:perfilview')
     success_message = "Perfil editado com sucesso."
 
@@ -272,6 +274,19 @@ class EditarPerfilView(UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
 
+
+        banco_form = ContaBancariaFormSet(instance=self.object, prefix='banco_form')
+        banco_form.can_delete = True
+        if ContaBancaria.objects.filter(usuario_banco=self.object.pk).count():
+            banco_form.extra = 0
+
+        endereco_form = EnderecoUsuarioFormSet(instance=self.object, prefix='endereco_form')
+        endereco_form.can_delete = True
+        if EnderecoUsuario.objects.filter(usuario_endereco=self.object.pk).count():
+            endereco_form.extra = 0
+
+
+
         try:
             empresa_instance = MinhaEmpresa.objects.get(
                 m_usuario=self.object.id)
@@ -280,10 +295,13 @@ class EditarPerfilView(UpdateView):
         except MinhaEmpresa.DoesNotExist:
             minha_empresa_form = MinhaEmpresaForm(prefix='m_empresa_form')
 
-        return self.render_to_response(self.get_context_data(form=form, minha_empresa_form=minha_empresa_form, object=self.object))
+        return self.render_to_response(self.get_context_data(form=form, minha_empresa_form=minha_empresa_form, banco_form=banco_form, endereco_form=endereco_form, object=self.object))
 
     def post(self, request):
         self.object = self.get_object()
+
+        banco_form = ContaBancariaFormSet(request.POST, prefix='banco_form', instance=self.object)
+        endereco_form = EnderecoUsuarioFormSet(request.POST, prefix='endereco_form', instance=self.object)
 
         try:
             instance = Usuario.objects.get(user=request.user)
@@ -303,7 +321,7 @@ class EditarPerfilView(UpdateView):
 
         user = User.objects.get(pk=request.user.id)
 
-        if form.is_valid() and minha_empresa_form.is_valid():
+        if form.is_valid() and minha_empresa_form.is_valid() and banco_form.is_valid() and endereco_form.is_valid():
             try:
                 perfil = form.save(commit=False)
                 user.first_name = request.POST.get("first_name")
@@ -313,6 +331,14 @@ class EditarPerfilView(UpdateView):
                 user.full_clean()
                 user.save()
                 perfil.user = user
+
+                # Salvar informacoes bancarias
+                banco_form.instance = perfil
+                banco_form.save()
+
+                endereco_form.instance = perfil
+                endereco_form.save()
+
                 if 'user_foto' in request.FILES:
                     perfil.user_foto = request.FILES['user_foto']
                 perfil.save()
@@ -393,6 +419,7 @@ class UsuariosListView(SuperUserRequiredMixin, ListView):
         for key, value in request.POST.items():
             if value == "on":
                 instance = User.objects.get(id=key)
+                #### verificar registros do usuário
                 instance.delete()
         return redirect(self.success_url)
 
