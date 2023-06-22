@@ -67,7 +67,7 @@ class UserFormView(View):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = form.authenticate_user(username=username, password=password)
-            usuario = Usuario.objects.get(user=user)
+            usuario = Usuario.objects.get_or_create(user=user)
             if user:
                 if not request.POST.get('remember_me', None):
                     request.session.set_expiry(0)
