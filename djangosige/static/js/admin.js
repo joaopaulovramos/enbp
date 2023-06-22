@@ -3259,6 +3259,16 @@ $.Admin.ajaxRequest = {
     }
 }
 
+$.Admin.datetimepicker_viagem = {
+    init: function(){
+        $('.datetimepicker').datetimepicker({
+            // format: 'd/m/Y H:i',
+            format: 'Y-m-d H:i:s',
+        });
+
+        $.datetimepicker.setLocale('pt-BR');
+    },
+}
 
 $.Admin.datetimepicker = {
     init: function(){

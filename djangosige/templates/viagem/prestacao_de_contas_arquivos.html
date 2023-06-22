@@ -370,7 +370,10 @@
   {% load static %}
 
   <script src="{% static 'js/jquery.mask.js' %}"></script>
-    <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
+
+    {% include 'base/load_jqueryui.html' %}
+    {% include 'base/datepicker_js.html' %}
+
   <script type="text/javascript">
       $.Admin.viagemForm.init()
 

@@ -167,6 +167,7 @@ class ViagemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(ViagemForm, self).__init__(*args, **kwargs)
+        self.fields['dada_inicio'].input_formats = ('%d/%m/%Y %H:%M',)
 
     class Meta:
         model = ViagemModel
@@ -204,8 +205,8 @@ class ViagemForm(forms.ModelForm):
             'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
-            'dada_inicio': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
-            'dada_fim': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'dada_inicio': forms.TextInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
+            'dada_fim': forms.TextInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'acompanhante': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
@@ -424,6 +425,10 @@ class ArquivosForm(forms.ModelForm):
     #     super(ArquivosForm, self).__init__(*args, **kwargs)
     #     self.fields['viagem'].initial = ViagemModel.objects.get(id=45)
 
+    def __int__(self, *args, **kwargs):
+        super(ArquivosForm, self).__int__(*args, **kwargs)
+        self.fields['data_evento'].input_formats = ('%d/%m/%Y',)
+
     class Meta:
         model = Arquivos
         # 'viagem',
@@ -445,7 +450,8 @@ class ArquivosForm(forms.ModelForm):
             'numero_item': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'tipo_despesa': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'moeda': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
-            'data_evento': DateInput(attrs={'class': 'form-control', 'size': '200'}),
+            # 'data_evento': DateInput(format='%d/%m/%Y', attrs={'class': 'form-control datepicker', 'size': '200'}),
+            'data_evento': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
             'pagamento': forms.Select(attrs={'class': 'form-control'}),
             'valor_pago': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'cotacao': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
