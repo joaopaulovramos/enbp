@@ -200,7 +200,8 @@ class ViagemModel(models.Model):
             ("autorizar_viagens_sup", "Pode autorizar viagens - Superintendente"),
             ("autorizar_viagens_dus", "Pode autorizar viagens - Diretor de Unidade de Serviço"),
             ("homologar_viagens", "Pode homologar viagens"),
-            ("cadastrar_item_viagens", "Cadastrar Items de Viagem")
+            ("cadastrar_item_viagens", "Cadastrar Items de Viagem"),
+            ("aprovar_pc_viagens", "Aprovar prestação de contras de Viagem")
         )
 
     @property

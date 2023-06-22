@@ -3787,6 +3787,47 @@ $.Admin.reprovar_pc = {
 
 
 
+        // $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+        //     if(this.checked){
+        //         $(this).parents('tr').addClass("delete-row");
+        //     }else{
+        //         $(this).parents('tr').removeClass("delete-row");
+        //     }
+        //     $btnAutoriza.show()
+        // });
+        //
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("reprovar_pc");
+
+            form.append($(input));
+            $('#modal_reprovacao_pc_viagem').modal('show');
+            // form.submit();
+        });
+        //
+        //
+        //
+        // //Fazer a linha da table um link para a detail view
+        // $('body').on('click', '.clickable-row:not(.popup)', function(event){
+        //     if(!$(event.target).is("input, label, i, .prevent-click-row")){
+        //         window.document.location = $(this).data("href");
+        //     }
+        // });
+
+    },
+}
+
+$.Admin.submeter_horas = {
+   init: function() {
+        var $btnAutoriza = $('.btn-submeter-horas');
+
+
+
         $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
             if(this.checked){
                 $(this).parents('tr').addClass("delete-row");
@@ -3803,15 +3844,14 @@ $.Admin.reprovar_pc = {
 
             var input = $("<input>")
                    .attr("type", "hidden")
-                   .attr("name", "acao").val("reprovar_pc");
+                   .attr("name", "acao").val("submeter_horas");
 
             form.append($(input));
+
+
             form.submit();
         });
 
-
-
-        //Fazer a linha da table um link para a detail view
         $('body').on('click', '.clickable-row:not(.popup)', function(event){
             if(!$(event.target).is("input, label, i, .prevent-click-row")){
                 window.document.location = $(this).data("href");
@@ -3932,6 +3972,7 @@ $.Admin.viagemForm = {
 
 
  }
+
 
 $(function () {
     $.Admin.barraLateral.init();

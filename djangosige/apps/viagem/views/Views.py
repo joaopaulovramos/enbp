@@ -1129,7 +1129,7 @@ class ListAprovarPCViagensView(CustomListView):
     model = ViagemModel
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaaprovarpcviagem')
-    permission_codename = 'homologar_viagens'
+    permission_codename = 'aprovar_pc_viagens'
 
     def get_queryset(self):
         # return self.model.objects.all()
@@ -1271,25 +1271,28 @@ class AvaliarArquivosView(CustomUpdateView):
     form_2 = ArquivosForm
     template_name = 'viagem/avaliar_arquivos.html'
     success_message = "Viagem Editada com Sucesso."
-    permission_codename = 'solicitar_viagens'
+    permission_codename = 'aprovar_pc_viagens'
+    success_url = reverse_lazy('viagem:listaaprovarpcviagem')
 
     def post(self, request, *args, **kwargs):
-        self.object = None
-        form = ArquivosForm(request.POST, request.FILES, instance=self.object)
-        letters = string.ascii_lowercase
-        name = ''.join(random.choice(letters) for i in range(20))
-        nome_antigo = request.FILES['file'].name
-        nome_antigo = nome_antigo.split('.')
-        ext = nome_antigo[-1]
 
-        if form.is_valid():
-            request.FILES['file'].name = name + '.' + ext
-            self.object = self.get_object()
-            form.instance.viagem = ViagemModel.objects.get(pk=kwargs['pk'])
-            self.object = form.save()
-            url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
-            return redirect(url)
-            # return self.form_invalid(form)
+        # self.object.qtd_diarias.di
+
+
+        if 'acao' in request.POST.keys():
+            acao = request.POST['acao']
+            instance = self.model.objects.get(pk=kwargs['pk'])
+            if acao == 'aprovar_pc':
+                instance.aprovar_pc = 1
+                instance.save()
+                print("aprovando PC")
+            if acao == 'reprovar_pc':
+                instance.aprovar_pc = 2
+                instance.finalizar_pc = 0
+                instance.motivo_reprovacao_pc = request.POST['motivo']
+                instance.save()
+
+        return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
