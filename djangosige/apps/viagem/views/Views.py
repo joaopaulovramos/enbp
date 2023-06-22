@@ -574,7 +574,7 @@ class AdicionarViagemView(CustomCreateView):
         form.request_user = self.request.user
 
         data_hoje = datetime.datetime.now()
-        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%d/%m/%Y %H:%M:S")
+        data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%d/%m/%Y %H:%M:%S")
         data_fim = False
 
         _qtd_diarias = 0
@@ -582,7 +582,7 @@ class AdicionarViagemView(CustomCreateView):
         _valor_total_diarias = 0
 
         if request.POST['dada_fim']:
-            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%d/%m/%Y %H:%M:S")
+            data_fim = datetime.datetime.strptime(request.POST['dada_fim'], "%d/%m/%Y %H:%M:%S")
 
         if 'itinerario' in request.POST.keys():
             if request.POST['itinerario'] == '1' and not request.POST['dada_fim']:
