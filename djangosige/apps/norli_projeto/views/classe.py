@@ -30,8 +30,6 @@ class AddProjetoView(CustomCreateView):
     success_message = "Projeto adicionado com sucesso."
     permission_codename = 'controle_projeto'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(AddProjetoView, self).get_context_data(**kwargs)
@@ -49,8 +47,7 @@ class EditProjetoView(CustomUpdateView):
     success_message = "Projeto Editado com sucesso."
     permission_codename = 'controle_projeto'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(EditProjetoView, self).get_context_data(**kwargs)
@@ -83,8 +80,7 @@ class AddTipoView(CustomCreateView):
     success_message = "Tipo de projeto adicionado com sucesso."
     permission_codename = 'controle_projeto'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(AddTipoView, self).get_context_data(**kwargs)
@@ -102,8 +98,7 @@ class EditTipoView(CustomUpdateView):
     success_message = "Tipo de Projeto Editado com sucesso."
     permission_codename = 'controle_projeto'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
 
     def get_context_data(self, **kwargs):
         context = super(EditTipoView, self).get_context_data(**kwargs)
@@ -133,8 +128,6 @@ class AddFilialView(CustomCreateView):
     success_message = "Filial adicionado com sucesso."
     permission_codename = 'controle_projeto'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, descricao=str(self.object))
 
     def get_context_data(self, **kwargs):
         context = super(AddFilialView, self).get_context_data(**kwargs)
@@ -152,8 +145,6 @@ class EditFilialView(CustomUpdateView):
     success_message = "Filial Editado com sucesso."
     permission_codename = 'controle_projeto'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, descricao=str(self.object))
 
     def get_context_data(self, **kwargs):
         context = super(EditFilialView, self).get_context_data(**kwargs)
