@@ -122,12 +122,6 @@
                                 </a>
 
 
-                                <li>
-                                <a href="{% url 'exemplo:listacarro' %}">
-                                    Lista Carros
-                                </a>
-
-
 
 
 
@@ -353,35 +347,8 @@
                     <!-- Fim Viagens-->
 
 
-                    <!-- Tattica -->
 
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">&#xE1BD;</i>
-                            <span>Taticca</span>
-                        </a>
-                        <ul class="ml-menu">
-
-
-                            <li>
-                                {% if request.user.username == 'root' %}
-
-                                {% else %}
-                                    <a href="{% url 'taticca_cv:editacv' %}">
-                                        Meu CV
-                                    </a>
-
-                                    <a href="{% url 'taticca_cv:listacertificados' %}">
-                                       Certificados e Diplomas
-                                    </a>
-                                {% endif %}
-
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Tattico -->
-
+<!--
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">&#xE1BD;</i>
@@ -403,6 +370,7 @@
                             </li>
                         </ul>
                     </li>
+                    -->
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">&#xE1BD;</i>
@@ -425,7 +393,7 @@
 
 
                     </li>
-
+<!--
 
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -582,7 +550,7 @@
                             </li>
 
                         </ul>
-                    </li>
+                    </li> -->
 
 
 
