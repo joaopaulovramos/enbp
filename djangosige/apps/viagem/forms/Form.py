@@ -167,7 +167,8 @@ class ViagemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(ViagemForm, self).__init__(*args, **kwargs)
-        self.fields['dada_inicio'].input_formats = ('%d/%m/%Y %H:%M',)
+        self.fields['dada_inicio'].input_formats = ('%d/%m/%Y %H:%M:%S',)
+        self.fields['dada_fim'].input_formats = ('%d/%m/%Y %H:%M:%S',)
 
     class Meta:
         model = ViagemModel
@@ -205,8 +206,8 @@ class ViagemForm(forms.ModelForm):
             'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
-            'dada_inicio': forms.TextInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
-            'dada_fim': forms.TextInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
+            'dada_inicio': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
+            'dada_fim': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
             'acompanhante': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
