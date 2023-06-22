@@ -559,7 +559,7 @@ $.Admin.maskInput = {
     },
 
     maskViagem: function(){
-        $('#valor_passagem_viagem').mask('00000.00', {reverse: true});
+        $('#valor_passagem_viagem, #id_valor_pago, #id_cotacao').mask('00000.00', {reverse: true});
     }
 }
 
