@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .pessoa_forms import PessoaJuridicaForm, PessoaFisicaForm
-from .inline_formsets import EnderecoFormSet, TelefoneFormSet, EmailFormSet, SiteFormSet, BancoFormSet, DocumentoFormSet
+from .inline_formsets import EnderecoFormSet, TelefoneFormSet, EmailFormSet, SiteFormSet, BancoFormSet, DocumentoFormSet, ContaBancariaFormSet, EnderecoUsuarioFormSet
 
 from .empresa import EmpresaForm, MinhaEmpresaForm
 from .cliente import ClienteForm
