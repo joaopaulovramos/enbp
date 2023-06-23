@@ -448,7 +448,7 @@ class ArquivosForm(forms.ModelForm):
         widgets = {
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '250'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
-            'numero_item': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
+            'numero_item': forms.NumberInput(attrs={'class': 'form-control', 'size': '200', 'readonly': 'readonly'}),
             'tipo_despesa': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'moeda': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             # 'data_evento': DateInput(format='%d/%m/%Y', attrs={'class': 'form-control datepicker', 'size': '200'}),

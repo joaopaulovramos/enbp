@@ -120,7 +120,8 @@
                   <div class="form-group">
                     <div class="form-line">
                       <label>{{form_2.numero_item.label}}</label><strong style="color:red;"> *</strong>
-                      {{form_2.numero_item}}
+{#                      {{form_2.numero_item}}#}
+                        <input readonly type="number" name="numero_item" class="form-control" size="200" required="" id="id_numero_item" value="{{ num_item }}">
                       {% if form.numero_item.errors %}<label class="error">{% for error in form.numero_item.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
