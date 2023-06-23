@@ -114,6 +114,7 @@ class EditarEmpresaView(EditarPessoaView):
         form = form_class(request.POST, request.FILES,
                           prefix='empresa_form', instance=self.object, request=request)
         logo_file = Empresa.objects.get(pk=self.object.pk).logo_file
+
         if 'cnpj_sync_btn' in request.POST:
             cnpj = request.POST['pessoa_jur_form-cnpj']
             if is_valid_cnpj(cnpj):

@@ -11,11 +11,6 @@ from .base import Pessoa
 from djangosige.apps.login.models import Usuario
 from djangosige.configs.settings import MEDIA_ROOT
 
-BOOLEAN = [
-    ('1', 'SIM'),
-    ('0', 'NÃO')
-]
-
 TRIBUTACAO = [
     ('1', 'Lucro Real'),
     ('2', 'Lucro Real/Arbitrado'),
@@ -90,7 +85,7 @@ class Empresa(Pessoa):
         upload_to=logo_directory_path, default='imagens/logo.png', blank=True, null=True)
     cnae = models.CharField(max_length=10, blank=True, null=True)
     iest = models.CharField(max_length=32, null=True, blank=True)
-    inativo = models.CharField(max_length=1, null=False, blank=True, choices=BOOLEAN, default=1)
+    inativo = models.BooleanField(null=False)
     codigo_legado = models.CharField(max_length=10, null=True, blank=True)
     forma_tributacao = models.CharField(
         max_length=2, null=True, blank=True, choices=TRIBUTACAO)

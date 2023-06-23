@@ -220,7 +220,7 @@ class PessoaFisica(models.Model):
 class PessoaJuridica(models.Model):
     pessoa_id = models.OneToOneField(
         Pessoa, on_delete=models.CASCADE, primary_key=True, related_name='pessoa_jur_info')
-    cnpj = CNPJField(masked=True, null=True, unique=True)
+    cnpj = CNPJField(masked=True, null=False, blank=False)
     nome_fantasia = models.CharField(max_length=255, null=True, blank=True)
     inscricao_estadual = models.CharField(max_length=32, null=True, blank=True)
     responsavel = models.CharField(max_length=32, null=True, blank=True)
