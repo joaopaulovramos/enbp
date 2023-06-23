@@ -1,7 +1,7 @@
 {%extends 'base/base.html'%}
 
 
-{%block title%} {{form.cfop.value}} {%endblock%}
+{%block title%} {{title_complete}} {%endblock%}
 {%block content%}
 <section class="content">
   <div class="container-fluid">
@@ -15,20 +15,47 @@
       <div class="row">
         <div class="card">
 
+        <form role="form" action=""  method="post" id="pc_form">
+            {% csrf_token %}
+
           <!--Header-->
           <div class="header">
 
             <h2>
               <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
-            <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
+
+              <div class="header-btn">
+                  <button type="submit" name="aprovar_pc" class="btn btn-success btn-aprovar_pc" ><i class="material-icons">check</i><span> Aprovar </span></button>
+                  <button class="btn btn-red btn-reprovar_pc" id="btn_reprovar_pc"><i class="material-icons">clear</i><span> Reprovar </span></button>
+              </div>
 
           </div>
 
 
+    {#Modal motivo da reprovação#}
 
-          <form role="form" action=""  method="post">
-            {% csrf_token %}
+        <div id="modal_reprovacao_pc_viagem" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Informe o motivo da Reprovação</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea required name="motivo" class="form-control" rows="5" placeholder="Digite o motivo da reprovação"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" name="reprovar_pc"  class="btn btn-red">Reprovar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {#Modal motivo da reprovação#}
+
+
               <div class="body">
 
               <div class="panel panel-default">
@@ -38,7 +65,7 @@
               <div class="form-group">
                 <div class="form-line">
                   <label>Código da Solicitação</label>
-                    <input disabled type="text" name="data_fim" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                    <input type="text" name="codigo" value="{{id}}" class="form-control" id="id_codigo" readonly>
                 </div>
               </div>
             </div>
@@ -47,7 +74,7 @@
               <div class="form-group">
                 <div class="form-line">
                   <label>Inclusão</label>
-                    <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                    <input disabled type="text" name="data_inicio" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
                 </div>
               </div>
             </div>
@@ -56,7 +83,7 @@
               <div class="form-group">
                 <div class="form-line">
                   <label>Usuário</label>
-                    <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
+                    <input disabled type="text" name="solicitante" value="{{solicitante}}" class="form-control" id="id_solicitante" readonly>
                 </div>
               </div>
             </div>
@@ -65,7 +92,7 @@
               <div class="form-group">
                 <div class="form-line">
                   <label>Origem</label>
-                    <input disabled type="text" name="data_fim" value="{{origem}}" class="form-control" id="id_data_origen" readonly>
+                    <input disabled type="text" name="origem" value="{{origem}}" class="form-control" id="id_origem" readonly>
                 </div>
               </div>
             </div>
@@ -74,7 +101,7 @@
               <div class="form-group">
                 <div class="form-line">
                   <label>Destino</label>
-                     <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
+                     <input disabled type="text" name="destino" value="{{destino}}" class="form-control" id="id_destino" readonly>
                 </div>
               </div>
             </div>
@@ -185,17 +212,3 @@
 
 {%endblock%}
 
-{% block js %}
-    
-  {% load static %}
-  <!-- JQuery UI Css/Js -->
-  <link href="{% static 'css/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
-  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-
-  <script type="text/javascript">
-    var cfop_path = '{% static 'tabelas/cfop/cfop_2015_002.csv' %}'
-    $.Admin.autocompleteField.autocompleteCfop(cfop_path);
-    
-  </script>
-  
-{% endblock %}

@@ -423,11 +423,9 @@
 
   <script src="{% static 'js/jquery.mask.js' %}"></script>
     <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
-  <script type="text/javascript">
+    <script type="text/javascript">
       $.Admin.viagemForm.init()
-      {#$(function () {#}
-      {#       $('#id_dada_inicio').datetimepicker();#}
-      {#   });#}
-  </script>
+      $.Admin.datetimepicker_viagem.init()
+    </script>
 
 {% endblock %}
