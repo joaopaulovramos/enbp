@@ -44,6 +44,8 @@ python manage.py createsuperuser
 ```
 python manage.py loaddata djangosige/tests/fixtures/test_db_backup.json
 
+python manage.py loaddata djangosige/tests/fixtures/cnae.json
+
 python manage.py loaddata djangosige/tests/fixtures/municipios.json
 
 python manage.py loaddata djangosige/tests/fixtures/grupos.json 

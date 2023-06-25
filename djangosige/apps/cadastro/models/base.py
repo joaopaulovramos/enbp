@@ -220,7 +220,7 @@ class PessoaFisica(models.Model):
 class PessoaJuridica(models.Model):
     pessoa_id = models.OneToOneField(
         Pessoa, on_delete=models.CASCADE, primary_key=True, related_name='pessoa_jur_info')
-    cnpj = CNPJField(masked=True, null=False, blank=False)
+    cnpj = CNPJField(masked=True, null=True, blank=True)
     nome_fantasia = models.CharField(max_length=255, null=True, blank=True)
     inscricao_estadual = models.CharField(max_length=32, null=True, blank=True)
     responsavel = models.CharField(max_length=32, null=True, blank=True)
@@ -336,3 +336,13 @@ class Documento(models.Model):
         Pessoa, related_name="documento", on_delete=models.CASCADE)
     tipo = models.CharField(max_length=32)
     documento = models.CharField(max_length=255)
+
+class CNAE(models.Model):
+    codigo = models.CharField(max_length=10)
+    descricao = models.CharField(max_length=250)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.codigo, self.descricao)
+
+    def __str__(self):
+        return u'%s - %s' % (self.codigo, self.descricao)

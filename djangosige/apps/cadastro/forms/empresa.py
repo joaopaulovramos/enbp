@@ -23,7 +23,7 @@ class EmpresaForm(forms.ModelForm):
 
         widgets = {
             'nome_razao_social': forms.TextInput(attrs={'class': 'form-control'}),
-            'cnae': forms.TextInput(attrs={'class': 'form-control'}),
+            'cnae': forms.Select(attrs={'class': 'form-control'}),
             'inscricao_municipal': forms.TextInput(attrs={'class': 'form-control'}),
             'logo_file': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'iest': forms.TextInput(attrs={'class': 'form-control'}),

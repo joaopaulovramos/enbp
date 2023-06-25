@@ -5,7 +5,6 @@ import os
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.template.defaultfilters import date
 
 from .base import Pessoa
 from djangosige.apps.login.models import Usuario
@@ -83,9 +82,10 @@ def logo_directory_path(instance, filename):
 class Empresa(Pessoa):
     logo_file = models.ImageField(
         upload_to=logo_directory_path, default='imagens/logo.png', blank=True, null=True)
-    cnae = models.CharField(max_length=10, blank=True, null=True)
+    cnae = models.ForeignKey('cnae', related_name="empresa_cnae",
+                                on_delete=models.SET_NULL, null=True, blank=True)
     iest = models.CharField(max_length=32, null=True, blank=True)
-    inativo = models.BooleanField(null=False)
+    inativo = models.BooleanField(null=False, default=False)
     codigo_legado = models.CharField(max_length=10, null=True, blank=True)
     forma_tributacao = models.CharField(
         max_length=2, null=True, blank=True, choices=TRIBUTACAO)
