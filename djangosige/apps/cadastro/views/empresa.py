@@ -16,6 +16,7 @@ from django_cpf_cnpj.validators import is_valid_cnpj
 import requests
 import json
 
+from ..models.base import CNAE
 from ..models.empresa import SITUACAO_CADASTRAL
 
 
@@ -114,6 +115,7 @@ class EditarEmpresaView(EditarPessoaView):
         form = form_class(request.POST, request.FILES,
                           prefix='empresa_form', instance=self.object, request=request)
         logo_file = Empresa.objects.get(pk=self.object.pk).logo_file
+
         if 'cnpj_sync_btn' in request.POST:
             cnpj = request.POST['pessoa_jur_form-cnpj']
             if is_valid_cnpj(cnpj):
@@ -134,7 +136,10 @@ def loadCnpjFields(cnpj, post):
         if "atividade_principal" in estabelecimento_:
             atividade_principal_ = estabelecimento_["atividade_principal"]
             if ("subclasse" in atividade_principal_):
-                post['empresa_form-cnae'] = atividade_principal_["subclasse"]
+                cnae = CNAE.objects.filter(codigo=atividade_principal_["subclasse"])
+                if (len(cnae) != 0):
+                    post['empresa_form-cnae'] = cnae[0].id
+
         if 'data_inicio_atividade' in estabelecimento_:
             post['empresa_form-ini_atividades'] = convert_date_format(estabelecimento_['data_inicio_atividade'])
         if 'data_situacao_cadastral' in estabelecimento_:
