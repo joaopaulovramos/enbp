@@ -6,7 +6,6 @@ import re
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django_cpf_cnpj.fields import CNPJField
 
 from .bancos import BANCOS
 
@@ -136,38 +135,16 @@ class Pessoa(models.Model):
 
     @property
     def cpf_cnpj_apenas_digitos(self):
-        cpf_cnpj = None
         if self.tipo_pessoa == 'PF':
-            cpf_cnpj = self.pessoa_fis_info.cpf.raw_input
-        elif self.tipo_pessoa == 'PJ':
-            cpf_cnpj = self.pessoa_jur_info.cnpj.raw_input
+            if self.pessoa_fis_info.cpf:
+                return re.sub('[./-]', '', self.pessoa_fis_info.cpf)
 
-        if cpf_cnpj:
-            return re.sub('[./-]', '', cpf_cnpj)
+        elif self.tipo_pessoa == 'PJ':
+            if self.pessoa_jur_info.cnpj:
+                return re.sub('[./-]', '', self.pessoa_jur_info.cnpj)
+
         else:
             return ''
-
-    @property
-    def cpf_cnpj_formated(self):
-        if self.tipo_pessoa == 'PF':
-            cpf = self.pessoa_fis_info.cpf.raw_input
-            if cpf:
-                if len(cpf) > 11:
-                    cpf = re.sub('[./-]', '', cpf)
-                if len(cpf) < 11:
-                    cpf = cpf.zfill(11)
-                return '{}.{}.{}-{}'.format(cpf[:3], cpf[3:6], cpf[6:9], cpf[9:])
-        elif self.tipo_pessoa == 'PJ':
-            cnpj = self.pessoa_jur_info.cnpj.raw_input
-            if len(cnpj) > 14:
-                cnpj = re.sub('[./-]', '', cnpj)
-            if len(cnpj) < 14:
-                cnpj = cnpj.zfill(14)
-            return '{}.{}.{}/{}-{}'.format(cnpj[:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:])
-        else:
-            return ''
-
-
 
     @property
     def inscricao_estadual(self):
@@ -219,7 +196,7 @@ class PessoaFisica(models.Model):
 
 class PessoaJuridica(models.Model):
     pessoa_id = models.OneToOneField(
-        Pessoa, on_delete=models.CASCADE, primary_key=True, related_name='pessoa_jur_info')
+    Pessoa, on_delete=models.CASCADE, primary_key=True, related_name='pessoa_jur_info')
     cnpj = CNPJField(masked=True, null=True, blank=True)
     nome_fantasia = models.CharField(max_length=255, null=True, blank=True)
     inscricao_estadual = models.CharField(max_length=32, null=True, blank=True)
@@ -337,6 +314,7 @@ class Documento(models.Model):
     tipo = models.CharField(max_length=32)
     documento = models.CharField(max_length=255)
 
+    
 class CNAE(models.Model):
     codigo = models.CharField(max_length=10)
     descricao = models.CharField(max_length=250)
@@ -346,3 +324,64 @@ class CNAE(models.Model):
 
     def __str__(self):
         return u'%s - %s' % (self.codigo, self.descricao)
+
+class ContaBancaria(models.Model):
+    usuario_banco = models.ForeignKey(
+        'login.Usuario', related_name="banco", on_delete=models.CASCADE)
+    banco = models.CharField(
+        max_length=3, choices=BANCOS, null=True, blank=True)
+    agencia = models.CharField(max_length=8, null=True, blank=True)
+    conta = models.CharField(max_length=32, null=True, blank=True)
+    digito = models.CharField(max_length=8, null=True, blank=True)
+
+    def __unicode__(self):
+        s = u'%s / %s / %s' % (self.get_banco_display(),
+                               self.agencia, self.conta)
+        return s
+
+    def __str__(self):
+        s = u'%s / %s / %s' % (self.get_banco_display(),
+                               self.agencia, self.conta)
+        return s
+
+
+
+
+class EnderecoUsuario(models.Model):
+    usuario_endereco = models.ForeignKey(
+        'login.Usuario', related_name="usuario_endereco", on_delete=models.CASCADE)
+
+
+    tipo_endereco = models.CharField(
+        max_length=3, null=True, blank=True, choices=TIPO_ENDERECO)
+    logradouro = models.CharField(max_length=255, null=True, blank=True)
+    numero = models.CharField(max_length=16, null=True, blank=True)
+    bairro = models.CharField(max_length=64, null=True, blank=True)
+    complemento = models.CharField(max_length=64, null=True, blank=True)
+    pais = models.CharField(max_length=32, null=True,
+                            blank=True, default='Brasil')
+    cpais = models.CharField(max_length=5, null=True,
+                             blank=True, default='1058')
+    municipio = models.CharField(max_length=64, null=True, blank=True)
+    cmun = models.CharField(max_length=9, null=True, blank=True)
+    cep = models.CharField(max_length=16, null=True, blank=True)
+    uf = models.CharField(max_length=3, null=True,
+                          blank=True, choices=UF_SIGLA)
+
+    @property
+    def format_endereco(self):
+        return '{0}, {1} - {2}'.format(self.logradouro, self.numero, self.bairro)
+
+    @property
+    def format_endereco_completo(self):
+        return '{0} - {1} - {2} - {3} - {4} - {5} - {6}'.format(self.logradouro, self.numero, self.bairro, self.municipio, self.cep, self.uf, self.pais)
+
+    def __unicode__(self):
+        s = u'%s, %s, %s (%s)' % (
+            self.logradouro, self.numero, self.municipio, self.uf)
+        return s
+
+    def __str__(self):
+        s = u'%s, %s, %s (%s)' % (
+            self.logradouro, self.numero, self.municipio, self.uf)
+        return s

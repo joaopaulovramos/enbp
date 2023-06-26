@@ -19,6 +19,9 @@
     <!-- Css -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
+    <!-- datetimepicker -->
+    <link href="{% static 'css/jquery.datetimepicker.css' %}" rel="stylesheet">
+
     <!-- Jquery 3.0.0 Js -->
     <script src="{% static 'js/jquery/jquery-3.0.0.min.js' %}"></script>
 
@@ -119,12 +122,6 @@
                             <li>
                                 <a href="{% url 'cadastro:listaclientesview' %}">
                                     Clientes
-                                </a>
-
-
-                                <li>
-                                <a href="{% url 'exemplo:listacarro' %}">
-                                    Lista Carros
                                 </a>
 
 
@@ -237,10 +234,11 @@
                             <span>Viagens</span>
                         </a>
                         <ul class="ml-menu">
+                            <li>
                             <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">check_circle</i>
                             <span>Itens de Viagem</span>
-                        </a>
+                            </a>
                                 <ul class="ml-menu">
                                     <li>
                                         <li>
@@ -297,7 +295,22 @@
                                                  <span>Tipos de Necessidade Especial</span>
                                             </a>
                                         </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listalocalidades' %}">
+                                                 <span>Localidades de destino</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatabeladiarias' %}">
+                                                 <span>Tabela de Diárias</span>
+                                            </a>
+                                        </li>
                                 </ul>
+
+                        </li>
+
 
                                 <li>
                                     <a href="{% url 'viagem:listaviagem' %}">
@@ -306,8 +319,14 @@
                                 </li>
 
                                 <li>
+                                    <a href="{% url 'viagem:listasupautorizarviagem' %}">
+                                         <span>Autorizar Viagens - Sup</span>
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="{% url 'viagem:listaautorizarviagem' %}">
-                                         <span>Autorizar Viagens</span>
+                                         <span>Autorizar Viagens - DUS</span>
                                     </a>
                                 </li>
 
@@ -331,35 +350,8 @@
                     <!-- Fim Viagens-->
 
 
-                    <!-- Tattica -->
 
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">&#xE1BD;</i>
-                            <span>Taticca</span>
-                        </a>
-                        <ul class="ml-menu">
-
-
-                            <li>
-                                {% if request.user.username == 'root' %}
-
-                                {% else %}
-                                    <a href="{% url 'taticca_cv:editacv' %}">
-                                        Meu CV
-                                    </a>
-
-                                    <a href="{% url 'taticca_cv:listacertificados' %}">
-                                       Certificados e Diplomas
-                                    </a>
-                                {% endif %}
-
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Tattico -->
-
+<!--
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">&#xE1BD;</i>
@@ -381,6 +373,7 @@
                             </li>
                         </ul>
                     </li>
+                    -->
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">&#xE1BD;</i>
@@ -403,7 +396,7 @@
 
 
                     </li>
-
+<!--
 
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -560,7 +553,7 @@
                             </li>
 
                         </ul>
-                    </li>
+                    </li> -->
 
 
 
