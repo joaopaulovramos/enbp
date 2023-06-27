@@ -8,7 +8,7 @@ class FilialModel(models.Model):
     cnpj = models.CharField(max_length=50, default='')
     endereco = models.CharField(max_length=200, default='')
     empresa = models.ForeignKey('cadastro.Empresa', related_name="filial_empresa",
-                                on_delete=models.CASCADE, null=True, blank=True)
+                                on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         verbose_name = "Controle de Projeto"

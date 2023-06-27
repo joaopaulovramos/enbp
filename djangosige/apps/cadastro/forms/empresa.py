@@ -11,6 +11,8 @@ class EmpresaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(EmpresaForm, self).__init__(*args, **kwargs)
+        self.fields['ini_atividades'].input_formats = ('%d/%m/%Y',)
+        self.fields['data_sit_cadastral'].input_formats = ('%d/%m/%Y',)
 
     class Meta:
         model = Empresa
@@ -21,17 +23,17 @@ class EmpresaForm(forms.ModelForm):
 
         widgets = {
             'nome_razao_social': forms.TextInput(attrs={'class': 'form-control'}),
-            'cnae': forms.TextInput(attrs={'class': 'form-control'}),
+            'cnae': forms.Select(attrs={'class': 'form-control'}),
             'inscricao_municipal': forms.TextInput(attrs={'class': 'form-control'}),
             'logo_file': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'iest': forms.TextInput(attrs={'class': 'form-control'}),
             'informacoes_adicionais': forms.Textarea(attrs={'class': 'form-control'}),
-            'inativo' :  forms.Select(attrs={'class': 'form-control'}),
+            'inativo':  forms.CheckboxInput(attrs={'class': 'form-control'}),
             'codigo_legado': forms.TextInput(attrs={'class': 'form-control'}),
             'forma_tributacao': forms.Select(attrs={'class': 'form-control'}),
             'sit_cadastral': forms.Select(attrs={'class': 'form-control'}),
-            'ini_atividades': forms.DateInput(attrs={'class': 'form-control datepicker'}),
-            'data_sit_cadastral': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+            'ini_atividades': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
+            'data_sit_cadastral': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             'indi_ini_periodo': forms.Select(attrs={'class': 'form-control'}),
             'indi_sit_especial': forms.Select(attrs={'class': 'form-control'}),
             'qualificacao': forms.Select(attrs={'class': 'form-control'}),

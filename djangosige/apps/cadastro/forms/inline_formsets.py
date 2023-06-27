@@ -4,7 +4,8 @@ from django import forms
 from django.forms import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 
-from djangosige.apps.cadastro.models import Pessoa, Endereco, Telefone, Email, Site, Banco, Documento
+from djangosige.apps.cadastro.models import Pessoa, Endereco, Telefone, Email, Site, Banco, ContaBancaria, EnderecoUsuario, Documento
+from djangosige.apps.login.models import Usuario
 
 
 class EnderecoForm(forms.ModelForm):
@@ -40,6 +41,43 @@ class EnderecoForm(forms.ModelForm):
             'cep': forms.TextInput(attrs={'class': 'form-control'}),
             'uf': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class EnderecoUsuarioForm(forms.ModelForm):
+
+    class Meta:
+        model = EnderecoUsuario
+        fields = ('tipo_endereco', 'logradouro', 'numero', 'bairro',
+                  'complemento', 'pais', 'cpais', 'uf', 'cep', 'municipio', 'cmun',)
+
+        labels = {
+            'tipo_endereco': _('Tipo'),
+            'logradouro': _("Logradouro"),
+            'numero': _("Número"),
+            'bairro': _("Bairro"),
+            'complemento': _("Complemento"),
+            'pais': _("País"),
+            'cpais': _("Código do País"),
+            'municipio': _("Município (sem acentuação)"),
+            'cmun': _("Código do município"),
+            'cep': _("CEP (Apenas dígitos)"),
+            'uf': _("UF"),
+        }
+        widgets = {
+            'tipo_endereco': forms.Select(attrs={'class': 'form-control'}),
+            'logradouro': forms.TextInput(attrs={'class': 'form-control'}),
+            'numero': forms.TextInput(attrs={'class': 'form-control'}),
+            'bairro': forms.TextInput(attrs={'class': 'form-control'}),
+            'complemento': forms.TextInput(attrs={'class': 'form-control'}),
+            'pais': forms.TextInput(attrs={'class': 'form-control'}),
+            'cpais': forms.TextInput(attrs={'class': 'form-control'}),
+            'municipio': forms.Select(attrs={'class': 'form-control'}),
+            'cmun': forms.TextInput(attrs={'class': 'form-control'}),
+            'cep': forms.TextInput(attrs={'class': 'form-control'}),
+            'uf': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
 
 
 class TelefoneForm(forms.ModelForm):
@@ -101,6 +139,24 @@ class BancoForm(forms.ModelForm):
             'digito': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+class ContaBancariaForm(forms.ModelForm):
+
+    class Meta:
+        model = ContaBancaria
+        fields = ('banco', 'agencia', 'conta', 'digito',)
+        labels = {
+            'banco': _('Banco'),
+            'agencia': _('Agência'),
+            'conta': _('Conta'),
+            'digito': _('Dígito'),
+        }
+        widgets = {
+            'banco': forms.Select(attrs={'class': 'form-control'}),
+            'agencia': forms.TextInput(attrs={'class': 'form-control'}),
+            'conta': forms.TextInput(attrs={'class': 'form-control'}),
+            'digito': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 class DocumentoForm(forms.ModelForm):
 
@@ -129,3 +185,9 @@ BancoFormSet = inlineformset_factory(
     Pessoa, Banco, form=BancoForm, extra=1, can_delete=True)
 DocumentoFormSet = inlineformset_factory(
     Pessoa, Documento, form=DocumentoForm, extra=1, can_delete=True)
+ContaBancariaFormSet = inlineformset_factory(
+    Usuario, ContaBancaria, form=ContaBancariaForm, extra=1, can_delete=True)
+
+
+EnderecoUsuarioFormSet = inlineformset_factory(
+    Usuario, EnderecoUsuario, form=EnderecoUsuarioForm, extra=1, can_delete=True)

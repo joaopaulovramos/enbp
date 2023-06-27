@@ -1,4 +1,4 @@
-pyt # DjangoSIGE [![Build Status](https://travis-ci.org/thiagopena/djangoSIGE.svg?branch=master)](https://travis-ci.org/thiagopena/djangoSIGE)
+pipyt # DjangoSIGE [![Build Status](https://travis-ci.org/thiagopena/djangoSIGE.svg?branch=master)](https://travis-ci.org/thiagopena/djangoSIGE)
 
 Sistema Integrado de Gestão Empresarial baseado em Django
 
@@ -43,6 +43,8 @@ python manage.py createsuperuser
 5.1 carregar dados iniciais 
 ```
 python manage.py loaddata djangosige/tests/fixtures/test_db_backup.json
+
+python manage.py loaddata djangosige/tests/fixtures/cnae.json
 
 python manage.py loaddata djangosige/tests/fixtures/municipios.json
 

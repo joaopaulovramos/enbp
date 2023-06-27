@@ -51,11 +51,24 @@ urlpatterns = [
     url(r'viagem/adicionartiponecessidadeespecial/$', views.AdicionarTipoNecessidadeEspecialView.as_view(), name='adicionartiponecessidadeespecial'),
     url(r'viagem/editartiponecessidadeespecial/(?P<pk>[0-9]+)/$', views.EditarTipoNecessidadeEspecialView.as_view(), name='editartiponecessidadeespecial'),
 
+    # Localidades
+    url(r'viagem/listalocalidade/$', views.ListLocalidadeView.as_view(), name='listalocalidades'),
+    url(r'viagem/adicionarlocalidade/$', views.AdicionarLocalidadeView.as_view(), name='adicionarlocalidade'),
+    url(r'viagem/editarlocalidade/(?P<pk>[0-9]+)/$', views.EditarLocalidadeView.as_view(), name='editarlocalidade'),
+
+    # Tabela Diárias
+    url(r'viagem/listatabeladiaria/$', views.ListTabelaDiariaView.as_view(), name='listatabeladiarias'),
+    url(r'viagem/adicionartabeladiaria/$', views.AdicionarTabelaDiariaView.as_view(), name='adicionartabeladiaria'),
+    url(r'viagem/editartabeladiaria/(?P<pk>[0-9]+)/$', views.EditarTabelaDiariaView.as_view(), name='editartabeladiaria'),
 
     # Viagens
     url(r'viagem/listarviagem/$', views.ListViagensView.as_view(), name='listaviagem'),
     url(r'viagem/adicionarviagem/$', views.AdicionarViagemView.as_view(), name='adicionarviagem'),
     url(r'viagem/editarviagem/(?P<pk>[0-9]+)/$', views.EditarViagemView.as_view(), name='editarviagem'),
+    url(r'viagem/ver_solicitacao_viagem/(?P<pk>[0-9]+)/$', views.VerSolicitacaoViagem.as_view(), name='ver_solicitacao_viagem'),
+
+    url(r'viagem/listasupautorizarviagem/$', views.ListSupAutorizarViagensView.as_view(), name='listasupautorizarviagem'),
+
     url(r'viagem/listarautorizarviagem/$', views.ListAutorizarViagensView.as_view(), name='listaautorizarviagem'),
     url(r'viagem/listarhomologarviagem/$', views.ListHomologarViagensView.as_view(), name='listahomologacaoviagem'),
     url(r'viagem/prestar_contas/(?P<pk>[0-9]+)/$', views.PrestarContasView.as_view(), name='prestar_contas'),

@@ -91,12 +91,14 @@ class PerfilUsuarioForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'username', 'email', 'user_foto', 'pcd', 'certificado_digital', 'cpf', 'grupo_funcional', 'telefone', 'matricula', )
 
         widgets = {
+
+
             'pcd': forms.Select(attrs={'class': 'form-control select-produto'}),
             'certificado_digital': forms.Select(attrs={'class': 'form-control select-produto'}),
             'grupo_funcional': forms.Select(attrs={'class': 'form-control select-produto'}),
             'cpf': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
-            'telefone': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
-            'matricula': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'size': '14', 'size': '200'}),
+            'matricula': forms.TextInput(attrs={'class': 'form-control', 'size': '14', 'size': '200'}),
 
         }
         labels = {

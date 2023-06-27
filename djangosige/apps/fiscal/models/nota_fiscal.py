@@ -180,7 +180,7 @@ class NotaFiscalSaida(NotaFiscal):
     venda = models.ForeignKey('vendas.PedidoVenda', related_name="venda_nfe",
                               on_delete=models.SET_NULL, null=True, blank=True)
     emit_saida = models.ForeignKey(
-        'cadastro.Empresa', related_name="emit_nfe_saida", on_delete=models.SET_NULL, null=True, blank=True)
+        'cadastro.Empresa', related_name="emit_nfe_saida", on_delete=models.PROTECT, null=True, blank=True)
     dest_saida = models.ForeignKey(
         'cadastro.Cliente', related_name="dest_nfe_saida", on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -239,7 +239,7 @@ class NotaFiscalEntrada(NotaFiscal):
     emit_entrada = models.ForeignKey(
         'cadastro.Fornecedor', related_name="emit_nfe_entrada", on_delete=models.SET_NULL, null=True, blank=True)
     dest_entrada = models.ForeignKey(
-        'cadastro.Empresa', related_name="dest_nfe_entrada", on_delete=models.SET_NULL, null=True, blank=True)
+        'cadastro.Empresa', related_name="dest_nfe_entrada", on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         verbose_name = "Nota Fiscal de Fornecedor"

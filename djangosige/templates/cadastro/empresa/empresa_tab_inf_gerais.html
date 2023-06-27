@@ -1,3 +1,4 @@
+{% if empresa.id %}
 <div class="col-sm-3">
   <div class="form-group">
     <div class="form-line">
@@ -8,6 +9,9 @@
 </div>
 
 <div class="col-sm-3">
+{%else%}
+<div class="col-sm-6">
+{% endif %}
   <div class="form-group">
     <div class="form-line">
       <label>{{form.codigo_legado.label}}</label>
@@ -17,21 +21,34 @@
   </div>
 </div>
 
-<div class="col-sm-4">
+<div class="col-sm-3">
   <div class="form-group">
     <div class="form-line">
-      <label>{{pessoa_juridica_form.cnpj.label}}</label>
+      <label>{{pessoa_juridica_form.cnpj.label}}</label><strong style="color:red;"> *</strong>
       {% if pessoa_juridica_form.cnpj.errors %}<label class="error">{% for error in pessoa_juridica_form.cnpj.errors %}{{error}}{% endfor %}</label>{% endif %}
       {{pessoa_juridica_form.cnpj}}
     </div>
   </div>
 </div>
 
-<div class="col-sm-2" style="margin-bottom: 17px;margin-top: 5px;">
+<div class="col-sm-1 " style="padding-top: 6px; padding-left: 0;">
   <div class="form-group">
-    <label>{{form.inativo.label}}</label><strong style="color:red;"> *</strong>
-      {% if form.inativo.errors %}<label class="error">{% for error in form.inativo.errors %}{{error}}{% endfor %}</label>{% endif %}
-      {{form.inativo}}
+    <div class="">
+        </br>
+        <button class="btn btn-success" style="position: absolute; border-bottom:   0;" type="submit" name="cnpj_sync_btn" title="Consultar dados da empresa pelo CNPJ">
+<!--          <i class="material-icons">&#xE148;</i>-->
+          <span>Buscar Dados</span>
+        </button>
+      </div>
+    </div>
+</div>
+
+<div class="col-sm-2">
+  <div class="form-group" style="padding-top: 6px; padding-left: 30px;">
+      </br>
+      <input type="checkbox" class="form-control" id="id_inativo" name="empresa_form-inativo" {% if form.inativo.value == True %} checked="checked"{% endif %}/>
+      <label style="font-weight: bold;" for="id_inativo">Inativo</label>
+      <i class="material-icons" style="font-size: 18px;margin-left: 10px;" title="CNPJ é Inativo?">&#xE887;</i>
   </div>
 </div>
 

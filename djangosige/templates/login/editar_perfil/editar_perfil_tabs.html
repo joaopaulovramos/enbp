@@ -1,0 +1,93 @@
+{%extends 'base/base.html'%}
+
+{%block title%}Editar Perfil{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid block">
+    <div class="block-header">
+      <h2>PERFIL</h2>
+    </div>
+      
+    {% include 'base/form_error_alert.html' %}
+
+    <div class="block-content">
+      <div class="card">
+        <div class="header">
+          <h2>
+            <a href="{% url 'login:perfilview' %}"><i class="material-icons">&#xE5C4;</i></a>
+            EDITAR PERFIL
+          </h2>
+        </div>
+      {% include 'login/editar_perfil/tab_list.html' %}
+
+        <div class="body">
+          <form role="form" action="" method="post" enctype="multipart/form-data" >
+              {% csrf_token %}
+              <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane active" id="tab_dados_pessoais">
+                      {% for field in form %}
+
+                        <div class="col-sm-6">
+                           <div class="form-group">
+                               <div class="form-line">
+                                    <label>{{field.label}}</label>
+                                    {{field}}
+                               </div>
+                            </div>
+                        </div>
+
+                      {% endfor %}
+
+         </div>
+
+                    <div role="tabpanel" class="tab-pane formset-tab" id="tab_dados_bancarios">
+                         {% include 'formset/formset.html' with formset=banco_form title='Dados Bancários' %}
+                    </div>
+
+
+                    <div role="tabpanel" class="tab-pane formset-tab" id="tab_endereco">
+                         {% include 'formset/formset.html' with formset=endereco_form title='Endereço' %}
+
+
+                    </div>
+
+                        <div role="tabpanel" class="tab-pane formset-tab" id="tab_empresas">
+                                <div class="form-group">
+                                <label>{{minha_empresa_form.m_empresa.label}}</label>
+                                <div class="input-group">
+                                <div class="form-line">
+                                    {{minha_empresa_form.m_empresa}}
+                                </div>
+                                <a class="input-group-addon" style="color: green;" href="{% url 'cadastro:addempresaview' %}"><i class="material-icons add-new-icon" title="Adicionar empresa">&#xE147;</i></a>
+                            </div>
+                        </div>
+                    </div>
+        
+      </div>
+           <button class="btn btn-success foot-btn" style="margin-right:0px;" type="submit"><i class="material-icons">&#xE3C9;</i><span> ALTERAR</span></button>
+   </form>
+        </div>
+    </div>
+  </div>
+  
+</div>
+</section>
+
+
+{%endblock%}
+
+{% block js %}
+
+  {% load static %}
+  <script type="text/javascript">
+  	var cmun_path = '{% static 'tabelas/municipios/' %}'
+
+  	var mun_inicial = [];
+  	{% for form in endereco_form %}
+  	mun_inicial.push("{{form.municipio.initial}}");
+  	{% endfor %}
+
+    $.Admin.pessoaForm.init(cmun_path, mun_inicial);
+  </script>
+
+{% endblock %}

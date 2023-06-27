@@ -5,16 +5,10 @@ import os
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.template.defaultfilters import date
 
 from .base import Pessoa
 from djangosige.apps.login.models import Usuario
 from djangosige.configs.settings import MEDIA_ROOT
-
-BOOLEAN = [
-    ('1', 'SIM'),
-    ('0', 'NÃO')
-]
 
 TRIBUTACAO = [
     ('1', 'Lucro Real'),
@@ -88,9 +82,10 @@ def logo_directory_path(instance, filename):
 class Empresa(Pessoa):
     logo_file = models.ImageField(
         upload_to=logo_directory_path, default='imagens/logo.png', blank=True, null=True)
-    cnae = models.CharField(max_length=10, blank=True, null=True)
+    cnae = models.ForeignKey('cnae', related_name="empresa_cnae",
+                                on_delete=models.SET_NULL, null=True, blank=True)
     iest = models.CharField(max_length=32, null=True, blank=True)
-    inativo = models.CharField(max_length=1, null=False, blank=True, choices=BOOLEAN, default=1)
+    inativo = models.BooleanField(null=False, default=False)
     codigo_legado = models.CharField(max_length=10, null=True, blank=True)
     forma_tributacao = models.CharField(
         max_length=2, null=True, blank=True, choices=TRIBUTACAO)
@@ -144,6 +139,6 @@ def logo_post_delete_handler(sender, instance, **kwargs):
 
 class MinhaEmpresa(models.Model):
     m_empresa = models.ForeignKey(
-        Empresa, on_delete=models.CASCADE, related_name='minha_empresa', blank=True, null=True)
+        Empresa, on_delete=models.PROTECT, related_name='minha_empresa', blank=True, null=True)
     m_usuario = models.ForeignKey(
         Usuario, on_delete=models.CASCADE, related_name='empresa_usuario')

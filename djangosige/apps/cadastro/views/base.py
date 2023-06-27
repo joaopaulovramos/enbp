@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+import json
+import re
+
+import requests
+from bradocs4py import ValidadorInscricaoEstadual
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
 
 from djangosige.apps.cadastro.forms import PessoaJuridicaForm, PessoaFisicaForm, EnderecoFormSet, TelefoneFormSet, EmailFormSet, \
     SiteFormSet, BancoFormSet, DocumentoFormSet
-from djangosige.apps.cadastro.models import PessoaFisica, PessoaJuridica, Endereco, Telefone, Email, Site, Banco, Documento
+from djangosige.apps.cadastro.models import PessoaFisica, PessoaJuridica, Endereco, Telefone, Email, Site, Banco, \
+    Documento, Empresa
 
 
 class AdicionarPessoaView(CustomCreateView):
@@ -66,15 +72,31 @@ class AdicionarPessoaView(CustomCreateView):
         if veiculo_form:
             extra_forms = [veiculo_form, ]
 
+        pessoa_juridica_form = PessoaJuridicaForm(
+            request.POST, prefix='pessoa_jur_form')
+        pessoa_fisica_form = PessoaFisicaForm(
+            request.POST, prefix='pessoa_fis_form')
+
         if form.is_valid():
 
             self.object = form.save(commit=False)
             if self.object.tipo_pessoa == 'PJ':
-                pessoa_form = PessoaJuridicaForm(
-                    request.POST, prefix='pessoa_jur_form')
+                pessoa_form = pessoa_juridica_form
+
+                if (len(Empresa.objects.filter(
+                        pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj']))) != 0):
+                    pessoa_juridica_form.add_error('cnpj', 'CNPJ Já existe')
+
+                if (not suframaActive(request.POST)):
+                    pessoa_juridica_form.add_error('suframa', 'Inscricão inválida')
+
+                if (request.POST['pessoa_jur_form-inscricao_estadual'] and request.POST['endereco_form-0-uf']):
+                    if (not ValidadorInscricaoEstadual.validarStr(request.POST['pessoa_jur_form-inscricao_estadual'],
+                                                                  request.POST['endereco_form-0-uf'])):
+                        pessoa_juridica_form.add_error('inscricao_estadual',
+                                                       'Inscricão inválida para ' + request.POST['endereco_form-0-uf'])
             else:
-                pessoa_form = PessoaFisicaForm(
-                    request.POST, prefix='pessoa_fis_form')
+                pessoa_form = pessoa_fisica_form
 
             if (all(formset.is_valid() for formset in formsets) and
                 pessoa_form.is_valid() and
@@ -129,11 +151,6 @@ class AdicionarPessoaView(CustomCreateView):
                 pessoa_form.save()
 
                 return self.form_valid(form)
-
-        pessoa_juridica_form = PessoaJuridicaForm(
-            request.POST, prefix='pessoa_jur_form')
-        pessoa_fisica_form = PessoaFisicaForm(
-            request.POST, prefix='pessoa_fis_form')
 
         return self.form_invalid(form=form,
                                  pessoa_juridica_form=pessoa_juridica_form,
@@ -227,6 +244,31 @@ class EditarPessoaView(CustomUpdateView):
         site_form = SiteFormSet(
             request.POST, prefix='site_form', instance=self.object)
 
+        if self.object.tipo_pessoa == 'PJ':
+            pessoa_juridica_form = PessoaJuridicaForm(
+                request.POST, prefix='pessoa_jur_form', instance=self.object)
+            pessoa_fisica_form = PessoaFisicaForm(
+                request.POST, prefix='pessoa_fis_form')
+
+            if (len(Empresa.objects.filter(
+                    pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj'])).exclude(
+                id=request.POST['codigo'])) != 0):
+                pessoa_juridica_form.add_error('cnpj', 'CNPJ Já existe')
+
+            if (not suframaActive(request.POST)):
+                pessoa_juridica_form.add_error('suframa', 'Inscricão inválida')
+
+            if (request.POST['pessoa_jur_form-inscricao_estadual'] and request.POST['endereco_form-0-uf']):
+                if (not ValidadorInscricaoEstadual.validarStr(request.POST['pessoa_jur_form-inscricao_estadual'],
+                                                              request.POST['endereco_form-0-uf'])):
+                    pessoa_juridica_form.add_error('inscricao_estadual',
+                                          'Inscricão inválida para ' + request.POST['endereco_form-0-uf'])
+        else:
+            pessoa_juridica_form = PessoaJuridicaForm(
+                request.POST, prefix='pessoa_jur_form')
+            pessoa_fisica_form = PessoaFisicaForm(
+                request.POST, prefix='pessoa_fis_form', instance=self.object)
+
         formsets = [telefone_form, email_form, site_form]
 
         if veiculo_form:
@@ -235,11 +277,9 @@ class EditarPessoaView(CustomUpdateView):
         if form.is_valid():
             self.object = form.save(commit=False)
             if self.object.tipo_pessoa == 'PJ':
-                pessoa_form = PessoaJuridicaForm(
-                    request.POST, prefix='pessoa_jur_form')
+                pessoa_form = pessoa_juridica_form
             else:
-                pessoa_form = PessoaFisicaForm(
-                    request.POST, prefix='pessoa_fis_form')
+                pessoa_form = pessoa_fisica_form
 
             if (all(formset.is_valid() for formset in formsets) and
                 pessoa_form.is_valid() and
@@ -307,17 +347,6 @@ class EditarPessoaView(CustomUpdateView):
 
         logo_file = kwargs.pop('logo_file', None)
 
-        if self.object.tipo_pessoa == 'PJ':
-            pessoa_juridica_form = PessoaJuridicaForm(
-                request.POST, prefix='pessoa_jur_form', instance=self.object)
-            pessoa_fisica_form = PessoaFisicaForm(
-                request.POST, prefix='pessoa_fis_form')
-        else:
-            pessoa_juridica_form = PessoaJuridicaForm(
-                request.POST, prefix='pessoa_jur_form')
-            pessoa_fisica_form = PessoaFisicaForm(
-                request.POST, prefix='pessoa_fis_form', instance=self.object)
-
         return self.form_invalid(form=form,
                                  pessoa_juridica_form=pessoa_juridica_form,
                                  pessoa_fisica_form=pessoa_fisica_form,
@@ -328,10 +357,30 @@ class EditarPessoaView(CustomUpdateView):
                                  veiculo_form=veiculo_form,
                                  logo_file=logo_file)
 
-
 ## regional
 
 class RegionalListView(CustomListView):
 
     def __init__(self, *args, **kwargs):
         super(RegionalListView, self).__init__(*args, **kwargs)
+
+
+def suframaActive(post):
+    suframa = post['pessoa_jur_form-suframa']
+    if (not suframa):
+        return True
+    cnpj = re.sub('[./-]', '', post['pessoa_jur_form-cnpj'])
+    url = "https://publica.cnpj.ws/suframa"
+    payload = json.dumps({
+        "cnpj": cnpj,
+        "inscricao": suframa
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    resp = requests.request("POST", url, headers=headers, data=payload)
+    json_object = json.loads(resp.text)
+    if "ativo" in json_object:
+        return json_object["ativo"]
+    return False
