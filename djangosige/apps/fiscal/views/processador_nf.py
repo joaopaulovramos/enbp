@@ -367,7 +367,8 @@ class ProcessadorNotaFiscal(object):
         nota_saida = NotaFiscalSaida()
         venda = PedidoVenda()
 
-        xml_nfe = request.FILES['arquivo_xml'].read().decode("utf-8")
+        try: xml_nfe = request.FILES['arquivo_xml'].read().decode("utf-8")
+        except: xml_nfe = request.FILES['arquivo_xml'].read().decode("cp1252")
 
         nfe.xml = xml_nfe
 
@@ -804,7 +805,8 @@ class ProcessadorNotaFiscal(object):
         nota_entrada = NotaFiscalEntrada()
         compra = PedidoCompra()
 
-        xml_nfe = request.FILES['arquivo_xml'].read().decode("utf-8")
+        try: xml_nfe = request.FILES['arquivo_xml'].read().decode("utf-8")
+        except: xml_nfe = request.FILES['arquivo_xml'].read().decode("cp1252")
 
         nfe.xml = xml_nfe
 
