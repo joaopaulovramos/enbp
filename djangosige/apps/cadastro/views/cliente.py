@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.urls import reverse_lazy
-
+import datetime
 from djangosige.apps.cadastro.forms import ClienteForm
 from djangosige.apps.cadastro.models import Cliente
 
@@ -27,11 +27,20 @@ class AdicionarClienteView(AdicionarPessoaView):
 
     def post(self, request, *args, **kwargs):
         req_post = request.POST.copy()
-        req_post['cliente_form-limite_de_credito'] = req_post['cliente_form-limite_de_credito'].replace(
-            '.', '')
+        req_post['cliente_form-limite_de_credito'] = req_post['cliente_form-limite_de_credito'].replace('.', '')
+        nascimento = req_post['pessoa_fis_form-nascimento']
+        nascimento = datetime.datetime.strptime(nascimento, "%d/%m/%Y").date()
+        now = datetime.datetime.now()
+        diferenca_anos =  now.year - nascimento.year
+
+
+
         request.POST = req_post
         form = ClienteForm(request.POST, request.FILES,
                            prefix='cliente_form', request=request)
+        if diferenca_anos < 18:
+            form.add_error(
+                field=None, error=u"Erro ao enviar email de verificação.")
         return super(AdicionarClienteView, self).post(request, form, *args, **kwargs)
 
 
