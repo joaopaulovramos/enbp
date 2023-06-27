@@ -55,6 +55,14 @@ DATABASES = {
 #     }
 # }
 
+LEGADO = {}
+# LEGADO['SISTEMA'] = 'q_LEGADO'
+# LEGADO['DATABASE_ENGINE'] = 'sqlserver_ado'
+LEGADO['DATABASE_NAME'] = 'nGestao'
+LEGADO['DATABASE_USER'] = 'sa'
+LEGADO['DATABASE_PASSWORD'] = 'J9j7A%caojuly1'
+LEGADO['DATABASE_HOST'] = 'localhost:1433'
+
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 # Application definition
@@ -93,6 +101,9 @@ INSTALLED_APPS = [
 
     'djangosige.apps.viagem',
 
+    # Utilitarios e Importacao
+    'djangosige.apps.util',
+    'import_export',
 ]
 
 

@@ -126,6 +126,9 @@ class Pessoa(models.Model):
     data_criacao = models.DateTimeField(editable=False)
     data_edicao = models.DateTimeField()
 
+    # Dados migracao
+    # id_legado = models.IntegerField(null=True, blank=True)
+
     def save(self, *args, **kwargs):
         # Atualizar datas criacao edicao
         if not self.data_criacao:
