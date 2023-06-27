@@ -103,7 +103,7 @@ INSTALLED_APPS = [
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
-    'import_export',
+    # 'import_export',
 ]
 
 
