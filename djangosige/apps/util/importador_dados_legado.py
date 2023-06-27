@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from djangosige.apps.cadastro.models import (Cliente, Endereco, Fornecedor,
                                              PessoaFisica, PessoaJuridica,
                                              Telefone, Email)
+from djangosige.apps.cadastro.models.transportadora import Transportadora
 from djangosige.apps.financeiro.models.plano import TIPO_GRUPO_ESCOLHAS, PlanoContasGrupo, PlanoContasSubgrupo
 
 
@@ -125,6 +126,38 @@ class ImportadorLegado:
         cur.close()
         if verbose:
             stdout.write("\rImportando clientes: 100%\r\n")
+
+    def importar_transportadoras(self, verbose=True):
+        sql = """
+            Select et.cd_entidade as id_legado, 
+            et.nr_cpfcnpj, et.nr_ie as inscricao_estadual, et.cd_classificacao, et.dt_abertura,
+            et.ds_entidade, et.ds_fantasia, 
+            et.nr_ddd, et.nr_telefone, ds_email,
+            et.ds_endereco, et.ds_bairro, et.nr_cep, et.nr_numero, et.ds_complemento, cid.ds_cidade, cid.ds_uf
+            from tbl_entidades et 
+            left join TBL_ENDERECO_CIDADES cid on cid.CD_CIDADE = et.CD_CIDADE
+            where X_TRANSPORTADOR = 1 and X_ATIVO = 1;
+            """
+        cur = self.get_connection().cursor()
+        cur.execute(sql)
+
+        row = cur.fetchone()
+        while row:
+            rcliente = self.clean_data(row)
+
+            # CNPJ
+            if len(rcliente['numero_pessoa_clean']) == 14:
+                clientepj = PessoaJuridica.objects.filter(cnpj=rcliente['numero_pessoa'])
+                if not clientepj.exists():
+                    transportadora = Transportadora()
+                    self.importar_pessoa(rcliente, transportadora)
+                    transportadora.save()
+            # TODO: Importar fornecedor PF
+            row = cur.fetchone()
+
+        cur.close()
+        if verbose:
+            stdout.write("\rImportando transportadoras: 100%\r\n")
 
     def importar_fornecedores(self, verbose=True):
         sql = """
