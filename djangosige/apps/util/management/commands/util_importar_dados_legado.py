@@ -11,3 +11,4 @@ class Command(BaseCommand):
         dao.importar_usuarios(verbose)
         dao.importar_clientes(verbose)
         dao.importar_fornecedores(verbose)
+        # dao.importar_contas_lancamentos(verbose)

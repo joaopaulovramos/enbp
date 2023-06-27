@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from djangosige.apps.cadastro.models import (Cliente, Endereco, Fornecedor,
                                              PessoaFisica, PessoaJuridica,
                                              Telefone, Email)
+from djangosige.apps.financeiro.models.plano import TIPO_GRUPO_ESCOLHAS, PlanoContasGrupo, PlanoContasSubgrupo
 
 
 class ImportadorLegado:
@@ -134,7 +135,7 @@ class ImportadorLegado:
             et.ds_endereco, et.ds_bairro, et.nr_cep, et.nr_numero, et.ds_complemento, cid.ds_cidade, cid.ds_uf
             from tbl_entidades et 
             left join TBL_ENDERECO_CIDADES cid on cid.CD_CIDADE = et.CD_CIDADE
-            where X_FORNECEDOR = 1 and X_ATIVO = 1;
+            where (X_FORNECEDOR = 1 OR X_FORNECEDOR_DESPESA = 1) and X_ATIVO = 1;
             """
         cur = self.get_connection().cursor()
         cur.execute(sql)
@@ -185,3 +186,54 @@ class ImportadorLegado:
         if verbose:
             stdout.write("\rImportando usuarios: 100%\r\n")
 
+    def importar_lancamentos(self, verbose=True):
+        # Criar lancamento com data futura (sem movimentos)
+        data_pagamento_futura = datetime.strptime(
+            '01/01/2099', "%d/%m/%Y").date()
+        obj = Entrada.objects.create(status='0', movimentar_caixa=False, valor_total='120.00', valor_liquido='120.00', data_pagamento=data_pagamento_futura)
+
+    def importar_contas_lancamentos(self, verbose=True):
+        sql = """
+            Select pc.cd_conta, pc.ds_classificacao, pc.ds_conta, pc.ds_abreviacao, pc.nr_natureza, pc.nr_conta_vinculada_agco, pc.nr_cpfcnpj 
+            from TBL_CONTABIL_PLANO_CONTAS pc INNER JOIN
+                (SELECT tb.cd_conta, ds_classificacao, sum(ordf) as ord
+                from (SELECT CD_CONTA, DS_CLASSIFICACAO, ordinal, value, cast(value as int) as value_int, -(power(10, ordinal) * cast(value as int))  as ordf 
+                FROM TBL_CONTABIL_PLANO_CONTAS 
+                CROSS APPLY STRING_SPLIT(DS_CLASSIFICACAO, '.', 1)
+                ) as tb
+                group by tb.cd_conta, tb.ds_classificacao
+                ) tmp on tmp.cd_conta = pc.cd_conta
+            WHERE X_ATIVO = 1
+            order by tmp.ord desc;
+            """
+        cur = self.get_connection().cursor()
+        cur.execute(sql)
+
+        row = cur.fetchone()
+
+        natureza = {
+            'C': TIPO_GRUPO_ESCOLHAS[0][0],
+            'D': TIPO_GRUPO_ESCOLHAS[1][0]
+        }
+        
+        while row:
+            rcliente = {
+                'codigo': str(row['ds_classificacao']).title(),
+                'descricao': str(row['ds_conta']).lower(),
+                'tipo_grupo': natureza[row['nr_natureza']] 
+            }
+            if not PlanoContasGrupo.objects.filter(codigo=rcliente['codigo']).exists():
+                if '.' not in rcliente['codigo']:
+                    ct = PlanoContasGrupo.objects.create(codigo=rcliente['codigo'], descricao=rcliente['descricao'], tipo_grupo=rcliente['tipo_grupo'])
+                    ct.save()
+                else:
+                    codigo_pai = rcliente['codigo'][rcliente['codigo'].rindex('.')+1:]
+                    print(codigo_pai)
+                    pt = PlanoContasGrupo.objects.get(codigo=codigo_pai)
+                    ct = PlanoContasSubgrupo.objects.create(codigo=rcliente['codigo'], descricao=rcliente['descricao'], tipo_grupo=rcliente['tipo_grupo'], grupo=pt)
+
+            row = cur.fetchone()
+
+        cur.close()
+        if verbose:
+            stdout.write("\rImportando contas: 100%\r\n")
