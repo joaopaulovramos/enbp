@@ -40,7 +40,9 @@ class AdicionarClienteView(AdicionarPessoaView):
                            prefix='cliente_form', request=request)
         if diferenca_anos < 18:
             form.add_error(
-                field=None, error=u"Erro ao enviar email de verificação.")
+                field=None, error=u"O cliente deve ter mais de 18 anos.")
+
+
         return super(AdicionarClienteView, self).post(request, form, *args, **kwargs)
 
 
