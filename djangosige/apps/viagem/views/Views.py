@@ -619,7 +619,7 @@ class AdicionarViagemView(CustomCreateView):
                 _valor_diaria = tabela_diaria.valor_diaria
                 _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
             except TabelaDiariaModel.DoesNotExist:
-                form.add_error('localidade_destino', 'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
+                form.add_error('localidade_destino', 'Seu grupo funcional não tem valores de diárias cadastrado para esta localidade')
 
 
 
