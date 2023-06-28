@@ -38,13 +38,19 @@ class AdicionarEmpresaView(AdicionarPessoaView):
         return super(AdicionarEmpresaView, self).get(request, form, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        form = EmpresaForm(request.POST, request.FILES,
+                           prefix='empresa_form', request=request)
+
         if 'cnpj_sync_btn' in request.POST:
             cnpj = request.POST['pessoa_jur_form-cnpj']
             if is_valid_cnpj(cnpj):
                 request.POST = loadCnpjFields(cnpj, request.POST.copy())
-
-        form = EmpresaForm(request.POST, request.FILES,
-                           prefix='empresa_form', request=request)
+                postResult = super(AdicionarEmpresaView, self).post(request, form, *args, **kwargs)
+                novaEmpresa = Empresa.objects.filter(pessoa_jur_info__cnpj=re.sub('[./-]', '', cnpj))
+                if (len(novaEmpresa) > 0):
+                    self.kwargs['pk'] = novaEmpresa[0].pk
+                    return redirect(reverse_lazy('cadastro:editarempresaview', kwargs=self.kwargs))
+                return postResult
         return super(AdicionarEmpresaView, self).post(request, form, *args, **kwargs)
 
 #teste
