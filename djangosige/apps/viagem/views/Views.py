@@ -494,7 +494,7 @@ class AdicionarTabelaDiariaView(CustomCreateView):
     form_class = TabelaDiariaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatabeladiarias')
-    success_message = "Localidade adicionada com sucesso."
+    success_message = "Diária adicionada com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -614,9 +614,14 @@ class AdicionarViagemView(CustomCreateView):
             _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
             usuario = Usuario.objects.get(id=self.request.user.id)
             tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
-            tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
-            _valor_diaria = tabela_diaria.valor_diaria
-            _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+            try:
+                tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+                _valor_diaria = tabela_diaria.valor_diaria
+                _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+            except TabelaDiariaModel.DoesNotExist:
+                form.add_error('localidade_destino', 'Seu grupo funcional não tem valores de diárias cadastrado para esta localidade')
+
+
 
         if form.is_valid():
             self.object = form.save(commit=False)
