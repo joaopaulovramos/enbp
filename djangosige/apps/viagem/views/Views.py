@@ -997,10 +997,16 @@ class PrestarContasArquivosView(CustomUpdateView):
         context['viagem_pk'] = pk
         context['arquivos'] = Arquivos.objects.filter(viagem=context['viagem_pk'])
 
-        # Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
+        #Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
         if context['arquivos'].count() >= 1:
             _qtd_arquivos_enviados = context['arquivos'].latest('numero_item').numero_item
+            if _qtd_arquivos_enviados is None:
+                _qtd_arquivos_enviados = 1
             context['num_item'] = _qtd_arquivos_enviados + 1
+        else:
+            context['num_item'] = 1
+
+
 
         total_recursos_proprios = 0
         total_recursos_empresa = 0
