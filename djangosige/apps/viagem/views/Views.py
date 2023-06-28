@@ -177,7 +177,7 @@ class AdicionarMotivoView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarMotivoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR MOTIVO VIAGEM'
+        context['title_complete'] = 'ADICIONAR VIAGEM'
         context['return_url'] = reverse_lazy('viagem:listamotivos')
         return context
 
@@ -494,7 +494,7 @@ class AdicionarTabelaDiariaView(CustomCreateView):
     form_class = TabelaDiariaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatabeladiarias')
-    success_message = "Diária adicionada com sucesso."
+    success_message = "Localidade adicionada com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -614,14 +614,9 @@ class AdicionarViagemView(CustomCreateView):
             _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
             usuario = Usuario.objects.get(id=self.request.user.id)
             tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
-            try:
-                tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
-                _valor_diaria = tabela_diaria.valor_diaria
-                _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
-            except TabelaDiariaModel.DoesNotExist:
-                form.add_error('localidade_destino', 'Seu grupo funcional não tem valores de diárias cadastrado para esta localidade')
-
-
+            tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+            _valor_diaria = tabela_diaria.valor_diaria
+            _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
         if form.is_valid():
             self.object = form.save(commit=False)
@@ -1003,8 +998,9 @@ class PrestarContasArquivosView(CustomUpdateView):
         context['arquivos'] = Arquivos.objects.filter(viagem=context['viagem_pk'])
 
         # Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
-        _qtd_arquivos_enviados = context['arquivos'].latest('numero_item').numero_item
-        context['num_item'] = _qtd_arquivos_enviados + 1
+        if context['arquivos'].count() >= 1:
+            _qtd_arquivos_enviados = context['arquivos'].latest('numero_item').numero_item
+            context['num_item'] = _qtd_arquivos_enviados + 1
 
         total_recursos_proprios = 0
         total_recursos_empresa = 0
