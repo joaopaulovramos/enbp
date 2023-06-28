@@ -494,7 +494,7 @@ class AdicionarTabelaDiariaView(CustomCreateView):
     form_class = TabelaDiariaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatabeladiarias')
-    success_message = "Localidade adicionada com sucesso."
+    success_message = "Diária adicionada com sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
