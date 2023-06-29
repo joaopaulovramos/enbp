@@ -108,7 +108,7 @@
 {#                   </td>#}
                     <td>
                        {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '0' %}
-                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONSTAS </span></a>
+                            <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS </span></a>
                        {% endif %}
                        {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
                             <a class="btn"><span> Enviado Para Aprovação</span></a>

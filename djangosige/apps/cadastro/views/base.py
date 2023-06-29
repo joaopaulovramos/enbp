@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import re
+import datetime
 
 import requests
 from bradocs4py import ValidadorInscricaoEstadual
@@ -76,6 +77,8 @@ class AdicionarPessoaView(CustomCreateView):
             request.POST, prefix='pessoa_jur_form')
         pessoa_fisica_form = PessoaFisicaForm(
             request.POST, prefix='pessoa_fis_form')
+
+        validate_nascimento(request.POST['pessoa_fis_form-nascimento'], pessoa_fisica_form)
 
         if form.is_valid():
 
@@ -269,6 +272,7 @@ class EditarPessoaView(CustomUpdateView):
             pessoa_fisica_form = PessoaFisicaForm(
                 request.POST, prefix='pessoa_fis_form', instance=self.object)
 
+        validate_nascimento(request.POST['pessoa_fis_form-nascimento'], pessoa_fisica_form)
         formsets = [telefone_form, email_form, site_form]
 
         if veiculo_form:
@@ -384,3 +388,11 @@ def suframaActive(post):
     if "ativo" in json_object:
         return json_object["ativo"]
     return False
+
+def validate_nascimento(nascimento, form):
+    nascimento = datetime.datetime.strptime(nascimento, "%d/%m/%Y").date()
+    now = datetime.datetime.now()
+    diferenca_anos = now.year - nascimento.year
+    if diferenca_anos < 18:
+        form.add_error('nascimento', 'O cliente deve ter mais de 18 anos.')
+    return form

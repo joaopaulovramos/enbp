@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.urls import reverse_lazy
-
+import datetime
 from djangosige.apps.cadastro.forms import ClienteForm
 from djangosige.apps.cadastro.models import Cliente
 
@@ -27,11 +27,10 @@ class AdicionarClienteView(AdicionarPessoaView):
 
     def post(self, request, *args, **kwargs):
         req_post = request.POST.copy()
-        req_post['cliente_form-limite_de_credito'] = req_post['cliente_form-limite_de_credito'].replace(
-            '.', '')
+        req_post['cliente_form-limite_de_credito'] = float(req_post['cliente_form-limite_de_credito'].replace('.', '').replace(',', '.'))
         request.POST = req_post
-        form = ClienteForm(request.POST, request.FILES,
-                           prefix='cliente_form', request=request)
+        form = ClienteForm(request.POST, request.FILES, prefix='cliente_form', request=request)
+
         return super(AdicionarClienteView, self).post(request, form, *args, **kwargs)
 
 
@@ -74,8 +73,7 @@ class EditarClienteView(EditarPessoaView):
 
     def post(self, request, *args, **kwargs):
         req_post = request.POST.copy()
-        req_post['cliente_form-limite_de_credito'] = req_post['cliente_form-limite_de_credito'].replace(
-            '.', '')
+        req_post['cliente_form-limite_de_credito'] = float(req_post['cliente_form-limite_de_credito'].replace('.', '').replace(',', '.'))
         request.POST = req_post
         self.object = self.get_object()
         form_class = self.get_form_class()

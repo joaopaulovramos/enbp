@@ -50,6 +50,7 @@ class PessoaFisicaForm(forms.ModelForm):
                 instance=instance, *args, **kwargs)
         else:
             super(PessoaFisicaForm, self).__init__(*args, **kwargs)
+        self.fields['nascimento'].input_formats = ('%d/%m/%Y',)
 
     class Meta:
         model = PessoaFisica
@@ -58,7 +59,7 @@ class PessoaFisicaForm(forms.ModelForm):
         widgets = {
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'rg': forms.TextInput(attrs={'class': 'form-control'}),
-            'nascimento': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+            'nascimento': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
         }
         labels = {
             'cpf': _('CPF'),
