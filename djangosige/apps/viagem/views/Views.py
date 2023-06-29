@@ -343,7 +343,7 @@ class ListHorarioPreferencialView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListHorarioPreferencialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Horários Prefenciais'
+        context['title_complete'] = 'Horários Preferenciais'
         context['add_url'] = reverse_lazy('viagem:adicionarhorariopreferencial')
         return context
 
