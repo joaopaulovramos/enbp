@@ -55,7 +55,7 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr {% if not natop.autorizada_dus and not natop.autorizada_sup and not natop.homologada %}
+               <tr {% if not natop.autorizada_dus and not natop.autorizada_sup and not natop.homologada  and not natop.recusado_sup%}
                        class="clickable-row"  data-href="{% url 'viagem:editarviagem' natop.id %}"
                     {% endif %}
                >
