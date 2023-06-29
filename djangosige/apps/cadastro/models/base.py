@@ -176,6 +176,7 @@ class PessoaFisica(models.Model):
     pessoa_id = models.OneToOneField(
         Pessoa, on_delete=models.CASCADE, primary_key=True, related_name='pessoa_fis_info')
     cpf = models.CharField(max_length=32, null=True, blank=True)
+    cpf = CPFField(masked=True, null=True, blank=True)
     rg = models.CharField(max_length=32, null=True, blank=True)
     nascimento = models.DateField(null=True, blank=True)
 
