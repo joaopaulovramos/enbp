@@ -55,7 +55,7 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr {% if not natop.autorizada_dus and not natop.autorizada_sup and not natop.homologada %}
+               <tr {% if not natop.autorizada_dus and not natop.autorizada_sup and not natop.homologada  and not natop.recusado_sup and not recusado_dus%}
                        class="clickable-row"  data-href="{% url 'viagem:editarviagem' natop.id %}"
                     {% endif %}
                >
@@ -69,6 +69,9 @@
                    <td>
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
+
+                        {% elif  natop.recusado_sup %}
+                            <a class="btn btn-red btn-success disabled"><span> RECUSADA</span></a>
                         {% else %}
                             <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
                         {% endif %}
@@ -76,8 +79,11 @@
 
                     </td>
                     <td>
+
                         {% if natop.autorizada_dus  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
+                         {% elif  natop.recusado_dus %}
+                            <a class="btn btn-red btn-success disabled"><span> RECUSADA</span></a>
                         {% else %}
                             <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
                         {% endif %}
@@ -133,7 +139,7 @@
                    </td>
 
                 <td class="lista-remove">
-                                {% if natop.autorizada_sup or natop.autorizada_dus or natop.homologada%}
+                                {% if natop.autorizada_sup or natop.autorizada_dus or natop.homologada or  natop.recusado_dus or  natop.recusado_sup %}
 
                                 {% else %}
                                     <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
