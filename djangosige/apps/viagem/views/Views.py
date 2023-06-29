@@ -4,7 +4,8 @@ from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
 from django.shortcuts import redirect
-
+from django.utils import timezone
+from datetime import datetime, date, timedelta
 from django.contrib import messages
 from djangosige.apps.login.models import Usuario
 from djangosige.apps.viagem.forms import *
@@ -944,6 +945,7 @@ class RemoverArquivoView(CustomUpdateView):
         return context
 
 
+
 class PrestarContasArquivosView(CustomUpdateView):
     form_class = PrestacaoContaForm
     model = ViagemModel
@@ -980,6 +982,16 @@ class PrestarContasArquivosView(CustomUpdateView):
         nome_antigo = request.FILES['file'].name
         nome_antigo = nome_antigo.split('.')
         ext = nome_antigo[-1]
+
+        data_evento = datetime.datetime.strptime(request.POST['data_evento'], "%d/%m/%Y")
+        data_evento = timezone.make_aware(data_evento, timezone.utc)
+        data_fim_viagem = viagem.dada_fim+timedelta(days=1)
+        data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
+
+
+
+        if data_evento < data_inicio_viagem or data_evento > data_fim_viagem:
+            form.add_error('data_evento', 'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
 
         if form.is_valid():
             request.FILES['file'].name = name + '.' + ext
