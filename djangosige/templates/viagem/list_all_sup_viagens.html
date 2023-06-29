@@ -36,16 +36,12 @@
                 <tr>
                     <th>Código</th>
                     <th>Solicitante</th>
-                    <th>Valor Da Passagem</th>
+
                     <th>Data Inicio</th>
                     <th>Data Fim</th>
                     <th>Origem</th>
                     <th>Destino</th>
-                    <th>Objetivo</th>
-                    <th>Tipo de Viagem</th>
-                    <th>Tipo de Solicitação</th>
-                    <th>Motivo</th>
-                    <th>Tipo de Transporte</th>
+
                     <th>Superintendente</th>
                     <th>DUS</th>
                     <th>Homologada</th>
@@ -63,16 +59,13 @@
                >
                    <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
-                   <td>R$ {{natop.valor_passagem}}</td>
+
                    <td>{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
-                   <td>{{natop.objetivo}}</td>
-                   <td>{{natop.tipo_viagem}}</td>
-                   <td>{{natop.tipo_solicitacao}}</td>
-                   <td>{{natop.motivo}}</td>
-                   <td>{{natop.tipo_transporte}}</td>
+
+
                    <td>
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
