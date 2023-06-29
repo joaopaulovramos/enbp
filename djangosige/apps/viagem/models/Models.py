@@ -220,9 +220,6 @@ class Arquivos(models.Model):
 
     data_evento = models.DateField(null=True, blank=True)
     pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
-    valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
-    cotacao = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
-    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2, validators=[
-        MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
+    valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    cotacao = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
