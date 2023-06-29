@@ -3444,6 +3444,47 @@ $.Admin.autirizar_viagem = {
 
 /**/
 
+$.Admin.recusar_viagem_dus = {
+   init: function() {
+        var $btnAutoriza = $('.btn-recusar-viagem-dus');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+             var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("dus_recusa_viagem");
+
+            form.append($(input));
+
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
+
 $.Admin.recusar_viagem_sup = {
    init: function() {
         var $btnAutoriza = $('.btn-recusar-viagem-sup');
@@ -4044,6 +4085,7 @@ $(function () {
     $.Admin.reprovar_gastos.init();
     $.Admin.reover_reprovar_horas_submetidas.init();
     $.Admin.recusar_viagem_sup.init();
+    $.Admin.recusar_viagem_dus.init();
 
 
 

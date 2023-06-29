@@ -164,6 +164,9 @@ class ViagemModel(models.Model):
     recusado_sup = models.BooleanField(default=False)
 
     autorizada_dus = models.BooleanField(default=False)
+    recusado_dus = models.BooleanField(default=False)
+
+
     homologada = models.BooleanField(default=False)
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)
     descricao = models.TextField(blank=True, null=True)

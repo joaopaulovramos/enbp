@@ -813,6 +813,8 @@ class ListAutorizarViagensView(CustomListView):
         current_user = self.request.user
         user_viagens = ViagemModel.objects.filter(autorizada_dus=False)
         user_viagens = user_viagens.filter(autorizada_sup=True)
+        user_viagens = user_viagens.filter(recusado_dus=False)
+
 
         return user_viagens
 
@@ -821,8 +823,15 @@ class ListAutorizarViagensView(CustomListView):
         for key, value in request.POST.items():
             if value == "on":
                 instance = self.model.objects.get(id=key)
-                instance.autorizada_dus = True
-                instance.save()
+                try:
+                    acao = request.POST['acao']
+                    if acao == 'dus_recusa_viagem':
+                        instance.recusado_dus = True
+                        instance.save()
+                except Exception:
+                    instance.autorizada_dus = True
+                    instance.save()
+
         return redirect(self.success_url)
 
     def get_object(self):
