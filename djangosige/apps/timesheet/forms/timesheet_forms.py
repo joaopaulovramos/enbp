@@ -59,6 +59,7 @@ class GastosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(GastosForm, self).__init__(*args, **kwargs)
+        self.fields['valor'].localize = True
 
 
     class Meta:
@@ -84,7 +85,7 @@ class GastosForm(forms.ModelForm):
         labels = {
             'projeto': _('Projeto'),
             'descricao': _('Descrição'),
-            'valor': _('Valor'),
+            'valor': _('Valor (R$)'),
             'file': _('Comprovante'),
 
         }

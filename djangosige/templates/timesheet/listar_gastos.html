@@ -35,7 +35,7 @@
               <thead>
                 <tr>
                   <th>Descrição</th>
-                  <th>Valor</th>
+                  <th>Valor (R$)</th>
                   <th>Comprovante</th>
                   <th>Situação</th>
                   <th>Selecionar</th>
@@ -48,7 +48,7 @@
 
                <tr>
                 <td>{{natop.descricao}}</td>
-                <td>{{natop.valor}}</td>
+                <td>{{natop.valor_formated}}</td>
                 <td><a href="{{natop.file.url}}">Download</a></td>
                     <td>
                        {% if natop.situacao == '0' %}

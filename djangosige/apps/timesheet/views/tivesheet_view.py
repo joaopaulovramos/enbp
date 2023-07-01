@@ -267,6 +267,10 @@ class AdicionarGastoView(CustomCreateView):
 
     def post(self, request, *args, **kwargs):
         self.object = None
+        req_post = request.POST.copy()
+        req_post['valor'] = float(
+            req_post['valor'].replace('.', '').replace(',', '.'))
+        request.POST = req_post
 
         form_class = self.get_form_class()
         form = self.get_form(form_class)

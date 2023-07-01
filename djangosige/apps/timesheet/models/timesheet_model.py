@@ -1,3 +1,5 @@
+from _decimal import Decimal
+
 from django.db import models
 from django.contrib.auth.models import User
 import calendar
@@ -92,9 +94,13 @@ class Gastos(models.Model):
     descricao = models.CharField(max_length=500, null=False, blank=False)
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_gastos", on_delete=models.CASCADE, null=True, blank=True)
     solicitante = models.ForeignKey(User, related_name="gastos_user", on_delete=models.CASCADE, null=True, blank=True)
-    valor = models.CharField(max_length=10, null=False, blank=False)
+    valor = models.DecimalField(
+        max_digits=15, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
     file = models.FileField(upload_to='files/', null=False, blank=False)
     situacao = models.CharField(max_length=1, null=True, blank=True, choices=SITUACAO, default='0')
+
+    def valor_formated(self):
+        return f'{self.valor:n}'
 
 
 class PercentualDiario(models.Model):
