@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 import calendar
 import datetime
 
+from django.template.defaultfilters import date
 
 
 def is_date_within_month(date, month, year):
@@ -98,9 +99,13 @@ class Gastos(models.Model):
         max_digits=15, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
     file = models.FileField(upload_to='files/', null=False, blank=False)
     situacao = models.CharField(max_length=1, null=True, blank=True, choices=SITUACAO, default='0')
+    data = models.DateField(null=False, blank=False)
 
     def valor_formated(self):
         return f'{self.valor:n}'
+
+    def data_formated(self):
+        return '%s' % date(self.data, "d/m/Y")
 
 
 class PercentualDiario(models.Model):

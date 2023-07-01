@@ -60,6 +60,7 @@ class GastosForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super(GastosForm, self).__init__(*args, **kwargs)
         self.fields['valor'].localize = True
+        self.fields['data'].input_formats = ('%d/%m/%Y',)
 
 
     class Meta:
@@ -72,22 +73,21 @@ class GastosForm(forms.ModelForm):
         # valor = models.CharField(max_length=10, null=False, blank=False)
         # file = models.FileField(upload_to='files/', null=False, blank=False)
 
-        fields = ('projeto', 'descricao', 'valor','file',  )
+        fields = ('projeto', 'descricao', 'valor', 'file', 'data', )
 
         widgets = {
             'projeto': forms.Select(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '500'}),
             'valor':  forms.TextInput(attrs={'class': 'form-control decimal-mask'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
-
-
+            'data': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
         }
         labels = {
             'projeto': _('Projeto'),
             'descricao': _('Descrição'),
             'valor': _('Valor (R$)'),
             'file': _('Comprovante'),
-
+            'data': _('Data'),
         }
 
     def save(self, commit=True):
