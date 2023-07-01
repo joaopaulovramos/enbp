@@ -97,5 +97,11 @@ class Gastos(models.Model):
     situacao = models.CharField(max_length=1, null=True, blank=True, choices=SITUACAO, default='0')
 
 
-
+class PercentualDiario(models.Model):
+    data = models.DateField(null=False, blank=False)
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_timesheet",
+                                on_delete=models.CASCADE, null=False, blank=False)
+    solicitante = models.ForeignKey(User, related_name="timesheet_diaria_user", on_delete=models.CASCADE, null=True,
+                                    blank=True)
+    observacao = models.CharField(max_length=500)
 

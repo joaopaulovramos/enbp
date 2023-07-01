@@ -15,6 +15,8 @@ from django.core import serializers
 from django.shortcuts import redirect
 
 
+LIMITE_HORAS_DIA = 8
+
 
 class AprovarTimesheetView(CustomListViewFilter):
     template_name = 'timesheet/timesheet_aprovar.html'
@@ -78,7 +80,7 @@ class ListTimesheetView(CustomListViewFilter):
     def get_context_data(self, **kwargs):
         context = super(ListTimesheetView, self).get_context_data(**kwargs, object_list=None)
         #context = self.get_object()
-        context['title_complete'] = 'Sub-Grupo'
+        context['title_complete'] = 'Timesheet'
         context['add_url'] = reverse_lazy('timesheet:adicionatimesheet')
         return context
 
@@ -91,9 +93,6 @@ class AdicionarTimesheetView(CustomCreateViewAddUser):
     permission_codename = 'add_naturezaoperacao'
     context_object_name = 'all_natops'
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
-
     def post(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
@@ -101,8 +100,31 @@ class AdicionarTimesheetView(CustomCreateViewAddUser):
         form = self.get_form(form_class)
         form.request_user = self.request.user
 
+        # É permitido horas fracionada?
+        # validar quantidade de horas e horas futuras
+
+        date_selected = request.POST['semanas'].split(" - ")
+        inicio_semana = datetime.datetime.strptime(date_selected[0], "%d/%m/%Y").date()
+        fim_semana = datetime.datetime.strptime(date_selected[1], "%d/%m/%Y").date()
+        hoje = datetime.datetime.now().date()
+
+        inputs_dias_semana = ['hr_seg', 'hr_ter', 'hr_qua', 'hr_qui', 'hr_sex', 'hr_sab', 'hr_dom', ]
+
+        if hoje > fim_semana:
+            return self.form_invalid(form)
+        else:
+            if hoje >= inicio_semana:
+                for i, v in enumerate(inputs_dias_semana):
+                    if i > hoje.isoweekday():
+                        print(hoje.isoweekday(), " ", i, "d eu ruim")
+
+        print(hoje <= fim_semana)
+
+        print(inicio_semana, " ", fim_semana, " ", hoje)
+
+
         if form.is_valid():
-            self.object = form.save()
+            # self.object = form.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
 
@@ -131,7 +153,7 @@ class AprovarTimesheetView(CustomListViewFilter):
 
     def get_object(self):
         current_user = self.request.user
-        return HorasSemanais.objects.all(user='1')
+        return HorasSemanais.objects.all(user=current_user)
 
 
     def post(self, request, *args, **kwargs):
