@@ -1,7 +1,9 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 import calendar
 import datetime
+from decimal import Decimal
 
 
 
@@ -101,7 +103,22 @@ class PercentualDiario(models.Model):
     data = models.DateField(null=False, blank=False)
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_timesheet",
                                 on_delete=models.CASCADE, null=False, blank=False)
+    percentual = models.DecimalField(null=False, blank=False, default=0.00, max_digits=16, decimal_places=2,
+                                     validators=[MinValueValidator(Decimal('0.01')),
+                                                 MaxValueValidator(Decimal('100.00'))])
     solicitante = models.ForeignKey(User, related_name="timesheet_diaria_user", on_delete=models.CASCADE, null=True,
                                     blank=True)
-    observacao = models.CharField(max_length=500)
+    observacao = models.CharField(max_length=500, blank=True, null=True)
+
+    # 0 - não submetida
+    # 1 - submetida aguardando aprovação
+    # 2 - submetida e aprovada
+    # 3 - reprovada
+    situacao = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Timesheet - Percentual trabalhado"
+        permissions = (
+            ("aprovar_horas", "Pode aprovar lançamento de horas"),
+        )
 
