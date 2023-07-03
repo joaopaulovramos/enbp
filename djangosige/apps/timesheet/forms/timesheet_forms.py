@@ -98,6 +98,7 @@ class PercentualDiarioForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(PercentualDiarioForm, self).__init__(*args, **kwargs)
+        self.fields['data'].input_formats = ('%d/%m/%Y',)
 
     class Meta:
         model = PercentualDiario
@@ -107,7 +108,7 @@ class PercentualDiarioForm(forms.ModelForm):
 
         widgets = {
 
-            'data': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
+            'data': forms.DateInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
             'projeto': forms.Select(attrs={'class': 'form-control'}),
             'percentual': forms.NumberInput(attrs={'class': 'form-control'}),
             'observacao': forms.Textarea(attrs={'class': 'form-control', 'size': '250'}),

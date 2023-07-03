@@ -380,8 +380,9 @@ class EditarPercentualDiarioView(CustomUpdateView):
                 if data == str(timesheet.data):
                     projetos_dict[timesheet.projeto] = {'percentual': timesheet.percentual, 'id': timesheet.id}
                     total_percentual_dia += float(timesheet.percentual)
+                    _data = timesheet.data
 
-            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia)]
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia), _data]
 
         context['timesheet'] = datas_dict
         context['projetos'] = projetos
@@ -520,8 +521,9 @@ class ListTimesheetDiasView(CustomListViewFilter):
                 if data == str(timesheet.data):
                     projetos_dict[timesheet.projeto] = {'percentual': timesheet.percentual, 'id': timesheet.id}
                     total_percentual_dia += float(timesheet.percentual)
+                    _data = timesheet.data
 
-            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia)]
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia), _data]
 
         context['timesheet'] = datas_dict
         context['projetos'] = projetos
