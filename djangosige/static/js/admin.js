@@ -3957,6 +3957,33 @@ $.Admin.submeter_horas = {
     },
 }
 
+$.Admin.timesheet = {
+
+    init: function () {
+
+        $.Admin.maskInput.maskTimesheet()
+
+        let data_padrao= $('#id_data').val() === ""? new Date() : $('#id_data').val()
+        $( ".datepicker-inline" ).datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            defaultDate: data_padrao,
+            inline: true,
+            altField: '#id_data',
+            maxDate: '+0m +0w'
+        });
+
+        $('.datepicker-inline').datepicker('setDate', $('#id_data').val());
+
+    }
+}
+
 $.Admin.viagemForm = {
 
      init: function () {

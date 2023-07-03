@@ -28,22 +28,67 @@
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-                {% for field in form %}
-                <div class="col-sm-6">
+                  <div class="col-sm-6">
                   <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}
-                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{field}}
+                    <div class="">
+                        <div class="datepicker-inline"></div>
+                         {% if form.data.errors %}<label class="error">{% for error in form.data.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
                 </div>
-                {% endfor %}
 
+              <div class="col-sm-6" style="display: none; visibility: hidden">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form.data.label}}</label>{% if form.data.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.data.errors %}<label class="error">{% for error in form.data.errors %}{{error}}{% endfor %}</label>{% endif %}
+                        {{form.data}}
+                    </div>
+                  </div>
+                </div>
 
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form.projeto.label}}</label>{% if form.projeto.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.projeto.errors %}<label class="error">{% for error in form.projeto.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.projeto}}
+                    </div>
+                  </div>
+                </div>
 
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form.percentual.label}}</label>{% if form.percentual.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.percentual.errors %}<label class="error">{% for error in form.percentual.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.percentual}}
+                    </div>
+                  </div>
+                </div>
 
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form.observacao.label}}</label>{% if form.observacao.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.observacao.errors %}<label class="error">{% for error in form.observacao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.observacao}}
+                    </div>
+                  </div>
+                </div>
+
+{#                {% for field in form %}#}
+{#                <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{##}
+{#                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}#}
+{#                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{field}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{#                {% endfor %}#}
 
               </div>
 
@@ -136,7 +181,7 @@
     {% include 'base/datepicker_js.html' %}
 
     <script>
-        $.Admin.maskInput.maskTimesheet()
+        $.Admin.timesheet.init()
     </script>
 
 {% endblock %}
