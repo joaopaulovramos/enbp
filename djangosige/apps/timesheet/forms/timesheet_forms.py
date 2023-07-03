@@ -110,7 +110,7 @@ class PercentualDiarioForm(forms.ModelForm):
 
             'data': forms.DateInput(attrs={'class': 'form-control datepicker', 'size': '200'}),
             'projeto': forms.Select(attrs={'class': 'form-control'}),
-            'percentual': forms.NumberInput(attrs={'class': 'form-control'}),
+            'percentual': forms.NumberInput(attrs={'class': 'form-control percentual'}),
             'observacao': forms.Textarea(attrs={'class': 'form-control', 'size': '250'}),
 
         }

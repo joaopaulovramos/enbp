@@ -560,6 +560,10 @@ $.Admin.maskInput = {
 
     maskViagem: function(){
         $('#valor_passagem_viagem, #id_valor_pago, #id_cotacao').mask('00000.00', {reverse: true});
+    },
+
+    maskTimesheet: function(){
+        $('.percentual').mask('000.00', {reverse: true});
     }
 }
 
