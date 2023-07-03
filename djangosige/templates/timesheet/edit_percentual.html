@@ -81,7 +81,12 @@
                            <td>{{ key }}</td>
                           {% for _, valor in value.0.items %}
 
-                              <td>{% if valor %}{{ valor }}%{% endif %}</td>
+                              <td>
+                                  {% if valor.percentual %}
+                                      <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}"> {{ valor.percentual }}%</a>
+                                  {% endif %}
+
+                              </td>
 
                           {% endfor %}
                               <td>
