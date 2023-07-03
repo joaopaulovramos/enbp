@@ -1768,3 +1768,10 @@ section.content {
 .progress {
   margin-bottom: 0;
 }
+
+/* Timesheet */
+
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td.active_td {
+  border-left: 4px solid #4678b2;
+  font-weight: bold
+}
