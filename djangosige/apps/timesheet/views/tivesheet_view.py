@@ -81,7 +81,7 @@ class ListTimesheetView(CustomListViewFilter):
 
 class AdicionarTimesheetView(CustomCreateViewAddUser):
     form_class = HorasSemanaisForm
-    template_name = "timesheet/add.html"
+    template_name = "timesheet/add_percentual.html"
     success_url = reverse_lazy('timesheet:listatimesheet')
     success_message = "Horas adicionado com sucesso."
     permission_codename = 'add_naturezaoperacao'
@@ -247,7 +247,7 @@ class ListGastosView(CustomListViewFilter):
 
 class AdicionarGastoView(CustomCreateView):
     form_class = GastosForm
-    template_name = 'timesheet/add.html'
+    template_name = 'timesheet/add_percentual.html'
     success_url = reverse_lazy('timesheet:listargastos')
     success_message = "Adicionar Exemplo <b>%(cfop)s </b>adicionado com sucesso."
     permission_codename = 'add_naturezaoperacao'
@@ -275,8 +275,8 @@ class AdicionarGastoView(CustomCreateView):
 
 class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
     form_class = PercentualDiarioForm
-    template_name = "timesheet/add.html"
-    success_url = reverse_lazy('timesheet:listarpercentualdiario')
+    template_name = "timesheet/add_percentual.html"
+    success_url = reverse_lazy('timesheet:adicionarpercentualdiario')
     success_message = "Percentual de horas trabalhadas lançado com sucesso."
     permission_codename = 'add_percentualdiario'
     context_object_name = 'all_natops'
@@ -289,11 +289,13 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
         form.request_user = self.request.user
 
         data = datetime.datetime.strptime(request.POST['data'], "%d/%m/%Y").date()
+        hoje = datetime.datetime.now().date()
+
+        if data > hoje:
+            form.add_error('data', 'Não é possível lança horas futuras.')
 
         # seleciona os laçamentos do usuário já existentes para o dia
         lancamentos_dia = PercentualDiario.objects.filter(solicitante=self.request.user, data=data)
-
-        print(self.request.POST['projeto'])
 
         total_percentual_dia = 0
         for lancamento in lancamentos_dia:
@@ -314,13 +316,40 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
         context = super(AdicionarPercentualDiarioView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR PERCENTUAL DE HORAS'
         context['return_url'] = reverse_lazy('timesheet:listarpercentualdiario')
+
+        lista_timesheet = PercentualDiario.objects.filter(solicitante=self.request.user)
+
+        projetos = set()
+        datas = set()
+
+        for timesheet in lista_timesheet:
+            projetos.add(timesheet.projeto)
+            datas.add(str(timesheet.data))
+
+        datas_dict = {key: None for key in datas}
+
+        for data in datas_dict.keys():
+
+            projetos_dict = {key: None for key in projetos}
+            total_percentual_dia = 0.00
+            for timesheet in lista_timesheet:
+
+                if data == str(timesheet.data):
+                    projetos_dict[timesheet.projeto] = timesheet.percentual
+                    total_percentual_dia += float(timesheet.percentual)
+
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia)]
+
+        context['timesheet'] = datas_dict
+        context['projetos'] = projetos
+
         return context
 
 
 class EditarPercentualDiarioView(CustomUpdateView):
     form_class = PercentualDiarioForm
     model = PercentualDiario
-    template_name = 'timesheet/edit.html'
+    template_name = 'timesheet/edit_percentual.html'
     success_url = reverse_lazy('timesheet:listarpercentualdiario')
     success_message = "Percentual de horas Editado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
@@ -330,15 +359,50 @@ class EditarPercentualDiarioView(CustomUpdateView):
         context['title_complete'] = 'Edição de percentual de horas'
         context['return_url'] = reverse_lazy('timesheet:listarpercentualdiario')
         context['id'] = self.object.id
+
+        lista_timesheet = PercentualDiario.objects.filter(solicitante=self.request.user)
+
+        projetos = set()
+        datas = set()
+
+        for timesheet in lista_timesheet:
+            projetos.add(timesheet.projeto)
+            datas.add(str(timesheet.data))
+
+        datas_dict = {key: None for key in datas}
+
+        for data in datas_dict.keys():
+
+            projetos_dict = {key: None for key in projetos}
+            total_percentual_dia = 0.00
+            for timesheet in lista_timesheet:
+
+                if data == str(timesheet.data):
+                    projetos_dict[timesheet.projeto] = timesheet.percentual
+                    total_percentual_dia += float(timesheet.percentual)
+
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia)]
+
+        context['timesheet'] = datas_dict
+        context['projetos'] = projetos
+
         return context
 
     def post(self, request, *args, **kwargs):
+
+        # Sobreescreve a url de sucesso considerando o pk
+        self.success_url = reverse_lazy('timesheet:editarpercentualdiario', kwargs={'pk': kwargs['pk']})
+
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = form_class(request.POST, instance=self.object)
         form.request_user = self.request.user
 
         data = datetime.datetime.strptime(request.POST['data'], "%d/%m/%Y").date()
+        hoje = datetime.datetime.now().date()
+
+        if data > hoje:
+            form.add_error('data', 'Não é possível lança horas futuras.')
 
         # seleciona os laçamentos do usuário para o mesmo dia, excluindo o que está sob atualização
         lancamentos_dia = self.model.objects.filter(solicitante=self.request.user, data=data).exclude(pk=kwargs['pk'])
@@ -450,13 +514,14 @@ class ListTimesheetDiasView(CustomListViewFilter):
         for data in datas_dict.keys():
 
             projetos_dict = {key: None for key in projetos}
-
+            total_percentual_dia = 0.00
             for timesheet in lista_timesheet:
 
                 if data == str(timesheet.data):
                     projetos_dict[timesheet.projeto] = timesheet.percentual
+                    total_percentual_dia += float(timesheet.percentual)
 
-            datas_dict[data] = projetos_dict
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia)]
 
         context['timesheet'] = datas_dict
         context['projetos'] = projetos

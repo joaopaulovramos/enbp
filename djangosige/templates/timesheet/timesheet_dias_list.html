@@ -42,65 +42,31 @@
                         {% endfor %}
                     {%endif%}
 
-{#                    <th>Total</th>#}
+                    <th>Total Diário</th>
 {#                    <th>Selecionar</th>#}
                 </tr>
               </thead>
 
               <tbody>
+                  {% if timesheet%}
+                      {% for key, value in timesheet.items %}
+                          <tr>
+                           <td>{{ key }}</td>
+                          {% for _, valor in value.0.items %}
 
+                              <td>{% if valor %}{{ valor }}%{% endif %}</td>
 
-              {% if timesheet%}
-                  {% for key, value in timesheet.items %}
-{#                      {{ key }}#}
-                      <tr>
-                       <td>{{ key }}</td>
-                      {% for item, valor in value.items %}
-
-                          <td>{{ valor }}</td>
-
+                          {% endfor %}
+                              <td>
+                                  <div class="progress-bar {% if value.2 == 100 %}progress-bar-success{% endif %}" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: {{ value.2}}%;">
+                                      {{ value.1 }}%
+                                  </div>
+                              </td>
+                          </tr>
                       {% endfor %}
-                      </tr>
-                  {% endfor %}
-              {%endif%}
+                  {%endif%}
+                </tbody>
 
-{#              {% if all_natops%}#}
-{#               {% for natop in all_natops %}#}
-{#                 <tr  class="clickable-row"  data-href="{% url 'timesheet:editarpercentualdiario' natop.id %}">#}
-{#                     <td>{{natop.data}}</td>#}
-{#                     <td>{{natop.percentual}}%</td>#}
-{#                     <td>{{natop.projeto}}</td>#}
-{#                     <td>#}
-{#                    {% if natop.situacao == 0  %}#}
-{#                        <a class="btn"><span> NÃO SUBMETIDA</span></a>#}
-{#                    {% endif %}#}
-{#                     {% if natop.situacao == 1  %}#}
-{#                        <a class="btn btn-yellow"><span> SUBMETIDA</span></a>#}
-{#                    {% endif %}#}
-{#                    {% if natop.situacao == 2  %}#}
-{#                        <a class="btn btn-success"><span> APROVADA</span></a>#}
-{#                    {% endif %}#}
-{#                   {% if natop.situacao == 3  %}#}
-{#                        <a class="btn btn-red"><span> REPROVADA</span></a>#}
-{#                    {% endif %}#}
-{#                   </td>#}
-{##}
-{#               <td class="lista-remove">#}
-{##}
-{#                    {% if natop.situacao == 0  %}#}
-{#                        <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>#}
-{#                        <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>#}
-{#                    {% endif %}#}
-{##}
-{##}
-{#                </td>#}
-{#              </tr>#}
-{#              {% endfor %}#}
-{#              {%else%}#}
-{#              {%endif%}#}
-
-
-            </tbody>
           </table>
         </div>
 

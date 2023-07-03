@@ -1761,3 +1761,10 @@ section.content {
   float: left;
   margin-left: 30px;
 }
+
+
+/*Sobrescrevendo BS*/
+
+.progress {
+  margin-bottom: 0;
+}
