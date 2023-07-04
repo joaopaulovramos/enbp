@@ -10,3 +10,13 @@
     border:#003eff;
     background-color:#fff
 }
+
+.ui-state-highlight {
+      border: 0 !important;
+    }
+
+.ui-state-highlight a {
+    border:1px solid #003eff;
+    background:#007fff !important;
+    color: #fff !important;
+}

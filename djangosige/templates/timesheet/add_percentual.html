@@ -180,9 +180,26 @@
     {% include 'base/load_jqueryui.html' %}
     {% include 'base/overwrite_css.html' %}
     {% include 'base/datepicker_js.html' %}
+    <script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
 
     <script>
         $.Admin.timesheet.init()
+    {#   $(document).ready(function () {#}
+    {#  $('.datepicker-inline').multiDatesPicker({#}
+    {#    dateFormat: 'dd/mm/yy',#}
+    {#        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],#}
+    {#        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],#}
+    {#        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],#}
+    {#        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],#}
+    {#        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],#}
+    {#        nextText: 'Próximo',#}
+    {#        prevText: 'Anterior',#}
+    {#        defaultDate: new Date(),#}
+    {#        inline: true,#}
+    {#        altField: '#id_data',#}
+    {#        maxDate: '+0m +0w',#}
+    {#  });#}
+    {#});#}
     </script>
 
 {% endblock %}
