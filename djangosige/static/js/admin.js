@@ -3958,7 +3958,6 @@ $.Admin.viagemForm = {
      init: function () {
 
          $.Admin.maskInput.maskViagem();
-         define_cod_descricao_para_selects();
          Handle_definir_categoria_passagem();
 
          // Lida com a modal para mostrar detalhes de solicitação de viagem
@@ -4020,18 +4019,6 @@ $.Admin.viagemForm = {
              else{
                  $('#id_dada_fim').parent().show()
              }
-         }
-
-
-         function define_cod_descricao_para_selects(){
-
-             $(".select-cod-descricao option").each(function (){
-                 let cod = $(this).val()
-                 let descricao = $(this).html()
-                 $(this).html(cod + " - " + descricao)
-
-             })
-
          }
 
          function Handle_definir_categoria_passagem(){
