@@ -432,7 +432,7 @@ class EditarPercentualDiarioView(CustomUpdateView):
     template_name = 'timesheet/edit_percentual.html'
     success_url = reverse_lazy('timesheet:listarpercentualdiario')
     success_message = "Percentual de horas Editado com Sucesso."
-    permission_codename = 'cadastrar_item_viagens'
+    permission_codename = 'change_percentualdiario'
 
     def get_context_data(self, **kwargs):
         context = super(EditarPercentualDiarioView, self).get_context_data(**kwargs)
