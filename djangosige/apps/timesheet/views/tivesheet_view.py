@@ -248,6 +248,46 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
         return context
 
 
+class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
+    template_name = 'timesheet/timesheet_percentual_ver_aprovados.html'
+    model = PercentualDiario
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('timesheet:verpercentuaisdiariosaprovados')
+    permission_codename = 'aprovar_horas'
+
+    def get_queryset(self):
+        current_user = self.request.user
+        query = PercentualDiario.objects.filter(situacao=2)
+        # querry = querry.filter(submetida=False)
+        return query
+
+    # def get_object(self):
+    #     current_user = self.request.user
+    #     return HorasSemanais.objects.all(user=current_user)
+
+    # def post(self, request, *args, **kwargs):
+    #     for key, value in request.POST.items():
+    #         if value == "on":
+    #             acao = request.POST['acao']
+    #             if acao == 'reprovar-horas':
+    #                 instance = self.model.objects.get(id=key)
+    #                 instance.situacao = 3
+    #                 instance.save()
+    #             else:
+    #                 instance = self.model.objects.get(id=key)
+    #                 instance.situacao = 2
+    #                 instance.save()
+    #
+    #     return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super(VerTimesheetPercentualAprovadoView, self).get_context_data(**kwargs, object_list=None)
+        # context = self.get_object()
+        context['title_complete'] = 'Horas Aprovadas'
+        # context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
+        return context
+
+
 class ListGastosView(CustomListViewFilter):
     template_name = 'timesheet/listar_gastos.html'
     model = Gastos

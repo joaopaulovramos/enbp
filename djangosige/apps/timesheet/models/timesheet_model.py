@@ -117,7 +117,7 @@ class PercentualDiario(models.Model):
     situacao = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Timesheet - Percentual trabalhado"
+        verbose_name = "Timesheet - Percentual"
         permissions = (
             ("aprovar_horas", "Pode aprovar lançamento de horas"),
         )
