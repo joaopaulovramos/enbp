@@ -197,6 +197,12 @@
                             <span>TimeSheet</span>
                         </a>
                         <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'timesheet:listarpercentualdiario' %}">
+                                    <span>Minhas Horas - Percentual</span>
+                                </a>
+                            </li>
+
                                  <li>
                                     <a href="{% url 'timesheet:listatimesheet' %}">
                                         <span>Minhas Horas</span>
@@ -222,6 +228,18 @@
                                         <span>Aprovar Gastos</span>
                                     </a>
                                  </li>
+
+                             <li>
+                                <a href="{% url 'timesheet:aprovarpercentuaisdiarios' %}">
+                                    <span>Aprovar Horas - Percentual</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'timesheet:verpercentuaisdiariosaprovados' %}">
+                                    <span>Horas Aprovadas - Percentual</span>
+                                </a>
+                            </li>
 
 
                         </ul>

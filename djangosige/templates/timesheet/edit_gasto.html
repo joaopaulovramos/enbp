@@ -23,7 +23,7 @@
           </div>
           <!--# Header-->
 
-          <form role="form" action="" method="post">
+          <form id="" role="form" action="" enctype="multipart/form-data"  method="post">
             {% csrf_token %}
             <!-- Body-->
             <div class="body">
@@ -44,8 +44,20 @@
               </div>
               <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
             </div>
+
+            {form.situacao}
             <!--#Body-->
           </form>
+
+          {% if natop.situacao == '0' %}
+            <a class="btn btn"><span>NÃO SUBMETIDA</span></a>
+          {% elif natop.situacao == '1' %}
+            <a class="btn btn-yellow"><span>SUBMETIDA</span></a>
+          {% elif natop.situacao == '2' %}
+            <a class="btn btn-success"><span>APROVADA</span></a>
+          {% elif natop.situacao == '3' %}
+            <a class="btn btn-red btn-success"><span>REPROVADA</span></a>
+          {% endif %}
 
         </div>
       </div>
@@ -60,11 +72,16 @@
 {% block js %}
 
   {% load static %}
-
+  <!-- JQuery UI Css/Js -->
+  <link href="{% static 'css/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <script src="{% static 'js/jquery.mask.js' %}"></script>
 
     {% include 'base/load_jqueryui.html' %}
     {% include 'base/datepicker_js.html' %}
 
+  <script type="text/javascript">
+    $('.decimal-mask').mask('000.000.000.000,00', {reverse: true});
+  </script>
 
 {% endblock %}
