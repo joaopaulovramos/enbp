@@ -527,7 +527,9 @@ class VerPercentualDiarioView(CustomUpdateView):
         context['id'] = self.object.id
         context['projeto'] = self.object.projeto
 
-        context['lancamentos_do_dia'] = self.model.objects.filter(data=self.object.data)
+        lancamentos = self.model.objects.filter(data=self.object.data)
+        lancamentos = lancamentos.filter(situacao=1)
+        context['lancamentos_do_dia'] = lancamentos
 
         return context
 
