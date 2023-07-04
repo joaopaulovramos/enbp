@@ -43,11 +43,11 @@ from functools import reduce
 
 DEFAULT_PERMISSION_MODELS = ['cliente', 'fornecedor', 'produto',
                              'empresa', 'transportadora', 'unidade', 'marca', 'categoria', 'orcamentocompra', 'pedidocompra', 'condicaopagamento', 'orcamentovenda', 'pedidovenda',
-                             'naturezaoperacao', 'notafiscalentrada', 'notafiscalsaida', 'grupofiscal', 'lancamento', 'planocontasgrupo', 'localestoque', 'movimentoestoque', 'cadastrodefinalidademodel','cvmodel', 'carromodel', ]
+                             'naturezaoperacao', 'notafiscalentrada', 'notafiscalsaida', 'grupofiscal', 'lancamento', 'planocontasgrupo', 'localestoque', 'movimentoestoque', 'cadastrodefinalidademodel', 'cvmodel', 'carromodel', 'percentualdiario', ]
 
 CUSTOM_PERMISSIONS = ['configurar_nfe', 'emitir_notafiscal', 'cancelar_notafiscal', 'gerar_danfe', 'consultar_cadastro', 'inutilizar_notafiscal', 'consultar_notafiscal',
                       'baixar_notafiscal', 'manifestacao_destinatario', 'faturar_pedidovenda', 'faturar_pedidocompra', 'acesso_fluxodecaixa', 'consultar_estoque', 'solicitar_viagens',
-                      'autorizar_viagens', 'homologar_viagens', 'cadastrar_item_viagens']
+                      'autorizar_viagens_sup', 'autorizar_viagens_dus', 'homologar_viagens', 'cadastrar_item_viagens', 'aprovar_pc_viagens', 'aprovar_horas', ]
 
 
 #, 'editar_carro', 'cadastrar_carro', 'listar_carro'
