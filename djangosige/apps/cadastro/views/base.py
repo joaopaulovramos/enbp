@@ -87,8 +87,8 @@ class AdicionarPessoaView(CustomCreateView):
             if self.object.tipo_pessoa == 'PJ':
                 pessoa_form = pessoa_juridica_form
 
-                if (isinstance(form.instance, Empresa) and len(Empresa.objects.filter(
-                        pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj']))) != 0):
+                if (isinstance(form.instance, Empresa) and Empresa.objects.filter(
+                        pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj'])).count() != 0):
                     pessoa_juridica_form.add_error('cnpj', 'CNPJ Já existe')
 
                 if (not suframaActive(request.POST)):
@@ -254,9 +254,9 @@ class EditarPessoaView(CustomUpdateView):
             pessoa_fisica_form = PessoaFisicaForm(
                 request.POST, prefix='pessoa_fis_form')
 
-            if (isinstance(form.instance, Empresa) and len(Empresa.objects.filter(
+            if (isinstance(form.instance, Empresa) and Empresa.objects.filter(
                     pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj'])).exclude(
-                id=request.POST['codigo'])) != 0):
+                id=request.POST['codigo']).count() != 0):
                 pessoa_juridica_form.add_error('cnpj', 'CNPJ Já existe')
 
             if (not suframaActive(request.POST)):

@@ -327,7 +327,7 @@ class ListGastosView(CustomListViewFilter):
 
 class AdicionarGastoView(CustomCreateView):
     form_class = GastosForm
-    template_name = 'timesheet/add_percentual.html'
+    template_name = 'timesheet/add.html'
     success_url = reverse_lazy('timesheet:listargastos')
     success_message = "Adicionar Exemplo <b>%(cfop)s </b>adicionado com sucesso."
     permission_codename = 'add_naturezaoperacao'
@@ -352,9 +352,56 @@ class AdicionarGastoView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarGastoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR EXEMPLO'
+        context['title_complete'] = 'ADICIONAR GASTO'
         context['return_url'] = reverse_lazy('timesheet:listargastos')
         return context
+
+class EditarGastoView(CustomUpdateView):
+    form_class = GastosForm
+    template_name = 'timesheet/edit_gasto.html'
+    success_url = reverse_lazy('timesheet:listargastos')
+    success_message = "Adicionar Exemplo <b>%(cfop)s </b>adicionado com sucesso."
+    permission_codename = 'change_naturezaoperacao'
+    context_object_name = 'all_natops'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        req_post = request.POST.copy()
+        req_post['valor'] = float(
+            req_post['valor'].replace('.', '').replace(',', '.'))
+        request.POST = req_post
+
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        form.request_user = self.request.user
+        form.files['file'] = Gastos.objects.get(pk=self.kwargs['pk']).file
+        if form.is_valid():
+            self.object = form.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+    def get_queryset(self):
+        current_user = self.request.user
+        querry = Gastos.objects.filter(solicitante=current_user, id=self.kwargs['pk'])
+        # querry = querry.filter(submetida=False)
+        return querry
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarGastoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'EDITAR GASTO'
+        context['return_url'] = reverse_lazy('timesheet:listargastos')
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        # form_class.prefix = "empresa_form"
+        form = self.get_form(form_class)
+        form.files['file'] = Gastos.objects.get(pk=self.object.pk).file
+        return super(EditarGastoView, self).get(request, form, *args, **kwargs)
 
 
 class AdicionarPercentualDiarioView(CustomCreateViewAddUser):

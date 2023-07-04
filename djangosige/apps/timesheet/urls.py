@@ -12,6 +12,7 @@ urlpatterns = [
 
     url(r'timesheet/listargastos/$', views.ListGastosView.as_view(), name='listargastos'),
     url(r'timesheet/incluirgastos/$', views.AdicionarGastoView.as_view(), name='incluirgastos'),
+    url(r'timesheet/editargastos/(?P<pk>[0-9]+)$', views.EditarGastoView.as_view(), name='editargastos'),
     url(r'timesheet/aprovargastos/$', views.AprovarGastosView.as_view(), name='aprovargastos'),
 
     # Timesheet percentual

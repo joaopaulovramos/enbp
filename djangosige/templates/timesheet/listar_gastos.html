@@ -47,7 +47,7 @@
                {% if all_natops%}
                {% for natop in all_natops %}
 
-               <tr>
+              <tr class="clickable-row" data-href="{% url 'timesheet:editargastos' natop.id %}">
                 <td>{{natop.descricao}}</td>
                 <td>{{natop.valor_formated}}</td>
                 <td><a href="{{natop.file.url}}">Download</a></td>
