@@ -4024,7 +4024,7 @@ $.Admin.timesheet = {
         $.Admin.maskInput.maskTimesheet()
 
         let data_padrao= $('#id_data').val() === ""? new Date() : $('#id_data').val()
-        $( ".datepicker-inline" ).datepicker({
+        $( ".datepicker-inline").datepicker({
             dateFormat: 'dd/mm/yy',
             dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
             dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
@@ -4036,10 +4036,10 @@ $.Admin.timesheet = {
             defaultDate: data_padrao,
             inline: true,
             altField: '#id_data',
-            maxDate: '+0m +0w'
+            maxDate: '+0m +0w',
         });
 
-        $('.datepicker-inline').datepicker('setDate', $('#id_data').val());
+        // $('.datepicker-inline').datepicker('setDate', $('#id_data').val());
 
     }
 }
