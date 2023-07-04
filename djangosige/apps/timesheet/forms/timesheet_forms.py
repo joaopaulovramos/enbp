@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import datetime
-from djangosige.apps.timesheet.models.timesheet_model import HorasSemanais, Gastos
+from djangosige.apps.timesheet.models.timesheet_model import HorasSemanais, Gastos, PercentualDiario
 from decimal import Decimal
 
 
