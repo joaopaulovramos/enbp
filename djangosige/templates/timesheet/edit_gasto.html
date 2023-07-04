@@ -1,6 +1,7 @@
 {%extends 'base/base.html'%}
 
-{%block title%}{{title_complete|title}}{%endblock%}
+
+{%block title%} {{title_complete}} {%endblock%}
 {%block content%}
 <section class="content">
   <div class="container-fluid">
@@ -32,7 +33,6 @@
                 <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
-
                       <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}
                       {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{field}}
@@ -41,25 +41,29 @@
                 </div>
                 {% endfor %}
 
-
-
-
-
               </div>
-
               <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
             </div>
+
+            {form.situacao}
             <!--#Body-->
           </form>
 
+          {% if natop.situacao == '0' %}
+            <a class="btn btn"><span>NÃO SUBMETIDA</span></a>
+          {% elif natop.situacao == '1' %}
+            <a class="btn btn-yellow"><span>SUBMETIDA</span></a>
+          {% elif natop.situacao == '2' %}
+            <a class="btn btn-success"><span>APROVADA</span></a>
+          {% elif natop.situacao == '3' %}
+            <a class="btn btn-red btn-success"><span>REPROVADA</span></a>
+          {% endif %}
+
         </div>
       </div>
-
     </div>
 
   </div>
-
-
 </section>
 
 
@@ -73,8 +77,8 @@
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <script src="{% static 'js/jquery.mask.js' %}"></script>
 
-  {% include 'base/load_jqueryui.html' %}
-  {% include 'base/datepicker_js.html' %}
+    {% include 'base/load_jqueryui.html' %}
+    {% include 'base/datepicker_js.html' %}
 
   <script type="text/javascript">
     $('.decimal-mask').mask('000.000.000.000,00', {reverse: true});
