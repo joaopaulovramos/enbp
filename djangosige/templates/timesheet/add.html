@@ -65,15 +65,18 @@
 
 {%endblock%}
 
-
 {% block js %}
 
   {% load static %}
-
+  <!-- JQuery UI Css/Js -->
+  <link href="{% static 'css/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
   <script src="{% static 'js/jquery.mask.js' %}"></script>
 
     {% include 'base/load_jqueryui.html' %}
     {% include 'base/datepicker_js.html' %}
 
+  <script type="text/javascript">
+    $('.decimal-mask').mask('000.000.000.000,00', {reverse: true});
+  </script>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import datetime
-from djangosige.apps.timesheet.models.timesheet_model import HorasSemanais, Gastos, PercentualDiario
+from djangosige.apps.timesheet.models.timesheet_model import HorasSemanais, Gastos
 from decimal import Decimal
 
 
@@ -57,6 +57,8 @@ class GastosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(GastosForm, self).__init__(*args, **kwargs)
+        self.fields['valor'].localize = True
+        self.fields['data'].input_formats = ('%d/%m/%Y',)
 
     class Meta:
         model = Gastos
@@ -68,7 +70,7 @@ class GastosForm(forms.ModelForm):
         # valor = models.CharField(max_length=10, null=False, blank=False)
         # file = models.FileField(upload_to='files/', null=False, blank=False)
 
-        fields = ('projeto', 'descricao', 'valor', 'file',)
+        fields = ('projeto', 'descricao', 'valor', 'file', 'data',)
 
         widgets = {
             'projeto': forms.Select(attrs={'class': 'form-control'}),
@@ -80,9 +82,9 @@ class GastosForm(forms.ModelForm):
         labels = {
             'projeto': _('Projeto'),
             'descricao': _('Descrição'),
-            'valor': _('Valor'),
+            'valor': _('Valor (R$)'),
             'file': _('Comprovante'),
-
+            'data': _('Data'),
         }
 
     def save(self, commit=True):

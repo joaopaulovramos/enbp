@@ -35,9 +35,10 @@
               <thead>
                 <tr>
                   <th>Descrição</th>
-                  <th>Valor</th>
+                  <th>Valor (R$)</th>
                   <th>Comprovante</th>
                   <th>Situação</th>
+                  <th>Data</th>
                   <th>Selecionar</th>
                 </tr>
               </thead>
@@ -48,28 +49,26 @@
 
                <tr>
                 <td>{{natop.descricao}}</td>
-                <td>{{natop.valor}}</td>
+                <td>{{natop.valor_formated}}</td>
                 <td><a href="{{natop.file.url}}">Download</a></td>
-                    <td>
-                       {% if natop.situacao == '0' %}
-                           <a class="btn btn"><span>NÃO SUBMETIDA</span></a>
-                       {% elif natop.situacao == '1' %}
-                           <a class="btn btn-yellow"><span>SUBMETIDA</span></a>
-                       {% elif natop.situacao == '2' %}
-                           <a class="btn btn-success"><span>APROVADA</span></a>
-                       {% elif natop.situacao == '3' %}
-                           <a class="btn btn-red btn-success"><span>REPROVADA</span></a>
-                       {% endif %}
-                    </td>
-
-
-
-                    <td class="lista-remove">
-                       {% if natop.situacao == '0' %}
-                        <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
-                        <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
-                      {% endif %}
-                    </td>
+                <td>
+                   {% if natop.situacao == '0' %}
+                       <a class="btn btn"><span>NÃO SUBMETIDA</span></a>
+                   {% elif natop.situacao == '1' %}
+                       <a class="btn btn-yellow"><span>SUBMETIDA</span></a>
+                   {% elif natop.situacao == '2' %}
+                       <a class="btn btn-success"><span>APROVADA</span></a>
+                   {% elif natop.situacao == '3' %}
+                       <a class="btn btn-red btn-success"><span>REPROVADA</span></a>
+                   {% endif %}
+                </td>
+                <td>{{natop.data_formated}}</td>
+                <td class="lista-remove">
+                   {% if natop.situacao == '0' %}
+                    <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
+                    <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
+                  {% endif %}
+                </td>
               </tr>
               {% endfor %}
               {%else%}

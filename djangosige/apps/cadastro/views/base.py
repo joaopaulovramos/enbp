@@ -11,7 +11,7 @@ from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, 
 from djangosige.apps.cadastro.forms import PessoaJuridicaForm, PessoaFisicaForm, EnderecoFormSet, TelefoneFormSet, EmailFormSet, \
     SiteFormSet, BancoFormSet, DocumentoFormSet
 from djangosige.apps.cadastro.models import PessoaFisica, PessoaJuridica, Endereco, Telefone, Email, Site, Banco, \
-    Documento, Empresa
+    Documento, Empresa, Cliente
 
 
 class AdicionarPessoaView(CustomCreateView):
@@ -78,7 +78,8 @@ class AdicionarPessoaView(CustomCreateView):
         pessoa_fisica_form = PessoaFisicaForm(
             request.POST, prefix='pessoa_fis_form')
 
-        validate_nascimento(request.POST['pessoa_fis_form-nascimento'], pessoa_fisica_form)
+        if (isinstance(form.instance, Cliente)):
+            validate_nascimento(request.POST['pessoa_fis_form-nascimento'], pessoa_fisica_form)
 
         if form.is_valid():
 
@@ -86,7 +87,7 @@ class AdicionarPessoaView(CustomCreateView):
             if self.object.tipo_pessoa == 'PJ':
                 pessoa_form = pessoa_juridica_form
 
-                if (len(Empresa.objects.filter(
+                if (isinstance(form.instance, Empresa) and len(Empresa.objects.filter(
                         pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj']))) != 0):
                     pessoa_juridica_form.add_error('cnpj', 'CNPJ Já existe')
 
@@ -253,7 +254,7 @@ class EditarPessoaView(CustomUpdateView):
             pessoa_fisica_form = PessoaFisicaForm(
                 request.POST, prefix='pessoa_fis_form')
 
-            if (len(Empresa.objects.filter(
+            if (isinstance(form.instance, Empresa) and len(Empresa.objects.filter(
                     pessoa_jur_info__cnpj=re.sub('[./-]', '', request.POST['pessoa_jur_form-cnpj'])).exclude(
                 id=request.POST['codigo'])) != 0):
                 pessoa_juridica_form.add_error('cnpj', 'CNPJ Já existe')
@@ -272,7 +273,9 @@ class EditarPessoaView(CustomUpdateView):
             pessoa_fisica_form = PessoaFisicaForm(
                 request.POST, prefix='pessoa_fis_form', instance=self.object)
 
-        validate_nascimento(request.POST['pessoa_fis_form-nascimento'], pessoa_fisica_form)
+        if (isinstance(form.instance, Cliente)):
+            validate_nascimento(request.POST['pessoa_fis_form-nascimento'], pessoa_fisica_form)
+
         formsets = [telefone_form, email_form, site_form]
 
         if veiculo_form:
@@ -390,9 +393,9 @@ def suframaActive(post):
     return False
 
 def validate_nascimento(nascimento, form):
-    nascimento = datetime.datetime.strptime(nascimento, "%d/%m/%Y").date()
-    now = datetime.datetime.now()
-    diferenca_anos = now.year - nascimento.year
-    if diferenca_anos < 18:
-        form.add_error('nascimento', 'O cliente deve ter mais de 18 anos.')
-    return form
+    if (nascimento):
+        nascimento = datetime.datetime.strptime(nascimento, "%d/%m/%Y").date()
+        now = datetime.datetime.now()
+        diferenca_anos = now.year - nascimento.year
+        if diferenca_anos < 18:
+            form.add_error('nascimento', 'O cliente deve ter mais de 18 anos.')

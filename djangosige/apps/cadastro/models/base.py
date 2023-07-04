@@ -152,7 +152,10 @@ class Pessoa(models.Model):
     @property
     def cpf_cnpj_formated(self):
         if self.tipo_pessoa == 'PF':
-            cpf = self.pessoa_fis_info.cpf.raw_input
+            info_cpf = self.pessoa_fis_info.cpf
+            if (info_cpf == None):
+                return ''
+            cpf = info_cpf.raw_input
             if cpf:
                 if len(cpf) > 11:
                     cpf = re.sub('[./-]', '', cpf)
@@ -160,7 +163,10 @@ class Pessoa(models.Model):
                     cpf = cpf.zfill(11)
                 return '{}.{}.{}-{}'.format(cpf[:3], cpf[3:6], cpf[6:9], cpf[9:])
         elif self.tipo_pessoa == 'PJ':
-            cnpj = self.pessoa_jur_info.cnpj.raw_input
+            info_cnpj = self.pessoa_jur_info.cnpj
+            if (info_cnpj == None):
+                return ''
+            cnpj = info_cnpj.raw_input
             if len(cnpj) > 14:
                 cnpj = re.sub('[./-]', '', cnpj)
             if len(cnpj) < 14:
