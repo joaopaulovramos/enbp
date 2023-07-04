@@ -443,6 +443,7 @@ class EditarPercentualDiarioView(CustomUpdateView):
         context['title_complete'] = 'Edição de percentual de horas'
         context['return_url'] = reverse_lazy('timesheet:listarpercentualdiario')
         context['id'] = self.object.id
+        context['motivo_reprovacao'] = self.object.motivo_reprovacao
 
         lista_timesheet = PercentualDiario.objects.filter(solicitante=self.request.user)
 
@@ -545,23 +546,6 @@ class VerPercentualDiarioView(CustomUpdateView):
                 instance.save()
 
         return redirect(self.success_url)
-
-        # Sobreescreve a url de sucesso considerando o pk
-        # self.success_url = reverse_lazy('timesheet:verpercentualdiario', kwargs={'pk': kwargs['pk']})
-
-        # self.object = self.get_object()
-        # form_class = self.get_form_class()
-        # form = form_class(request.POST, instance=self.object)
-        # form.request_user = self.request.user
-        #
-        # self.request.POST['a']
-        #
-        # if form.is_valid():
-        #     self.object = form.save(commit=False)
-        #
-        #     self.object.save()
-        #     return self.form_valid(form)
-        # return self.form_invalid(form)
 
 
 class ListPercentualDiarioView(CustomListViewFilter):

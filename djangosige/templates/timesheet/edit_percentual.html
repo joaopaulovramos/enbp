@@ -18,7 +18,8 @@
             <h2>
               <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
-            <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
+              <div class="header-btn"><strong style="color:red;">Lançamento Reprovado:</strong> {{ motivo_reprovacao }}</div>
+              <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
 
           </div>
           <!--# Header-->
@@ -76,19 +77,8 @@
                       {{form.observacao}}
                     </div>
                   </div>
-                </div>
 
-{#                {% for field in form %}#}
-{#                <div class="col-sm-6">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{#                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}#}
-{#                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}#}
-{#                      {{field}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{#                {% endfor %}#}
+                </div>
 
               </div>
               <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
