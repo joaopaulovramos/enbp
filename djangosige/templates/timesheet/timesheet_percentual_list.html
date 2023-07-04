@@ -44,22 +44,22 @@
               <tbody>
                {% if all_natops%}
                {% for natop in all_natops %}
-                 <tr  class="clickable-row"  data-href="{% url 'timesheet:editarpercentualdiario' natop.id %}">
+                 <tr {% if natop.situacao == 0  or natop.situacao == 3 %}class="clickable-row"  data-href="{% url 'timesheet:editarpercentualdiario' natop.id %}" {% endif %}>
                     <td>{{natop.data}}</td>
                    <td>{{natop.percentual}}%</td>
                    <td>{{natop.projeto}}</td>
                    <td>
                     {% if natop.situacao == 0  %}
-                        <a class="btn"><span> NÃO SUBMETIDA</span></a>
+                        <a class="btn disabled"><span> NÃO SUBMETIDA</span></a>
                     {% endif %}
                      {% if natop.situacao == 1  %}
-                        <a class="btn btn-yellow"><span> SUBMETIDA</span></a>
+                        <a class="btn btn-info disabled"><span> SUBMETIDA</span></a>
                     {% endif %}
                     {% if natop.situacao == 2  %}
-                        <a class="btn btn-success"><span> APROVADA</span></a>
+                        <a class="btn btn-success disabled"><span> APROVADA</span></a>
                     {% endif %}
                    {% if natop.situacao == 3  %}
-                        <a class="btn btn-red"><span> REPROVADA</span></a>
+                        <a class="btn btn-red disabled"><span> REPROVADA</span></a>
                     {% endif %}
                    </td>
 

@@ -208,6 +208,46 @@ class AprovarGastosView(CustomListViewFilter):
         return context
 
 
+class AprovarTimesheetPercentualView(CustomListViewFilter):
+    template_name = 'timesheet/timesheet_percentual_aprovar.html'
+    model = PercentualDiario
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('timesheet:listarpercentualdiario')
+    permission_codename = 'aprovar_horas'
+
+    def get_queryset(self):
+        current_user = self.request.user
+        query = PercentualDiario.objects.filter(situacao=1)
+        # querry = querry.filter(submetida=False)
+        return query
+
+    # def get_object(self):
+    #     current_user = self.request.user
+    #     return HorasSemanais.objects.all(user=current_user)
+
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if value == "on":
+                acao = request.POST['acao']
+                if acao == 'reprovar-horas':
+                    instance = self.model.objects.get(id=key)
+                    instance.situacao = 3
+                    instance.save()
+                else:
+                    instance = self.model.objects.get(id=key)
+                    instance.situacao = 2
+                    instance.save()
+
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super(AprovarTimesheetPercentualView, self).get_context_data(**kwargs, object_list=None)
+        # context = self.get_object()
+        context['title_complete'] = 'Aprovar lançamento de horas'
+        context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
+        return context
+
+
 class ListGastosView(CustomListViewFilter):
     template_name = 'timesheet/listar_gastos.html'
     model = Gastos
@@ -378,7 +418,10 @@ class EditarPercentualDiarioView(CustomUpdateView):
             for timesheet in lista_timesheet:
 
                 if data == str(timesheet.data):
-                    projetos_dict[timesheet.projeto] = {'percentual': timesheet.percentual, 'id': timesheet.id}
+                    projetos_dict[timesheet.projeto] = {
+                        'percentual': timesheet.percentual,
+                        'id': timesheet.id,
+                        'situacao': timesheet.situacao, }
                     total_percentual_dia += float(timesheet.percentual)
                     _data = timesheet.data
 

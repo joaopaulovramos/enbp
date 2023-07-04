@@ -130,9 +130,17 @@
                            <td>{{ key }}</td>
                           {% for _, valor in value.0.items %}
 
-                              <td {% if id == valor.id %} class="active_td" {% endif %}>
+                              <td {% if id == valor.id %} class="active_td {% if valor.situacao == 3 %}active_rejected_td{% endif %}" {% endif %}>
                                   {% if valor.percentual %}
-                                      <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}"> {{ valor.percentual }}%</a>
+
+                                      {% if valor.situacao == 0 or valor.situacao == 3 %}
+                                          <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}"> {{ valor.percentual }}%</a>
+                                      {% else %}
+                                          {{ valor.percentual }}%
+                                      {% endif %}
+
+                                  {% else %}
+                                      -
                                   {% endif %}
 
                               </td>

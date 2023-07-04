@@ -1775,3 +1775,8 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
   border-left: 4px solid #4678b2;
   font-weight: bold
 }
+
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td.active_rejected_td {
+  border-left: 4px solid red;
+  font-weight: bold
+}
