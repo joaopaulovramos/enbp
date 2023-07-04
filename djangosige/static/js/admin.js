@@ -3918,6 +3918,66 @@ $.Admin.reprovar_pc = {
     },
 }
 
+$.Admin.reprovar_timesheet = {
+   init: function() {
+        var $btnAutoriza = $('.btn-reprovar_timesheet');
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("reprovar_timesheet");
+
+            form.append($(input));
+            $('#modal_reprovacao_timesheet').modal('show');
+            // form.submit();
+        });
+    },
+}
+
+$.Admin.aprovar_timesheet = {
+   init: function() {
+        var $btnAutoriza = $('.btn-aprovar_timesheet');
+
+
+
+        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
+            if(this.checked){
+                $(this).parents('tr').addClass("delete-row");
+            }else{
+                $(this).parents('tr').removeClass("delete-row");
+            }
+            $btnAutoriza.show()
+        });
+
+        $btnAutoriza.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+
+
+             var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "acao").val("aprovar_timesheet");
+
+            form.append($(input));
+            form.submit();
+        });
+
+
+
+        //Fazer a linha da table um link para a detail view
+        $('body').on('click', '.clickable-row:not(.popup)', function(event){
+            if(!$(event.target).is("input, label, i, .prevent-click-row")){
+                window.document.location = $(this).data("href");
+            }
+        });
+
+    },
+}
+
 $.Admin.submeter_horas = {
    init: function() {
         var $btnAutoriza = $('.btn-submeter-horas');
@@ -4117,6 +4177,8 @@ $(function () {
     $.Admin.reover_reprovar_horas_submetidas.init();
     $.Admin.recusar_viagem_sup.init();
     $.Admin.recusar_viagem_dus.init();
+    $.Admin.reprovar_timesheet.init();
+    $.Admin.aprovar_timesheet.init();
 
 
 

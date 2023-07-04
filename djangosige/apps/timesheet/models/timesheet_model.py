@@ -124,6 +124,7 @@ class PercentualDiario(models.Model):
     # 2 - submetida e aprovada
     # 3 - reprovada
     situacao = models.IntegerField(default=0)
+    motivo_reprovacao = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         verbose_name = "Timesheet - Percentual"

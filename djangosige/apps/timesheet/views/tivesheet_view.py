@@ -511,6 +511,59 @@ class EditarPercentualDiarioView(CustomUpdateView):
         return self.form_invalid(form)
 
 
+class VerPercentualDiarioView(CustomUpdateView):
+    form_class = PercentualDiarioForm
+    model = PercentualDiario
+    template_name = 'timesheet/ver_percentual.html'
+    success_url = reverse_lazy('timesheet:aprovarpercentuaisdiarios')
+    success_message = "Percentual de horas Editado com Sucesso."
+    permission_codename = 'aprovar_horas'
+
+    def get_context_data(self, **kwargs):
+        context = super(VerPercentualDiarioView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Visualizando lançamento de horas'
+        context['return_url'] = reverse_lazy('timesheet:aprovarpercentuaisdiarios')
+        context['id'] = self.object.id
+        context['projeto'] = self.object.projeto
+
+        context['lancamentos_do_dia'] = self.model.objects.filter(data=self.object.data)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        if 'acao' in request.POST.keys():
+            acao = request.POST['acao']
+            instance = self.model.objects.get(pk=kwargs['pk'])
+            if acao == 'aprovar_timesheet':
+                instance.situacao = 2
+                instance.save()
+                print("aprovando Timesheet")
+            if acao == 'reprovar_timesheet':
+                instance.situacao = 3
+                instance.motivo_reprovacao = request.POST['motivo']
+                instance.save()
+
+        return redirect(self.success_url)
+
+        # Sobreescreve a url de sucesso considerando o pk
+        # self.success_url = reverse_lazy('timesheet:verpercentualdiario', kwargs={'pk': kwargs['pk']})
+
+        # self.object = self.get_object()
+        # form_class = self.get_form_class()
+        # form = form_class(request.POST, instance=self.object)
+        # form.request_user = self.request.user
+        #
+        # self.request.POST['a']
+        #
+        # if form.is_valid():
+        #     self.object = form.save(commit=False)
+        #
+        #     self.object.save()
+        #     return self.form_valid(form)
+        # return self.form_invalid(form)
+
+
 class ListPercentualDiarioView(CustomListViewFilter):
     template_name = 'timesheet/timesheet_percentual_list.html'
     model = PercentualDiario

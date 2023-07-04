@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'timesheet/editarpercentualdiario/(?P<pk>[0-9]+)$', views.EditarPercentualDiarioView.as_view(), name='editarpercentualdiario'),
     url(r'timesheet/aprovarpercentuaisdiarios/$', views.AprovarTimesheetPercentualView.as_view(), name='aprovarpercentuaisdiarios'),
     url(r'timesheet/verpercentuaisdiariosaprovados/$', views.VerTimesheetPercentualAprovadoView.as_view(), name='verpercentuaisdiariosaprovados'),
+    url(r'timesheet/verpercentuaisdiario/(?P<pk>[0-9]+)$', views.VerPercentualDiarioView.as_view(), name='verpercentuaisdiario'),
 
 
     url(r'timesheet/listartimesheetdias/$', views.ListTimesheetDiasView.as_view(), name='listartimesheetdias'),
