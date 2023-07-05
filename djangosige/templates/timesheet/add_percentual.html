@@ -183,8 +183,8 @@
     <script src="{% static 'js/jquery-ui.multidatespicker.js' %}"></script>
 
     <script>
-        $.Admin.timesheet.init()
-        /*
+        {#$.Admin.timesheet.init()#}
+
        $(document).ready(function () {
       $('.datepicker-inline').multiDatesPicker({
         dateFormat: 'dd/mm/yy',
@@ -199,7 +199,7 @@
             inline: true,
             altField: '#id_data',
             maxDate: '+0m +0w',
-      });}); */
+      });});
     </script>
 
 {% endblock %}

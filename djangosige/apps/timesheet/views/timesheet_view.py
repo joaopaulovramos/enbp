@@ -356,6 +356,7 @@ class AdicionarGastoView(CustomCreateView):
         context['return_url'] = reverse_lazy('timesheet:listargastos')
         return context
 
+
 class EditarGastoView(CustomUpdateView):
     form_class = GastosForm
     template_name = 'timesheet/edit_gasto.html'
@@ -413,34 +414,53 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
     context_object_name = 'all_natops'
 
     def post(self, request, *args, **kwargs):
-        self.object = None
-        form_class = self.get_form_class()
 
-        form = self.get_form(form_class)
-        form.request_user = self.request.user
+        datas_selecionadas = str(request.POST['data']).split(', ')
 
-        data = datetime.datetime.strptime(request.POST['data'], "%d/%m/%Y").date()
-        hoje = datetime.datetime.now().date()
+        post = request.POST.copy()  # to make it mutable
 
-        if data > hoje:
-            form.add_error('data', 'Não é possível lança horas futuras.')
+        for dt in datas_selecionadas:
 
-        # seleciona os laçamentos do usuário já existentes para o dia
-        lancamentos_dia = PercentualDiario.objects.filter(solicitante=self.request.user, data=data)
+            post['data'] = dt.strip()
+            request.POST = post
 
-        total_percentual_dia = 0
-        for lancamento in lancamentos_dia:
-            total_percentual_dia += lancamento.percentual
-            if int(self.request.POST['projeto']) == lancamento.projeto_id:
-                form.add_error('projeto', 'Você já lançou horas para este projeto nesta data')
+            self.object = None
+            form_class = self.get_form_class()
 
-        if float(total_percentual_dia) + float(self.request.POST['percentual']) > 100.00:
-            form.add_error('percentual', 'O percentual diário não pode ultrapassar 100% de horas')
+            form = self.get_form(form_class)
+            form.request_user = self.request.user
 
-        if form.is_valid():
-            self.object = form.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
+            data = datetime.datetime.strptime(dt.strip(), "%d/%m/%Y").date()
+            hoje = datetime.datetime.now().date()
+
+            if data > hoje:
+                form.add_error('data', 'Não é possível lança horas futuras.')
+
+            # seleciona os laçamentos do usuário já existentes para o dia
+            lancamentos_dia = PercentualDiario.objects.filter(solicitante=self.request.user, data=data)
+
+            total_percentual_dia = 0
+            for lancamento in lancamentos_dia:
+                total_percentual_dia += lancamento.percentual
+                if int(self.request.POST['projeto']) == lancamento.projeto_id:
+                    form.add_error('projeto', f'Você já lançou horas para este projeto em {dt}')
+
+            if float(total_percentual_dia) + float(self.request.POST['percentual']) > 100.00:
+                form.add_error('percentual', 'O percentual diário não pode ultrapassar 100% de horas')
+
+            print(request.POST['data'])
+
+            if form.is_valid():
+                self.object = form.save()
+            else:
+                return self.form_invalid(form)
+
+        return redirect(self.success_url)
+
+        # if form.is_valid():
+        #     self.object = form.save()
+        #     return redirect(self.success_url)
+        # return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         self.form_class.Meta.model.user = self.request.user
