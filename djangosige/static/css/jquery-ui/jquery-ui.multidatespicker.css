@@ -1,10 +1,8 @@
-/*Sobreescrevendo estilo jquery-ui para seleção do dia corrente*/
-
 .ui-state-active,.ui-widget-content .ui-state-active,.ui-widget-header .ui-state-active,a.ui-button:active,.ui-button:active,.ui-button.ui-state-active:hover{
-    border:1px solid #003eff;
-    background: #007fff;
+    border:1px solid #969696;
+    background: #ededed;
     font-weight:normal;
-    color:#fff
+    color:#000
 }
 .ui-icon-background,.ui-state-active .ui-icon-background{
     border:#003eff;

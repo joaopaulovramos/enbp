@@ -415,6 +415,7 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
 
     def post(self, request, *args, **kwargs):
 
+
         datas_selecionadas = str(request.POST['data']).split(', ')
 
         post = request.POST.copy()  # to make it mutable
