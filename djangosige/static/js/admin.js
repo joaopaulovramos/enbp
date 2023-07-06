@@ -4037,6 +4037,30 @@ $.Admin.timesheet = {
             inline: true,
             altField: '#id_data',
             maxDate: '+0m +0w',
+            beforeShowDay: function (date){
+
+                    let datas_verde = $('.dias_verdes').html().trim()
+                    let datas_laranja = $('.dias_laranjas').html().trim()
+
+                    let dia = date.getDate()
+                    dia = (dia < 10)? '0' + dia : dia
+
+                    let mes = date.getMonth() + 1
+                    mes = (mes < 10)? '0' + mes : mes
+
+                    let data = date.getFullYear() + '-' + mes + '-' + dia
+
+                    if(datas_verde.indexOf(data) >= 0){
+                        return [true, "multidatepicker-verde", "Todas as horas lançadas"];
+                    }
+                    else{
+                        if(datas_laranja.indexOf(data) >= 0){
+                        return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
+                    } else {
+                        return [true, " ", " "];
+                        }
+                    }
+                }
         });
 
         // $('.datepicker-inline').datepicker('setDate', $('#id_data').val());
