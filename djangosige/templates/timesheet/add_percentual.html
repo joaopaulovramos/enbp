@@ -31,7 +31,7 @@
                   <div class="col-sm-6">
                   <div class="form-group">
                     <div class="">
-                        <div class="datepicker-inline"></div>
+                        <div class="multidatepicker-inline"></div>
                          {% if form.data.errors %}<label class="error">{% for error in form.data.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
@@ -192,7 +192,7 @@
         $.Admin.timesheet.init()
 
        $(document).ready(function () {
-          $('.datepicker-inline').multiDatesPicker({
+          $('.multidatepicker-inline').multiDatesPicker({
             dateFormat: 'dd/mm/yy',
                 dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
                 dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
