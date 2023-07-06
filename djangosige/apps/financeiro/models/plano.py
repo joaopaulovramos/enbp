@@ -9,7 +9,7 @@ TIPO_GRUPO_ESCOLHAS = (
 
 
 class PlanoContasGrupo(models.Model):
-    codigo = models.CharField(max_length=6)
+    codigo = models.CharField(max_length=20)
     tipo_grupo = models.CharField(max_length=1, choices=TIPO_GRUPO_ESCOLHAS)
     descricao = models.CharField(max_length=255)
 
