@@ -1,20 +1,8 @@
-/*Sobreescrevendo estilo jquery-ui para seleção do dia corrente*/
-
-.multidatepicker-verde .ui-state-default{
-    background: #74b666;
-    border:1px solid #34602b;
-}
-
-.multidatepicker-laranja .ui-state-default{
-    background: #fd9e26;
-    border:1px solid #e18d23;
-}
-
 .ui-state-active,.ui-widget-content .ui-state-active,.ui-widget-header .ui-state-active,a.ui-button:active,.ui-button:active,.ui-button.ui-state-active:hover{
-    border:1px solid #003eff;
-    background: #007fff;
+    border:1px solid #969696;
+    background: #ededed;
     font-weight:normal;
-    color:#fff
+    color:#000
 }
 .ui-icon-background,.ui-state-active .ui-icon-background{
     border:#003eff;
@@ -25,6 +13,10 @@
     border:1px solid #003eff;
     background:#007fff !important;
     color: #fff !important;
-    box-shadow: none;
 }
 
+/*.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {*/
+/*    border: 1px solid #dad55e;*/
+/*    background: #d90638;*/
+/*    color: #777620;*/
+/*}*/
