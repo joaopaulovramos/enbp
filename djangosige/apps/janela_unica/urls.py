@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'ju/edit/(?P<pk>[0-9]+)/$', views.EditarDocumentoView.as_view(), name='editardocumentos'),
 
     url(r'ju/board/$', views.home, name='board'),
-    url(r'ju/tasks/$', views.ListTask, name='tasks'),
+    url(r'ju/tasks/$', views.ListTask.as_view(), name='tasks'),
 
 
 
