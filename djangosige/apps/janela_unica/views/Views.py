@@ -10,9 +10,63 @@ from django.contrib import messages
 from djangosige.apps.login.models import Usuario
 from djangosige.apps.janela_unica.forms import *
 from djangosige.apps.janela_unica.models import *
+from django.utils.formats import localize
+from django.shortcuts import redirect, render
 import random
 import string
+from djangosige.apps.janela_unica.models import Task
+from django.contrib.auth.models import User
 
+from rest_framework import serializers
+
+
+from djangosige.apps.janela_unica.models import Task
+
+from rest_framework import generics
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+class TaskSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Task
+        fields = ('uuid', 'name', 'boardName', 'date', 'owner')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'tasks']
+
+
+
+
+class ListTask(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.filter(owner=user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class DetailTask(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.filter(owner=user)
 
 
 
@@ -58,3 +112,17 @@ class EditarDocumentoView(CustomUpdateView):
         context['return_url'] = reverse_lazy('janela_unica:listadocumentos')
         context['id'] = self.object.id
         return context
+
+
+def home(request):
+    all_tasks = []
+    t_list = request.user.tasks.all()
+    for t in t_list:
+        t_dict = {
+            'uuid': str(t.uuid),
+            'name': t.name if t.name is not None else 'Без названия',
+            'boardName': t.boardName,
+            'date': str(localize(t.date))
+        }
+        all_tasks.append(t_dict)
+    return render(request, 'janela_unica/board/index.html', {'tasks': all_tasks})

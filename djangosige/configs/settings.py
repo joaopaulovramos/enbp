@@ -104,8 +104,15 @@ INSTALLED_APPS = [
     # Utilitarios e Importacao
     'djangosige.apps.util',
     'djangosige.apps.janela_unica',
+    'djangosige.apps.api',
+
     # 'import_export',
+    'rest_framework',
+    'django_filters',
+    'budget',
+
 ]
+
 
 
 MIDDLEWARE = [
