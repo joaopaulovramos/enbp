@@ -11,10 +11,14 @@ class DocumentoModel(models.Model):
 
 class Task(models.Model):
     class boardNames(models.TextChoices):
-        ToDo = 'Сделать'
-        InProgress = 'В процессе'
-        Review = 'На проверке'
-        Done = 'Выполнено'
+        # ToDo = 'Сделать'
+        ToDo = 'A Fazer'
+        #InProgress = 'В процессе'
+        InProgress = 'Em andamento'
+        #Review = 'На проверке'
+        Review = 'Em Revisão'
+        #Done = 'Выполнено'
+        Done = 'Feito'
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE,
                               related_name='tasks')
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True,
