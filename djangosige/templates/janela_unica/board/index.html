@@ -30,11 +30,11 @@
 
                   {% now "H" as current_time %}
                   {% if current_time|add:"0" < 12 %}
-                   Доброе утро, {{ request.user.username }}
+                   Bom dia, {{ request.user.username }}
                   {% elif current_time|add:"0" > 17 %}
-                   Добрый вечер, {{ request.user.username }}
+                   Boa noite, {{ request.user.username }}
                   {% else %}
-                   Добрый день, {{ request.user.username }}
+                   Boa tarde, {{ request.user.username }}
                   {% endif %}
                 </h1>
                 <div class="text-sm" :class="`text-${colorSelected.value}-400`">{% now 'SHORT_DATE_FORMAT' %}</div>
