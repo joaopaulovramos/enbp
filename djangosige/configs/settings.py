@@ -103,6 +103,7 @@ INSTALLED_APPS = [
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
+    'djangosige.apps.janela_unica',
     # 'import_export',
 ]
 

@@ -245,6 +245,24 @@
                         </ul>
                     </li>
 <!-- fim timesheet-->
+                    <!-- inicio janela única-->
+                  <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">insert_drive_file</i>
+                            <span>Janela Única</span>
+                        </a>
+                        <ul class="ml-menu">
+
+                            <li>
+                                <a href="{% url 'janela_unica:listadocumentos' %}">
+                                    <span>Listar Documentos</span>
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                    <!-- fim janela única -->
                  <!-- Viagens-->
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -350,7 +368,7 @@
 
                                 <li>
                                     <a href="{% url 'viagem:listahomologacaoviagem' %}">
-                                         <span>Homologar Viagens</span>
+                                         <span>Homologar RH</span>
                                     </a>
                                 </li>
 
