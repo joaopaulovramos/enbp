@@ -25,7 +25,6 @@ urlpatterns = [
     url(r'^zeppelin/', include('djangosige.apps.timesheet.urls')),
     url(r'^zeppelin/', include('djangosige.apps.viagem.urls')),
     url(r'^zeppelin/', include('djangosige.apps.janela_unica.urls')),
-    url(r'^api/', include('djangosige.apps.api.urls')),
 
 ]
 

@@ -3,71 +3,11 @@
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
-from django.shortcuts import redirect
-from django.utils import timezone
-from datetime import datetime, date, timedelta
-from django.contrib import messages
-from djangosige.apps.login.models import Usuario
+
 from djangosige.apps.janela_unica.forms import *
 from djangosige.apps.janela_unica.models import *
 from django.utils.formats import localize
-from django.shortcuts import redirect, render
-import random
-import string
-from djangosige.apps.janela_unica.models import Task
-from django.contrib.auth.models import User
-
-from rest_framework import serializers
-
-
-from djangosige.apps.janela_unica.models import Task
-
-from rest_framework import generics
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
-
-class TaskSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-
-    class Meta:
-        model = Task
-        fields = ('uuid', 'name', 'boardName', 'date', 'owner')
-
-
-class UserSerializer(serializers.ModelSerializer):
-    tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'tasks']
-
-
-
-
-class ListTask(generics.ListCreateAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Task.objects.filter(owner=user)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-class DetailTask(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Task.objects.filter(owner=user)
-
+from django.shortcuts import render
 
 
 class ListDocumentosViagensView(CustomListView):
