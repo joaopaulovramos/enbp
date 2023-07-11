@@ -34,23 +34,18 @@
                     <th>Enviado Por</th>
                     <th>Recebido Por</th>
                     <th>Documento</th>
-                    <th>Remover</th>
+                    <th>Data</th>
                 </tr>
               </thead>
 
               <tbody>
                {% if all_natops%}
                {% for natop in all_natops %}
-               <tr class="clickable-row" data-href="{% url 'janela_unica:editardocumentos' natop.id %}">
+               <tr >
                     <td>{{natop.user_enviado}}</td>
                     <td>{{natop.user_recebido}}</td>
                     <td><a href="{{natop.doc.file.url}}">Documento</a></td>
-
-
-                <td class="lista-remove">
-                  <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
-                  <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
-                </td>
+                    <td>{{natop.data}}</td>
               </tr>
               {% endfor %}
               {%else%}
