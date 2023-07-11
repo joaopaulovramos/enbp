@@ -32,14 +32,27 @@
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
+
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="">
-                        <div class="datepicker-inline"></div>
+                        <div class="datepicker-inline" style="float: left"></div>
+                        <div style="margin-left:20px; float: left;">
+                                <strong>Legenda lançamentos:</strong>
+                              <div class="legenda">
+                                  <span class="multidatepicker-verde"></span> 100% <br>
+                                  <span class="multidatepicker-laranja"></span> <100% <br>
+                                  <span class="multidatepicker-vermelho"></span>  0% <br>
+                                  <span class="multidatepicker-azul"></span> seleção <br>
+                              </div>
+                        </div>
                          {% if form.data.errors %}<label class="error">{% for error in form.data.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
-                </div>
+              </div>
+
+
 
               <div class="col-sm-6" style="display: none; visibility: hidden">
                   <div class="form-group">
