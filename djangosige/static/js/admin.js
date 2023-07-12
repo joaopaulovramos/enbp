@@ -235,6 +235,10 @@ $.Admin.table = {
             }
         });
 
+        //Habilita o funcionamento de popovers nas páginas da tabela
+        //Usando a chamada típica do BS, funcionaria apenas na primeira página
+        dTable.$('[data-toggle="popover"]').popover()
+
         //Campo de busca
         $('#search-bar').keyup(function(){
             dTable.search($(this).val()).draw();

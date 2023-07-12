@@ -143,8 +143,15 @@
                               <td {% if id == valor.id %} class="active_td {% if valor.situacao == 3 %}active_rejected_td{% endif %}" {% endif %}>
                                   {% if valor.percentual %}
 
+                                      {% if valor.obs  %}
+                                          <i style="float: right;cursor: pointer" data-toggle="popover" title="Observação" data-content="{{ valor.obs }}" class="material-icons">&#xe0ca;</i>
+                                      {% endif %}
+
                                       {% if valor.situacao == 0 or valor.situacao == 3 %}
-                                          <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}"> {{ valor.percentual }}%</a>
+                                          <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}">
+                                              {{ valor.percentual }}%
+                                          </a>
+
                                       {% else %}
                                           {{ valor.percentual }}%
                                       {% endif %}

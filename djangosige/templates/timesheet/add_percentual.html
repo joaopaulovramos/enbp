@@ -146,8 +146,24 @@
                           {% for _, valor in value.0.items %}
 
                               <td>
+
                                   {% if valor.percentual %}
-                                      <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}"> {{ valor.percentual }}%</a>
+
+                                      {% if valor.obs  %}
+                                          <i style="float: right;cursor: pointer" data-toggle="popover" title="Observação" data-content="{{ valor.obs }}" class="material-icons">&#xe0ca;</i>
+                                      {% endif %}
+
+                                      {% if valor.situacao == 0 or valor.situacao == 3 %}
+                                          <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}">
+                                              {{ valor.percentual }}%
+                                          </a>
+
+                                      {% else %}
+                                          {{ valor.percentual }}%
+                                      {% endif %}
+
+                                  {% else %}
+                                      -
                                   {% endif %}
 
                               </td>
