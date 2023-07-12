@@ -222,13 +222,43 @@
             </div>
             <!--#Body-->
           </form>
-
         <hr/>
 
         <form action="" method="post">
          {% csrf_token %}
 
             <div class="body">
+
+                <div class="">
+
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <div class="form-line">
+
+                                <input type="checkbox" name="check_cancelada" class="form-control" id="id_check_cancelada" {% if justificativa_cancelamento %}checked="checked"{% endif %}>
+                                <label for="id_check_cancelada"
+                                       style="font-weight: bold;"
+                                       title=""> Viagem Cancelada
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-10">
+
+                        <div class="form-group">
+                            <div class="form-line">
+                            <label>Justificativa</label><strong style="color:red;"> *</strong>
+                            <input type="text" name="justificativa_cancelamento" class="form-control" size="200"  id="id_justificativa_cancelamento" value="{{ justificativa_cancelamento }}">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <div class="">
                 <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
@@ -255,6 +285,7 @@
                   </div>
                 </div>
                 <button name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVA PRESTAÇÃO DE CONTAS</span></button>
+            </div>
             </div>
 
         </form>
@@ -383,6 +414,7 @@
             let cotacao = parseFloat($('#id_cotacao').val())
             $('#id_valor_pago_reais').val((valor_pago * cotacao).toFixed(2))
         })
+
 
   </script>
 

@@ -66,7 +66,6 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
-    # 'tema',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -109,7 +108,6 @@ INSTALLED_APPS = [
     'fsm_admin',
     'simple_history',
 ]
-
 
 
 MIDDLEWARE = [

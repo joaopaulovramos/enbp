@@ -195,6 +195,8 @@ class ViagemModel(models.Model):
                                               validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
 
+    justificativa_cancelamento = models.TextField(blank=True, null=True)
+
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
 
