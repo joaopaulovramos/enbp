@@ -975,7 +975,7 @@ class PrestarContasArquivosView(CustomUpdateView):
 
         viagem = ViagemModel.objects.get(pk=kwargs['pk'])
 
-        # Verifica a submimissão do botão finalizar
+        # Verifica a submimissão do botão finalizar (que é o salvar prestação de contas)
         if 'finalizar' in request.POST.keys():
             url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
 
@@ -983,6 +983,9 @@ class PrestarContasArquivosView(CustomUpdateView):
                 viagem.remarcacao_interesse_particular = '1'
             else:
                 viagem.remarcacao_interesse_particular = '0'
+
+            if 'check_cancelada' in request.POST.keys():
+                viagem.justificativa_cancelamento = request.POST['justificativa_cancelamento']
 
             if 'finalizar_pc' in request.POST.keys():
                 viagem.finalizar_pc = '1'
@@ -1066,6 +1069,7 @@ class PrestarContasArquivosView(CustomUpdateView):
         context['motivo_pc_reprovacao'] = viagem_solicitada.motivo_reprovacao_pc
         context['remarcacao_interesse_particular'] = viagem_solicitada.remarcacao_interesse_particular
         context['finalizar_pc'] = viagem_solicitada.finalizar_pc
+        context['justificativa_cancelamento'] = viagem_solicitada.justificativa_cancelamento
 
         usuario_solicitante_id = viagem_solicitada.solicitante_id
         usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
