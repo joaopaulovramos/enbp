@@ -137,7 +137,7 @@
                   {% if timesheet%}
                       {% for key, value in timesheet.items %}
                           <tr>
-                           <td>{{ key }}</td>
+                           <td>{{ value.3 }}</td>
                           {% for _, valor in value.0.items %}
 
                               <td {% if id == valor.id %} class="active_td {% if valor.situacao == 3 %}active_rejected_td{% endif %}" {% endif %}>
