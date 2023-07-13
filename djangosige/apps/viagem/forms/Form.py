@@ -176,6 +176,7 @@ class ViagemForm(forms.ModelForm):
             'valor_passagem',
             'itinerario',
             'escalas',
+            'duracao',
             'dada_inicio',
             'dada_fim',
             'origem',
@@ -206,6 +207,7 @@ class ViagemForm(forms.ModelForm):
             'valor_passagem': forms.NumberInput(attrs={'class': 'form-control', 'id': 'valor_passagem_viagem'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control'}),
+            'duracao': forms.RadioSelect(attrs={'class': 'form-control'}),
             'dada_inicio': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'dada_fim': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
@@ -236,6 +238,7 @@ class ViagemForm(forms.ModelForm):
         labels = {
             'itinerario': _('Itinerário'),
             'escalas': _('Escalas'),
+            'duracao': _('Duração da viagem'),
             'dada_inicio': _('Data Inicio'),
             'dada_fim': _('Data Fim'),
             'origem': _('Origem'),

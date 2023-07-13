@@ -34,11 +34,17 @@ ESCALAS = [
 ITINERARIO = [
     ('0', 'Ida'),
     ('1', 'Ida e Volta'),
+    ('2', 'Em trânsito'),
 ]
 
 GRUPO_FUNCIONAL = [
     ('0', 'A - DIRETORES e CONSELHEIROS'),
     ('1', 'B – PROFISSIONAIS'),
+]
+
+DURACAO_VIAGEM = [
+    ('0', 'Inferior a 6hs'),
+    ('1', 'Igual/Superior a 6hs'),
 ]
 
 
@@ -133,6 +139,7 @@ class ViagemModel(models.Model):
 
     itinerario = models.CharField(max_length=2, choices=ITINERARIO)
     escalas = models.CharField(max_length=1, choices=ESCALAS)
+    duracao = models.CharField(max_length=1, choices=DURACAO_VIAGEM)
 
     dada_inicio = models.DateTimeField()
     dada_fim = models.DateTimeField(blank=True, null=True)
@@ -165,7 +172,6 @@ class ViagemModel(models.Model):
 
     autorizada_dus = models.BooleanField(default=False)
     recusado_dus = models.BooleanField(default=False)
-
 
     homologada = models.BooleanField(default=False)
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)
