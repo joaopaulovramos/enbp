@@ -116,6 +116,7 @@
 
               <div class="sep"><h5>Adicionar itens de prestação de contas</h5><hr/></div>
 
+              <div class="row">
               <div class="col-sm-2">
                   <div class="form-group">
                     <div class="form-line">
@@ -156,6 +157,10 @@
                     </div>
                   </div>
                 </div>
+
+              </div>
+
+              <div class="row">
 
               <div class="col-sm-2">
                   <div class="form-group">
@@ -216,9 +221,9 @@
                     </div>
                   </div>
                 </div>
-{#                {{ form.errors }}#}
               </div>
-              <button name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
+              </div>
+              <button style="margin-right: 15px" name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
             </div>
             <!--#Body-->
           </form>
@@ -249,8 +254,12 @@
 
                         <div class="form-group">
                             <div class="form-line">
-                            <label>Justificativa</label><strong style="color:red;"> *</strong>
-                            <input type="text" name="justificativa_cancelamento" class="form-control" size="200"  id="id_justificativa_cancelamento" value="{{ justificativa_cancelamento }}">
+                            <label>Justificativa</label>
+                                <span id="id_justificativa_cancelamento_span">
+                                    {% if justificativa_cancelamento %}<strong style="color:red;"> *</strong>{% endif %}
+                                </span>
+                            <input type="text" name="justificativa_cancelamento" class="form-control" size="200"
+                                   id="id_justificativa_cancelamento" value="{{ justificativa_cancelamento }}" {% if justificativa_cancelamento %}required{% endif %} >
                             </div>
                         </div>
 
@@ -284,7 +293,7 @@
                     </div>
                   </div>
                 </div>
-                <button name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVA PRESTAÇÃO DE CONTAS</span></button>
+                <button style="margin-right: 15px" name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVA PRESTAÇÃO DE CONTAS</span></button>
             </div>
             </div>
 
@@ -341,7 +350,7 @@
                     <div class="form-line">
 
                       <label>Motivo da recusa</label>
-                        <input disabled type="text" name="recursos_empresa" value="{{ motivo_pc_reprovacao }}" class="form-control" id="id_recursos_empresa" readonly>
+                        <input disabled type="text" name="recursos_empresa" value="{% if motivo_pc_reprovacao%}{{ motivo_pc_reprovacao }}{% endif %}" class="form-control" id="id_recursos_empresa" readonly>
                     </div>
                   </div>
                 </div>
@@ -415,6 +424,17 @@
             $('#id_valor_pago_reais').val((valor_pago * cotacao).toFixed(2))
         })
 
+      $('#id_check_cancelada').on('change',function () {
+          if ($(this).is(':checked')){
+              $('#id_justificativa_cancelamento').attr('required', 'required')
+              $('#id_justificativa_cancelamento_span').html('<strong style="color:red;"> *</strong>')
+          }
+          else{
+              $('#id_justificativa_cancelamento').val("")
+              $('#id_justificativa_cancelamento').removeAttr('required');
+              $('#id_justificativa_cancelamento_span').html('')
+          }
+      })
 
   </script>
 
