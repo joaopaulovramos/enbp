@@ -986,6 +986,8 @@ class PrestarContasArquivosView(CustomUpdateView):
 
             if 'check_cancelada' in request.POST.keys():
                 viagem.justificativa_cancelamento = request.POST['justificativa_cancelamento']
+            else:
+                viagem.justificativa_cancelamento = ""
 
             if 'finalizar_pc' in request.POST.keys():
                 viagem.finalizar_pc = '1'
