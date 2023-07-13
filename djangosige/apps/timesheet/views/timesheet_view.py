@@ -485,10 +485,16 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
             for timesheet in lista_timesheet:
 
                 if data == str(timesheet.data):
-                    projetos_dict[timesheet.projeto] = {'percentual': timesheet.percentual, 'id': timesheet.id}
+                    projetos_dict[timesheet.projeto] = {
+                        'percentual': timesheet.percentual,
+                        'id': timesheet.id,
+                        'situacao': timesheet.situacao,
+                        'obs': timesheet.observacao,
+                    }
                     total_percentual_dia += float(timesheet.percentual)
 
-            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia)]
+            data_formatada = f'{data.split("-")[2]}/{data.split("-")[1]}/{data.split("-")[0]}'
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia), data_formatada]
 
         context['timesheet'] = datas_dict
         context['projetos'] = projetos
@@ -532,11 +538,13 @@ class EditarPercentualDiarioView(CustomUpdateView):
                     projetos_dict[timesheet.projeto] = {
                         'percentual': timesheet.percentual,
                         'id': timesheet.id,
-                        'situacao': timesheet.situacao, }
+                        'situacao': timesheet.situacao,
+                        'obs': timesheet.observacao,
+                    }
                     total_percentual_dia += float(timesheet.percentual)
-                    _data = timesheet.data
 
-            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia), _data]
+            data_formatada = f'{data.split("-")[2]}/{data.split("-")[1]}/{data.split("-")[0]}'
+            datas_dict[data] = [projetos_dict, total_percentual_dia, int(total_percentual_dia), data_formatada]
 
         context['timesheet'] = datas_dict
         context['projetos'] = projetos
