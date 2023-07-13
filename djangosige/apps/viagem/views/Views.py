@@ -1381,6 +1381,7 @@ class AvaliarArquivosView(CustomUpdateView):
         context['data_fim'] = viagem_solicitada.dada_fim
         context['data_inclusao'] = viagem_solicitada.data_inclusao
         context['remarcacao_interesse_particular'] = viagem_solicitada.remarcacao_interesse_particular
+        context['justificativa_cancelamento'] = viagem_solicitada.justificativa_cancelamento
 
         usuario_solicitante_id = viagem_solicitada.solicitante_id
         usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
