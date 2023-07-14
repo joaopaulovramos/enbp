@@ -339,6 +339,11 @@ CELERY_INCLUDE = 'papermerge.core.tasks'
 CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_TASK_RESULT_EXPIRES = 86400
 
+AUTHENTICATION_BACKENDS = (
+    'papermerge.core.auth.NodeAuthBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'knox.auth.TokenAuthentication',
@@ -380,3 +385,4 @@ cfg_papermerge = try_load_config(
 # figure out if papermerge configuration file was successfully load.
 CFG_PAPERMERGE = cfg_papermerge
 # AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'auth.User'

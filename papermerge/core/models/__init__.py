@@ -69,6 +69,7 @@ def _user_has_module_perms(user, app_label):
             return False
     return False
 
+
 # class User(models.Model):
 # class User(AbstractUser):
 class User(auth.models.User):

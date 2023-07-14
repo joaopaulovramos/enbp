@@ -59,12 +59,11 @@ def browse_view(request, parent_id=None):
     #   '24': {"read": True, "delete": False },
     #   '25': {"read": False, "delete": False }
     # }
-    nodes_perms = User(request.user).get_perms_dict(
-        nodes, Access.ALL_PERMS
-    )
+    paperuser = User.objects.get(username=request.user.username)
+    nodes_perms = paperuser.get_perms_dict(nodes, Access.ALL_PERMS)
 
     for node in nodes:
-        if nodes_perms and hasattr(nodes_perms, node.id) and nodes_perms[node.id].get(Access.PERM_READ, False):
+        if nodes_perms and node.id in nodes_perms and nodes_perms[node.id].get(Access.PERM_READ, False):
             node_dict = node.to_dict()
             # and send user_perms to the frontend client
 
