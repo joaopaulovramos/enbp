@@ -634,7 +634,21 @@ class ListPercentualDiarioView(CustomListViewFilter):
     def get_queryset(self):
         current_user = self.request.user
         querry = self.model.objects.filter(solicitante=current_user)
-        # querry = querry.filter(submetida=False)
+
+        days = {}
+        for lancamento in querry:
+            lancamento.full = False
+            retVal = days.get(lancamento.data)
+            if retVal is not None:
+                days[lancamento.data] = days[lancamento.data]+lancamento.percentual
+            else:
+                days[lancamento.data] = lancamento.percentual
+
+        for lancamento in querry:
+            if days[lancamento.data] == 100.00:
+                lancamento.full = True
+
+
         return querry
 
     def get_object(self):
