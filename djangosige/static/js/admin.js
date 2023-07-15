@@ -235,6 +235,10 @@ $.Admin.table = {
             }
         });
 
+        //Habilita o funcionamento de popovers nas páginas da tabela
+        //Usando a chamada típica do BS, funcionaria apenas na primeira página
+        dTable.$('[data-toggle="popover"]').popover()
+
         //Campo de busca
         $('#search-bar').keyup(function(){
             dTable.search($(this).val()).draw();
@@ -4037,30 +4041,7 @@ $.Admin.timesheet = {
             inline: true,
             altField: '#id_data',
             maxDate: '+0m +0w',
-            beforeShowDay: function (date){
-
-                    let datas_verde = $('.dias_verdes').html().trim()
-                    let datas_laranja = $('.dias_laranjas').html().trim()
-
-                    let dia = date.getDate()
-                    dia = (dia < 10)? '0' + dia : dia
-
-                    let mes = date.getMonth() + 1
-                    mes = (mes < 10)? '0' + mes : mes
-
-                    let data = date.getFullYear() + '-' + mes + '-' + dia
-
-                    if(datas_verde.indexOf(data) >= 0){
-                        return [true, "multidatepicker-verde", "Todas as horas lançadas"];
-                    }
-                    else{
-                        if(datas_laranja.indexOf(data) >= 0){
-                        return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
-                    } else {
-                        return [true, " ", " "];
-                        }
-                    }
-                }
+            beforeShowDay: $.Admin.timesheet.pintar_calendario
         });
 
         // $('.datepicker-inline').datepicker('setDate', $('#id_data').val());
@@ -4078,34 +4059,42 @@ $.Admin.timesheet = {
                 inline: true,
                 altField: '#id_data',
                 maxDate: '+0m +0w',
-                beforeShowDay: function (date){
-
-                    let datas_verde = $('.dias_verdes').html().trim()
-                    let datas_laranja = $('.dias_laranjas').html().trim()
-
-                    let dia = date.getDate()
-                    dia = (dia < 10)? '0' + dia : dia
-
-                    let mes = date.getMonth() + 1
-                    mes = (mes < 10)? '0' + mes : mes
-
-                    let data = date.getFullYear() + '-' + mes + '-' + dia
-
-                    if(datas_verde.indexOf(data) >= 0){
-                        return [true, "multidatepicker-verde", "Todas as horas lançadas"];
-                    }
-                    else{
-                        if(datas_laranja.indexOf(data) >= 0){
-                        return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
-                    } else {
-                        return [true, " ", " "];
-                        }
-                    }
-                }
+                beforeShowDay: $.Admin.timesheet.pintar_calendario
           });
 
           $('.datepicker-inline').datepicker('setDate', new Date());
 
+    },
+
+    pintar_calendario: function (date){
+
+        let datas_verde = $('.dias_verdes').html().trim()
+        let datas_laranja = $('.dias_laranjas').html().trim()
+        let hoje = new Date()
+
+
+        let dia = date.getDate()
+        dia = (dia < 10)? '0' + dia : dia
+
+        let mes = date.getMonth() + 1
+        mes = (mes < 10)? '0' + mes : mes
+
+        let data = date.getFullYear() + '-' + mes + '-' + dia
+
+        if(datas_verde.indexOf(data) >= 0){
+            return [true, "multidatepicker-verde", "Todas as horas lançadas"];
+        }
+        else{
+            if(datas_laranja.indexOf(data) >= 0){
+                return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
+            } else {
+                console.log(date.getDay())
+                if(date.getDay() != 6 && date.getDay() != 0 && date <= hoje)
+                    return [true, "multidatepicker-vermelho", "Horas não lançadas"];
+                else
+                    return [true, " ", " "];
+                }
+            }
     }
 }
 

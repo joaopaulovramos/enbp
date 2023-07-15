@@ -6,7 +6,7 @@ from dj_database_url import parse as dburl
 from pathlib import Path
 
 # import django_heroku
-
+# from configula import Configula
 
 APP_ROOT = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,13 +42,14 @@ DATABASES = {
     }
 }
 
+
 #
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'norli',
+#         'NAME': 'norli_timesheet',
 #         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
+#         'PASSWORD': 'admin',
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     }
@@ -77,6 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cpf_field',
     'django_cpf_cnpj',
+    'django.contrib.sites',
 
     # djangosige apps:
     'djangosige.apps.base',
@@ -117,6 +119,7 @@ INSTALLED_APPS = [
     'mptt',
     'mgclipboard'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -160,6 +163,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangosige.wsgi.application'
 
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -178,6 +182,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -192,6 +197,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -222,6 +228,7 @@ LOGIN_NOT_REQUIRED = (
 
 
 WSGI_APPLICATION = 'djangosige.wsgi.application'
+
 
 # # Database
 # # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -319,7 +326,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'data_folder_out': PAPERMERGE_TASK_QUEUE_DIR,
 }
 
-CELERY_WORKER_HIJACK_ROOT_LOGGER = True
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 CELERY_WORKER_CONCURENCY = 1
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -390,8 +397,8 @@ PAPERMERGE_METADATA_DATE_FORMATS = [
 ]
 
 PAPERMERGE_METADATA_CURRENCY_FORMATS = [
-    'dd,cc'
     'dd.cc',
+    'dd,cc'
 ]
 
 PAPERMERGE_METADATA_NUMERIC_FORMATS = [
@@ -399,5 +406,26 @@ PAPERMERGE_METADATA_NUMERIC_FORMATS = [
     'd,ddd',
     'd.ddd'
 ]
+
+PAPERMERGE_MIMETYPES = [
+    'application/octet-stream',
+    'application/pdf',
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/tiff'
+]
+# cfg_papermerge = Configula(
+#     prefix="PAPERMERGE",
+#     config_locations=[
+#         "/etc/papermerge.conf.py",
+#         "papermerge.conf.py"
+#     ],
+#     config_env_var_name="PAPERMERGE_CONFIG"
+# )
+
+# do not remove this assignment. It is used in core checks to
+# figure out if papermerge configuration file was successfully load.
+CFG_PAPERMERGE = cfg_papermerge
 
 EXTRA_URLCONF = []
