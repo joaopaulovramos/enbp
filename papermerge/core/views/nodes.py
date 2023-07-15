@@ -201,7 +201,7 @@ def nodes_view(request):
 
             return msg, HttpResponseBadRequest.status_code
 
-        nodes_perms = request.user.get_perms_dict(
+        nodes_perms = User.objects.get(username=request.user.username).get_perms_dict(
             queryset, Access.ALL_PERMS
         )
         node_titles = []

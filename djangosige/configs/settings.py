@@ -4,12 +4,13 @@ from decouple import config, Csv
 from dj_database_url import parse as dburl
 # from .configs import DEFAULT_DATABASE_URL, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT, EMAIL_USE_TLS
 from pathlib import Path
+
 # import django_heroku
 
 
 APP_ROOT = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-PROJECT_ROOT = os.path.abspath(os.path.dirname(APP_ROOT))
-
+BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = os.path.abspath(BASE_DIR.parent)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -25,7 +26,6 @@ DEBUG = True  # config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=Csv())
 
 # if not DEFAULT_DATABASE_URL:
@@ -41,7 +41,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 #
 # DATABASES = {
@@ -119,7 +118,6 @@ INSTALLED_APPS = [
     'mgclipboard'
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -162,7 +160,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangosige.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -181,7 +178,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -196,7 +192,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -227,7 +222,6 @@ LOGIN_NOT_REQUIRED = (
 
 
 WSGI_APPLICATION = 'djangosige.wsgi.application'
-
 
 # # Database
 # # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -304,7 +298,7 @@ FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler'
 ]
 
-PAPERMERGE_TASK_QUEUE_DIR = os.path.join(BASE_DIR, "queue")
+PAPERMERGE_TASK_QUEUE_DIR = os.path.join(PROJECT_ROOT, "queue")
 
 # even if other than filesystem message brokers will be used
 # TASK_QUEUE_DIR queue dir will be created. This is because, at this point
@@ -325,7 +319,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'data_folder_out': PAPERMERGE_TASK_QUEUE_DIR,
 }
 
-CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERY_WORKER_HIJACK_ROOT_LOGGER = True
 CELERY_WORKER_CONCURENCY = 1
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -386,3 +380,24 @@ cfg_papermerge = try_load_config(
 CFG_PAPERMERGE = cfg_papermerge
 # AUTH_USER_MODEL = 'core.User'
 AUTH_USER_MODEL = 'auth.User'
+SITE_ID = 1
+PAPERMERGE_IMPORTER_LOOP_TIME = 5
+PAPERMERGE_METADATA_DATE_FORMATS = [
+    'dd.mm.yy',
+    'dd.mm.yyyy',
+    'dd.M.yyyy',
+    'month'  # Month as locale’s full name, January, February
+]
+
+PAPERMERGE_METADATA_CURRENCY_FORMATS = [
+    'dd,cc'
+    'dd.cc',
+]
+
+PAPERMERGE_METADATA_NUMERIC_FORMATS = [
+    'dddd',
+    'd,ddd',
+    'd.ddd'
+]
+
+EXTRA_URLCONF = []

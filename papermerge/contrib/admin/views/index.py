@@ -6,7 +6,7 @@ from papermerge.core.models import (
     Page,
     Folder,
     BaseTreeNode,
-    Access,
+    Access, User,
 )
 
 
@@ -89,7 +89,7 @@ def search(request):
                     tags__name__in=[tag]
                 ).distinct()
 
-    nodes_perms = request.user.get_perms_dict(
+    nodes_perms = User.objects.get(username=request.user.username).get_perms_dict(
         qs_docs, Access.ALL_PERMS
     )
 

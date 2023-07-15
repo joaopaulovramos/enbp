@@ -30,7 +30,7 @@ from papermerge.core.lib.hocr import Hocr
 from .decorators import json_response
 
 from papermerge.core.models import (
-    Folder, Document, BaseTreeNode, Access
+    Folder, Document, BaseTreeNode, Access, User
 )
 from papermerge.core.tasks import ocr_page
 from papermerge.core.utils import filter_node_id
@@ -47,7 +47,7 @@ def document(request, doc_id):
     except Document.DoesNotExist:
         return render(request, "admin/document_404.html")
 
-    nodes_perms = request.user.get_perms_dict(
+    nodes_perms = User.objects.get(username=request.user.username).get_perms_dict(
         [doc], Access.ALL_PERMS
     )
 
@@ -141,7 +141,7 @@ def cut_node(request):
     nodes = BaseTreeNode.objects.filter(
         id__in=node_ids
     )
-    nodes_perms = request.user.get_perms_dict(
+    nodes_perms = User.objects.get(username=request.user.username).get_perms_dict(
         nodes, Access.ALL_PERMS
     )
     for node in nodes:
@@ -630,7 +630,7 @@ def documents_download(request):
     nodes = BaseTreeNode.objects.filter(
         id__in=node_ids
     )
-    nodes_perms = request.user.get_perms_dict(
+    nodes_perms = User.objects.get(username=request.user.username).get_perms_dict(
         nodes, Access.ALL_PERMS
     )
     for node in nodes:

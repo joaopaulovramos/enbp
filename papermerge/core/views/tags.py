@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 from django.utils.html import escape
 
 from papermerge.core import validators
-from papermerge.core.models import Access, BaseTreeNode, Tag
+from papermerge.core.models import Access, BaseTreeNode, Tag, User
 from .decorators import json_response
 
 logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ def nodes_tags_view(request):
     tags = [escape(tag) for tag in tags]
     nodes = BaseTreeNode.objects.filter(id__in=node_ids)
 
-    nodes_perms = request.user.get_perms_dict(
+    nodes_perms = User.objects.get(username=request.user.username).get_perms_dict(
         nodes, Access.ALL_PERMS
     )
 

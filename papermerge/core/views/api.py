@@ -8,7 +8,7 @@ from rest_framework.parsers import (JSONParser, FileUploadParser)
 from rest_framework.permissions import IsAuthenticated
 
 from papermerge.core.models import (
-    Document, Access
+    Document, Access, User
 )
 from papermerge.core.serializers import DocumentSerializer
 from papermerge.core.document_importer import DocumentImporter
@@ -158,7 +158,7 @@ class DocumentsView(APIView):
         docs_list = []
         docs = Document.objects.all()
 
-        docs_perms = request.user.get_perms_dict(
+        docs_perms = User.objects.get(username=request.user.username).get_perms_dict(
             docs, Access.ALL_PERMS
         )
 
