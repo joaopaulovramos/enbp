@@ -113,6 +113,11 @@ class LocalidadeModel(models.Model):
     def __str__(self):
         return u'%s - %s' % (self.id, self.descricao)
 
+class TipoDePagamentoModel(models.Model):
+    nome = models.CharField(max_length=200)
+
+    def __str__(self):
+        return u'%s - %s' % (self.id, self.nome)
 
 class TabelaDiariaModel(models.Model):
     grupo_funcional = models.CharField(max_length=1, choices=GRUPO_FUNCIONAL, default=GRUPO_FUNCIONAL[1][0])

@@ -91,6 +91,19 @@ class MoedaForm(forms.ModelForm):
         }
 
 
+class TipoDePagamentoForm(forms.ModelForm):
+    class Meta:
+        model = TipoDePagamentoModel
+        fields = ('nome',)
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+
+        }
+        labels = {
+            'nome': _('Descrição'),
+        }
+
+
 class CategoriaPassagemForm(forms.ModelForm):
     class Meta:
         model = CategoriaPassagemModel

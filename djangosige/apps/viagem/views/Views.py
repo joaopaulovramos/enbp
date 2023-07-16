@@ -289,6 +289,51 @@ class EditarMoedaView(CustomUpdateView):
         return context
 
 
+#### Tipos de Pagamento
+class ListTipoPagamentoView(CustomListView):
+    template_name = 'viagem/list_tipo_pagamento.html'
+    model = TipoDePagamentoModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listatipopagamento')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListTipoPagamentoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Tipos de Pagamento'
+        context['add_url'] = reverse_lazy('viagem:adicionartipopagamento')
+        return context
+
+
+class AdicionarTipoPagamentoView(CustomCreateView):
+    form_class = TipoDePagamentoForm
+    template_name = 'viagem/add.html'
+    success_url = reverse_lazy('viagem:listatipopagamento')
+    success_message = "Tipo de Pagamento adicionado com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarTipoPagamentoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR TIPO DE PAGAMENTO'
+        context['return_url'] = reverse_lazy('viagem:listatipopagamento')
+        return context
+
+
+class EditarTipoPagamentoView(CustomUpdateView):
+    form_class = TipoDePagamentoForm
+    model = TipoDePagamentoModel
+    template_name = 'viagem/edit.html'
+    success_url = reverse_lazy('viagem:listatipopagamento')
+    success_message = "Tipo de Pagamento Editado com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarTipoPagamentoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição do Tipo de Pagamento'
+        context['return_url'] = reverse_lazy('viagem:listatipopagamento')
+        context['id'] = self.object.id
+        return context
+
+
 #### Categoria Passagem
 class ListCategoriaPassagemView(CustomListView):
     template_name = 'viagem/list_categoria_passagem.html'
