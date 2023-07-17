@@ -927,6 +927,39 @@ class ListHomologarViagensView(CustomListView):
         return context
 
 
+class ListPagamentoDiariasView(CustomListView):
+    template_name = 'viagem/list_pagamento_diarias.html'
+    model = ViagemModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listapagamentodiarias')
+    permission_codename = 'autorizar_pagamento_diarias'
+
+    def get_queryset(self):
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
+        user_viagens = user_viagens.filter(homologada=True)
+        user_viagens = user_viagens.filter(pagamento_autorizado=False)
+
+        return user_viagens
+
+    # Remover items selecionados da database
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if value == "on":
+                instance = self.model.objects.get(id=key)
+                instance.pagamento_autorizado = True
+                instance.save()
+        return redirect(self.success_url)
+
+    def get_object(self):
+        current_user = self.request.user
+        return ViagemModel.objects.get(user=current_user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListPagamentoDiariasView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Viagens'
+        return context
+
+
 class PrestarContasView(CustomUpdateView):
     form_class = PrestacaoContaForm
     model = ViagemModel
@@ -1232,7 +1265,7 @@ class ListAprovarPCViagensView(CustomListView):
         # return self.model.objects.all()
         current_user = self.request.user
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-        user_viagens = user_viagens.filter(homologada=True)
+        user_viagens = user_viagens.filter(pagamento_autorizado=True)
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
         return user_viagens

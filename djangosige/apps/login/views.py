@@ -47,7 +47,7 @@ DEFAULT_PERMISSION_MODELS = ['cliente', 'fornecedor', 'produto',
 
 CUSTOM_PERMISSIONS = ['configurar_nfe', 'emitir_notafiscal', 'cancelar_notafiscal', 'gerar_danfe', 'consultar_cadastro', 'inutilizar_notafiscal', 'consultar_notafiscal',
                       'baixar_notafiscal', 'manifestacao_destinatario', 'faturar_pedidovenda', 'faturar_pedidocompra', 'acesso_fluxodecaixa', 'consultar_estoque', 'solicitar_viagens',
-                      'autorizar_viagens_sup', 'autorizar_viagens_dus', 'homologar_viagens', 'cadastrar_item_viagens', 'aprovar_pc_viagens', 'aprovar_horas', 'analisar_opinioes', ]
+                      'autorizar_viagens_sup', 'autorizar_viagens_dus', 'autorizar_pagamento_diarias', 'homologar_viagens', 'cadastrar_item_viagens', 'aprovar_pc_viagens', 'aprovar_horas', 'analisar_opinioes', ]
 
 
 #, 'editar_carro', 'cadastrar_carro', 'listar_carro'

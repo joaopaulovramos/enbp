@@ -171,8 +171,11 @@ class ViagemModel(models.Model):
     autorizada_dus = models.BooleanField(default=False)
     recusado_dus = models.BooleanField(default=False)
 
-
     homologada = models.BooleanField(default=False)
+
+    pagamento_autorizado = models.BooleanField(default=False)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, related_name="viagem_pagamento", on_delete=models.CASCADE, null=True, blank=True)
+
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)
     descricao = models.TextField(blank=True, null=True)
 
@@ -211,7 +214,8 @@ class ViagemModel(models.Model):
             ("autorizar_viagens_dus", "Pode autorizar viagens - Diretor de Unidade de Serviço"),
             ("homologar_viagens", "Pode homologar viagens"),
             ("cadastrar_item_viagens", "Cadastrar Items de Viagem"),
-            ("aprovar_pc_viagens", "Aprovar prestação de contras de Viagem")
+            ("aprovar_pc_viagens", "Aprovar prestação de contras de Viagem"),
+            ("autorizar_pagamento_diarias", "Pode autorizar pagamento de diárias")
         )
 
     @property

@@ -44,7 +44,9 @@
                     <th>Superintendente</th>
                     <th>DUS</th>
                     <th>Homologada</th>
+                    <th>Financeiro - Diárias</th>
                     <th>Prestar Contas</th>
+                    <th>Financeiro - Reembolso</th>
 {#                    <th>ARQUIVOS</th>#}
                      <th>Avaliação</th>
                     <th>Remover</th>
@@ -99,6 +101,16 @@
 
 
                     </td>
+                    <td>
+                        {% if natop.pagamento_autorizado  %}
+                            <a class="btn btn-success disabled"><span> APROVADA</span></a>
+                        {% endif %}
+                        {% if natop.homologada and not natop.pagamento_autorizado  %}
+                            <a class="btn "><span> Enviado Para Aprovação</span></a>
+                        {% endif %}
+
+
+                    </td>
 {#                   <td>#}
 {#                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '0' %}#}
 {#                            <a href="{% url 'viagem:prestar_contas' natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS</span></a>#}
@@ -113,10 +125,10 @@
 {#                       {% endif %}#}
 {#                   </td>#}
                     <td>
-                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '0' %}
+                       {% if natop.autorizada_dus and natop.pagamento_autorizado and natop.finalizar_pc == '0' %}
                             <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS </span></a>
                        {% endif %}
-                       {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
+                       {% if natop.autorizada_dus and natop.pagamento_autorizado and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
                             <a class="btn"><span> Enviado Para Aprovação</span></a>
                        {% endif %}
                         {% if natop.aprovar_pc == '1' %}
@@ -124,6 +136,9 @@
                        {% endif %}
 
                    </td>
+
+
+                   <td></td>
                <td>
                        {% if natop.aprovar_pc == '1' %}
                             <a class="btn btn-success disabled"><span> APROVADA</span></a>
