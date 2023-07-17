@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+from papermerge.core.models.document import Document
+from papermerge.contrib.admin.views import browse as index_view
+from django.views.i18n import JavaScriptCatalog
+from django.views.generic.base import RedirectView
+from django.conf import settings
 from django.urls import path, re_path
 from django.conf.urls import url, include
 from django.contrib import admin
@@ -17,7 +22,7 @@ urlpatterns = [
     url(r'^financeiro/', include('djangosige.apps.financeiro.urls')),
     url(r'^estoque/', include('djangosige.apps.estoque.urls')),
 
-#zeppelin
+    # zeppelin
     url(r'^exemplo/', include('djangosige.apps.exemplo.urls')),
     url(r'^zeppelin/', include('djangosige.apps.zeppelin.urls')),
     url(r'^zeppelin/', include('djangosige.apps.zpfaturamento.urls')),
@@ -31,10 +36,6 @@ urlpatterns = [
 
 # Papermerge
 
-from django.conf import settings
-from django.views.generic.base import RedirectView
-from django.views.i18n import JavaScriptCatalog
-from papermerge.contrib.admin.views import browse as index_view
 
 js_info_dict = {
     'domain': 'django',
@@ -59,6 +60,25 @@ urlpatterns += [
     path('', include('papermerge.core.urls')),
     path('', index_view, name='index')
 ]
+
+from viewflow.urls import Application, Site, ModelViewset
+from viewflow.workflow.flow import FlowAppViewset
+from documento_fluxo.flows import DistribuirDocumentoFlow
+
+site = Site(
+    title="Norli Workflow", viewsets=[
+        FlowAppViewset(DistribuirDocumentoFlow, icon="assignment"),
+        # Application(
+        #     title='Documento Workflow',
+        #     icon='people',
+        #     app_name='workflow',
+        #     # viewsets=[
+        #     #     ModelViewset(model=Document),
+        #     # ]
+        # ),
+    ])
+
+urlpatterns += [path('', site.urls),]
 
 if DEBUG is True:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns

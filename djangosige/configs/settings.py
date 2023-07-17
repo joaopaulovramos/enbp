@@ -68,6 +68,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
+    # 'tema',
     'rest_framework',
     'knox',
     # 'django.contrib.admin',
@@ -117,7 +118,10 @@ INSTALLED_APPS = [
     'polymorphic_tree',
     'polymorphic',
     'mptt',
-    'mgclipboard'
+    'mgclipboard',
+    'viewflow',
+    'viewflow.workflow',
+    'documento_fluxo'
 ]
 
 
@@ -388,6 +392,7 @@ CFG_PAPERMERGE = cfg_papermerge
 # AUTH_USER_MODEL = 'core.User'
 AUTH_USER_MODEL = 'auth.User'
 SITE_ID = 1
+# PAPERMERGE_SEARCH_BACKEND = "papermerge.search.backends.db.SearchBackend"
 PAPERMERGE_IMPORTER_LOOP_TIME = 5
 PAPERMERGE_METADATA_DATE_FORMATS = [
     'dd.mm.yy',
