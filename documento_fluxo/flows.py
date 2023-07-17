@@ -19,9 +19,7 @@ class DistribuirDocumentoFlow(flow.Flow):
                 model=DistribuirDocumento,
                 fields=["usuario_destino", "despacho", "documento"]
             )
-        )
-        .Permission("department.can_register_bill")
-        .Next(this.receber_documento)
+        ).Next(this.receber_documento)
     )
 
     # project manager
