@@ -50,8 +50,6 @@
                     <th>DUS</th>
                     <th>Homologada</th>
                     <th>Financeiro - Diárias</th>
-                    <th>Prestar Contas</th>
-                    <th>Financeiro - Reembolso</th>
                   <th>Selecionar</th>
                 </tr>
               </thead>
@@ -99,14 +97,12 @@
                         {% endif %}
                    </td>
                    <td>
-                        {% if natop.pagamento_autorizado  %}
+                        {% if natop.pagamento_diarias_autorizado  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
                             <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
                         {% endif %}
                    </td>
-                   <td></td>
-                   <td></td>
                 <td class="lista-remove">
                   <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
                   <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>

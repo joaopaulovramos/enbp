@@ -172,9 +172,14 @@ class ViagemModel(models.Model):
     recusado_dus = models.BooleanField(default=False)
 
     homologada = models.BooleanField(default=False)
+    homologada_reembolso = models.BooleanField(default=False)
+    tem_reembolso = models.BooleanField(default=False)
 
-    pagamento_autorizado = models.BooleanField(default=False)
+    pagamento_diarias_autorizado = models.BooleanField(default=False)
     tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, related_name="viagem_pagamento", on_delete=models.CASCADE, null=True, blank=True)
+
+    pagamento_reembolso_autorizado = models.BooleanField(default=False)
+    # tipo_pagamento_reembolso = models.ForeignKey(TipoDePagamentoModel, related_name="viagem_pagamento", on_delete=models.CASCADE, null=True, blank=True)
 
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)
     descricao = models.TextField(blank=True, null=True)
@@ -215,7 +220,8 @@ class ViagemModel(models.Model):
             ("homologar_viagens", "Pode homologar viagens"),
             ("cadastrar_item_viagens", "Cadastrar Items de Viagem"),
             ("aprovar_pc_viagens", "Aprovar prestação de contras de Viagem"),
-            ("autorizar_pagamento_diarias", "Pode autorizar pagamento de diárias")
+            ("autorizar_pagamento_diarias", "Pode autorizar pagamento de diárias"),
+            ("autorizar_pagamento_reembolso", "Pode autorizar pagamento de reembolso")
         )
 
     @property

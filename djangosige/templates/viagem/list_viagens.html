@@ -43,9 +43,10 @@
                     <th>Destino</th>
                     <th>Superintendente</th>
                     <th>DUS</th>
-                    <th>Homologada</th>
+                    <th>Homologada - Diárias</th>
                     <th>Financeiro - Diárias</th>
                     <th>Prestar Contas</th>
+                    <th>Homologada - Reembolso</th>
                     <th>Financeiro - Reembolso</th>
 {#                    <th>ARQUIVOS</th>#}
                      <th>Avaliação</th>
@@ -102,10 +103,10 @@
 
                     </td>
                     <td>
-                        {% if natop.pagamento_autorizado  %}
+                        {% if natop.pagamento_diarias_autorizado  %}
                             <a class="btn btn-success disabled"><span> APROVADA</span></a>
                         {% endif %}
-                        {% if natop.homologada and not natop.pagamento_autorizado  %}
+                        {% if natop.homologada and not natop.pagamento_diarias_autorizado  %}
                             <a class="btn "><span> Enviado Para Aprovação</span></a>
                         {% endif %}
 
@@ -125,10 +126,10 @@
 {#                       {% endif %}#}
 {#                   </td>#}
                     <td>
-                       {% if natop.autorizada_dus and natop.pagamento_autorizado and natop.finalizar_pc == '0' %}
+                       {% if natop.autorizada_dus and natop.pagamento_diarias_autorizado and natop.finalizar_pc == '0' %}
                             <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS </span></a>
                        {% endif %}
-                       {% if natop.autorizada_dus and natop.pagamento_autorizado and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
+                       {% if natop.autorizada_dus and natop.pagamento_diarias_autorizado and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
                             <a class="btn"><span> Enviado Para Aprovação</span></a>
                        {% endif %}
                         {% if natop.aprovar_pc == '1' %}
@@ -136,9 +137,29 @@
                        {% endif %}
 
                    </td>
+                    <td>
+                        {% if natop.homologada_reembolso  %}
+                            <a class="btn btn-success disabled"><span> SIM</span></a>
+                        {% endif %}
+                        {% if natop.aprovar_pc == '1' and not natop.homologada_reembolso %}
+                            <a class="btn btn-red btn-success disabled"><span>NAO</span></a>
+                       {% endif %}
 
 
-                   <td></td>
+                    </td>
+
+
+                   <td>
+                       {% if not natop.tem_reembolso and natop.homologada_reembolso %}
+                            <a class="btn btn-success disabled"><span> SEM REEMBOLSO</span></a>
+                       {% endif %}
+                       {% if natop.tem_reembolso and natop.homologada_reembolso and not natop.pagamento_reembolso_autorizado %}
+                            <a class="btn"><span> Enviado Para Aprovação</span></a>
+                       {% endif %}
+                       {% if natop.tem_reembolso and natop.homologada_reembolso and natop.pagamento_reembolso_autorizado %}
+                            <a class="btn btn-success disabled"><span> APROVADO</span></a>
+                       {% endif %}
+                   </td>
                <td>
                        {% if natop.aprovar_pc == '1' %}
                             <a class="btn btn-success disabled"><span> APROVADA</span></a>

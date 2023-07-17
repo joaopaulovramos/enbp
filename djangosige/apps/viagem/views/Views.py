@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.db.models import Q
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
@@ -904,8 +904,9 @@ class ListHomologarViagensView(CustomListView):
 
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-        user_viagens = user_viagens.filter(homologada=False)
-
+        user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
+        for viagem in user_viagens:
+            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
         return user_viagens
 
     # Remover items selecionados da database
@@ -913,7 +914,11 @@ class ListHomologarViagensView(CustomListView):
         for key, value in request.POST.items():
             if value == "on":
                 instance = self.model.objects.get(id=key)
-                instance.homologada = True
+                if (instance.homologada):
+                    instance.homologada_reembolso = True
+                    instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count()>0
+                else:
+                    instance.homologada = True
                 instance.save()
         return redirect(self.success_url)
 
@@ -937,7 +942,7 @@ class ListPagamentoDiariasView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
         user_viagens = user_viagens.filter(homologada=True)
-        user_viagens = user_viagens.filter(pagamento_autorizado=False)
+        user_viagens = user_viagens.filter(pagamento_diarias_autorizado=False)
 
         return user_viagens
 
@@ -946,7 +951,7 @@ class ListPagamentoDiariasView(CustomListView):
         for key, value in request.POST.items():
             if value == "on":
                 instance = self.model.objects.get(id=key)
-                instance.pagamento_autorizado = True
+                instance.pagamento_diarias_autorizado = True
                 instance.save()
         return redirect(self.success_url)
 
@@ -956,7 +961,40 @@ class ListPagamentoDiariasView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListPagamentoDiariasView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Viagens'
+        context['title_complete'] = 'Financeiro - Pagamento de Diárias'
+        return context
+
+
+class ListPagamentoReembolsoView(CustomListView):
+    template_name = 'viagem/list_pagamento_reembolso.html'
+    model = ViagemModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listapagamentoreembolso')
+    permission_codename = 'autorizar_pagamento_reembolso'
+
+    def get_queryset(self):
+        user_viagens = ViagemModel.objects.filter(homologada_reembolso=True)
+        user_viagens = user_viagens.filter(tem_reembolso=True)
+        user_viagens = user_viagens.filter(pagamento_reembolso_autorizado=False)
+
+        return user_viagens
+
+    # Remover items selecionados da database
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if value == "on":
+                instance = self.model.objects.get(id=key)
+                instance.pagamento_reembolso_autorizado = True
+                instance.save()
+        return redirect(self.success_url)
+
+    def get_object(self):
+        current_user = self.request.user
+        return ViagemModel.objects.get(user=current_user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListPagamentoReembolsoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Financeiro - Pagamento de Reembolso'
         return context
 
 
@@ -1265,7 +1303,7 @@ class ListAprovarPCViagensView(CustomListView):
         # return self.model.objects.all()
         current_user = self.request.user
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-        user_viagens = user_viagens.filter(pagamento_autorizado=True)
+        user_viagens = user_viagens.filter(pagamento_diarias_autorizado=True)
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
         return user_viagens
