@@ -212,7 +212,7 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
     template_name = 'timesheet/timesheet_percentual_aprovar.html'
     model = PercentualDiario
     context_object_name = 'all_natops'
-    success_url = reverse_lazy('timesheet:listarpercentualdiario')
+    success_url = reverse_lazy('timesheet:aprovarpercentuaisdiarios')
     permission_codename = 'aprovar_horas'
 
     def get_queryset(self):
@@ -635,7 +635,7 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
     def get_queryset(self):
         current_user = self.request.user
-        querry = self.model.objects.filter(solicitante=current_user)
+        querry = self.model.objects.filter(solicitante=current_user).order_by('data')
 
         days = {}
         for lancamento in querry:
