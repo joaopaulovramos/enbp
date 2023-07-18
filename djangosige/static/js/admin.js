@@ -3955,6 +3955,7 @@ $.Admin.aprovar_timesheet = {
                    .attr("name", "acao").val("aprovar_timesheet");
 
             form.append($(input));
+            $('#id_selecionar_todos').prop( "checked" , false )
             form.submit();
         });
 
