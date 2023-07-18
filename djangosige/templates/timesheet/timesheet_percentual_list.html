@@ -29,15 +29,17 @@
            {% include 'base/search.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-order='[[0, "desc"]]'>
               <thead>
                 <tr>
-
-                    <th>Dia</th>
+                    <th data-norli-sort="desc">Dia</th>
                     <th>Percentual</th>
                     <th>Projeto</th>
                     <th>Situação</th>
-                    <th>Selecionar</th>
+                    <th data-orderable="false" class="select-all">
+                        <input type="checkbox" name="selecionar_todos" id="id_selecionar_todos"/>
+                        <label class="remove-entry-label" for="id_selecionar_todos"></label>
+                    </th>
 
                 </tr>
               </thead>
@@ -46,8 +48,7 @@
                {% if all_natops%}
                {% for natop in all_natops %}
                  <tr {% if natop.situacao == 0  or natop.situacao == 3 %}class="clickable-row"  data-href="{% url 'timesheet:editarpercentualdiario' natop.id %}" {% endif %}>
-
-                     <td>{{natop.data}}</td>
+                    <td>{{natop.data_formated}}</td>
                    <td>{{natop.percentual}}%</td>
                    <td>{{natop.projeto}}</td>
                    <td>
@@ -73,8 +74,6 @@
                             <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
                         {% endif %}
                     {% endif %}
-
-
 
                 </td>
               </tr>
