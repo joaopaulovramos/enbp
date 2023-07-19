@@ -776,7 +776,7 @@ class ListOpiniaoView(CustomListViewFilter):
 class AdicionarOpiniaoView(CustomCreateViewAddUser):
     form_class = OpiniaoForm
     template_name = "timesheet/add.html"
-    success_url = reverse_lazy('timesheet:listaropinioes')
+    success_url = reverse_lazy('timesheet:adicionaopiniao')
     success_message = "Opinião Adicionada com Sucesso."
     permission_codename = 'add_opiniaomodel'
     context_object_name = 'all_natops'
@@ -797,7 +797,7 @@ class AdicionarOpiniaoView(CustomCreateViewAddUser):
         self.form_class.Meta.model.user = self.request.user
         context = super(AdicionarOpiniaoView, self).get_context_data(**kwargs)
         context['title_complete'] = 'ADICIONAR OPINIÃO'
-        context['return_url'] = reverse_lazy('timesheet:listaropinioes')
+        context['return_url'] = reverse_lazy('timesheet:adicionaopiniao')
         return context
 
 class EditarOpiniaoView(CustomUpdateView):
