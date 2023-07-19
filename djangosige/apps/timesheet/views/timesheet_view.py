@@ -59,7 +59,7 @@ class ListTimesheetView(CustomListViewFilter):
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
-            if value == "on":
+            if value == "on" and key != 'selecionar_todos':
                 acao = request.POST['acao']
                 if acao == 'submeter_horas':
                     instance = self.model.objects.get(id=key)
@@ -148,7 +148,7 @@ class AprovarTimesheetView(CustomListViewFilter):
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
-            if value == "on":
+            if value == "on" and key != 'selecionar_todos':
                 acao = request.POST['acao']
                 if acao == 'reprovar-horas':
                     instance = self.model.objects.get(id=key)
@@ -185,8 +185,7 @@ class AprovarGastosView(CustomListViewFilter):
     def post(self, request, *args, **kwargs):
         if self.check_user_delete_permission(request, self.model):
             for key, value in request.POST.items():
-                if value == "on":
-
+                if value == "on" and key != 'selecionar_todos':
                     if 'acao' in request.POST:
                         acao = request.POST['acao']
                         if acao == 'aprovar_gastos':
@@ -227,7 +226,7 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
-            if value == "on":
+            if value == "on" and key != 'selecionar_todos':
                 acao = request.POST['acao']
                 if acao == 'reprovar-horas':
                     instance = self.model.objects.get(id=key)
@@ -304,8 +303,7 @@ class ListGastosView(CustomListViewFilter):
     def post(self, request, *args, **kwargs):
         if self.check_user_delete_permission(request, self.model):
             for key, value in request.POST.items():
-                if value == "on":
-
+                if value == "on" and key != 'selecionar_todos':
                     if 'acao' in request.POST:
                         acao = request.POST['acao']
                         if acao == 'submeter_gastos':
@@ -659,7 +657,7 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
-            if value == "on":
+            if value == "on" and key != 'selecionar_todos':
                 acao = request.POST['acao']
                 if acao == 'submeter_horas':
                     instance = self.model.objects.get(id=key)
@@ -700,7 +698,7 @@ class ListTimesheetDiasView(CustomListViewFilter):
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
-            if value == "on":
+            if value == "on" and key != 'selecionar_todos':
                 acao = request.POST['acao']
                 if acao == 'submeter_horas':
                     instance = self.model.objects.get(id=key)
