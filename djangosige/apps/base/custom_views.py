@@ -95,6 +95,7 @@ class CustomListViewFilter(CheckPermissionMixin, ListView):
     def post(self, request, *args, **kwargs):
         if self.check_user_delete_permission(request, self.model):
             for key, value in request.POST.items():
+                # adicionar um IF aqui
                 if value == "on":
                     instance = self.model.objects.get(id=key)
                     instance.delete()
