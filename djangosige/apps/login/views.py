@@ -443,6 +443,7 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             context['perfil'] =  Usuario.PERFIS[int(us_perfil)][1]
             context['data_inativacao'] = usuario.data_inativacao.strftime('%d/%m/%Y às %H:%M:%S')
             context['user_foto'] = usuario.user_foto
+            context['departamento'] = usuario.departamento
 
 
 
