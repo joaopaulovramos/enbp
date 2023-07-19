@@ -770,9 +770,13 @@ class ListSupAutorizarViagensView(CustomListView):
     permission_codename = 'autorizar_viagens_sup'
 
     def get_queryset(self):
-        # return self.model.objects.all()
+        current_user = self.request.user
+        if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
+            return
         user_viagens = ViagemModel.objects.filter(autorizada_sup=False)
         user_viagens = user_viagens.filter(recusado_sup =False)
+        if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
+            user_viagens = user_viagens.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
         return user_viagens
 
@@ -812,11 +816,12 @@ class ListAutorizarViagensView(CustomListView):
     def get_queryset(self):
         # return self.model.objects.all()
         current_user = self.request.user
+        if (current_user.usuario.perfil!='1' and not current_user.is_superuser):
+            return
+
         user_viagens = ViagemModel.objects.filter(autorizada_dus=False)
         user_viagens = user_viagens.filter(autorizada_sup=True)
         user_viagens = user_viagens.filter(recusado_dus=False)
-
-
         return user_viagens
 
     # Remover items selecionados da database
