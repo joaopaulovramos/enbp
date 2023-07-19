@@ -636,7 +636,8 @@ class AdicionarViagemView(CustomCreateView):
         context['title_complete'] = 'ADICIONAR VIAGEM'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
-        usuario = Usuario.objects.get(id=self.request.user.id)
+        #usuario = Usuario.objects.get(user=self.request.user.id)
+        usuario = Usuario.objects.get(user=self.request.user)
         context['pcd'] = usuario.pcd
 
         return context
