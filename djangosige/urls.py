@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
-
+from papermerge.core.models.document import Document
+from papermerge.contrib.admin.views import browse as index_view
+from django.views.i18n import JavaScriptCatalog
+from django.views.generic.base import RedirectView
+from django.conf import settings
+from django.urls import path, re_path
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
 from .configs.settings import DEBUG, MEDIA_ROOT, MEDIA_URL
 
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    # url(r'^admin/', admin.site.urls),
     url(r'^', include('djangosige.apps.base.urls')),
     url(r'^login/', include('djangosige.apps.login.urls')),
     url(r'^cadastro/', include('djangosige.apps.cadastro.urls')),
@@ -16,7 +22,7 @@ urlpatterns = [
     url(r'^financeiro/', include('djangosige.apps.financeiro.urls')),
     url(r'^estoque/', include('djangosige.apps.estoque.urls')),
 
-#zeppelin
+    # zeppelin
     url(r'^exemplo/', include('djangosige.apps.exemplo.urls')),
     url(r'^zeppelin/', include('djangosige.apps.zeppelin.urls')),
     url(r'^zeppelin/', include('djangosige.apps.zpfaturamento.urls')),
@@ -24,8 +30,57 @@ urlpatterns = [
     url(r'^zeppelin/', include('djangosige.apps.norli_projeto.urls')),
     url(r'^zeppelin/', include('djangosige.apps.timesheet.urls')),
     url(r'^zeppelin/', include('djangosige.apps.viagem.urls')),
+    url(r'^zeppelin/', include('djangosige.apps.janela_unica.urls')),
 
 ]
 
+# Papermerge
+
+
+js_info_dict = {
+    'domain': 'django',
+    'packages': None,
+}
+
+favicon_view = RedirectView.as_view(
+    url='/static/admin/img/favicon.ico',
+    permanent=True
+)
+
+urlpatterns += [
+    re_path(r'favicon\.ico$', favicon_view),
+    path('accounts/', include('allauth.urls')),
+    path(
+        'jsi18n/',
+        JavaScriptCatalog.as_view(),
+        js_info_dict,
+        name='javascript-catalog'
+    ),
+    path('admin/', include('papermerge.contrib.admin.urls')),
+    path('', include('papermerge.core.urls')),
+    path('', index_view, name='index')
+]
+
+from viewflow.urls import Application, Site, ModelViewset
+from viewflow.workflow.flow import FlowAppViewset
+from documento_fluxo.flows import DistribuirDocumentoFlow
+
+site = Site(
+    title="Norli Workflow", viewsets=[
+        FlowAppViewset(DistribuirDocumentoFlow, icon="assignment"),
+        # Application(
+        #     title='Documento Workflow',
+        #     icon='people',
+        #     app_name='workflow',
+        #     # viewsets=[
+        #     #     ModelViewset(model=Document),
+        #     # ]
+        # ),
+    ])
+
+urlpatterns += [path('', site.urls),]
+
 if DEBUG is True:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

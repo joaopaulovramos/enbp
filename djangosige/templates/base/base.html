@@ -131,6 +131,12 @@
 
                             </li>
                             <li>
+                                <a href="{% url 'cadastro:listadepartamentos' %}">
+                                    Departamentos
+                                </a>
+                            </li>
+
+                            <li>
                                 <a href="{% url 'cadastro:listafornecedoresview' %}">
                                     Fornecedores
                                 </a>
@@ -251,6 +257,68 @@
                         </ul>
                     </li>
 <!-- fim timesheet-->
+                    <!-- inicio janela única-->
+                  <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">insert_drive_file</i>
+                            <span>Janela Única</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="/distribuirdocumento/inbox/">
+                                    <span>Caixa de Entrada</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/distribuirdocumento/">
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/browse">
+                                    <span>Documentos</span>
+                                </a>
+                                <ul id="pinned_tags_view" class="pinned_tags">
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="distribuirdocumento/enviar_documento">
+                                    <span>Tramitação</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/automates/">
+                                    <span>Automações</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/tags">
+                                    <span>Tags</span>
+                                </a>
+                            </li>
+<!--
+                            <li>
+                                <a href="{% url 'janela_unica:listadocumentos' %}">
+                                    <span>Listar Documentos</span>
+                                </a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'janela_unica:tramitar' %}">
+                                    <span>Tramitar</span>
+                                </a>
+                            </li>
+
+                               <li>
+                                <a href="{% url 'janela_unica:listtramitacao' %}">
+                                    <span>Listar Tramitação</span>
+                                </a>
+                            </li>
+-->
+                        </ul>
+                    </li>
+                    <!-- fim janela única -->
                  <!-- Viagens-->
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -356,7 +424,7 @@
 
                                 <li>
                                     <a href="{% url 'viagem:listahomologacaoviagem' %}">
-                                         <span>Homologar Viagens</span>
+                                         <span>Homologar RH</span>
                                     </a>
                                 </li>
 

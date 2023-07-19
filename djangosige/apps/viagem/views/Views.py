@@ -636,7 +636,8 @@ class AdicionarViagemView(CustomCreateView):
         context['title_complete'] = 'ADICIONAR VIAGEM'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
-        usuario = Usuario.objects.get(id=self.request.user.id)
+        #usuario = Usuario.objects.get(user=self.request.user.id)
+        usuario = Usuario.objects.get(user=self.request.user)
         context['pcd'] = usuario.pcd
 
         return context
@@ -1002,13 +1003,16 @@ class PrestarContasArquivosView(CustomUpdateView):
 
         data_evento = datetime.datetime.strptime(request.POST['data_evento'], "%d/%m/%Y")
         data_evento = timezone.make_aware(data_evento, timezone.utc)
-        data_fim_viagem = viagem.dada_fim+timedelta(days=1)
-        data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
-
-
-
-        if data_evento < data_inicio_viagem or data_evento > data_fim_viagem:
-            form.add_error('data_evento', 'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
+        if viagem.dada_fim:
+            data_fim_viagem = viagem.dada_fim+timedelta(days=1)
+            data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
+            if data_evento < data_inicio_viagem or data_evento > data_fim_viagem:
+                form.add_error('data_evento', 'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
+        else:
+            data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
+            if data_evento < data_inicio_viagem:
+                form.add_error('data_evento',
+                               'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
 
         if form.is_valid():
             request.FILES['file'].name = name + '.' + ext

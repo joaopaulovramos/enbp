@@ -3,7 +3,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from djangosige.apps.cadastro.models import Empresa, MinhaEmpresa
+from djangosige.apps.cadastro.models import Empresa, MinhaEmpresa, DepartamentoModel
 
 
 class EmpresaForm(forms.ModelForm):
@@ -78,3 +78,17 @@ class MinhaEmpresaForm(forms.ModelForm):
         labels = {
             'm_empresa': _('Minha Empresa'),
         }
+
+
+class DepartamentoForm(forms.ModelForm):
+    class Meta:
+        model = DepartamentoModel
+        fields = ('nome',)
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+
+        }
+        labels = {
+            'nome': _('Nome'),
+        }
+

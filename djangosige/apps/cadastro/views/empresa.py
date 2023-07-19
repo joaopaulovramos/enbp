@@ -7,8 +7,9 @@ from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
-from djangosige.apps.cadastro.forms import EmpresaForm
+from djangosige.apps.cadastro.forms import EmpresaForm, DepartamentoForm
 from djangosige.apps.cadastro.models import Empresa
+from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
 
 from .base import AdicionarPessoaView, PessoasListView, EditarPessoaView
 from django_cpf_cnpj.validators import is_valid_cnpj
@@ -17,7 +18,7 @@ import requests
 import json
 
 from ..models.base import CNAE
-from ..models.empresa import SITUACAO_CADASTRAL
+from ..models.empresa import SITUACAO_CADASTRAL, DepartamentoModel
 
 
 class AdicionarEmpresaView(AdicionarPessoaView):
@@ -165,3 +166,47 @@ def convert_date_format(date_str):
     date = datetime.strptime(date_str, '%Y-%m-%d')
     return date.strftime('%d/%m/%Y')
 
+# departamento
+
+class ListDepartamentosView(CustomListView):
+    template_name = 'cadastro/list.html'
+    model = DepartamentoModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('cadastro:listadepartamentos')
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListDepartamentosView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'DEPARTAMENTOS'
+        context['add_url'] = reverse_lazy('cadastro:adddepartamento')
+        return context
+
+
+class AddDepartamentoView(CustomCreateView):
+    form_class = DepartamentoForm
+    template_name = 'cadastro/add.html'
+    success_url = reverse_lazy('cadastro:listadepartamentos')
+    success_message = "Departamento adicionado com sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(AddDepartamentoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'ADICIONAR DEPARTAMENTO'
+        context['add_url'] = reverse_lazy('cadastro:listadepartamentos')
+        return context
+
+
+class EditarDepartamentoView(CustomUpdateView):
+    form_class = DepartamentoForm
+    model = DepartamentoModel
+    template_name = 'cadastro/edit.html'
+    success_url = reverse_lazy('cadastro:listadepartamentos')
+    success_message = "Departamento Editado com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarDepartamentoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Departamento'
+        context['add_url'] = reverse_lazy('cadastro:listadepartamentos')
+        context['id'] = self.object.id
+        return context

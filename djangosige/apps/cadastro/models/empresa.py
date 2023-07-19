@@ -142,3 +142,13 @@ class MinhaEmpresa(models.Model):
         Empresa, on_delete=models.PROTECT, related_name='minha_empresa', blank=True, null=True)
     m_usuario = models.ForeignKey(
         Usuario, on_delete=models.CASCADE, related_name='empresa_usuario')
+
+
+class DepartamentoModel(models.Model):
+    nome = models.CharField(max_length=200)
+
+    def __str__(self):
+        return u'%s - %s' % (self.id, self.nome)
+
+
+
