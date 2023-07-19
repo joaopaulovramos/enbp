@@ -51,7 +51,8 @@ def get_weeks_in_month(month, year):
 
     return result
 
-#semanas = get_weeks_in_month(5, 2023)
+
+# semanas = get_weeks_in_month(5, 2023)
 
 
 data_atual = datetime.datetime.now()
@@ -71,8 +72,10 @@ class HorasSemanais(models.Model):
     hr_dom = models.CharField(max_length=200, null=pode_null, blank=branco)
 
     semanas = models.CharField(max_length=200, null=False, blank=False, choices=SEMANAS)
-    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="certificados_user", on_delete=models.CASCADE, null=False, blank=False)
-    solicitante = models.ForeignKey(User, related_name="timesheet_user", on_delete=models.CASCADE, null=True, blank=True)
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="certificados_user",
+                                on_delete=models.CASCADE, null=False, blank=False)
+    solicitante = models.ForeignKey(User, related_name="timesheet_user", on_delete=models.CASCADE, null=True,
+                                    blank=True)
     # 0 - não submetida
     # 1 - submetida aguardando aprovação
     # 2 - submetida e aprovada
@@ -90,10 +93,11 @@ SITUACAO = [
     ('0', 'NÃO SUBMETIDA'),
 ]
 
-class Gastos(models.Model):
 
+class Gastos(models.Model):
     descricao = models.CharField(max_length=500, null=False, blank=False)
-    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_gastos", on_delete=models.CASCADE, null=True, blank=True)
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_gastos", on_delete=models.CASCADE,
+                                null=True, blank=True)
     solicitante = models.ForeignKey(User, related_name="gastos_user", on_delete=models.CASCADE, null=True, blank=True)
     valor = models.DecimalField(
         max_digits=15, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
@@ -134,4 +138,24 @@ class PercentualDiario(models.Model):
         permissions = (
             ("aprovar_horas", "Pode aprovar lançamento de horas"),
         )
+
+
+class OpiniaoModel(models.Model):
+    data = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(User, related_name="timesheet_opiniao_user", on_delete=models.CASCADE, null=True,
+                                blank=True)
+    opiniao = models.CharField(max_length=500, blank=False, null=False)
+
+    class Meta:
+        verbose_name = "Timesheet - Opiniões"
+        permissions = (
+            ("analisar_opinioes", "Vizualiza todas as opiniões"),
+        )
+
+    def data_formated(self):
+        return '%s' % date(self.data, "d/m/Y")
+
+    def opiniao_truncated(self):
+        return '%s' % self.opiniao[:200]
+
 
