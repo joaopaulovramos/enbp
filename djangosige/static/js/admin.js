@@ -232,12 +232,38 @@ $.Admin.table = {
                     "sSortAscending": ": Ordenar colunas de forma ascendente",
                     "sSortDescending": ": Ordenar colunas de forma descendente"
                 },
+            },
+            "drawCallback": function( settings ) {
+
+                // sempre que desenha a tabela, verifica que se há pelo menos um checkbox marcado
+                // caso afirmativo, marca o checkbox geral
+                // especialmente útil para mudanças de páginas
+                $('.lista-remove input[type="checkbox"]').each(function(){
+                    if($(this).is(':checked')){
+                        $('#id_selecionar_todos').prop( "checked" , true )
+                        return false
+                    }
+                    $('#id_selecionar_todos').prop( "checked" , false )
+                });
+
             }
         });
 
-        //Habilita o funcionamento de popovers nas páginas da tabela
+        //Habilita o funcionamento de popovers, pelo data-toggle, nas páginas da tabela
         //Usando a chamada típica do BS, funcionaria apenas na primeira página
         dTable.$('[data-toggle="popover"]').popover()
+
+        // Tratamento do checkbox selecionar todos
+        $('#id_selecionar_todos').click(function () {
+            if($(this).is(':checked')){
+                $('.lista-remove input[type="checkbox"]').prop( "checked" , true )
+                    .parents('tr').addClass("delete-row");
+            }
+            else {
+                $('.lista-remove input[type="checkbox"]').prop( "checked" , false )
+                    .parents('tr').removeClass("delete-row");
+            }
+        })
 
         //Campo de busca
         $('#search-bar').keyup(function(){
@@ -260,6 +286,10 @@ $.Admin.table = {
             var form = $(this).parents('form');
             $.Admin.messages.msgRemove("Os items selecionados serão removidos permanentemente da Base de Dados.");
             $('#btn-sim').one('click', function(){
+
+                // Antes de submeter o formulário remove a marcação do campo selecionar todos
+                $('#id_selecionar_todos').prop( "checked" , false )
+
                 form.submit();
             });
         });
@@ -3533,48 +3563,6 @@ $.Admin.recusar_viagem_sup = {
     },
 }
 
-
-$.Admin.submeter_horas = {
-   init: function() {
-        var $btnAutoriza = $('.btn-submeter-horas');
-
-
-
-        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
-            if(this.checked){
-                $(this).parents('tr').addClass("delete-row");
-            }else{
-                $(this).parents('tr').removeClass("delete-row");
-            }
-            $btnAutoriza.show()
-        });
-
-        $btnAutoriza.on('click',function(event){
-            event.preventDefault();
-            var form = $(this).parents('form');
-
-
-            var input = $("<input>")
-                   .attr("type", "hidden")
-                   .attr("name", "acao").val("submeter_horas");
-
-            form.append($(input));
-
-
-            form.submit();
-        });
-
-        $('body').on('click', '.clickable-row:not(.popup)', function(event){
-            if(!$(event.target).is("input, label, i, .prevent-click-row")){
-                window.document.location = $(this).data("href");
-            }
-        });
-
-    },
-}
-
-
-
 $.Admin.reover_opcao = {
    init: function() {
         var $btnAutoriza = $('.btn-remover-submeter-horas');
@@ -3967,6 +3955,7 @@ $.Admin.aprovar_timesheet = {
                    .attr("name", "acao").val("aprovar_timesheet");
 
             form.append($(input));
+            $('#id_selecionar_todos').prop( "checked" , false )
             form.submit();
         });
 
@@ -4008,6 +3997,8 @@ $.Admin.submeter_horas = {
 
             form.append($(input));
 
+            // Antes de submeter o formulário remove a marcação do campo selecionar todos
+            $('#id_selecionar_todos').prop( "checked" , false )
 
             form.submit();
         });

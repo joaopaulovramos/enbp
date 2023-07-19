@@ -126,6 +126,9 @@ class PercentualDiario(models.Model):
     situacao = models.IntegerField(default=0)
     motivo_reprovacao = models.CharField(max_length=500, blank=True, null=True)
 
+    def data_formated(self):
+        return '%s' % date(self.data, "d/m/Y")
+
     class Meta:
         verbose_name = "Timesheet - Percentual"
         permissions = (

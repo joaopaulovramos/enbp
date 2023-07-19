@@ -1378,9 +1378,11 @@ fieldset[disabled] .form-control {
   .lista .lista-content .lista-table tbody tr .red_td:hover{
     background: #e5c5c5;
     cursor: pointer; }
-  .lista .lista-content .lista-table .lista-remove{
+  .lista .lista-content .lista-table .lista-remove,
+  .lista .lista-content .lista-table .select-all{
     text-align:center; }
-    .lista .lista-content .lista-table .lista-remove .remove-entry-label{
+    .lista .lista-content .lista-table .lista-remove .remove-entry-label,
+    .select-all .remove-entry-label{
       vertical-align:middle;
       margin-bottom: 0px; }
 
