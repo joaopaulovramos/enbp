@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import datetime
-from djangosige.apps.timesheet.models.timesheet_model import HorasSemanais, Gastos, PercentualDiario
+from djangosige.apps.timesheet.models.timesheet_model import HorasSemanais, Gastos, PercentualDiario, OpiniaoModel
 from decimal import Decimal
 
 
@@ -136,6 +136,33 @@ class PercentualDiarioForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super(PercentualDiarioForm, self).save(commit=False)
         instance.solicitante = self.request_user
+        if commit:
+            instance.save()
+        return instance
+
+class OpiniaoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(OpiniaoForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = OpiniaoModel
+
+        fields = ('opiniao',)
+
+        widgets = {
+
+            'opiniao': forms.Textarea(attrs={'class': 'form-control', 'size': '512'}),
+
+        }
+        labels = {
+            'opiniao': _('Observação/crítica/sugestão'),
+        }
+
+    def save(self, commit=True):
+        instance = super(OpiniaoForm, self).save(commit=False)
+        instance.usuario = self.request_user
         if commit:
             instance.save()
         return instance

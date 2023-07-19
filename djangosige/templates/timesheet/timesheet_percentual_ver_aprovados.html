@@ -27,7 +27,7 @@
            {% include 'base/search.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[1, "desc"]]'>
               <thead>
                 <tr>
                     <th>Solicitante</th>
@@ -43,7 +43,7 @@
                {% for natop in all_natops %}
                  <tr>
                      <td>{{natop.solicitante}}</td>
-                     <td>{{natop.data}}</td>
+                      <td data-order="{{natop.data_formated}}">{{natop.data}}</td>
                      <td>{{natop.percentual}}%</td>
                      <td>{{natop.projeto}}</td>
 
