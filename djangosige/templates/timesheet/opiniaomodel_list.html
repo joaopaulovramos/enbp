@@ -31,7 +31,7 @@
             <table id="lista-database" class="table table-bordered table-striped lista-table" data-order='[[0, "desc"]]'>
               <thead>
                 <tr>
-                    <th data-norli-sort="desc">Dia</th>
+                    <th data-norli-sort="desc">Inclusão</th>
                     <th>Opinião</th>
                     <th data-orderable="false" class="select-all">
                         <input type="checkbox" name="selecionar_todos" id="id_selecionar_todos"/>
@@ -45,7 +45,7 @@
                {% if all_natops%}
                {% for natop in all_natops %}
                  <tr class="clickable-row"  data-href="{% url 'timesheet:editaropiniao' natop.id %}" >
-                    <td>{{natop.data_formated}}</td>
+                    <td data-order="{{natop.data_formated}}">{{natop.data}}</td>
                    <td>{{natop.opiniao_truncated}}</td>
 
 
