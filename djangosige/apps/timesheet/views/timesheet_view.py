@@ -664,6 +664,8 @@ class ListPercentualDiarioView(CustomListViewFilter):
                     instance.situacao = 1
                     instance.save()
                 elif acao == 'excluir':
+                    if key == 'selecionar_todos':
+                        continue
                     instance = self.model.objects.get(id=key)
                     if instance.situacao == 0:
                         instance.delete()
