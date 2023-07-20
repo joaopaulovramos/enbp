@@ -1212,7 +1212,7 @@ fieldset[disabled] .form-control {
 /* Checkbox & Radio ============================ */
 [type="checkbox"] + label {
   padding-left: 26px;
-  height: 25px;
+  height: 21px;
   line-height: 21px;
   font-size: 13px;
   font-weight: normal; }

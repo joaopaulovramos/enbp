@@ -633,8 +633,15 @@ class ListPercentualDiarioView(CustomListViewFilter):
     permission_codename = 'view_percentualdiario'
 
     def get_queryset(self):
+
+        # http://127.0.0.1: 8000 / zeppelin / timesheet / listarpercentualdiario /?mes = 07
+        mes = self.request.GET.get('mes')
+        ano = datetime.datetime.now().year
+        if not mes:
+            mes = datetime.datetime.now().month
+
         current_user = self.request.user
-        querry = self.model.objects.filter(solicitante=current_user).order_by('data')
+        querry = self.model.objects.filter(solicitante=current_user, data__month=mes, data__year=ano)
 
         days = {}
         for lancamento in querry:
@@ -673,7 +680,12 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
     def get_context_data(self, **kwargs):
         context = super(ListPercentualDiarioView, self).get_context_data(**kwargs, object_list=None)
-        # context = self.get_object()
+
+        mes = self.request.GET.get('mes')
+        if not mes:
+            mes = datetime.datetime.now().month
+
+        context['mes_selecionado'] = str(mes)
         context['title_complete'] = 'Timesheet'
         context['add_url'] = reverse_lazy('timesheet:adicionarpercentualdiario')
         return context
