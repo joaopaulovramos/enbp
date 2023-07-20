@@ -216,7 +216,11 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
 
     def get_queryset(self):
         current_user = self.request.user
+        if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
+            return
         query = PercentualDiario.objects.filter(situacao=1)
+        if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
+            query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
         # querry = querry.filter(submetida=False)
         return query
 
