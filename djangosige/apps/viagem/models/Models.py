@@ -46,28 +46,28 @@ class TiposDeViagemModel(models.Model):
     nome = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.nome
+        return u'%s - %s' % (self.id, self.nome)
 
 
 class TiposDeSolicitacaoModel(models.Model):
     nome = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.nome
+        return u'%s - %s' % (self.id, self.nome)
 
 
 class MotivoDeViagemModel(models.Model):
     nome = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.nome
+        return u'%s - %s' % (self.id, self.nome)
 
 
 class TipoDeTransporteModel(models.Model):
     nome = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.nome
+        return u'%s - %s' % (self.id, self.nome)
 
 
 class TipoDeDespesaModel(models.Model):
@@ -76,42 +76,42 @@ class TipoDeDespesaModel(models.Model):
     nome = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.sigla
+        return u'%s - %s' % (self.id, self.sigla)
 
 
 class MoedaModel(models.Model):
     descricao = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.descricao
+        return u'%s - %s' % (self.id, self.descricao)
 
 
 class CategoriaPassagemModel(models.Model):
     descricao = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.descricao
+        return u'%s - %s' % (self.id, self.descricao)
 
 
 class HorarioPreferencialModel(models.Model):
     descricao = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.descricao
+        return u'%s - %s' % (self.id, self.descricao)
 
 
 class TiposNecessidadeEspecialModel(models.Model):
     descricao = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.descricao
+        return u'%s - %s' % (self.id, self.descricao)
 
 
 class LocalidadeModel(models.Model):
     descricao = models.CharField(max_length=400)
 
     def __str__(self):
-        return self.descricao
+        return u'%s - %s' % (self.id, self.descricao)
 
 
 class TabelaDiariaModel(models.Model):

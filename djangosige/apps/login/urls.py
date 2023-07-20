@@ -26,6 +26,9 @@ urlpatterns = [
     # login/editarperfil/
     url(r'^editarperfil/$', views.EditarPerfilView.as_view(), name='editarperfilview'),
 
+    # login/editarperfiluser/
+    url(r'^editarperfiluser/$', views.EditarPerfilView.as_view(), name='editarperfilview'),
+
     # login/alterarsenha/
     url(r'^alterarsenha/$', views.AlterarSenhaView.as_view(), name='alterarsenha'),
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .empresa import AdicionarEmpresaView, EmpresasListView, EditarEmpresaView
+from .empresa import *
 from .cliente import AdicionarClienteView, ClientesListView, EditarClienteView
 from .fornecedor import AdicionarFornecedorView, FornecedoresListView, EditarFornecedorView
 from .transportadora import AdicionarTransportadoraView, TransportadorasListView, EditarTransportadoraView

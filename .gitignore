@@ -15,7 +15,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
-lib
+# lib
 lib64
 __pycache__
 
@@ -39,6 +39,7 @@ arquivos/
 setup.py
 djangosige/configs/configs.py
 djangosige/media/imagens/usuarios/
+djangosige/media/
 .env
 .venv/
 env/
