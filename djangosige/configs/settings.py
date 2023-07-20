@@ -68,6 +68,7 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
+    'tema',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -98,15 +99,16 @@ INSTALLED_APPS = [
     # norli
     'djangosige.apps.norli_projeto',
     'djangosige.apps.timesheet',
-
     'djangosige.apps.viagem',
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
+
+    # Janela unica
     'djangosige.apps.janela_unica',
-
-
-
+    'django_fsm',
+    'django_fsm_log',
+    'fsm_admin',
 ]
 
 

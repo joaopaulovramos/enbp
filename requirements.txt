@@ -29,12 +29,12 @@ typing_extensions==4.6.3
 urllib3==2.0.3
 whitenoise==6.2.0
 pymssql==2.2.7
-
-
 crispy-tailwind==0.5.0
 django-crispy-forms==1.14.0
 djangorestframework==3.14.0
-
+django-fsm==2.8.1
+django-fsm-admin==1.2.5
+django-fsm-log==3.1.0
 
 
 
