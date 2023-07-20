@@ -15,6 +15,11 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     fsm_field = ['situacao',]
     fields = ('fornecedor', 'tipo_arquivo', 'arquivo',
               'numero', 'chave', 'mod', 'serie', 'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',)
+    # Atributos de filtragem
+    list_filter = ('situacao', 'tipo_arquivo')
+    
+    # Atributos da tabela
+    list_display = ('pk', 'situacao', 'serie',)
 
     widgets = {
         'versao': forms.Select(attrs={'class': 'form-control'}),
