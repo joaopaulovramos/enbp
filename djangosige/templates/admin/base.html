@@ -28,7 +28,15 @@
 
     <title>ERPZeppelin | {%block title%}Bem-vindo{%endblock%}</title>
 </head>
+<style>
+    #content-main{
+        width: 80%;
+        background: red;
+        float: right;
+        margin-top: 150px;
+    }
 
+</style>
 <body class="{%block body_class%}theme{%endblock%}">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
@@ -123,6 +131,9 @@
 
     {%block content%}
     {%endblock%}
+
+
+    <div id="content-main"></div>
 
     {% include 'base/modal.html' %}
 
