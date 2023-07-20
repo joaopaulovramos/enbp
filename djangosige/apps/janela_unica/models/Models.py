@@ -82,6 +82,9 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     class Meta:
         verbose_name = "Documento Único Financeiro Entrada"
 
+    def can_edit(self, user):
+        return self.situacao == StatusAnaliseFinaceira.EDICAO_RESPONSAVEL and user == self.responsavel
+
     @property
     def estado(self):
         if self.emit_entrada:
@@ -112,7 +115,21 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         Reprovado pela gerência
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_GERENCIA, 
+    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_GERENCIA, target=StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA)
+    def aprovacao_superintendencia(self):
+        self.aprovado_superintendencia = True
+        '''
+        Aprovado pela superintendência
+        '''
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_GERENCIA, target=StatusAnaliseFinaceira.REPROVADO)
+    def reprovado_superintendencia(self):
+        self.aprovado_superintendencia = False
+        '''
+        Reprovado pela superintendência
+        '''
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA  , 
                 target=StatusAnaliseFinaceira.FINALIZADO)
     def finalizar(self):
         '''
