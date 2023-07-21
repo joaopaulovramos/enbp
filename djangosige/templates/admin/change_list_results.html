@@ -5,10 +5,10 @@
 </div>
 {% endif %}
 {% if results %}
-<div class="results">
-<table id="result_list">
+<div class="table-responsive">
+<table id="result_list" class="table table-bordered table-striped lista-table dataTable no-footer" role="grid">
 <thead>
-<tr>
+<tr role="row">
 {% for header in result_headers %}
 <th scope="col"{{ header.class_attrib }}>
    {% if header.sortable %}
@@ -28,7 +28,9 @@
 <tbody>
 {% for result in results %}
 {% if result.form and result.form.non_field_errors %}
-    <tr><td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td></tr>
+    <tr>
+      <td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td>
+    </tr>
 {% endif %}
 <tr>{% for item in result %}{{ item }}{% endfor %}</tr>
 {% endfor %}

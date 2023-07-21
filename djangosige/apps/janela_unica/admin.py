@@ -17,12 +17,16 @@ class TramitacaoModelAdmin(admin.ModelAdmin,):
 class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     fsm_field = ['situacao',]
     form = DocumentoUnicoFinanceiroForm
-
+    # Desabilita as ações em massa
+    actions = None
     # Atributos de filtragem
-    list_filter = ('situacao', 'tipo_arquivo')
-    search_fields = ('pk', 'serie',)
+    list_filter = ('situacao',)
+    search_fields = ('situacao',)
     # Atributos da tabela
     list_display = ('pk', 'situacao', 'serie',)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     # fieldsets = (
     #     ('Dados solicitação', {
