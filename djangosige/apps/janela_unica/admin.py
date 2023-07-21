@@ -26,8 +26,10 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
-        if obj is None or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
-            return ['aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria']
+        if not obj or not obj.situacao or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
+            return ['aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
+            'aprovado_analise_financeira', 'observacao_analise_financeira',
+            'aprovado_analise_fiscal', 'observacao_analise_fiscal',]
 
         ret = ['fornecedor',
                'tipo_arquivo', 'arquivo', 'numero', 'chave', 'mod', 'serie',
@@ -38,13 +40,13 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
         ]
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
-        if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO:
+        if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_GERENCIA:
             ret.remove('observacao_gerencia')
-        elif obj.situacao == StatusAnaliseFinaceira.APROVADO_GERENCIA:
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA:
             ret.remove('observacao_superintendencia')
-        elif obj.situacao == StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA:
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA:
             ret.remove('observacao_diretoria')
-        elif obj.situacao == StatusAnaliseFinaceira.APROVADO_DIRETORIA:
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL:
             ret.remove('observacao_analise_financeira')
         elif obj.siutacao == StatusAnaliseFinaceira.APROVADO_ANALISE_FINANCEIRA:
             ret.remove('observacao_analise_fiscal')

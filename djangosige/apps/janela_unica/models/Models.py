@@ -18,23 +18,21 @@ TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO =  (
 
 class StatusAnaliseFinaceira(object):
     EDICAO_RESPONSAVEL = 'Edição Responsável'
-    AGUARDANDO_AVALIACAO = 'Aguardando avaliação'
-    APROVADO_GERENCIA = 'Aprovado Gerência'
-    APROVADO_SUPERITENDENCIA = 'Aprovado Superintendencia'
-    APROVADO_DIRETORIA = 'Aprovado Diretoria'
-    APROVADO_ANALISE_FISCAL = 'Aprovado Análise Fiscal'
-    APROVADO_ANALISE_FINANCEIRA = 'Aprovado Análise Financeira'
+    AGUARDANDO_GERENCIA = 'Aguardando avaliação Gerência'
+    AGUARDANDO_SUPERITENDENCIA = 'Aguardando avaliação Superintendencia'
+    AGUARDANDO_DIRETORIA = 'Aguardando avaliação Diretoria'
+    AGUARDANDO_ANALISE_FISCAL = 'Aguardando Análise Fiscal'
+    AGUARDANDO_ANALISE_FINANCEIRA = 'Aguardando Análise Financeira'
     APROVADO = 'Aprovado'
     REPROVADO = 'Reprovado'
     FINALIZADO = 'Finalizado'
     CHOICES = (
         (EDICAO_RESPONSAVEL, EDICAO_RESPONSAVEL),
-        (AGUARDANDO_AVALIACAO, AGUARDANDO_AVALIACAO),
-        (APROVADO_GERENCIA, APROVADO_GERENCIA),
-        (APROVADO_SUPERITENDENCIA, APROVADO_SUPERITENDENCIA),
-        (APROVADO_DIRETORIA, APROVADO_DIRETORIA),
-        (APROVADO_ANALISE_FISCAL, APROVADO_ANALISE_FISCAL),
-        (APROVADO_ANALISE_FINANCEIRA, APROVADO_ANALISE_FINANCEIRA),
+        (AGUARDANDO_GERENCIA, AGUARDANDO_GERENCIA),
+        (AGUARDANDO_SUPERITENDENCIA, AGUARDANDO_SUPERITENDENCIA),
+        (AGUARDANDO_DIRETORIA, AGUARDANDO_DIRETORIA),
+        (AGUARDANDO_ANALISE_FISCAL, AGUARDANDO_ANALISE_FISCAL),
+        (AGUARDANDO_ANALISE_FINANCEIRA, AGUARDANDO_ANALISE_FINANCEIRA),
         (REPROVADO, REPROVADO),
         (FINALIZADO, FINALIZADO),
     )
@@ -47,7 +45,7 @@ class DocumentoUnico(models.Model):
 class DocumentoUnicoFinanceiro(DocumentoUnico):
     situacao = FSMField(
         default=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
-        verbose_name='Avaliação',
+        verbose_name='Situação',
         choices=StatusAnaliseFinaceira.CHOICES,
         protected=True, #Impede alteração de estado por usuários sem permissão
     )
@@ -101,21 +99,21 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         return ''
     
     # Workflow 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, target=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
+    @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
                 )
     def enviar_avaliacao(self):
         '''
         Envia para avaliação
         '''
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO, 
-                target=StatusAnaliseFinaceira.APROVADO_GERENCIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, 
+                target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA)
     def aprovacao_gerencia(self):
         self.aprovado_gerencia = True
         '''
         Aprovado pela gerência
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO, 
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, 
                 target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
     def reprovacao_gerencia(self):
         self.aprovado_gerencia = False
@@ -123,70 +121,70 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         Reprovado pela gerência
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_GERENCIA, target=StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA)
     def aprovacao_superintendencia(self):
         self.aprovado_superintendencia = True
         '''
         Aprovado pela superintendência
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_GERENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA)
     def reprovado_superintendencia(self):
         self.aprovado_superintendencia = False
         '''
         Reprovado pela superintendência
         '''
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.APROVADO_DIRETORIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL)
     def aprovar_diretoria(self):
         self.aprovado_diretoria = True
         '''
         Aprovado pela diretoria
         '''
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.APROVADO_GERENCIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA)
     def reprovar_diretoria(self):
         self.aprovado_diretoria = False
         '''
         Reprovado pela diretoria
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_DIRETORIA, target=StatusAnaliseFinaceira.APROVADO_ANALISE_FINANCEIRA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.APROVADO)
     def aprovar_analise_financeira(self):
         '''
         Aprovar análise financeira
         '''
         self.aprovado_analise_financeira = True
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_DIRETORIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
     def reprovar_analise_financeira(self):
         '''
         Reprovar análise financeira
         '''
         self.aprovado_analise_financeira = False
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_DIRETORIA, target=StatusAnaliseFinaceira.REPROVADO)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.REPROVADO)
     def reprovar_analise_fiscal(self):
         '''
         Reprovar análise fiscal
         '''
         self.aprovado_analise_fiscal = False
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.APROVADO_ANALISE_FISCAL)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.APROVADO)
     def aprovar_analise_fiscal(self):
         '''
         Aprovar análise fiscal
         '''
         self.aprovado_analise_fiscal = True
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.APROVADO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.REPROVADO)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.REPROVADO)
     def reprovar_analise_financeira(self):
         '''
         Reprovar análise financeira
         '''
         self.aprovado_analise_financeira = False
 
-    @transition(field=situacao, source=[StatusAnaliseFinaceira.REPROVADO, StatusAnaliseFinaceira.APROVADO_ANALISE_FISCAL], 
+    @transition(field=situacao, source=[StatusAnaliseFinaceira.REPROVADO], 
                 target=StatusAnaliseFinaceira.FINALIZADO)
     def finalizar(self):
         '''

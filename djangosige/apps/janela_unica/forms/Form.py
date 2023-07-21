@@ -53,3 +53,10 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'aprovado_analise_financeira', 'observacao_analise_financeira',
             'aprovado_analise_fiscal', 'observacao_analise_fiscal',
         )
+    # TODO: Melhorar isso, gambiarra para funcionar o form-control
+    # https://stackoverflow.com/questions/48067882/django-admin-making-a-required-field-read-only
+    def __init__(self, *args, **kwargs):
+        super(DocumentoUnicoFinanceiroForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            # print(visible.field)
+            visible.field.widget.attrs['class'] = 'form-control'
