@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django import forms
+
+from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
+from djangosige.apps.janela_unica.models.Models import StatusAnaliseFinaceira
 from .models import TramitacaoModel, DocumentoUnicoFinanceiro
 from fsm_admin.mixins import FSMTransitionMixin
 
@@ -13,49 +16,36 @@ class TramitacaoModelAdmin(admin.ModelAdmin,):
 @admin.register(DocumentoUnicoFinanceiro)
 class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     fsm_field = ['situacao',]
-    fields = ('fornecedor', 'tipo_arquivo', 'arquivo',
-              'numero', 'chave', 'mod', 'serie', 'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',)
+    form = DocumentoUnicoFinanceiroForm
+
     # Atributos de filtragem
     list_filter = ('situacao', 'tipo_arquivo')
-    
+    search_fields = ('pk', 'serie',)
     # Atributos da tabela
     list_display = ('pk', 'situacao', 'serie',)
 
-    widgets = {
-        'versao': forms.Select(attrs={'class': 'form-control'}),
-        'status_nfe': forms.Select(attrs={'class': 'form-control', 'disabled': True}),
-        'natop': forms.TextInput(attrs={'class': 'form-control'}),
-        'indpag': forms.Select(attrs={'class': 'form-control'}),
-        'mod': forms.Select(attrs={'class': 'form-control'}),
-        'serie': forms.TextInput(attrs={'class': 'form-control'}),
-        'dhemi': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker'}, format='%d/%m/%Y %H:%M'),
-        'dhsaient': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker'}, format='%d/%m/%Y %H:%M'),
-        'iddest': forms.Select(attrs={'class': 'form-control'}),
-        'tp_imp': forms.Select(attrs={'class': 'form-control'}),
-        'tp_emis': forms.Select(attrs={'class': 'form-control'}),
-        'tp_amb': forms.Select(attrs={'class': 'form-control'}),
-        'fin_nfe': forms.Select(attrs={'class': 'form-control'}),
-        'ind_final': forms.Select(attrs={'class': 'form-control'}),
-        'ind_pres': forms.Select(attrs={'class': 'form-control'}),
-        'inf_ad_fisco': forms.Textarea(attrs={'class': 'form-control'}),
-        'inf_cpl': forms.Textarea(attrs={'class': 'form-control'}),
-    }
-    labels = {
-        'versao': ('Versão'),
-        'status_nfe': ('Status'),
-        'natop': ('Natureza da Operação'),
-        'indpag': ('Forma de pagamento'),
-        'mod': ('Modelo'),
-        'serie': ('Série'),
-        'dhemi': ('Data e hora de emissão'),
-        'dhsaient': ('Data e hora de Saída/Entrada'),
-        'iddest': ('Destino da operação'),
-        'tp_imp': ('Tipo impressão da DANFE'),
-        'tp_emis': ('Forma de emissão'),
-        'tp_amb': ('Ambiente'),
-        'fin_nfe': ('Finalidade da emissão'),
-        'ind_final': ('Consumidor final'),
-        'ind_pres': ('Tipo de atendimento'),
-        'inf_ad_fisco': ('Informações Adicionais de Interesse do Fisco'),
-        'inf_cpl': ('Informações Complementares de interesse do Contribuinte'),
-    }
+    def get_readonly_fields(self, request, obj=None):
+        # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
+        if obj is None or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
+            return ['aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria']
+
+        ret = ['fornecedor',
+               'tipo_arquivo', 'arquivo', 'numero', 'chave', 'mod', 'serie',
+               'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia', 
+               'observacao_gerencia', 'aprovado_superintendencia', 
+               'observacao_superintendencia', 'aprovado_diretoria','observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
+               'aprovado_analise_fiscal', 'observacao_analise_fiscal'
+        ]
+
+        # Se o status for aprovado, todos os campos estarão disponíveis para edição
+        if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO:
+            ret.remove('observacao_gerencia')
+        elif obj.situacao == StatusAnaliseFinaceira.APROVADO_GERENCIA:
+            ret.remove('observacao_superintendencia')
+        elif obj.situacao == StatusAnaliseFinaceira.APROVADO_SUPERITENDENCIA:
+            ret.remove('observacao_diretoria')
+        elif obj.situacao == StatusAnaliseFinaceira.APROVADO_DIRETORIA:
+            ret.remove('observacao_analise_financeira')
+        elif obj.siutacao == StatusAnaliseFinaceira.APROVADO_ANALISE_FINANCEIRA:
+            ret.remove('observacao_analise_fiscal')
+        return ret
