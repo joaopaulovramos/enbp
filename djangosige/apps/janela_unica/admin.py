@@ -24,20 +24,30 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     # Atributos da tabela
     list_display = ('pk', 'situacao', 'serie',)
 
+    # fieldsets = (
+    #     ('Dados solicitação', {
+    #         'fields': ('tipo_arquivo', 'arquivo')
+    #     }),
+
+    #     ('Aprovadores', {
+    #         'fields': ('aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira', 'aprovado_analise_fiscal', 'observacao_analise_fiscal')
+    #     }),
+    # )
+
     def get_readonly_fields(self, request, obj=None):
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
         if not obj or not obj.situacao or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
             return ['aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
-            'aprovado_analise_financeira', 'observacao_analise_financeira',
-            'aprovado_analise_fiscal', 'observacao_analise_fiscal',]
+                    'aprovado_analise_financeira', 'observacao_analise_financeira',
+                    'aprovado_analise_fiscal', 'observacao_analise_fiscal',]
 
         ret = ['fornecedor',
                'tipo_arquivo', 'arquivo', 'numero', 'chave', 'mod', 'serie',
-               'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia', 
-               'observacao_gerencia', 'aprovado_superintendencia', 
-               'observacao_superintendencia', 'aprovado_diretoria','observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
+               'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia',
+               'observacao_gerencia', 'aprovado_superintendencia',
+               'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
                'aprovado_analise_fiscal', 'observacao_analise_fiscal'
-        ]
+               ]
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
         if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_GERENCIA:
