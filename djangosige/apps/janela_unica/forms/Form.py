@@ -41,19 +41,32 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
     class Meta:
         model = DocumentoUnicoFinanceiro
         fields = (
-            'responsavel', 'descricao',
-            'fornecedor',
+            'responsavel', 'descricao', 'fornecedor',
             # Dados arquivo
             'tipo_arquivo', 'arquivo',
             # Dados Notas
             'numero', 'chave', 'mod', 'serie',
             # Dados financeiros
             'plano_conta', 'rateio', 'observacoes',
+            # Dados bancarios
+            'banco', 'agencia', 'conta', 'digito',
+            #projeto
+            'projeto',
             # Aprovações
             'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
             'aprovado_analise_financeira', 'observacao_analise_financeira',
             'aprovado_analise_fiscal', 'observacao_analise_fiscal',
         )
+
+        widgets = {
+
+            'projeto': forms.Select(attrs={'class': 'form-control'}),
+            'plano_conta': forms.Select(attrs={'class': 'form-control'}),
+            'fornecedor': forms.Select(attrs={'class': 'form-control'}),
+            'responsavel' : forms.Select(attrs={'class': 'form-control'}),
+
+        }
+
 
     # TODO: Melhorar isso, gambiarra para funcionar o form-control
     # https://stackoverflow.com/questions/48067882/django-admin-making-a-required-field-read-only

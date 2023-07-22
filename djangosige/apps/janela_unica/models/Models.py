@@ -7,7 +7,9 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.template.defaultfilters import date
 from django_fsm import FSMField, transition
+from django_cpf_cnpj.fields import CPFField, CNPJField
 
+from djangosige.apps.cadastro.models.bancos import BANCOS
 from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
                                                        NotaFiscal)
 
@@ -15,6 +17,13 @@ TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO =  (
     (u'0', u'Nota Fiscal (NF-e)'),
     (u'1', u'Boleto'),
     (u'2', u'Comprovante de Pagamento'),
+    (u'3', u'Outros'),
+)
+
+TIPO_ANEXO =  (
+    (u'0', u'.xml'),
+    (u'1', u'.pdf'),
+    (u'2', u'.doc'),
     (u'3', u'Outros'),
 )
 
@@ -54,26 +63,37 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         choices=StatusAnaliseFinaceira.CHOICES,
         protected=True, #Impede alteração de estado por usuários sem permissão
     )
+
     data_inclusao = models.DateTimeField(auto_now_add=True)
     tipo_arquivo = models.CharField(max_length=1, choices=TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO,null=True, blank=True)
+    tipo_anexo = models.CharField(max_length=1, choices=TIPO_ANEXO,null=True, blank=True)
+
     numero = models.CharField(max_length=9, validators=[RegexValidator(r'^\d{1,10}$')],null=True, blank=True)
     chave = models.CharField(max_length=44)
-    mod = models.CharField(
-        max_length=2, choices=MOD_NFE_ESCOLHAS,null=True, blank=True)
+    mod = models.CharField(max_length=2, choices=MOD_NFE_ESCOLHAS,null=True, blank=True)
     serie = models.CharField(max_length=3,null=True, blank=True)
+
+    cnpj = CNPJField(masked=True, null=True, blank=True)
+
+
     # TODO: Trocar para cadastro.Pessoa
-    fornecedor = models.ForeignKey(
-        'cadastro.Fornecedor', related_name="fornecedor_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
-    
-    valor_total = models.DecimalField(max_digits=13, decimal_places=2, validators=[
-                                 MinValueValidator(Decimal('0.00'))], null=True, blank=True)
+    fornecedor = models.ForeignKey('cadastro.Fornecedor', related_name="fornecedor_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+    valor_total = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], null=True, blank=True)
     
     # Plano de contas
-    plano_conta = models.ForeignKey(
-        'financeiro.PlanoContasGrupo', related_name="nfe_entrada_analise_plano_conta", on_delete=models.PROTECT, null=True, blank=True)
+    plano_conta = models.ForeignKey('financeiro.PlanoContasGrupo', related_name="nfe_entrada_analise_plano_conta", on_delete=models.PROTECT, null=True, blank=True)
 
     rateio = models.BooleanField(null=True, blank=True,)
     observacoes = models.CharField(max_length=1055, null=True, blank=True)
+
+    # dados bancarios
+    banco = models.CharField(max_length=3, choices=BANCOS, null=True, blank=True)
+    agencia = models.CharField(max_length=8, null=True, blank=True)
+    conta = models.CharField(max_length=32, null=True, blank=True)
+    digito = models.CharField(max_length=8, null=True, blank=True)
+
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=False, blank=False)
+
 
     # Dados Aprovação
 
