@@ -69,7 +69,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     tipo_anexo = models.CharField(max_length=1, choices=TIPO_ANEXO,null=True, blank=True)
 
     numero = models.CharField(max_length=9, validators=[RegexValidator(r'^\d{1,10}$')],null=True, blank=True)
-    chave = models.CharField(max_length=44)
+    chave = models.CharField(max_length=44, null=True, blank=True)
     mod = models.CharField(max_length=2, choices=MOD_NFE_ESCOLHAS,null=True, blank=True)
     serie = models.CharField(max_length=3,null=True, blank=True)
 

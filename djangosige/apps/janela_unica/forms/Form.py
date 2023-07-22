@@ -55,7 +55,7 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             # Dados bancarios
             'banco', 'agencia', 'conta', 'digito',
             #projeto
-            'projeto',
+            'projeto', 'cnpj',
             # Aprovações
             'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
             'aprovado_analise_financeira', 'observacao_analise_financeira',
