@@ -98,6 +98,18 @@ class DadosCliente(ReportBand):
                      'fontSize': 10, 'leading': 10}
         self.elements.append(txt)
 
+    def inserir_informacoes_banco(self):
+        atributos = ['banco', 'agencia', 'conta', 'digito']
+        for atributo in atributos:
+            txt = ObjectValue(attribute_name= atributo,
+                              top=0.3 * cm, left=8.1 * cm,
+                              width=4 * cm,
+                              height=0.5 * cm
+            )
+            txt.style = {'fontName': REPORT_FONT_BOLD,
+                         'fontSize': 10, 'leading': 10}
+            self.elements.append(txt)
+
     def inserir_informacoes_pf(self):
         txt = ObjectValue(attribute_name='fornecedor.pessoa_fis_info.format_cpf',
                           top=0.3 * cm, left=8.1 * cm, width=4 * cm, height=0.5 * cm)
@@ -110,6 +122,25 @@ class DadosCliente(ReportBand):
         txt.style = {'fontName': REPORT_FONT_BOLD,
                      'fontSize': 10, 'leading': 10}
         self.elements.append(txt)
+
+    def inserir_aprovado(self):
+        aprovadores = ["gerencia", "superitendencia", "diretoria", "analise_financeira", "analise_fiscal"]
+        for aprovador in aprovadores:
+            txt = ObjectValue(attribute_name=f'aprovado_{aprovador}',
+                              top=1.5 * cm, left=0.3 * cm,
+                              width=8 * cm, height=0.5 * cm,
+                              get_value=lambda instance: instance.aprovado_gerencia and "SIM" or "Não"
+                             )
+            txt.style = {'fontName': REPORT_FONT_BOLD,
+                         'fontSize': 12, 'leading': 12}
+            self.elements.append(txt)
+            txt = ObjectValue(attribute_name=f'observacao_{aprovador}',
+                              top=1.5 * cm, left=0.3 * cm,
+                              width=8 * cm, height=0.5 * cm
+                              )
+            txt.style = {'fontName': REPORT_FONT_BOLD,
+                         'fontSize': 12, 'leading': 12}
+            self.elements.append(txt)
 
 
 class Observacoes(ReportBand):
