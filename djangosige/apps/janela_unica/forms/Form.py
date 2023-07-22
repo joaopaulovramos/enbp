@@ -24,11 +24,15 @@ class TramitacaoForm(forms.ModelForm):
     class Meta:
         model = TramitacaoModel
         fields = ('user_recebido', 'doc',)
+
         widgets = {
+
             'user_recebido': forms.Select(attrs={'class': 'form-control'}),
             'doc': forms.Select(attrs={'class': 'form-control'}),
 
         }
+
+
         labels = {
             'user_recebido': _('Enviar Para'),
             'doc': _('Documento'),
