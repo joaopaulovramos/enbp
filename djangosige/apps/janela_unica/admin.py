@@ -20,11 +20,11 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     # Desabilita as ações em massa
     actions = None
     # Atributos de filtragem
-    list_filter = ('situacao',)
+    list_filter = ('situacao', )
     search_fields = ('situacao',)
     # Atributos da tabela
-    list_display = ('pk', 'situacao', 'serie',)
-
+    list_display = ('numero_solicitacao', 'situacao', 'descricao', 'responsavel', 'fornecedor', 'data_inclusao', 'valor_total')
+    
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -61,7 +61,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA:
             ret.remove('observacao_diretoria')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL:
-            ret.remove('observacao_analise_financeira')
-        elif obj.siutacao == StatusAnaliseFinaceira.APROVADO_ANALISE_FINANCEIRA:
             ret.remove('observacao_analise_fiscal')
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA:
+            ret.remove('observacao_analise_financeira')
         return ret

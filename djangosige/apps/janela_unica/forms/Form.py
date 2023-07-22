@@ -41,6 +41,7 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
     class Meta:
         model = DocumentoUnicoFinanceiro
         fields = (
+            'responsavel', 'descricao',
             'fornecedor',
             # Dados arquivo
             'tipo_arquivo', 'arquivo',

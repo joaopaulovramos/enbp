@@ -1,12 +1,15 @@
-from django.db import models
-from django.contrib.auth.models import User
-from decimal import Decimal
 from datetime import datetime
-from django.core.validators import RegexValidator, MinValueValidator
+from decimal import Decimal
+
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, RegexValidator
+from django.db import models
 from django.template.defaultfilters import date
 from django_fsm import FSMField, transition
-from djangosige.apps.fiscal.models.nota_fiscal import MOD_NFE_ESCOLHAS, NotaFiscal
 
+from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
+                                                       NotaFiscal)
 
 TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO =  (
     (u'0', u'Nota Fiscal (NF-e)'),
@@ -37,6 +40,8 @@ class StatusAnaliseFinaceira(object):
         (FINALIZADO, FINALIZADO),
     )
 
+# Caso venha a surgir outros tipos de documentos
+# subir para a classe abstrata os campos em comum
 class DocumentoUnico(models.Model):
     arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     class Meta:
@@ -56,6 +61,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     mod = models.CharField(
         max_length=2, choices=MOD_NFE_ESCOLHAS,null=True, blank=True)
     serie = models.CharField(max_length=3,null=True, blank=True)
+    # TODO: Trocar para cadastro.Pessoa
     fornecedor = models.ForeignKey(
         'cadastro.Fornecedor', related_name="fornecedor_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
     
@@ -82,14 +88,24 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     aprovado_analise_fiscal = models.BooleanField(null=True, blank=True)
     observacao_analise_fiscal = models.CharField(max_length=1055, null=True, blank=True)
 
+    # Novos
+    responsavel = models.ForeignKey(User, related_name="responsavel_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+    descricao = models.CharField(max_length=1055, null=True, blank=True)
+
+
     class Meta:
         verbose_name = "Documento Janela Única"
 
     def __str__(self):
-        return 'DJU' + str(self.pk)
+        return 'Documento Único N° ' + str(self.pk)
+    
+    @admin.display(description="Solicitação")
+    def numero_solicitacao(obj):
+        return obj.pk
 
-    def can_edit(self, user):
-        return self.situacao == StatusAnaliseFinaceira.EDICAO_RESPONSAVEL and user == self.responsavel
+    @property
+    def format_data_emissao(self):
+        return '%s' % date(self.data_inclusao, "d/m/Y")
 
     @property
     def estado(self):
