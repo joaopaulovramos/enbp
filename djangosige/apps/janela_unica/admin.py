@@ -31,30 +31,54 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     # TODO: Ajustar aqui
     fieldsets = (
         ('Dados solicitação', {
-            'fields': ('tipo_arquivo', 'arquivo')
+            'fields': ('pk', 'data_inclusao', 'responsavel',
+                       'tipo_arquivo', 'tipo_anexo','arquivo',)
         }),
 
+        ('Dados bancários', {
+            'fields': ('banco', 'agencia', 'conta', 'digito',
+                       'plano_conta', 'projeto')
+        }),
+
+        ('Informações financeiras', {
+            'fields': ('possui_parcelamento', 'extra_orcamentaria',
+                       'possui_contrato', 'antecipacao_pagamento', 'pagamento_boleto')
+        }),
+
+
         ('Aprovadores', {
-            'fields': ('aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira', 'aprovado_analise_fiscal', 'observacao_analise_fiscal')
+            'fields': (
+                'aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia', 
+                'aprovado_diretoria', 'usuario_diretoria','observacao_diretoria', 
+                'aprovado_analise_financeira', 'usuario_analise_financeira','observacao_analise_financeira', 
+                'aprovado_analise_fiscal', 'usuario_analise_fiscal','observacao_analise_fiscal')
+        }),
+
+        ('Lançamento no Questor', {
+            'fields': ('usuario_lancamento', 'data_lancamento', 'numero_lancamento')
+        }),
+        
+        ('Analise financeira', {
+            'fields': ('pagamento_realizado', 'observacao_pagamento')
         }),
     )
 
     def get_readonly_fields(self, request, obj=None):
-        ret = ['pk', 'responsavel']
+        ret = ['pk', 'responsavel', 'data_inclusao']
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
         if not obj or not obj.situacao or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
             ret.extend(['aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
-                    'aprovado_analise_financeira', 'observacao_analise_financeira',
-                    'aprovado_analise_fiscal', 'observacao_analise_fiscal',])
+                        'aprovado_analise_financeira', 'observacao_analise_financeira',
+                        'aprovado_analise_fiscal', 'observacao_analise_fiscal',])
             return ret
 
         ret.extend(['fornecedor',
-               'tipo_arquivo', 'arquivo', 'numero', 'chave', 'mod', 'serie',
-               'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia',
-               'observacao_gerencia', 'aprovado_superintendencia',
-               'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
-               'aprovado_analise_fiscal', 'observacao_analise_fiscal',
-               ])
+                    'tipo_arquivo', 'arquivo', 'numero', 'chave', 'mod', 'serie',
+                    'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia',
+                    'observacao_gerencia', 'aprovado_superintendencia',
+                    'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
+                    'aprovado_analise_fiscal', 'observacao_analise_fiscal',
+                    ])
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
         if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_GERENCIA:

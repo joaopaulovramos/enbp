@@ -100,22 +100,47 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     # projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=False, blank=False)
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=True, blank=True)
 
+    # Dados informações financeiras
+    possui_parcelamento = models.BooleanField(null=True, blank=True)
+    extra_orcamentaria = models.BooleanField(null=True, blank=True)
+    antecipacao_pagamento = models.BooleanField(null=True, blank=True)
+    pagamento_boleto = models.BooleanField(null=True, blank=True)
+
     # Dados Aprovação
 
+    usuario_gerencia = models.ForeignKey(User, related_name="documento_unico_usuario_gerencia", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_gerencia = models.BooleanField(null=True, blank=True)
-    observacao_gerencia = models.CharField(max_length=1055, null=True, blank=True)
+    observacao_gerencia = models.CharField(max_length=1055, null=True, 
+                                           blank=True)
+    
+    usuario_superintencencia = models.ForeignKey(User, related_name="documento_unico_usuario_superintendencia", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_superintendencia = models.BooleanField(null=True, blank=True)
     observacao_superintendencia = models.CharField(max_length=1055, null=True, blank=True)
+
+    usuario_diretoria = models.ForeignKey(User, related_name="documento_unico_usuario_diretoria", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_diretoria = models.BooleanField(null=True, blank=True)
     observacao_diretoria = models.CharField(max_length=1055, null=True, blank=True)
+
+    usuario_analise_financeira = models.ForeignKey(User, related_name="documento_unico_usuario_analise_financeira", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_financeira = models.BooleanField(null=True, blank=True)
     observacao_analise_financeira = models.CharField(max_length=1055, null=True, blank=True)
+
+    usuario_analise_fiscal = models.ForeignKey(User, related_name="documento_unico_usuario_analise_fiscal", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_fiscal = models.BooleanField(null=True, blank=True)
     observacao_analise_fiscal = models.CharField(max_length=1055, null=True, blank=True)
 
     # Novos
     responsavel = models.ForeignKey(User, related_name="responsavel_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
     descricao = models.CharField(max_length=1055, null=True, blank=True)
+
+    # Lançamentos Questor
+    usuario_lancamento =  models.CharField(max_length=255, null=True, blank=True)
+    data_lancamento = models.DateField(null=True, blank=True)
+    numero_lancamento = models.CharField(max_length=255, null=True, blank=True)
+
+    # Analise financeira
+    pagamento_realizado = models.BooleanField(null=True, blank=True)
+    observacao_pagamento = models.CharField(max_length=1055, null=True, blank=True)
 
     class Meta:
         verbose_name = "Documento Janela Única"
@@ -189,7 +214,6 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.aprovado_superintendencia = False
         self.logar_detalhes(request, mensagem='Reprovado pela superintendência')
 
-
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL)
     def aprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = True
@@ -245,7 +269,6 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         '''
         self.aprovado_analise_financeira = False
         self.logar_detalhes(request, mensagem='Reprovado pela gerência')
-
 
     @transition(field=situacao, source=[StatusAnaliseFinaceira.REPROVADO],
                 target=StatusAnaliseFinaceira.FINALIZADO)

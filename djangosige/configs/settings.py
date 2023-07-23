@@ -68,7 +68,7 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
-    'tema',
+    # 'tema',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -132,7 +132,6 @@ ROOT_URLCONF = 'djangosige.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        #'DIRS': [ BASE_DIR / 'templates'],
         'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {

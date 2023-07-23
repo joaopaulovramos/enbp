@@ -44,23 +44,24 @@ class TramitacaoForm(forms.ModelForm):
 class DocumentoUnicoFinanceiroForm(forms.ModelForm):
     class Meta:
         model = DocumentoUnicoFinanceiro
-        fields = (
-            'responsavel', 'descricao', 'fornecedor',
-            # Dados arquivo
-            'tipo_arquivo', 'arquivo',
-            # Dados Notas
-            'numero', 'chave', 'mod', 'serie',
-            # Dados financeiros
-            'plano_conta', 'rateio', 'observacoes',
-            # Dados bancarios
-            'banco', 'agencia', 'conta', 'digito',
-            #projeto
-            'projeto', 'cnpj',
-            # Aprovações
-            'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
-            'aprovado_analise_financeira', 'observacao_analise_financeira',
-            'aprovado_analise_fiscal', 'observacao_analise_fiscal',
-        )
+        fields = '__all__'
+        # (
+        #     'responsavel', 'descricao', 'fornecedor',
+        #     # Dados arquivo
+        #     'tipo_arquivo', 'arquivo',
+        #     # Dados Notas
+        #     'numero', 'chave', 'mod', 'serie',
+        #     # Dados financeiros
+        #     'plano_conta', 'rateio', 'observacoes',
+        #     # Dados bancarios
+        #     'banco', 'agencia', 'conta', 'digito',
+        #     #projeto
+        #     'projeto', 'cnpj',
+        #     # Aprovações
+        #     'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
+        #     'aprovado_analise_financeira', 'observacao_analise_financeira',
+        #     'aprovado_analise_fiscal', 'observacao_analise_fiscal',
+        # )
 
         widgets = {
 
