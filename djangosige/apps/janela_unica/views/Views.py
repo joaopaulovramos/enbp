@@ -1,31 +1,39 @@
 
 
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib import messages
-
-from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
+from geraldo.generators import PDFGenerator
+from datetime import datetime
+from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomView
+from djangosige.apps.cadastro.models.empresa import MinhaEmpresa
+from django.template.defaultfilters import date
 
 from djangosige.apps.janela_unica.forms import *
 from djangosige.apps.janela_unica.models import *
 from django.utils.formats import localize
 from django.shortcuts import render
+import io
 
+from djangosige.apps.janela_unica.report_janela_unica import DocumentoUnicoFinaceiroReport
+from djangosige.apps.login.models import Usuario
+from djangosige.configs.settings import MEDIA_ROOT
 
-class ListDocumentosViagensView(CustomListView):
+class ListDocumentosJanelaUnicaView(CustomListView):
     template_name = 'janela_unica/list_ja.html'
     form_class = TramitacaoForm
     model = DocumentoModel
     context_object_name = 'all_natops'
     success_url = reverse_lazy('janela_unica:listadocumentos')
-    permission_codename = 'cadastrar_item_viagens'
+    permission_codename = 'cadastrar_item_janela_unica'
 
     def get_queryset(self):
         self.model.objects.filter()
         return self.model.objects.all()
 
     def get_context_data(self, **kwargs):
-        context = super(ListDocumentosViagensView, self).get_context_data(**kwargs)
+        context = super(ListDocumentosJanelaUnicaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'DOCUMENTOS'
         context['add_url'] = reverse_lazy('janela_unica:adicionardocumentos')
         return context
@@ -97,8 +105,6 @@ class TramitarView(CustomCreateView):
         return context
 
 
-
-
 class ListTramitacaoView(CustomListView):
     template_name = 'janela_unica/list_tramitacao.html'
     model = TramitacaoModel
@@ -117,3 +123,31 @@ class ListTramitacaoView(CustomListView):
         context['add_url'] = reverse_lazy('janela_unica:tramitar')
         return context
 
+from pypdf import PdfWriter
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.template.loader import get_template
+
+
+class GerarPDFDocumentoUnicoView(CustomView):
+    def get(self, request, *args, **kwargs):
+        documento_unico_id = kwargs.get('pk', None)
+
+        if not documento_unico_id:
+            return HttpResponse('Objeto não encontrado.')
+
+        obj = DocumentoUnicoFinanceiro.objects.get(pk=documento_unico_id)
+        template = get_template('janela_unica/pdf_list.html')
+        context = {"natop": obj}
+        html = template.render(context)
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("latin1")), result)
+        if not pdf.err:
+            merger = PdfWriter()
+            merger.append(result)
+            # TODO: Melhorar isso, se o arquivo não for pdf, necessário converter
+            if obj.arquivo and obj.arquivo.name.endswith('.pdf'):
+                merger.append(fileobj=obj.arquivo)
+            merger.write(result)
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        return None

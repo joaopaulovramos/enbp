@@ -1782,3 +1782,21 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
   border-left: 4px solid red;
   font-weight: bold
 }
+
+/* Bootstrap */
+input[class*=" transition-reprov"]
+ {
+  color:#fff;
+  background-color:#ec971f;
+  border-color:#d58512
+ }
+
+ input[class*=" transition-aprov"]
+ {
+  color:#fff;
+  background-color:#5cb85c;
+  border-color:#4cae4c
+ }
+
+
+ 

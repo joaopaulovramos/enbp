@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <meta charset="latin-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+<section class="content">
+  <div class="container-fluid lista">
+
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
+
+                <div class="table-responsive">
+                    <h1>Dados Gerais</h1>
+                    <table id="lista-database" class="table table-bordered table-striped lista-table">
+                        <thead>
+                        <tr>
+                            <th>Numero solicitacao </th>
+                            <th>Situacao</th>
+                            <th>Projeto</th>
+                            <th>Descricao</th>
+                            <th>Responsavel</th>
+                            <th>Pessoa</th>
+                            <th>Data inclusao</th>
+                            <th>Valor Total</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td>{{natop.numero_solicitacao}}</td>
+                            <td>{{natop.situacao}}</td>
+                            <td>{{natop.projeto}}</td>
+                            <td>{{natop.descricao}}</td>
+                            <td>{{natop.responsavel}}</td>
+                            <td>{{natop.fornecedor}}</td>
+                            <td>{{natop.data_inclusao}}</td>
+                            <td>{{natop.valor_total }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <h1>Dados Bancarios</h1>
+
+                    <table id="lista-database" class="table table-bordered table-striped lista-table">
+                        <thead>
+                        <tr>
+                            <th>Banco</th>
+                            <th>Agencia</th>
+                            <th>Conta</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{% if natop.banco %}{{natop.banco}}{% endif %}</td>
+                            <td>{% if natop.agencia %}{{natop.agencia}}{% endif %}</td>
+                            <td>{% if natop.conta %}{{natop.conta}}-{{natop.digito}}{% endif %}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <h1>Dados de Aprovação</h1>
+
+                    <table id="lista-database" class="table table-bordered table-striped lista-table">
+                        <thead>
+                        <tr>
+                            <th>Aprovação Gerência</th>
+                            <th>Observação Gerência</th>
+                            <th>Aprovação Superitendência</th>
+                            <th>Observação Superitendência</th>
+                            <th>Aprovação Diretoria</th>
+                            <th>Observação Diretoria</th>
+                            <th>Aprovação Analise Fiscal</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{% if natop.aprovacdo_gerencia %}SIM{% else %}NÃO{% endif %}</td>
+                            <td>{{ natop.observacao_gerencia }}</td>
+                            <td>{% if natop.aprovacdo_superitendencia %}SIM{% else %}NÃO {% endif %}</td>
+                            <td>{{ natop.observacao_superitendencia }} </td>
+                            <td>{% if natop.aprovacdo_diretoria %}SIM{% else %}NÃO {% endif %}</td>
+                            <td>{{ natop.observacao_diretoria }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <div class="table-responsive">
+                    <h1>Dados de Analise</h1>
+                <table>
+                    <thead>
+                    <tr>
+                    <th>Aprovação Analise Fiscal</th>
+                            <th>Observação Analise Fiscal</th>
+                            <th>Aprovação Analise Financeira</th>
+                            <th>Observação Analise Financeira</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <td>{% if natop.aprovacdo_analise_fiscal %}SIM{% else %}NÃO {% endif %}</td>
+                            <td>{{ natop.observacao_analise_fiscal }}</td>
+                            <td>{% if natop.aprovacdo_analise_financeira %}SIM{% else %}NÃO {% endif %}</td>
+                            <td>{{ natop.observacao_analise_financeira }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
+</section>
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>

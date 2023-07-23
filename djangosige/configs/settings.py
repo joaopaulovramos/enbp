@@ -68,10 +68,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
-    # 'tema',
+    'django.contrib.admin',
     'rest_framework',
     'knox',
-    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -102,7 +101,6 @@ INSTALLED_APPS = [
     # norli
     'djangosige.apps.norli_projeto',
     'djangosige.apps.timesheet',
-
     'djangosige.apps.viagem',
 
     # Utilitarios e Importacao
@@ -121,7 +119,12 @@ INSTALLED_APPS = [
     'mgclipboard',
     'viewflow',
     'viewflow.workflow',
-    'documento_fluxo'
+    'documento_fluxo',
+      # Janela unica
+    'djangosige.apps.janela_unica',
+    'django_fsm',
+    'django_fsm_log',
+    'fsm_admin',
 ]
 
 
@@ -144,7 +147,8 @@ ROOT_URLCONF = 'djangosige.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

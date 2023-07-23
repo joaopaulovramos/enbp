@@ -28,7 +28,15 @@
 
     <title>ERPZeppelin | {%block title%}Bem-vindo{%endblock%}</title>
 </head>
+<style>
 
+    #content-main{
+
+        padding: 35px;
+
+
+    }
+</style>
 <body class="{%block body_class%}theme{%endblock%}">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
@@ -120,9 +128,28 @@
 
     </section>
     {% endblock %}
+    <section class="content">
+        <div class="container-fluid">
+          {% include 'base/title_header.html' %}
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="row">
+                  <div class="card">
+                  <div class="header">
+                      <h2>
+                          <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>JANELA ÚNICA
+                      </h2>
+                      <div>
+                          <small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small>
+                      </div>
+                  </div>
 
-    {%block content%}
-    {%endblock%}
+                    {%block content%}{%endblock%}
+
+                  </div>
+              </div>
+          </div>
+        </div>
+    </section>
 
     {% include 'base/modal.html' %}
 
