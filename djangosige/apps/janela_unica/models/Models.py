@@ -102,6 +102,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
 
     # Dados informações financeiras
     possui_parcelamento = models.BooleanField(null=True, blank=True)
+    possui_contrato = models.BooleanField(null=True, blank=True)
     extra_orcamentaria = models.BooleanField(null=True, blank=True)
     antecipacao_pagamento = models.BooleanField(null=True, blank=True)
     pagamento_boleto = models.BooleanField(null=True, blank=True)
@@ -217,6 +218,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL)
     def aprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = True
+        self.usuario_gerencia = request.user
         self.logar_detalhes(request, mensagem='Aprovado pela diretoria')
         '''
         Aprovado pela diretoria
