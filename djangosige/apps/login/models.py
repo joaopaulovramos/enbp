@@ -66,7 +66,7 @@ class Usuario(models.Model):
     def __str__(self):
         return self.user.username
 
-
+#teste
 @receiver(post_delete, sender=Usuario)
 def foto_post_delete_handler(sender, instance, **kwargs):
     # Nao deletar a imagem default 'user.png'
