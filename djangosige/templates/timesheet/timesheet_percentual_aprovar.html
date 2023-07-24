@@ -26,6 +26,10 @@
 
            {% include 'base/search.html' %}
 
+              {% include 'base/select_mes.html' %}
+
+
+
            <div class="table-responsive">
             <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[1, "desc"]]'>
               <thead>
@@ -75,3 +79,14 @@
 
 
 {%endblock%}
+
+{% block js %}
+
+   <script>
+        $('#id_select_mes').on('change', function () {
+            let mes = $(this).val()
+            window.location.href = `{% url 'timesheet:aprovarpercentuaisdiarios' %}?mes=${mes}`;
+        })
+   </script>
+
+{% endblock %}
