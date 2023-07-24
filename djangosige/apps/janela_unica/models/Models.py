@@ -39,6 +39,7 @@ class StatusAnaliseFinaceira(object):
     APROVADO = 'Aprovado'
     REPROVADO = 'Reprovado'
     FINALIZADO = 'Finalizado'
+    CANCELADO = 'Cancelado'
     CHOICES = (
         (EDICAO_RESPONSAVEL, EDICAO_RESPONSAVEL),
         (AGUARDANDO_GERENCIA, AGUARDANDO_GERENCIA),
@@ -48,6 +49,8 @@ class StatusAnaliseFinaceira(object):
         (AGUARDANDO_ANALISE_FINANCEIRA, AGUARDANDO_ANALISE_FINANCEIRA),
         (REPROVADO, REPROVADO),
         (FINALIZADO, FINALIZADO),
+        (CANCELADO, CANCELADO),
+        (APROVADO, APROVADO),
     )
 
 # Caso venha a surgir outros tipos de documentos
@@ -78,8 +81,9 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     chave = models.CharField(max_length=44, null=True, blank=True)
     mod = models.CharField(max_length=2, choices=MOD_NFE_ESCOLHAS, null=True, blank=True)
     serie = models.CharField(max_length=3, null=True, blank=True)
-
     cnpj = CNPJField(masked=True, null=True, blank=True)
+    data_emissao = models.DateField(null=True, blank=True)
+    cfop = models.CharField(max_length=5, null=True, blank=True)
 
     # TODO: Trocar para cadastro.Pessoa
     fornecedor = models.ForeignKey('cadastro.Pessoa', related_name="pessoa_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
@@ -177,48 +181,43 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
                 )
-    def enviar_avaliacao(self):
-        '''
-        Envia para avaliação
-        '''
+    def enviar_avaliacao(self, by=None, request=None):
+        self.responsavel = request.user
+        self.logar_detalhes(request, mensagem='Enviado para avaliação')
+
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
                 target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA)
     def aprovacao_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = True
+        self.usuario_gerencia = request.user
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
-        '''
-        Aprovado pela gerência
-        '''
+
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
                 target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
     def reprovacao_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = False
+        self.usuario_gerencia = request.user
         self.logar_detalhes(request, mensagem='Reprovado pela gerência')
-        '''
-        Reprovado pela gerência
-        '''
+
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA)
     def aprovacao_superintendencia(self, by=None, request=None):
         self.aprovado_superintendencia = True
+        self.usuario_superintencencia = request.user
         self.logar_detalhes(request, mensagem='Aprovado pela superintendência')
-        '''
-        Aprovado pela superintendência
-        '''
+
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA)
     def reprovado_superintendencia(self, by=None, request=None):
-        '''
-        Reprovado pela superintendência
-        '''
+        self.usuario_superintencencia = request.user
         self.aprovado_superintendencia = False
         self.logar_detalhes(request, mensagem='Reprovado pela superintendência')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL)
     def aprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = True
-        self.usuario_gerencia = request.user
+        self.usuario_diretoria = request.user
         self.logar_detalhes(request, mensagem='Aprovado pela diretoria')
         '''
         Aprovado pela diretoria
@@ -228,55 +227,37 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     def reprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = False
         self.logar_detalhes(request, mensagem='Reprovado pela diretoria')
-        '''
-        Reprovado pela diretoria
-        '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.APROVADO)
-    def aprovar_analise_financeira(self, by=None, request=None):
-        self.logar_detalhes(request, mensagem='Aprovado pela gerência')
-        '''
-        Aprovar análise financeira
-        '''
-        self.aprovado_analise_financeira = True
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA)
+    def aprovar_analise_fiscal(self, by=None, request=None):
+        self.aprovado_analise_fiscal = True
+        self.logar_detalhes(request, mensagem='Aprovado pela Analise Fiscal')
+
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
-    def reprovar_analise_financeira(self, by=None, request=None):
-        self.logar_detalhes(request, mensagem='Reprovado pela Analise Financeira')
-        '''
-        Reprovar análise financeira
-        '''
-        self.aprovado_analise_financeira = False
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.REPROVADO)
     def reprovar_analise_fiscal(self, by=None, request=None):
-        self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
-        '''
-        Reprovar análise fiscal
-        '''
         self.aprovado_analise_fiscal = False
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.APROVADO)
-    def aprovar_analise_fiscal(self, by=None, request=None):
-        '''
-        Aprovar análise fiscal
-        '''
-        self.aprovado_analise_fiscal = True
         self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.REPROVADO)
-    def reprovar_analise_financeira(self, by=None, request=None):
-        '''
-        Reprovar análise financeira
-        '''
-        self.aprovado_analise_financeira = False
-        self.logar_detalhes(request, mensagem='Reprovado pela gerência')
 
-    @transition(field=situacao, source=[StatusAnaliseFinaceira.REPROVADO],
-                target=StatusAnaliseFinaceira.FINALIZADO)
-    def finalizar(self, by=None, request=None):
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.FINALIZADO)
+    def aprovar_analise_financeira(self, by=None, request=None):
         self.data_finalizacao = datetime.now()
-        self.logar_detalhes(request, mensagem='Reprovado pela gerência')
+        self.aprovado_analise_financeira = True
+        self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
+
+    
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
+    def reprovar_analise_financeira(self, by=None, request=None):
+        self.aprovado_analise_financeira = False
+        self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
+
+    @transition(field=situacao, source=[StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, StatusAnaliseFinaceira.REPROVADO],
+                target=StatusAnaliseFinaceira.CANCELADO)
+    def cancelar(self, by=None, request=None):
+        self.data_finalizacao = datetime.now()
+        self.logar_detalhes(request, mensagem='Cancelado pelo responsável')
         '''
         Finalizar
         '''

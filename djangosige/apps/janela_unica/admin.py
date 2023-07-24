@@ -32,11 +32,14 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     fieldsets = (
         ('Dados solicitação', {
             'fields': ('pk', 'data_inclusao', 'responsavel',
-                       'tipo_arquivo', 'tipo_anexo','arquivo',)
+                       'tipo_arquivo', 'tipo_anexo','arquivo', 
+                       'observacoes',
+                       'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop', 'valor_total',
+                       'descricao' )
         }),
 
         ('Dados bancários', {
-            'fields': ('banco', 'agencia', 'conta', 'digito',
+            'fields': ('fornecedor', 'banco', 'agencia', 'conta', 'digito',
                        'plano_conta', 'projeto')
         }),
 
@@ -67,17 +70,19 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
         ret = ['pk', 'responsavel', 'data_inclusao']
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
         if not obj or not obj.situacao or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
-            ret.extend(['aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
-                        'aprovado_analise_financeira', 'observacao_analise_financeira',
-                        'aprovado_analise_fiscal', 'observacao_analise_fiscal',])
+            ret.extend(['aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia', 
+                'aprovado_diretoria', 'usuario_diretoria','observacao_diretoria', 
+                'aprovado_analise_financeira', 'usuario_analise_financeira','observacao_analise_financeira', 
+                'aprovado_analise_fiscal', 'usuario_analise_fiscal','observacao_analise_fiscal','usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento',])
             return ret
 
-        ret.extend(['fornecedor',
-                    'tipo_arquivo', 'arquivo', 'numero', 'chave', 'mod', 'serie',
+        ret.extend(['fornecedor', 'observacoes', 'descricao',
+                    'tipo_arquivo', 'tipo_anexo', 'valor_total', 'arquivo', 'numero', 'chave', 'mod', 'serie',
                     'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia',
                     'observacao_gerencia', 'aprovado_superintendencia',
                     'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
                     'aprovado_analise_fiscal', 'observacao_analise_fiscal',
+                    'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia', 'usuario_analise_financeira', 'usuario_analise_fiscal', 'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria', 'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia', 'conta', 'digito', 'projeto', 'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop',
                     ])
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
@@ -89,6 +94,11 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
             ret.remove('observacao_diretoria')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL:
             ret.remove('observacao_analise_fiscal')
+            ret.remove('usuario_lancamento')
+            ret.remove('data_lancamento')
+            ret.remove('numero_lancamento')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA:
             ret.remove('observacao_analise_financeira')
+            ret.remove('pagamento_realizado')
+            ret.remove('observacao_pagamento')
         return ret
