@@ -88,7 +88,7 @@ class PerfilUsuarioForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('first_name', 'last_name', 'username', 'email', 'user_foto', 'pcd', 'certificado_digital', 'cpf', 'grupo_funcional', 'telefone', 'matricula', 'departamento', )
+        fields = ('first_name', 'last_name', 'username', 'email', 'user_foto', 'pcd', 'certificado_digital', 'cpf', 'grupo_funcional', 'telefone', 'matricula', )
 
         widgets = {
 
@@ -99,7 +99,6 @@ class PerfilUsuarioForm(forms.ModelForm):
             'cpf': forms.TextInput(attrs={'class': 'form-control', 'size': '14'}),
             'telefone': forms.TextInput(attrs={'class': 'form-control', 'size': '14', 'size': '200'}),
             'matricula': forms.TextInput(attrs={'class': 'form-control', 'size': '14', 'size': '200'}),
-            'departamento':  forms.Select(attrs={'class': 'form-control select-produto'}),
 
         }
         labels = {
@@ -109,7 +108,6 @@ class PerfilUsuarioForm(forms.ModelForm):
             'grupo_funcional': _('Grupo Funcional'),
             'telefone': _('Telefone'),
             'matricula': _('Matrícula'),
-            'departamento': _('Departamento'),
         }
 
 

@@ -28,7 +28,7 @@ from .models import Usuario
 from djangosige.configs.settings import DEFAULT_FROM_EMAIL
 
 from djangosige.apps.cadastro.forms import MinhaEmpresaForm
-from djangosige.apps.cadastro.models import MinhaEmpresa
+from djangosige.apps.cadastro.models import MinhaEmpresa, DepartamentoModel
 
 from djangosige.apps.taticca_cv.models import CVModel
 
@@ -474,10 +474,11 @@ class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
         context['custom_permissions'] = Permission.objects.filter( codename__in=CUSTOM_PERMISSIONS)
 
         context['perfis'] = Usuario.PERFIS
-        obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+        # obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+        context['perfil_user'] = Usuario.PERFIS[int(user.usuario.perfil)][1]
 
-
-        context['perfil_user'] = Usuario.PERFIS[int(obj.perfil)][1]
+        context['departamentos'] = DepartamentoModel.objects.all()
+        context['departamento_user'] = user.usuario.departamento
         return context
 
     def post(self, request, *args, **kwargs):
@@ -585,7 +586,9 @@ class AlteraPerfilView(UpdateView):
         user = User.objects.get(pk=self.kwargs['pk'])
         usuario = Usuario.objects.get_or_create(user=user)[0]
         permicao = request.POST.get('permicao')
+        departamento = request.POST.get('departamento')
         usuario.perfil = Usuario.PERFIS[int(permicao)][0]
+        usuario.departamento = DepartamentoModel.objects.filter(id=departamento).first()
         usuario.save()
         return redirect(self.success_url)
 
