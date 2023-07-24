@@ -47,6 +47,14 @@
                                     Empresas
                                 </a>
                             </li>
+                             <li>
+                                <a href="{% url 'cadastro:listadepartamentos' %}">
+                                    Departamentos
+                                </a>
+                            </li>
+
+
+
                                <li>
                                 <a href="{% url 'norli_projeto:listafilial' %}">
                                         Filiais
@@ -104,7 +112,7 @@
 {#                                    </a>#}
 {#                                 </li>#}
 
-                                <li>
+                                <!-- <li>
                                     <a href="{% url 'timesheet:listargastos' %}">
                                         <span>Meus Gastos</span>
                                     </a>
@@ -123,7 +131,7 @@
                                         <span>Aprovar Gastos</span>
                                     </a>
                                  </li>
-
+-->
                              <li>
                                 <a href="{% url 'timesheet:aprovarpercentuaisdiarios' %}">
                                     <span>Aprovar Horas - Percentual</span>

@@ -104,8 +104,8 @@ urlpatterns = [
     url(r'infotransportadora/$', views.InfoTransportadora.as_view(), name='infotransportadora'),
     url(r'infoproduto/$', views.InfoProduto.as_view(), name='infoproduto'),
 
-    url(r'empresa/adddepartamento/$',views.ListDepartamentosView.as_view(), name='listadepartamentos'),
-    url(r'empresa/listdepartamento/$',views.AddDepartamentoView.as_view(), name='adddepartamento'),
+    url(r'empresa/listdepartamento/$',views.ListDepartamentosView.as_view(), name='listadepartamentos'),
+    url(r'empresa/adddepartamento/$',views.AddDepartamentoView.as_view(), name='adddepartamento'),
     url(r'empresa/editdepartamento/(?P<pk>[0-9]+)/$',views.EditarDepartamentoView.as_view(), name='editdepartamento'),
 
 ]
