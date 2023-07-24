@@ -64,7 +64,7 @@ class Usuario(models.Model):
         return u'%s' % self.user
 
     def __str__(self):
-        return ''.join(self.user.get_full_name, ' (', self.user.username, ')')
+        return self.user.username
 
 
 @receiver(post_delete, sender=Usuario)
