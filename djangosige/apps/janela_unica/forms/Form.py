@@ -32,7 +32,6 @@ class TramitacaoForm(forms.ModelForm):
 
         }
 
-
         labels = {
             'user_recebido': _('Enviar Para'),
             'doc': _('Documento'),
@@ -63,18 +62,23 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
         #     'aprovado_analise_fiscal', 'observacao_analise_fiscal',
         # )
 
-        widgets = {
+        labels = {
+            'pk': _('Solicitação'),
+            'data_inclusao': _('Data de Inclusão'),
+            'data_emissao': _('Data de Emissão'),
+        }
 
+        widgets = {
             'projeto': forms.Select(attrs={'class': 'form-control'}),
             'plano_conta': forms.Select(attrs={'class': 'form-control'}),
             'fornecedor': forms.Select(attrs={'class': 'form-control'}),
-            'responsavel' : forms.Select(attrs={'class': 'form-control'}),
-
+            'responsavel': forms.Select(attrs={'class': 'form-control'}),
+            'data_emissao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
         }
-
 
     # TODO: Melhorar isso, gambiarra para funcionar o form-control
     # https://stackoverflow.com/questions/48067882/django-admin-making-a-required-field-read-only
+
     def __init__(self, *args, **kwargs):
         super(DocumentoUnicoFinanceiroForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
