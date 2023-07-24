@@ -215,10 +215,16 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
     permission_codename = 'aprovar_horas'
 
     def get_queryset(self):
+
+        mes = self.request.GET.get('mes')
+        ano = datetime.datetime.now().year
+        if not mes:
+            mes = datetime.datetime.now().month
+
         current_user = self.request.user
         if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
             return
-        query = PercentualDiario.objects.filter(situacao=1)
+        query = PercentualDiario.objects.filter(situacao=1, data__month=mes, data__year=ano)
         if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
         # querry = querry.filter(submetida=False)
@@ -245,7 +251,11 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
 
     def get_context_data(self, **kwargs):
         context = super(AprovarTimesheetPercentualView, self).get_context_data(**kwargs, object_list=None)
-        # context = self.get_object()
+        mes = self.request.GET.get('mes')
+        if not mes:
+            mes = datetime.datetime.now().month
+
+        context['mes_selecionado'] = str(mes)
         context['title_complete'] = 'Aprovar lançamento de horas'
         context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
         return context
@@ -634,7 +644,6 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
     def get_queryset(self):
 
-        # http://127.0.0.1: 8000 / zeppelin / timesheet / listarpercentualdiario /?mes = 07
         mes = self.request.GET.get('mes')
         ano = datetime.datetime.now().year
         if not mes:
