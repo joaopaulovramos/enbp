@@ -1745,23 +1745,30 @@ section.content {
 }
 
 .form-top-select-perfil{
-  width: 700px;
+  width: 800px;
   margin-left: 20px;
-  height: 70px;
+  height: 170px;
 }
 .form-top-select-perfil label{
   float: left;
   margin-left: 10px;
   margin-top: 10px;
 }
-#perfis{
+.perfis{
+  width: 520px!important;
+  float: left;
+}
+.perfis-input{
+  float: left;
+}
+.perfis-field{
   width: 350px!important;
   margin-left: 30px;
   float: left;
 }
 #brn_perfis{
-  float: left;
-  margin-left: 30px;
+  margin: 15px;
+  float: right;
 }
 
 
