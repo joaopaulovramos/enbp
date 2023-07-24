@@ -816,7 +816,7 @@ class ListAutorizarViagensView(CustomListView):
     def get_queryset(self):
         # return self.model.objects.all()
         current_user = self.request.user
-        if (current_user.usuario.perfil!='1' and not current_user.is_superuser):
+        if (current_user.usuario.perfil!='1'):
             return
 
         user_viagens = ViagemModel.objects.filter(autorizada_dus=False)
