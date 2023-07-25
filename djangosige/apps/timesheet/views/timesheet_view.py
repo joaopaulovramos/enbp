@@ -1,3 +1,6 @@
+import random
+import string
+
 import requests
 from django.urls import reverse_lazy
 
@@ -806,11 +809,11 @@ class ListOpiniaoView(CustomListViewFilter):
         return context
 
 
-class AdicionarOpiniaoView(CustomCreateViewAddUser):
+class AdicionarOpiniaoView(CustomCreateView):
     form_class = OpiniaoForm
-    template_name = "timesheet/add.html"
+    template_name = "timesheet/add_feedback.html"
     success_url = reverse_lazy('timesheet:adicionaopiniao')
-    success_message = "Opinião Adicionada com Sucesso."
+    success_message = "Feedback Adicionado com Sucesso."
     permission_codename = 'add_opiniaomodel'
     context_object_name = 'all_natops'
 
@@ -818,20 +821,33 @@ class AdicionarOpiniaoView(CustomCreateViewAddUser):
         self.object = None
         form_class = self.get_form_class()
 
-        form = self.get_form(form_class)
+        form = OpiniaoForm(request.POST, request.FILES, instance=self.object)
         form.request_user = self.request.user
 
+        letters = string.ascii_lowercase
+        name = ''.join(random.choice(letters) for i in range(20))
+        nome_antigo = request.FILES['anexo'].name
+        nome_antigo = nome_antigo.split('.')
+        ext = nome_antigo[-1]
+
+
+
         if form.is_valid():
-            self.object = form.save()
+            request.FILES['anexo'].name = name + '.' + ext
+
+            self.object = form.save(commit=False)
+            # self.object.rating = 5
+            self.object.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         self.form_class.Meta.model.user = self.request.user
         context = super(AdicionarOpiniaoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR OPINIÃO'
+        context['title_complete'] = 'ADICIONAR FEEDBACK'
         context['return_url'] = reverse_lazy('timesheet:adicionaopiniao')
         return context
+
 
 class EditarOpiniaoView(CustomUpdateView):
     form_class = OpiniaoForm
@@ -849,7 +865,8 @@ class EditarOpiniaoView(CustomUpdateView):
         form.request_user = self.request.user
 
         if form.is_valid():
-            self.object = form.save()
+            self.object = form.save(commit=False)
+            self.object.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
 
