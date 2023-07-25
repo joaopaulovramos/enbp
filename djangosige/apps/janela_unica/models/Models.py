@@ -16,9 +16,10 @@ from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
 
 TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO = (
     (u'0', u'Nota Fiscal (NF-e)'),
-    (u'1', u'Boleto'),
-    (u'2', u'Comprovante de Pagamento'),
-    (u'3', u'Outros'),
+    (u'1', u'DANFE'),
+    (u'2', u'Boleto'),
+    (u'3', u'Comprovante de Pagamento'),
+    (u'9', u'Outros'),
 )
 
 TIPO_ANEXO = (

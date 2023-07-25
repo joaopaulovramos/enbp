@@ -66,6 +66,8 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'pk': _('Solicitação'),
             'data_inclusao': _('Data de Inclusão'),
             'data_emissao': _('Data de Emissão'),
+            'plano_conta': _('Centro de custos'),
+            'fornecedor': _('Fornecedor/funcionário'),
         }
 
         widgets = {

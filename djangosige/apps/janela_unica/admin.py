@@ -31,16 +31,20 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     # TODO: Ajustar aqui
     fieldsets = (
         ('Dados solicitação', {
-            'fields': ('pk', 'data_inclusao', 'responsavel',
-                       'tipo_arquivo', 'tipo_anexo','arquivo', 
-                       'observacoes',
-                       'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop', 'valor_total',
-                       'descricao' )
+            'fields': (
+                ('pk', 'data_inclusao', 'responsavel'),
+                ('tipo_arquivo', 'tipo_anexo','arquivo', 'observacoes'), 
+                ('chave', 'numero', 'mod', 'serie', 'cfop'),
+                ('cnpj', 'data_emissao', 'valor_total'),
+                'descricao' 
+            )
         }),
 
-        ('Dados bancários', {
-            'fields': ('fornecedor', 'banco', 'agencia', 'conta', 'digito',
-                       'plano_conta', 'projeto')
+        ('Dados pagamento', {
+            'fields': (
+                ('fornecedor', 'plano_conta', 'projeto'),
+                ('banco', 'agencia', 'conta', 'digito')                       
+            )
         }),
 
         ('Informações financeiras', {
