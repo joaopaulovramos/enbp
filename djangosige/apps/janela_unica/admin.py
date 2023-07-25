@@ -20,7 +20,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     # Desabilita as ações em massa
     actions = None
     # Atributos de filtragem
-    list_filter = ('situacao', )
+    list_filter = ('situacao', 'data_inclusao')
     search_fields = ('situacao',)
     # Atributos da tabela
     list_display = ('pk', 'descricao', 'situacao', 'data_inclusao', 'data_finalizacao', 'tipo_arquivo', 'numero', 'responsavel', 'fornecedor', 'valor_total',)
@@ -51,19 +51,27 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
 
         ('Aprovadores', {
             'fields': (
-                'aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia', 
-                'aprovado_diretoria', 'usuario_diretoria','observacao_diretoria', 
-                'aprovado_analise_financeira', 'usuario_analise_financeira','observacao_analise_financeira', 
-                'aprovado_analise_fiscal', 'usuario_analise_fiscal','observacao_analise_fiscal')
+                ('aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia'), 
+
+                ('aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia'),
+
+                ('aprovado_diretoria', 'usuario_diretoria','observacao_diretoria')
+                )
         }),
 
-        ('Lançamento no Questor', {
-            'fields': ('usuario_lancamento', 'data_lancamento', 'numero_lancamento')
+        ('Analise fiscal e lançamento questor', {
+            'fields': (
+                ('aprovado_analise_fiscal', 'usuario_analise_fiscal','observacao_analise_fiscal'),
+                ('usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'comprovante_lancamento')
+                )
         }),
         
-        ('Analise financeira', {
-            'fields': ('pagamento_realizado', 'observacao_pagamento')
-        }),
+        ('Analise financeira e pagamento', {
+            'fields': (
+                ('aprovado_analise_financeira', 'usuario_analise_financeira','observacao_analise_financeira'),
+                ('pagamento_realizado', 'observacao_pagamento', 'comprovante_pagamento')
+                )
+        }), 
     )
 
     def get_readonly_fields(self, request, obj=None):
@@ -73,7 +81,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
             ret.extend(['aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia', 
                 'aprovado_diretoria', 'usuario_diretoria','observacao_diretoria', 
                 'aprovado_analise_financeira', 'usuario_analise_financeira','observacao_analise_financeira', 
-                'aprovado_analise_fiscal', 'usuario_analise_fiscal','observacao_analise_fiscal','usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento',])
+                'aprovado_analise_fiscal', 'usuario_analise_fiscal','observacao_analise_fiscal','usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento','comprovante_pagamento', 'comprovante_lancamento'])
             return ret
 
         ret.extend(['fornecedor', 'observacoes', 'descricao',
@@ -82,7 +90,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
                     'observacao_gerencia', 'aprovado_superintendencia',
                     'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
                     'aprovado_analise_fiscal', 'observacao_analise_fiscal',
-                    'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia', 'usuario_analise_financeira', 'usuario_analise_fiscal', 'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria', 'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia', 'conta', 'digito', 'projeto', 'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop',
+                    'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia', 'usuario_analise_financeira', 'usuario_analise_fiscal', 'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria', 'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia', 'conta', 'digito', 'projeto', 'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop','comprovante_pagamento', 'comprovante_lancamento',
                     ])
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
@@ -97,8 +105,10 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
             ret.remove('usuario_lancamento')
             ret.remove('data_lancamento')
             ret.remove('numero_lancamento')
+            ret.remove('comprovante_lancamento')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA:
             ret.remove('observacao_analise_financeira')
             ret.remove('pagamento_realizado')
             ret.remove('observacao_pagamento')
+            ret.remove('compromante_pagamento')
         return ret
