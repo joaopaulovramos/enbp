@@ -126,13 +126,18 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     aprovado_diretoria = models.BooleanField(null=True, blank=True)
     observacao_diretoria = models.CharField(max_length=1055, null=True, blank=True)
 
+    # Analise financeira
     usuario_analise_financeira = models.ForeignKey(User, related_name="documento_unico_usuario_analise_financeira", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_financeira = models.BooleanField(null=True, blank=True)
     observacao_analise_financeira = models.CharField(max_length=1055, null=True, blank=True)
+    comprovante_lancamento = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
 
+
+    # Analise fiscal
     usuario_analise_fiscal = models.ForeignKey(User, related_name="documento_unico_usuario_analise_fiscal", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_fiscal = models.BooleanField(null=True, blank=True)
     observacao_analise_fiscal = models.CharField(max_length=1055, null=True, blank=True)
+    comprovante_pagamento = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
 
     # Novos
     responsavel = models.ForeignKey(User, related_name="responsavel_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
