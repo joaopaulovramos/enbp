@@ -1,11 +1,30 @@
 <div class="row">
 
+<div class="col-sm-2">
+      <div class="form-group">
+          <div class="form-line">
+              <label for="select-ano">Selecione o ano:</label>
+              <select class="form-control" name="select_ano" id="id_select_ano">
+
+                  {% for ano in anos_disponiveis %}
+
+                      <option value="{{ ano }}" {% if ano == ano_selecionado %}selected{% endif %}>{{ ano }}</option>
+
+                  {% endfor %}
+
+
+
+              </select>
+
+          </div>
+      </div>
+</div>
+
   <div class="col-sm-2">
       <div class="form-group">
           <div class="form-line">
               <label for="select-mes">Selecione o mês:</label>
               <select class="form-control" name="select_mes" id="id_select_mes">
-                  <option value="">---</option>
                   <option value="12" {% if mes_selecionado == '12' %}selected{% endif %}>Dezembro</option>
                   <option value="11" {% if mes_selecionado == '11' %}selected{% endif %}>Novembro</option>
                   <option value="10" {% if mes_selecionado == '10' %}selected{% endif %}>Outubro</option>
@@ -19,6 +38,7 @@
                   <option value="2" {% if mes_selecionado == '2' %}selected{% endif %}>Fevereiro</option>
                   <option value="1" {% if mes_selecionado == '1' %}selected{% endif %}>Janeiro</option>
               </select>
+
           </div>
       </div>
   </div>

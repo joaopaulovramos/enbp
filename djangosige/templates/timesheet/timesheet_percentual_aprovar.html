@@ -83,9 +83,10 @@
 {% block js %}
 
    <script>
-        $('#id_select_mes').on('change', function () {
-            let mes = $(this).val()
-            window.location.href = `{% url 'timesheet:aprovarpercentuaisdiarios' %}?mes=${mes}`;
+        $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'timesheet:verpercentuaisdiariosaprovados' %}?mes=${mes}&ano=${ano}`;
         })
    </script>
 

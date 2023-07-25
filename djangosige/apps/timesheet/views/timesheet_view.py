@@ -1,3 +1,4 @@
+import requests
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, \
@@ -213,21 +214,28 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('timesheet:aprovarpercentuaisdiarios')
     permission_codename = 'aprovar_horas'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
 
-        mes = self.request.GET.get('mes')
-        ano = datetime.datetime.now().year
-        if not mes:
-            mes = datetime.datetime.now().month
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
+        if current_user.usuario.perfil != '2' and current_user.usuario.perfil != '1' and not current_user.is_superuser:
             return
-        query = PercentualDiario.objects.filter(situacao=1, data__month=mes, data__year=ano)
-        if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
+        query = PercentualDiario.objects.filter(situacao=1, data__month=self._mes, data__year=self._ano)
+        if not current_user.is_superuser and current_user.usuario.perfil != '1':
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
-        # querry = querry.filter(submetida=False)
         return query
 
     # def get_object(self):
@@ -251,11 +259,10 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
 
     def get_context_data(self, **kwargs):
         context = super(AprovarTimesheetPercentualView, self).get_context_data(**kwargs, object_list=None)
-        mes = self.request.GET.get('mes')
-        if not mes:
-            mes = datetime.datetime.now().month
-
-        context['mes_selecionado'] = str(mes)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Aprovar lançamento de horas'
         context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
         return context
@@ -267,26 +274,32 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('timesheet:verpercentuaisdiariosaprovados')
     permission_codename = 'aprovar_horas'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        mes = self.request.GET.get('mes')
-        ano = datetime.datetime.now().year
-        if not mes:
-            mes = datetime.datetime.now().month
 
-        query = PercentualDiario.objects.filter(situacao=2, data__month=mes, data__year=ano)
-        # querry = querry.filter(submetida=False)
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
+        query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
         return query
 
     def get_context_data(self, **kwargs):
         context = super(VerTimesheetPercentualAprovadoView, self).get_context_data(**kwargs, object_list=None)
-        mes = self.request.GET.get('mes')
-        if not mes:
-            mes = datetime.datetime.now().month
-
-        context['mes_selecionado'] = str(mes)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Horas Aprovadas'
-        # context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
         return context
 
 
@@ -630,16 +643,24 @@ class ListPercentualDiarioView(CustomListViewFilter):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('timesheet:listarpercentualdiario')
     permission_codename = 'view_percentualdiario'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
 
-        mes = self.request.GET.get('mes')
-        ano = datetime.datetime.now().year
-        if not mes:
-            mes = datetime.datetime.now().month
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        querry = self.model.objects.filter(solicitante=current_user, data__month=mes, data__year=ano)
+        querry = self.model.objects.filter(solicitante=current_user, data__month=self._mes, data__year=self._ano)
 
         days = {}
         for lancamento in querry:
@@ -678,12 +699,10 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
     def get_context_data(self, **kwargs):
         context = super(ListPercentualDiarioView, self).get_context_data(**kwargs, object_list=None)
-
-        mes = self.request.GET.get('mes')
-        if not mes:
-            mes = datetime.datetime.now().month
-
-        context['mes_selecionado'] = str(mes)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Timesheet'
         context['add_url'] = reverse_lazy('timesheet:adicionarpercentualdiario')
         return context
