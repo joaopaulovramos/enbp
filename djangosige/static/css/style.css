@@ -1805,5 +1805,16 @@ input[class*=" transition-reprov"]
   border-color:#4cae4c
  }
 
+ input[class*=" transition-enviar"]
+ {
+  color:#fff;
+  background-color:#5cb85c;
+  border-color:#4cae4c
+ }
 
- 
+ input[class*=" transition-cancelar"]
+ {
+  color:#fff;
+  background-color:#ec971f;
+  border-color:#d58512
+ }

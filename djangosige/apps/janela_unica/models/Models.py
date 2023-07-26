@@ -9,7 +9,7 @@ from django.template.defaultfilters import date
 from django_fsm import FSMField, transition
 from django_cpf_cnpj.fields import CPFField, CNPJField
 from django.contrib.contenttypes.models import ContentType
-
+from simple_history.models import HistoricalRecords
 from djangosige.apps.cadastro.models.bancos import BANCOS
 from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
                                                        NotaFiscal)
@@ -59,20 +59,19 @@ class StatusAnaliseFinaceira(object):
 
 
 class DocumentoUnico(models.Model):
-    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
-
     class Meta:
         abstract = True
 
 
 class DocumentoUnicoFinanceiro(DocumentoUnico):
+    history = HistoricalRecords(history_change_reason_field=models.TextField(null=True))
     situacao = FSMField(
         default=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
         verbose_name='Situação',
         choices=StatusAnaliseFinaceira.CHOICES,
         protected=True,  # Impede alteração de estado por usuários sem permissão
     )
-
+    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     data_finalizacao = models.DateTimeField(null=True, blank=True)
     tipo_arquivo = models.CharField(max_length=1, choices=TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO, null=True, blank=True)

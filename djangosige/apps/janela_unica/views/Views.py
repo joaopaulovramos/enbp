@@ -141,7 +141,7 @@ class GerarPDFDocumentoUnicoView(CustomView):
         context = {"natop": obj}
         html = template.render(context)
         result = BytesIO()
-        pdf = pisa.pisaDocument(BytesIO(html.encode("latin1")), result)
+        pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
         if not pdf.err:
             merger = PdfWriter()
             merger.append(result)
