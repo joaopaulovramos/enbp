@@ -134,5 +134,5 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ret.remove('observacao_analise_financeira')
             ret.remove('pagamento_realizado')
             ret.remove('observacao_pagamento')
-            ret.remove('compromante_pagamento')
+            ret.remove('comprovante_pagamento')
         return ret

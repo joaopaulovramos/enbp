@@ -152,6 +152,17 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     pagamento_realizado = models.BooleanField(null=True, blank=True)
     observacao_pagamento = models.CharField(max_length=1055, null=True, blank=True)
 
+    @property
+    def tipo_documento_formatado(self):
+        tipo_formatdo = ''
+        if self.tipo_arquivo:
+            tipo_formatdo = self.get_tipo_arquivo_display()
+        if self.tipo_anexo:
+            tipo_formatdo = tipo_formatdo + '/' +  self.get_tipo_anexo_display() 
+ 
+        return tipo_formatdo
+
+
     class Meta:
         verbose_name = "Documento Janela Única"
         permissions = (
