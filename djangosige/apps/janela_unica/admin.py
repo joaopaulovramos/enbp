@@ -5,16 +5,17 @@ from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
 from djangosige.apps.janela_unica.models.Models import StatusAnaliseFinaceira
 from .models import TramitacaoModel, DocumentoUnicoFinanceiro
 from fsm_admin.mixins import FSMTransitionMixin
-
+from simple_history.admin import SimpleHistoryAdmin
+from django.utils.html import format_html
 
 @admin.register(TramitacaoModel)
 class TramitacaoModelAdmin(admin.ModelAdmin,):
     list_display = ('user_enviado', 'user_recebido', 'data', 'doc',)
     fields = ()
 
-
+# https://stackoverflow.com/questions/46892851/django-simple-history-displaying-changed-fields-in-admin
 @admin.register(DocumentoUnicoFinanceiro)
-class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
+class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     fsm_field = ['situacao',]
     form = DocumentoUnicoFinanceiroForm
     # Desabilita as ações em massa
@@ -25,22 +26,45 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, admin.ModelAdmin):
     # Atributos da tabela
     list_display = ('pk', 'descricao', 'situacao', 'data_inclusao', 'data_finalizacao', 'tipo_arquivo', 'numero', 'responsavel', 'fornecedor', 'valor_total',)
 
+    history_list_display = ["changed_fields","list_changes"]
+    
+    def changed_fields(self, obj):
+        if obj.prev_record:
+            delta = obj.diff_against(obj.prev_record)
+            return delta.changed_fields
+        return None
+
+    def list_changes(self, obj):
+        fields = ""
+        if obj.prev_record:
+            delta = obj.diff_against(obj.prev_record)
+
+            for change in delta.changes:
+                fields += str("<strong>{}</strong> de <span style='background-color:#ffb5ad'>{}</span> para <span style='background-color:#b3f7ab'>{}</span> . <br/>".format(change.field, change.old, change.new))
+            return format_html(fields)
+        return None
+
+
     def has_delete_permission(self, request, obj=None):
         return False
 
     # TODO: Ajustar aqui
     fieldsets = (
         ('Dados solicitação', {
-            'fields': ('pk', 'data_inclusao', 'responsavel',
-                       'tipo_arquivo', 'tipo_anexo','arquivo', 
-                       'observacoes',
-                       'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop', 'valor_total',
-                       'descricao' )
+            'fields': (
+                ('pk', 'data_inclusao', 'responsavel'),
+                ('tipo_arquivo', 'tipo_anexo','arquivo', 'observacoes'), 
+                ('chave', 'numero', 'mod', 'serie', 'cfop'),
+                ('cnpj', 'data_emissao', 'valor_total'),
+                'descricao' 
+            )
         }),
 
-        ('Dados bancários', {
-            'fields': ('fornecedor', 'banco', 'agencia', 'conta', 'digito',
-                       'plano_conta', 'projeto')
+        ('Dados pagamento', {
+            'fields': (
+                ('fornecedor', 'plano_conta', 'projeto'),
+                ('banco', 'agencia', 'conta', 'digito')                       
+            )
         }),
 
         ('Informações financeiras', {

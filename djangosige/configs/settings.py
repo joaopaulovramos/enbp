@@ -109,6 +109,7 @@ INSTALLED_APPS = [
     'django_fsm',
     'django_fsm_log',
     'fsm_admin',
+    'simple_history',
 ]
 
 
@@ -125,7 +126,10 @@ MIDDLEWARE = [
     # Middleware para paginas que exigem login
     'djangosige.middleware.LoginRequiredMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
+
+SIMPLE_HISTORY_REVERT_DISABLED=True
 
 ROOT_URLCONF = 'djangosige.urls'
 

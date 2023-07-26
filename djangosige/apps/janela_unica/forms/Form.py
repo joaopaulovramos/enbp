@@ -66,6 +66,8 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'pk': _('Solicitação'),
             'data_inclusao': _('Data de Inclusão'),
             'data_emissao': _('Data de Emissão'),
+            'plano_conta': _('Centro de custos'),
+            'fornecedor': _('Fornecedor/funcionário'),
         }
 
         widgets = {
@@ -74,6 +76,7 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'fornecedor': forms.Select(attrs={'class': 'form-control'}),
             'responsavel': forms.Select(attrs={'class': 'form-control'}),
             'data_emissao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     # TODO: Melhorar isso, gambiarra para funcionar o form-control

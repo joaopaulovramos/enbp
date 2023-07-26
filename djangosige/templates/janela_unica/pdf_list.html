@@ -1,123 +1,199 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-     <meta charset="latin-1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Untitled Document</title>
 </head>
+
 <body>
-<section class="content">
-  <div class="container-fluid lista">
-
-
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
-
-                <div class="table-responsive">
-                    <h1>Dados Gerais</h1>
-                    <table id="lista-database" class="table table-bordered table-striped lista-table">
-                        <thead>
-                        <tr>
-                            <th>Numero solicitacao </th>
-                            <th>Situacao</th>
-                            <th>Projeto</th>
-                            <th>Descricao</th>
-                            <th>Responsavel</th>
-                            <th>Pessoa</th>
-                            <th>Data inclusao</th>
-                            <th>Valor Total</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <tr>
-                            <td>{{natop.numero_solicitacao}}</td>
-                            <td>{{natop.situacao}}</td>
-                            <td>{{natop.projeto}}</td>
-                            <td>{{natop.descricao}}</td>
-                            <td>{{natop.responsavel}}</td>
-                            <td>{{natop.fornecedor}}</td>
-                            <td>{{natop.data_inclusao}}</td>
-                            <td>{{natop.valor_total }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="table-responsive">
-                    <h1>Dados Bancarios</h1>
-
-                    <table id="lista-database" class="table table-bordered table-striped lista-table">
-                        <thead>
-                        <tr>
-                            <th>Banco</th>
-                            <th>Agencia</th>
-                            <th>Conta</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{% if natop.banco %}{{natop.banco}}{% endif %}</td>
-                            <td>{% if natop.agencia %}{{natop.agencia}}{% endif %}</td>
-                            <td>{% if natop.conta %}{{natop.conta}}-{{natop.digito}}{% endif %}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="table-responsive">
-                    <h1>Dados de Aprovação</h1>
-
-                    <table id="lista-database" class="table table-bordered table-striped lista-table">
-                        <thead>
-                        <tr>
-                            <th>Aprovação Gerência</th>
-                            <th>Observação Gerência</th>
-                            <th>Aprovação Superitendência</th>
-                            <th>Observação Superitendência</th>
-                            <th>Aprovação Diretoria</th>
-                            <th>Observação Diretoria</th>
-                            <th>Aprovação Analise Fiscal</th>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{% if natop.aprovacdo_gerencia %}SIM{% else %}NÃO{% endif %}</td>
-                            <td>{{ natop.observacao_gerencia }}</td>
-                            <td>{% if natop.aprovacdo_superitendencia %}SIM{% else %}NÃO {% endif %}</td>
-                            <td>{{ natop.observacao_superitendencia }} </td>
-                            <td>{% if natop.aprovacdo_diretoria %}SIM{% else %}NÃO {% endif %}</td>
-                            <td>{{ natop.observacao_diretoria }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            <div class="table-responsive">
-                    <h1>Dados de Analise</h1>
-                <table>
-                    <thead>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td colspan="2"><img src="logo.png" width="150" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td width="49%">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                    <th>Aprovação Analise Fiscal</th>
-                            <th>Observação Analise Fiscal</th>
-                            <th>Aprovação Analise Financeira</th>
-                            <th>Observação Analise Financeira</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                        <td>{% if natop.aprovacdo_analise_fiscal %}SIM{% else %}NÃO {% endif %}</td>
-                            <td>{{ natop.observacao_analise_fiscal }}</td>
-                            <td>{% if natop.aprovacdo_analise_financeira %}SIM{% else %}NÃO {% endif %}</td>
-                            <td>{{ natop.observacao_analise_financeira }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        <td>
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td
+                                        style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;">
+                                        Documento Janela Única</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+                                        Número da solicitação: {{obj.numero_solicitacao}}</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;">
+                                        Dados pagamento </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:14px;">
+                                        {{obj.fornecedor}}
+                                    </td>
+                                </tr>
 
-            </div>
-        </div>
+                                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+                                    {% if obj.fornecedor %}
+                                    {{obj.fornecedor.cpf_cnpj_formated}}
+                                    {% endif %}
 
-</section>
-     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+                                </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </td>
+    <td width="51%" valign="top">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="right"><img src="logo.png" alt="" width="150" /></td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                </td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                    &nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                    Data inclusão :{{obj.data_inclusao}} por {{obj.responsavel}}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;" align="right">
+                    Dados lançamento</td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                    Projeto: {{obj.projeto|default_if_none:"--"}}<br>
+                    Centro de custo: {{obj.plano_conta|default_if_none:"--"}}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                    Descrição: {{obj.descricao|default_if_none:"--"}} <br>
+                    Valor total: {{obj.valor_total}}</td>
+            </tr>
+
+        </table>
+    </td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
+                        width="34%" height="32" align="center">Aprovação</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        width="30%" align="center">Usuário</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        width="30%" align="center">Observação</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
+                        height="32" align="center">Gerência: {%if obj.aprovado_gerencia %} Sim {% else %} Não {% endif %}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        align="center">{{obj.usuario_gerencia}}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        align="center">{%if obj.observacao_gerencia %} {{obj.observacao_gerencia}} {%else%} -- {%endif%}</td>
+                </tr>
+
+                <tr>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
+                        height="32" align="center">Superintendência: {%if obj.aprovado_superintendencia %} Sim {% else %} Não {% endif %}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        align="center">{{obj.usuario_superintencencia|default_if_none:""}}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        align="center">{{obj.observacao_superintendencia|default_if_none:"--"}}</td>
+                </tr>
+
+                <tr>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
+                        height="32" align="center">Diretoria: {%if obj.aprovado_diretoria%} Sim {% else %} Não {% endif %}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        align="center">{{obj.usuario_diretoria|default_if_none:""}}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
+                        align="center">{{obj.observacao_superintendencia|default_if_none:"--"}} </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Observações</td>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2">{{obj.observacao|default_if_none:"--"}}</td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Dados arquivo anexo</td>
+    </tr>
+    <!-- <td colspan="2">&nbsp;</td>
+    </tr> -->
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Tipo</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">{{obj.tipo_arquivo|default_if_none:"--"}}/{{obj.tipo_anexo|default_if_none:"--"}}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Número</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">{{obj.numero|default_if_none:"--"}}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Chave</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">{{obj.chave|default_if_none:"--"}}</td>
+    </tr>
+    <tr>
+        <td colspan="2" >&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="center">
+            <!-- (This is computer generated receipt and does not require physical signature.)  -->
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    </table>
 </body>
+
 </html>

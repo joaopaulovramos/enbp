@@ -9,16 +9,17 @@ from django.template.defaultfilters import date
 from django_fsm import FSMField, transition
 from django_cpf_cnpj.fields import CPFField, CNPJField
 from django.contrib.contenttypes.models import ContentType
-
+from simple_history.models import HistoricalRecords
 from djangosige.apps.cadastro.models.bancos import BANCOS
 from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
                                                        NotaFiscal)
 
 TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO = (
     (u'0', u'Nota Fiscal (NF-e)'),
-    (u'1', u'Boleto'),
-    (u'2', u'Comprovante de Pagamento'),
-    (u'3', u'Outros'),
+    (u'1', u'DANFE'),
+    (u'2', u'Boleto'),
+    (u'3', u'Comprovante de Pagamento'),
+    (u'9', u'Outros'),
 )
 
 TIPO_ANEXO = (
@@ -58,20 +59,19 @@ class StatusAnaliseFinaceira(object):
 
 
 class DocumentoUnico(models.Model):
-    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
-
     class Meta:
         abstract = True
 
 
 class DocumentoUnicoFinanceiro(DocumentoUnico):
+    history = HistoricalRecords(history_change_reason_field=models.TextField(null=True))
     situacao = FSMField(
         default=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
         verbose_name='Situação',
         choices=StatusAnaliseFinaceira.CHOICES,
         protected=True,  # Impede alteração de estado por usuários sem permissão
     )
-
+    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     data_finalizacao = models.DateTimeField(null=True, blank=True)
     tipo_arquivo = models.CharField(max_length=1, choices=TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO, null=True, blank=True)
@@ -126,13 +126,18 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     aprovado_diretoria = models.BooleanField(null=True, blank=True)
     observacao_diretoria = models.CharField(max_length=1055, null=True, blank=True)
 
+    # Analise financeira
     usuario_analise_financeira = models.ForeignKey(User, related_name="documento_unico_usuario_analise_financeira", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_financeira = models.BooleanField(null=True, blank=True)
     observacao_analise_financeira = models.CharField(max_length=1055, null=True, blank=True)
+    comprovante_lancamento = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
 
+
+    # Analise fiscal
     usuario_analise_fiscal = models.ForeignKey(User, related_name="documento_unico_usuario_analise_fiscal", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_fiscal = models.BooleanField(null=True, blank=True)
     observacao_analise_fiscal = models.CharField(max_length=1055, null=True, blank=True)
+    comprovante_pagamento = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
 
     # Novos
     responsavel = models.ForeignKey(User, related_name="responsavel_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
@@ -149,6 +154,13 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
 
     class Meta:
         verbose_name = "Documento Janela Única"
+        permissions = (
+            ("gerencia_documento_unico", "Aprovar documentos janela única - Gerência"),
+            ("superintendencia_documento_unico", "Aprovar documentos janela única - Superintendencia"),
+            ("diretoria_documento_unico", "Aprovar documentos janela única - Diretoria"),
+            ("analise_fiscal_documento_unico", "Aprovar documentos analise fiscal - Fiscal"),
+            ("analise_financeira_documento_unico", "Aprovar documentos analise financeira - Financeiro")
+        )
 
     def __str__(self):
         return 'Documento Único N° ' + str(self.pk)
@@ -186,35 +198,37 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.logar_detalhes(request, mensagem='Enviado para avaliação')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
-                target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA)
+                target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA,
+                permission='janela_unica.gerencia_documento_unico')
     def aprovacao_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = True
         self.usuario_gerencia = request.user
+        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
+        # self.changeReason = 'Aprovado pela gerência'
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
-                target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico')
     def reprovacao_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = False
         self.usuario_gerencia = request.user
         self.logar_detalhes(request, mensagem='Reprovado pela gerência')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, permission='janela_unica.superintendencia_documento_unico')
     def aprovacao_superintendencia(self, by=None, request=None):
         self.aprovado_superintendencia = True
         self.usuario_superintencencia = request.user
         self.logar_detalhes(request, mensagem='Aprovado pela superintendência')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, permission='janela_unica.superintendencia_documento_unico')
     def reprovado_superintendencia(self, by=None, request=None):
         self.usuario_superintencencia = request.user
         self.aprovado_superintendencia = False
         self.logar_detalhes(request, mensagem='Reprovado pela superintendência')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, permission='janela_unica.diretoria_documento_unico')
     def aprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = True
         self.usuario_diretoria = request.user
@@ -223,32 +237,32 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         Aprovado pela diretoria
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, permission='janela_unica.diretoria_documento_unico')
     def reprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = False
         self.logar_detalhes(request, mensagem='Reprovado pela diretoria')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, permission='janela_unica.analise_fiscal_documento_unico')
     def aprovar_analise_fiscal(self, by=None, request=None):
         self.aprovado_analise_fiscal = True
         self.logar_detalhes(request, mensagem='Aprovado pela Analise Fiscal')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.analise_fiscal_documento_unico')
     def reprovar_analise_fiscal(self, by=None, request=None):
         self.aprovado_analise_fiscal = False
         self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.FINALIZADO)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.FINALIZADO, permission='janela_unica.analise_financeira_documento_unico')
     def aprovar_analise_financeira(self, by=None, request=None):
         self.data_finalizacao = datetime.now()
         self.aprovado_analise_financeira = True
         self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
 
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL)
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico')
     def reprovar_analise_financeira(self, by=None, request=None):
         self.aprovado_analise_financeira = False
         self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
