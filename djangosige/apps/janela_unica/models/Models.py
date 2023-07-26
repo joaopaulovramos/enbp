@@ -203,6 +203,8 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     def aprovacao_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = True
         self.usuario_gerencia = request.user
+        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
+        # self.changeReason = 'Aprovado pela gerência'
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
 
 
