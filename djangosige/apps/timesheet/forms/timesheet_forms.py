@@ -149,15 +149,30 @@ class OpiniaoForm(forms.ModelForm):
     class Meta:
         model = OpiniaoModel
 
-        fields = ('opiniao',)
+        fields = ('nome',
+                  'email',
+                  'tipo',
+                  'opiniao',
+                  'rating',
+                  'anexo',
+                  )
 
         widgets = {
 
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'size': '100'}),
+            'tipo': forms.Select(attrs={'class': 'form-control'}),
             'opiniao': forms.Textarea(attrs={'class': 'form-control', 'size': '512'}),
+            'rating': forms.NumberInput(attrs={'class': 'form-control', 'size': '512'}),
+            'anexo': forms.FileInput(attrs={'class': 'form-control'}),
 
         }
         labels = {
-            'opiniao': _('Observação/crítica/sugestão'),
+            'nome': _('Nome'),
+            'email': _('E-mail'),
+            'tipo': _('O que você tem a nos dizer é uma:'),
+            'opiniao': _('Sua colaboração é muito importante para nós, sinta-se em casa e nos diga:'),
+            'anexo': _('Gostaria de enviar um anexo?'),
         }
 
     def save(self, commit=True):
