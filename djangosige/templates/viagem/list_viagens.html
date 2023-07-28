@@ -31,7 +31,7 @@
            {% include 'base/search.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[2, "desc"]]'>
               <thead>
                 <tr>
                     <th>Código</th>
@@ -61,7 +61,7 @@
                >
                    <td>{{natop.id}}</td>
                    <td>{{login}}</td>
-                   <td>{{natop.dada_inicio}}</td>
+                   <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{%if natop.tipo_viagem%}{{natop.tipo_viagem}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>

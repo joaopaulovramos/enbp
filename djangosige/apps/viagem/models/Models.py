@@ -202,6 +202,9 @@ class ViagemModel(models.Model):
 
     justificativa_cancelamento = models.TextField(blank=True, null=True)
 
+    def data_inicio_formated(self):
+        return '%s' % date(self.dada_inicio, "d/m/Y")
+
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
 
