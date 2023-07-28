@@ -530,11 +530,25 @@ class ListViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaviagem')
     permission_codename = 'solicitar_viagens'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         # return self.model.objects.all()
         current_user = self.request.user
-        user_viagens = ViagemModel.objects.filter(solicitante=current_user)
+        user_viagens = ViagemModel.objects.filter(solicitante=current_user, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
 
         return user_viagens
 
@@ -554,6 +568,10 @@ class ListViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens'
         context['add_url'] = reverse_lazy('viagem:adicionarviagem')
         context['login'] = self.request.user
