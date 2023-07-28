@@ -187,7 +187,6 @@ class ViagemModel(models.Model):
 
     bagagem_tecnica = models.BooleanField(blank=True, default=False)
     bagagem_despachada = models.BooleanField(blank=True, default=False)
-    crianca_colo = models.BooleanField(blank=True, default=False)
     local_risco = models.BooleanField(blank=True, default=False)
     exige_vacina = models.BooleanField(blank=True, default=False)
     reservar_hotel = models.BooleanField(blank=True, default=False)

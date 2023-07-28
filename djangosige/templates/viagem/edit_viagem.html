@@ -347,13 +347,6 @@
                             {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
                         </label> <br>
 
-                        {{form.crianca_colo}}
-                        <label for="id_crianca_colo"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.crianca_colo.label }}
-                        </label> <br>
-
                         {{form.local_risco}}
                         <label for="id_local_risco"
                                style="font-weight: bold;"
