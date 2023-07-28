@@ -786,13 +786,27 @@ class ListSupAutorizarViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listasupautorizarviagem')
     permission_codename = 'autorizar_viagens_sup'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         current_user = self.request.user
         if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
             return
-        user_viagens = ViagemModel.objects.filter(autorizada_sup=False)
-        user_viagens = user_viagens.filter(recusado_sup =False)
+        user_viagens = ViagemModel.objects.filter(autorizada_sup=False, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(recusado_sup=False)
         if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
             user_viagens = user_viagens.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
@@ -820,6 +834,10 @@ class ListSupAutorizarViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListSupAutorizarViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens para autorização - Superintendente'
         return context
 
@@ -830,14 +848,27 @@ class ListAutorizarViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaautorizarviagem')
     permission_codename = 'autorizar_viagens_dus'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        # return self.model.objects.all()
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         current_user = self.request.user
         if (current_user.usuario.perfil!='1'):
             return
 
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=False)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=False, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(autorizada_sup=True)
         user_viagens = user_viagens.filter(recusado_dus=False)
         return user_viagens
@@ -864,6 +895,10 @@ class ListAutorizarViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAutorizarViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens para autorização - DUS'
         return context
 
@@ -874,9 +909,23 @@ class ListHomologarViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listahomologacaoviagem')
     permission_codename = 'homologar_viagens'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(homologada=False)
 
         return user_viagens
@@ -896,6 +945,10 @@ class ListHomologarViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListHomologarViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens'
         return context
 
@@ -1206,11 +1259,24 @@ class ListAprovarPCViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaaprovarpcviagem')
     permission_codename = 'aprovar_pc_viagens'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        # return self.model.objects.all()
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         current_user = self.request.user
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(homologada=True)
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
@@ -1238,6 +1304,10 @@ class ListAprovarPCViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAprovarPCViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens'
         return context
 
