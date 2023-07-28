@@ -259,7 +259,7 @@
                                     {% if justificativa_cancelamento %}<strong style="color:red;"> *</strong>{% endif %}
                                 </span>
                             <input type="text" name="justificativa_cancelamento" class="form-control" size="200"
-                                   id="id_justificativa_cancelamento" value="{{ justificativa_cancelamento }}" {% if justificativa_cancelamento %}required{% endif %} >
+                                   id="id_justificativa_cancelamento" value="{% if justificativa_cancelamento %} {{ justificativa_cancelamento }} {% endif %}" {% if justificativa_cancelamento %}required{% endif %} >
                             </div>
                         </div>
 
