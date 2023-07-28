@@ -183,9 +183,10 @@
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">flight_takeoff</i>
-                            <span>Viagens</span>
+                            <span>Viagem</span>
                         </a>
                         <ul class="ml-menu">
+                        {% if perms.viagem.cadastrar_item_viagens  %}
                             <li>
                             <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">check_circle</i>
@@ -262,37 +263,46 @@
                                 </ul>
 
                         </li>
-
-
+                        {% endif %}
+                                {% if perms.viagem.solicitar_viagens  %}
                                 <li>
                                     <a href="{% url 'viagem:listaviagem' %}">
                                          <span>Minhas Solicitações de Viagens</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.autorizar_viagens_sup  %}
                                 <li>
                                     <a href="{% url 'viagem:listasupautorizarviagem' %}">
                                          <span>Autorizar Viagens - Sup</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.autorizar_viagens_dus  %}
                                 <li>
                                     <a href="{% url 'viagem:listaautorizarviagem' %}">
                                          <span>Autorizar Viagens - DUS</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.homologar_viagens  %}
                                 <li>
                                     <a href="{% url 'viagem:listahomologacaoviagem' %}">
                                          <span>Homologar RH</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.aprovar_pc_viagens  %}
                                 <li>
                                     <a href="{% url 'viagem:listaaprovarpcviagem' %}">
                                          <span>Aprovar Prestação de Contas</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
 
                             </li>
