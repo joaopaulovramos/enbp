@@ -1766,9 +1766,7 @@ section.content {
 }
 
 .form-top-select-perfil{
-  width: 800px;
-  margin-left: 20px;
-  height: 170px;
+  height: fit-content;
 }
 .form-top-select-perfil label{
   float: left;
@@ -1776,7 +1774,6 @@ section.content {
   margin-top: 10px;
 }
 .perfis{
-  width: 520px!important;
   float: left;
 }
 .perfis-input{
