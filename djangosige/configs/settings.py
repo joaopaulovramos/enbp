@@ -271,12 +271,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #teste
 #django_heroku.settings(locals())
-STATIC_LOCATION = "static"
+STATIC_URL = "/static/"
 MEDIA_LOCATION = "media"
 
 AZURE_ACCOUNT_NAME = "enbparblob"
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
 MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 MEDIA_ROOT = MEDIA_URL
-STATIC_ROOT = STATIC_URL
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
