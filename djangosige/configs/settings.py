@@ -127,8 +127,7 @@ MIDDLEWARE = [
 
 
 
-DEFAULT_FILE_STORAGE = 'backend.custom_azure.AzureMediaStorage'
-STATICFILES_STORAGE = 'backend.custom_azure.AzureStaticStorage'
+
 
 SIMPLE_HISTORY_REVERT_DISABLED=True
 
@@ -271,12 +270,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #teste
 #django_heroku.settings(locals())
-STATIC_URL = "/static/"
+DEFAULT_FILE_STORAGE = 'backend.azure_storage.AzureMediaStorage'
+STATICFILES_STORAGE = 'backend.azure_storage.AzureStaticStorage'
+STATIC_LOCATION = "static"
 MEDIA_LOCATION = "media"
 
 AZURE_ACCOUNT_NAME = "enbparblob"
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-MEDIA_ROOT = MEDIA_URL
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+MEDIA_ROOT = BASE_DIR / 'mediafiles'
