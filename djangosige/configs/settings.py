@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'cpf_field',
     'django_cpf_cnpj',
 
@@ -119,14 +120,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'corsheaders.middleware.CorsMiddleware',
     # Middleware para paginas que exigem login
     'djangosige.middleware.LoginRequiredMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 
+CORS_ORIGIN_ALLOW_ALL = False
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'https://enbparblob.blob.core.windows.net',
+)
 
 
 SIMPLE_HISTORY_REVERT_DISABLED=True
