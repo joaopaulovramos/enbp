@@ -4079,7 +4079,6 @@ $.Admin.timesheet = {
             if(datas_laranja.indexOf(data) >= 0){
                 return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
             } else {
-                console.log(date.getDay())
                 if(date.getDay() != 6 && date.getDay() != 0 && date <= hoje)
                     return [true, "multidatepicker-vermelho", "Horas não lançadas"];
                 else
