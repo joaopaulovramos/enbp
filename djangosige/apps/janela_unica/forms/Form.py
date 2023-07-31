@@ -85,5 +85,4 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DocumentoUnicoFinanceiroForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            # print(visible.field)
             visible.field.widget.attrs['class'] = 'form-control'
