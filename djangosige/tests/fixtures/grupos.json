@@ -1,0 +1,57 @@
+[
+    { "fields": {
+            "nome": "Subgrupo A1",
+            "tensao_maxima": 0.0,
+            "tensao_minima": 230.00,
+            "carga": 0
+        },
+        "model": "zeppelin.subgrupomodel",
+        "pk": 1
+    },
+    { "fields": {
+            "nome": "Subgrupo A2",
+            "tensao_maxima": 138.00,
+            "tensao_minima": 88.00,
+            "carga": 0
+        },
+        "model": "zeppelin.subgrupomodel",
+        "pk": 2
+    },
+    { "fields": {
+            "nome": "Subgrupo A3",
+            "tensao_maxima": 138.00,
+            "tensao_minima": 88.00,
+            "carga": 0
+        },
+        "model": "zeppelin.subgrupomodel",
+        "pk": 1
+    },
+    { "fields": {
+            "nome": "Subgrupo A3a",
+            "tensao_maxima": 44.00,
+            "tensao_minima": 30.00,
+            "carga": 0
+        },
+        "model": "zeppelin.subgrupomodel",
+        "pk": 3
+    },
+    { "fields": {
+            "nome": "Subgrupo A4",
+            "tensao_maxima": 25.00,
+            "tensao_minima": 2.3,
+            "carga": 0
+        },
+        "model": "zeppelin.subgrupomodel",
+        "pk": 4
+    },
+    { "fields": {
+            "nome": "Subgrupo AS",
+            "tensao_maxima": 2.3,
+            "tensao_minima": 0.0,
+            "carga": 0
+        },
+        "model": "zeppelin.subgrupomodel",
+        "pk": 5
+    }
+
+]

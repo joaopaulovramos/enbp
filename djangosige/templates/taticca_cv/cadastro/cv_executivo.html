@@ -1,0 +1,30 @@
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.nome_cv_executivo.label}}</label>
+      {% if form.nome_cv_executivo.errors %}<label class="error">{% for error in form.nome_cv_executivo.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.nome_cv_executivo}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.cargo.label}}</label>
+      {% if form.cargo.errors %}<label class="error">{% for error in form.cargo.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.cargo}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.cv_executivo.label}}</label>
+      {% if form.cv_executivo.errors %}<label class="error">{% for error in form.cv_executivo.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.cv_executivo}}
+    </div>
+  </div>
+</div>

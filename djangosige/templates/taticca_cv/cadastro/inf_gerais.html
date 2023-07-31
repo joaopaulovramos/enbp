@@ -1,0 +1,55 @@
+
+
+<div class="col-sm-6 {{pessoa_juridica_form.prefix}}">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.nome.label}}</label>
+      {% if form.nome.errors %}<label class="error">{% for error in form.nome.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.nome}}
+    </div>
+  </div>
+</div>
+
+
+<div class="col-sm-6 {{pessoa_juridica_form.prefix}}">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.telefone.label}}</label>
+      {% if form.telefone.errors %}<label class="error">{% for error in form.telefone.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.telefone}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6 {{pessoa_juridica_form.prefix}}">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.email.label}}</label>
+      {% if form.email.errors %}<label class="error">{% for error in form.email.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.email}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6 {{pessoa_juridica_form.prefix}}">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.cpf.label}}</label>
+      {% if form.cpf.errors %}<label class="error">{% for error in form.cpf.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.cpf}}
+    </div>
+  </div>
+</div>
+
+
+
+<div class="col-sm-6 {{pessoa_juridica_form.prefix}}">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.inf_adicionais.label}}</label>
+      {% if form.inf_adicionais.errors %}<label class="error">{% for error in form.inf_adicionais.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.inf_adicionais}}
+    </div>
+  </div>
+</div>
+

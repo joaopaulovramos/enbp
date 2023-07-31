@@ -1,0 +1,82 @@
+{%extends 'base/base.html'%}
+
+{%block title%}{{title_complete|title}}{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid lista">
+
+    {% include 'base/title_header.html' %}
+
+    {% include 'base/msg_sucesso.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
+      <div class="card">
+        <form action="" method="post">
+          {% csrf_token %}
+          <div class="header">
+            <h2>
+              {{title_complete}}
+            </h2>
+              <div>
+{#                  <button class="btn btn-success"><i class="material-icons">picture_as_pdf</i> <span>Baixar</span></button>#}
+              </div>
+          </div>
+
+          <div class="body">
+
+           {% include 'base/search.html' %}
+           {% include 'base/select_mes.html' %}
+
+           <div class="table-responsive">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[1, "desc"]]'>
+              <thead>
+                <tr>
+                    <th>Solicitante</th>
+                    <th>Dia</th>
+                    <th>Percentual</th>
+                    <th>Projeto</th>
+
+                </tr>
+              </thead>
+
+              <tbody>
+               {% if all_natops%}
+               {% for natop in all_natops %}
+                 <tr>
+                     <td>{{natop.solicitante}}</td>
+                      <td data-order="{{natop.data_formated}}">{{natop.data}}</td>
+                     <td>{{natop.percentual}}%</td>
+                     <td>{{natop.projeto}}</td>
+
+              </tr>
+              {% endfor %}
+              {%else%}
+              {%endif%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+</div>
+</section>
+
+
+{%endblock%}
+
+{% block js %}
+
+   <script>
+        $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'timesheet:verpercentuaisdiariosaprovados' %}?mes=${mes}&ano=${ano}`;
+        })
+   </script>
+
+{% endblock %}

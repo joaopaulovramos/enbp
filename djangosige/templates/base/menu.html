@@ -1,0 +1,760 @@
+<!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li>
+                        <a href="{% url 'base:index' %}">
+                            <i class="material-icons">&#xE88A;</i>
+                            <span>Página Inicial</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE85D;</i>
+                            <span>Cadastro</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'cadastro:listaclientesview' %}">
+                                    Clientes
+                                </a>
+
+
+
+
+
+
+                            </li>
+                            <li>
+                                <a href="{% url 'cadastro:listafornecedoresview' %}">
+                                    Fornecedores
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'cadastro:listaprodutosview' %}">
+                                    Produtos
+                                </a>
+                            </li>
+                            <!--
+                            <li>
+                                <a href="javascript:void(0);">
+                                    Serviços
+                                </a>
+                            </li>
+                            -->
+                            <li>
+                                <a href="{% url 'cadastro:listaempresasview' %}">
+                                    Empresas
+                                </a>
+                            </li>
+                             <li>
+                                <a href="{% url 'cadastro:listadepartamentos' %}">
+                                    Departamentos
+                                </a>
+                            </li>
+
+
+
+                               <li>
+                                <a href="{% url 'norli_projeto:listafilial' %}">
+                                        Filiais
+                                    </a>
+                            </li>
+
+
+
+                            <li>
+                                <a href="{% url 'cadastro:listatransportadorasview' %}">
+                                    Transportadoras
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    Outros
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'cadastro:listacategoriasview' %}">
+                                            Categorias
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cadastro:listaunidadesview' %}">
+                                            Unidades
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cadastro:listamarcasview' %}">
+                                            Marcas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+                <!-- timesheet-->
+<li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">timelapse</i>
+                            <span>TimeSheet</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'timesheet:listarpercentualdiario' %}">
+                                    <span>Minhas Horas - Percentual</span>
+                                </a>
+                            </li>
+
+{#                                 <li>#}
+{#                                    <a href="{% url 'timesheet:listatimesheet' %}">#}
+{#                                        <span>Minhas Horas</span>#}
+{#                                    </a>#}
+{#                                 </li>#}
+
+                                <!-- <li>
+                                    <a href="{% url 'timesheet:listargastos' %}">
+                                        <span>Meus Gastos</span>
+                                    </a>
+                                 </li>
+
+
+
+{#                                <li>#}
+{#                                    <a href="{% url 'timesheet:aprovartimesheet' %}">#}
+{#                                        <span>Aprovar Horas</span>#}
+{#                                    </a>#}
+{#                                 </li>#}
+
+                                <li>
+                                    <a href="{% url 'timesheet:aprovargastos' %}">
+                                        <span>Aprovar Gastos</span>
+                                    </a>
+                                 </li>
+-->
+                             <li>
+                                <a href="{% url 'timesheet:aprovarpercentuaisdiarios' %}">
+                                    <span>Aprovar Horas - Percentual</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'timesheet:verpercentuaisdiariosaprovados' %}">
+                                    <span>Horas Aprovadas - Percentual</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'timesheet:adicionaopiniao' %}">
+                                    <span>Dê a sua opinião </span>
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+<!-- fim timesheet-->
+                    <!-- inicio janela única-->
+                  <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">insert_drive_file</i>
+                            <span>Janela Única</span>
+                        </a>
+                        <ul class="ml-menu">
+
+                            <li>
+                                <a href="/admin/janela_unica/documentounicofinanceiro/">
+                                    <span>Documento</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="admin/janela_unica/tramitacaomodel/add/">
+                                    <span>Adicionar Tramitação</span>
+                                </a>
+                            </li>
+
+                             <li>
+                                <a href="/admin/janela_unica/tramitacaomodel/">
+                                    <span>Tramitar</span>
+                                </a>
+                            </li>
+
+
+
+                        </ul>
+                    </li>
+                    <!-- fim janela única -->
+                 <!-- Viagens-->
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">flight_takeoff</i>
+                            <span>Viagens</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                            <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">check_circle</i>
+                            <span>Itens de Viagem</span>
+                            </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <li>
+                                            <a href="{% url 'viagem:listatiposviagens' %}">
+                                                 <span>Tipos de Viagens</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatiposolicitacao' %}">
+                                                 <span>Tipos de Solicitação</span>
+                                            </a>
+                                        </li>
+
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipotransporte' %}">
+                                                 <span>Tipos de Transporte</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listamotivos' %}">
+                                                 <span>Motivos De Viagem</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipodespesa' %}">
+                                                 <span>Tipos de Despesa</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listamoeda' %}">
+                                                 <span>Moeda</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listahorariopreferencial' %}">
+                                                 <span>Horários Preferenciais</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listacategoriapassagem' %}">
+                                                 <span>Categoria de Passagem</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatiposnecessidadeespecial' %}">
+                                                 <span>Tipos de Necessidade Especial</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listalocalidades' %}">
+                                                 <span>Localidades de destino</span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatabeladiarias' %}">
+                                                 <span>Tabela de Diárias</span>
+                                            </a>
+                                        </li>
+                                </ul>
+
+                        </li>
+
+
+                                <li>
+                                    <a href="{% url 'viagem:listaviagem' %}">
+                                         <span>Minhas Solicitações de Viagens</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listasupautorizarviagem' %}">
+                                         <span>Autorizar Viagens - Sup</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listaautorizarviagem' %}">
+                                         <span>Autorizar Viagens - DUS</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listahomologacaoviagem' %}">
+                                         <span>Homologar RH</span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'viagem:listaaprovarpcviagem' %}">
+                                         <span>Aprovar Prestação de Contas</span>
+                                    </a>
+                                </li>
+
+
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Fim Viagens-->
+
+
+
+<!--
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE1BD;</i>
+                            <span>Faturamento - Setor Elétrico</span>
+                        </a>
+                        <ul class="ml-menu">
+
+
+                            <li>
+                                <a href="{% url 'zpfaturamento:listclassificacaofaturamento' %}">
+                                    Classificação de Faturamento
+                                </a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'zpfaturamento:listitemfaturamento' %}">
+                                    Itens de Faturamento
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    -->
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE1BD;</i>
+                            <span>Norli</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'norli_projeto:listaprojetos' %}">
+                                        Projetos
+                                    </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'norli_projeto:listatipo' %}">
+                                        Tipos de Projetos
+                                    </a>
+                            </li>
+                        </ul>
+
+
+
+
+                    </li>
+<!--
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE1BD;</i>
+                            <span>Cad. Básicos - Setor Elétrico</span>
+                        </a>
+                        <ul class="ml-menu">
+
+
+                            <li>
+                                <a href="{% url 'zeppelin:listcriteriobaixarenda' %}">
+                                        Critérios de Baixa Renda
+                                    </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'zeppelin:listamotivodeferimentobaixarenda' %}">
+                                        Motivo Deferimento Baixa Renda
+                                    </a>
+                            </li>
+                             <li>
+                                <a href="{% url 'zeppelin:listamotivoreprovacaoanalise' %}">
+                                        Motivo de Reprovação em Análise
+                                    </a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'zeppelin:listamotivocancelamento' %}">
+                                        Motivo de Cancelamento de Vistoria
+                                    </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'zeppelin:listadesligamento' %}">
+                                        Motivo Desligamento
+                                    </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'zeppelin:listaservico' %}">
+                                        Serviços
+                                    </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'zeppelin:listagrupoequipamento' %}">
+                                        Grupos de Equipamentos
+                                    </a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'zeppelin:listacnae' %}">
+                                        CNAE
+                                    </a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'zeppelin:listatipoboletimafericao' %}">
+                                        Tipos de Boletins de Aferição
+                                    </a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'zeppelin:listatipodocumento' %}">
+                                        Tipos de documento
+                                    </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'zeppelin:listatiposervicoessencial' %}">
+                                        Tipos de Serviços Essenciais
+                                    </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'zeppelin:listacadastrodefinalidade' %}">
+                                        Cadastro de Finalidade de Obra
+                                    </a>
+                            </li>
+
+
+                            <li>
+                                <a href="{% url 'zeppelin:listamotivoreprovacaovistoria' %}">
+                                        Motivos de Reprovação em Vistoria
+                                    </a>
+                            </li>
+
+
+                              <li>
+                                <a href="{% url 'zeppelin:listahistoricopadrao' %}">
+                                        Histórico Padrão
+                                    </a>
+                            </li>
+
+
+
+                             <li>
+                                <a href="{% url 'zeppelin:listaequipamento' %}">
+                                        Equipamentos
+                                    </a>
+                            </li>
+
+
+                            <li>
+                                <a href="{% url 'zeppelin:listaregional' %}">
+                                        Regionais
+                                    </a>
+                            </li>
+
+                            <li>
+                               <a href="{% url 'zeppelin:listauc' %}">
+                                        Unidade Consumidora
+                                    </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'zeppelin:listamedidor' %}">
+                                    Medidores
+                                </a>
+                            </li>
+                            <li>
+                               <a href="{% url 'zeppelin:listaclasse' %}">
+                                        Classes
+                                   </a>
+                            </li>
+                               <li>
+                               <a href="{% url 'zeppelin:listasubclasse' %}">
+                                        Sub-Classes
+                                    </a>
+                            </li>
+
+                              <li>
+                               <a href="{% url 'zeppelin:listagrupo' %}">
+                                        Grupo
+                                   </a>
+                            </li>
+                            <li>
+                               <a href="{% url 'zeppelin:listasubgrupo' %}">
+                                        Sub-Grupos
+                                    </a>
+                            </li>
+
+                             <li>
+                               <a href="{% url 'zeppelin:listatipoespecial' %}">
+                                        Tipos Especiais
+                                </a>
+                            </li>
+
+
+
+                            <li>
+                                <a href="{% url 'zeppelin:listamunicipio' %}">
+                                        Municipios
+                                    </a>
+                            </li>
+
+                        </ul>
+                    </li> -->
+
+
+
+
+
+
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE54E;</i>
+                            <span>Vendas</span>
+                        </a>
+                        <ul class="ml-menu">
+
+
+                            <li>
+                                <a href="{% url 'vendas:listapedidovendaview' %}">
+                                    Pedidos de venda
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'vendas:listacondicaopagamentoview' %}">
+                                    Condições de pagamento
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE8CC;</i>
+                            <span>Compras</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'compras:listaorcamentocompraview' %}">
+                                    Orçamentos de Compra
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'compras:listapedidocompraview' %}">
+                                    Pedidos de Compra
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'vendas:listacondicaopagamentoview' %}">
+                                    Condições de pagamento
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE8B0;</i>
+                            <span>Fiscal</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    Nota Fiscal
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'fiscal:listanotafiscalsaidaview' %}">
+                                            Notas Fiscais
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'fiscal:listanotafiscalentradaview' %}">
+                                            Notas de Fornecedores
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'fiscal:configuracaonotafiscal' %}">
+                                            Configuração NF-e
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{% url 'fiscal:listanaturezaoperacaoview' %}">
+                                    Natureza da operação
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'fiscal:listagrupofiscalview' %}">
+                                    Grupo fiscal
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    Comunicação SEFAZ
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'fiscal:consultarcadastro' %}">
+                                            Consultar cadastro
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'fiscal:inutilizarnotas' %}">
+                                            Inutilizar notas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'fiscal:consultarnota' %}">
+                                            Consultar nota
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'fiscal:baixarnota' %}">
+                                            Baixar nota
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'fiscal:manifestacaodestinatario' %}">
+                                            Manifestação do destinatário
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE227;</i>
+                            <span>Financeiro</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'financeiro:planocontasview' %}">
+                                    Plano de contas
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'financeiro:fluxodecaixaview' %}">
+                                    Fluxo de caixa
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'financeiro:listalancamentoview' %}">
+                                    Lançamentos
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    Entradas
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'financeiro:listarecebimentosview' %}">
+                                            Recebimentos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'financeiro:listacontareceberview' %}">
+                                            Contas a receber
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    Saidas
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'financeiro:listapagamentosview' %}">
+                                            Pagamentos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'financeiro:listacontapagarview' %}">
+                                            Contas a pagar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">&#xE1BD;</i>
+                            <span>Estoque</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'estoque:consultaestoqueview' %}">
+                                    Consultar estoque
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'estoque:listalocalview' %}">
+                                    Locais de estoque
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    Movimentações de estoque
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'estoque:listamovimentoestoqueview' %}">
+                                            Todas movimentações
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'estoque:listaentradasestoqueview' %}">
+                                            Entradas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'estoque:listasaidasestoqueview' %}">
+                                            Saídas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'estoque:listatransferenciasestoqueview' %}">
+                                            Transferências
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+
+
+
+
+                </ul>
+            </div>

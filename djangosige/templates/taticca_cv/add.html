@@ -1,0 +1,89 @@
+{%extends 'base/base.html'%}
+
+{%block title%}{{title_complete|title}}{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid">
+
+    {% include 'base/title_header.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <div class="card">
+
+          <!--Header-->
+          <div class="header">
+
+            <h2>
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>Meu CV
+            </h2>
+            <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#tab_inf_gerais" data-toggle="tab">INFORMAÇÕES GERAIS</a></li>
+                    <li role="presentation"><a href="#tab_foto" data-toggle="tab">Foto</a></li>
+                    <li role="presentation"><a href="#curriculo_executivo" data-toggle="tab">Currículo Executivo</a></li>
+                    <li role="presentation"><a href="#curriculo_padrao" data-toggle="tab">Currículo Padrão</a></li>
+                    <li role="presentation"><a href="#certificados_diplomas" data-toggle="tab">Certificados & Diplomas</a></li>
+            </ul>
+
+          </div>
+
+
+
+          <form id="" role="form" action="" method="post">
+            {% csrf_token %}
+
+
+           <div class="body">
+
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+
+
+                <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab_inf_gerais">
+                {% include 'taticca_cv/cadastro/inf_gerais.html' %}
+            </div>
+            <div role="tabpanel" class="tab-pane formset-tab" id="tab_foto">
+                 {% include 'taticca_cv/cadastro/foto.html' %}
+            </div>
+            <div role="tabpanel" class="tab-pane formset-tab" id="curriculo_executivo">
+                 {% include 'taticca_cv/cadastro/cv_executivo.html' %}
+            </div>
+            <div role="tabpanel" class="tab-pane formset-tab" id="curriculo_padrao">
+                {% include 'taticca_cv/cadastro/cv_padrao.html' %}
+            </div>
+            <div role="tabpanel" class="tab-pane formset-tab" id="certificados_diplomas">diplomas</div>
+        </div>
+                  
+              </div>
+
+              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+            </div>
+
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+{%endblock%}
+
+{% block js %}
+    
+  {% load static %}
+  <!-- JQuery UI Css/Js -->
+  <link href="{% static 'css/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+  <script type="text/javascript">
+    var cfop_path = '{% static 'tabelas/cfop/cfop_2015_002.csv' %}'
+    $.Admin.autocompleteField.autocompleteCfop(cfop_path);
+    
+  </script>
+  
+{% endblock %}

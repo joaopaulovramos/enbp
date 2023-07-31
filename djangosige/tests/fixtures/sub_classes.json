@@ -1,0 +1,203 @@
+[
+    { "fields": {
+            "nome": "Residencial",
+            "classe": 1
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 1
+    },
+    { "fields": {
+            "nome": "Residencial baixa renda",
+            "classe": 1
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 2
+    },
+    { "fields": {
+            "nome": "Residencial baixa renda Indígena",
+            "classe": 1
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 3
+    },
+    { "fields": {
+            "nome": "Residencial baixa renda benefício de prestação continuada da assistência social",
+            "classe": 1
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 4
+    },
+    { "fields": {
+            "nome": "Residencial baixa renda multifamiliar",
+            "classe": 1
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 5
+    }
+    ,
+    { "fields": {
+            "nome": "Comercial",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 6
+    }
+    ,
+    { "fields": {
+            "nome": "Serviços de transporte, exceto tração elétrica",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 7
+    },
+    { "fields": {
+            "nome": "Serviços de comunicações e telecomunicações",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 8
+    },
+      { "fields": {
+            "nome": "Associação e entidades filantrópicas",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 9
+    },
+      { "fields": {
+            "nome": "Templos religiosos",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 10
+    },
+      { "fields": {
+            "nome": "Administração condominial: iluminação e instalações de uso comum de prédio ou conjunto de edificações",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 11
+    },
+      { "fields": {
+            "nome": "Iluminação em rodovias: solicitada por quem detenha concessão ou autorização para administração em rodovias",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 12
+    },
+      { "fields": {
+            "nome": "Semáforos, radares e câmeras de monitoramento de trânsito, solicitados por quem detenha concessão ou autorização para controle de trânsito",
+            "classe": 3
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 13
+    },
+      { "fields": {
+            "nome": "agropecuária rural",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 14
+    }
+    ,
+      { "fields": {
+            "nome": "instalações elétricas de poços de captação de água",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 15
+    }
+     ,
+      { "fields": {
+            "nome": "serviço de bombeamento de água destinada à atividade de irrigação",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 16
+    },
+      { "fields": {
+            "nome": "agropecuária urbana",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 17
+    }
+    ,
+      { "fields": {
+            "nome": "residencial rural",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 18
+    }
+        ,
+      { "fields": {
+            "nome": "cooperativa de eletrificação rural",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 19
+    },
+      { "fields": {
+            "nome": "agroindustrial",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 20
+    }
+    ,
+      { "fields": {
+            "nome": "serviço público de irrigação rural",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 21
+    }
+    ,
+      { "fields": {
+            "nome": "escola agrotécnica: estabelecimento de ensino direcionado à agropecuária",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 22
+    }
+    ,
+      { "fields": {
+            "nome": "aquicultura",
+            "classe": 4
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 23
+    }
+      ,
+      { "fields": {
+            "nome": "Iluminação Pública",
+            "classe": 5
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 24
+    }
+     ,
+      { "fields": {
+            "nome": "Serviço Público - tração elétrica",
+            "classe": 5
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 25
+    }
+      ,
+      { "fields": {
+            "nome": "Serviço Público -  água, esgoto e saneamento",
+            "classe": 5
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 26
+    },
+      { "fields": {
+            "nome": "Consumo Próprio",
+            "classe": 5
+        },
+        "model": "zeppelin.subclassemodel",
+        "pk": 27
+    }
+]

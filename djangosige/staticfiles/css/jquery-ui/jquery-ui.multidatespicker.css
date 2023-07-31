@@ -1,0 +1,24 @@
+.ui-state-active,.ui-widget-content .ui-state-active,.ui-widget-header .ui-state-active,a.ui-button:active,.ui-button:active,.ui-button.ui-state-active:hover{
+    border:1px solid #969696;
+    background: #ededed;
+    font-weight:normal;
+    color:#000
+}
+.ui-icon-background,.ui-state-active .ui-icon-background{
+    border:#003eff;
+    background-color:#fff
+}
+
+.ui-state-highlight-multi a {
+    border:1px solid #003eff;
+    background:#007fff !important;
+    color: #fff !important;
+}
+
+/*.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {*/
+/*    border: 1px solid #dad55e;*/
+/*    background: #d90638;*/
+/*    color: #777620;*/
+/*}*/
+
+

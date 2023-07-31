@@ -1,0 +1,157 @@
+{%extends 'base/base.html'%}
+
+{%block title%}{{title_complete|title}}{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid">
+
+    {% include 'base/title_header.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <div class="card">
+
+          <!--Header-->
+          <div class="header">
+
+            <h2>
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
+            </h2>
+            <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
+
+          </div>
+          <!--# Header-->
+
+          <form id="" role="form" action="" enctype="multipart/form-data"  method="post">
+            {% csrf_token %}
+            <!-- Body-->
+            <div class="body">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+              <div class="row">
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.nome.label}}</label>{% if form.nome.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.nome.errors %}<label class="error">{% for error in form.nome.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.nome}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.email.label}}</label>{% if form.email.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.email.errors %}<label class="error">{% for error in form.email.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.email}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.tipo.label}}</label>{% if form.tipo.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.tipo.errors %}<label class="error">{% for error in form.tipo.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.tipo}}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.opiniao.label}}</label>{% if form.opiniao.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                      {% if form.opiniao.errors %}<label class="error">{% for error in form.opiniao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.opiniao}}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+
+                  <div class="col-md-12">
+
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.anexo.label}}</label>{% if form.anexo.field.required %}<strong style="color:red;"> *</strong>{% endif %}
+                          {% if form.anexo.errors %}<label class="error">{% for error in form.anexo.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.anexo}}
+                        </div>
+                      </div>
+
+                  </div>
+
+                  <div class="col-md-12">
+                      <div class="form-group">
+                        <input type="hidden" name="rating" id="id_rating" >
+                        <label>Agradecemos sua colaboração</label><br/>
+
+                    <ul class="list-inline rating-list">
+                        <li data-norli-rating="5">
+                            <i class="fa fa-heart {% if post.user_rating > 4 %} checked {% endif %}" title="Rate 5"></i>
+                        </li>
+                        <li data-norli-rating="4">
+                            <i class="fa fa-heart {% if post.user_rating > 3 %} checked {% endif %}" title="Rate 4"></i>
+                        </li>
+                        <li data-norli-rating="3">
+                            <i class="fa fa-heart {% if post.user_rating > 2 %} checked {% endif %}" title="Rate 3"></i>
+                        </li>
+                        <li data-norli-rating="2">
+                            <i class="fa fa-heart {% if post.user_rating > 1 %} checked {% endif %}" title="Rate 2"></i>
+                        </li>
+                        <li data-norli-rating="1">
+                            <i class="fa fa-heart {% if post.user_rating > 0 %} checked {% endif %}" title="Rate 1"></i>
+                        </li>
+                    </ul>
+                  </div>
+                  </div>
+
+              </div>
+
+              </div>
+
+              </div>
+
+              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+            </div>
+            <!--#Body-->
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+{%endblock%}
+
+{% block js %}
+
+  {% load static %}
+
+  <script type="text/javascript">
+
+    $('.rating-list li').on('click', function () {
+        $('#id_rating').val($(this).data('norli-rating'))
+        $('.rating-list li i').removeClass('checked')
+        $(this).nextAll().add(this).find('i').addClass('checked')
+    })
+
+  </script>
+
+{% endblock %}

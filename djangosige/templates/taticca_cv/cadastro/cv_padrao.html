@@ -1,0 +1,51 @@
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.nome_cv_padrao.label}}</label>
+      {% if form.nome_cv_padrao.errors %}<label class="error">{% for error in form.nome_cv_padrao.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.nome_cv_padrao}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.telefone_cv_padrao.label}}</label>
+      {% if form.telefone_cv_padrao.errors %}<label class="error">{% for error in form.telefone_cv_padrao.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.telefone_cv_padrao}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.endereco_cv_padrao.label}}</label>
+      {% if form.endereco_cv_padrao.errors %}<label class="error">{% for error in form.endereco_cv_padrao.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.endereco_cv_padrao}}
+    </div>
+  </div>
+</div>
+
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.email_cv_padrao.label}}</label>
+      {% if form.email_cv_padrao.errors %}<label class="error">{% for error in form.email_cv_padrao.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.email_cv_padrao}}
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6">
+  <div class="form-group">
+    <div class="form-line">
+      <label>{{form.perfil_cv_padrao.label}}</label>
+      {% if form.perfil_cv_padrao.errors %}<label class="error">{% for error in form.perfil_cv_padrao.errors %}{{error}}{% endfor %}</label>{% endif %}
+      {{form.perfil_cv_padrao}}
+    </div>
+  </div>
+</div>

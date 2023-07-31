@@ -1,0 +1,389 @@
+{%extends 'base/base.html'%}
+
+
+{%block title%} {{form.cfop.value}} {%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid">
+
+    {% include 'base/title_header.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <div class="card">
+
+          <!--Header-->
+          <div class="header">
+
+            <h2>
+              <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
+            </h2>
+            <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
+
+          </div>
+          <!--# Header-->
+
+          <form role="form" action="" enctype="multipart/form-data"  method="post">
+            {% csrf_token %}
+            <!-- Body-->
+            <div class="body">
+
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+              <div class="panel panel-default">
+                <div class="panel-body" style="background:#f5f5f5">
+
+                    <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Código da Solicitação</label>
+                    <input disabled type="text" name="data_fim" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Inclusão</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Usuário</label>
+                    <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Origem</label>
+                    <input disabled type="text" name="data_fim" value="{{origem}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Destino</label>
+                     <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data Início</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
+                </div>
+              </div>
+            </div>
+
+              <div class="col-sm-3">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data fim</label>
+                    <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
+
+                </div>
+              </div>
+            </div>
+
+
+                </div>
+              </div>
+               
+{#                {% for field in form_2 %}#}
+{#                <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{#                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}#}
+{#                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{field}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{#                {% endfor %}#}
+
+
+              <div class="sep"><h5>Adicionar itens de prestação de contas</h5><hr/></div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.numero_item.label}}</label><strong style="color:red;"> *</strong>
+{#                      {{form_2.numero_item}}#}
+                        <input readonly type="number" name="numero_item" class="form-control" size="200" required="" id="id_numero_item" value="{{ num_item }}">
+                      {% if form.numero_item.errors %}<label class="error">{% for error in form.numero_item.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.tipo_despesa.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.tipo_despesa}}
+                      {% if form.tipo_despesa.errors %}<label class="error">{% for error in form.tipo_despesa.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.descricao.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.descricao}}
+                      {% if form.descricao.errors %}<label class="error">{% for error in form.descricao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.file.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.file}}
+                      {% if form.file.errors %}<label class="error">{% for error in form.file.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.data_evento.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.data_evento}}
+                      {% if form.data_evento.errors %}<label class="error">{% for error in form.data_evento.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.pagamento.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.pagamento}}
+                      {% if form.pagamento.errors %}<label class="error">{% for error in form.pagamento.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.moeda.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.moeda}}
+                      {% if form.moeda.errors %}<label class="error">{% for error in form.moeda.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.valor_pago.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.valor_pago}}
+                      {% if form.valor_pago.errors %}<label class="error">{% for error in form.valor_pago.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.cotacao.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.cotacao}}
+                      {% if form.cotacao.errors %}<label class="error">{% for error in form.cotacao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <div class="form-line">
+                      <label>{{form_2.valor_pago_reais.label}}</label><strong style="color:red;"> *</strong>
+                      {{form_2.valor_pago_reais}}
+                      {% if form.valor_pago_reais.errors %}<label class="error">{% for error in form.valor_pago_reais.errors %}{{error}}{% endfor %}</label>{% endif %}
+                    </div>
+                  </div>
+                </div>
+{#                {{ form.errors }}#}
+              </div>
+              <button name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
+            </div>
+            <!--#Body-->
+          </form>
+
+        <hr/>
+
+        <form action="" method="post">
+         {% csrf_token %}
+
+            <div class="body">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <input type="checkbox" name="check_remarcacao" class="form-control" id="id_check_remarcacao" {% if remarcacao_interesse_particular == '1' %}checked="checked"{% endif %}>
+                        <label for="id_check_remarcacao"
+                               style="font-weight: bold;"
+                               title=""> Remarcação por Interesse particular
+                        </label>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <input type="checkbox" name="finalizar_pc" class="form-control" id="id_finalizar_pc">
+                        <label for="id_finalizar_pc"
+                               style="font-weight: bold;"
+                               title=""> Finalizar Prestação de contas
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <button name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVA PRESTAÇÃO DE CONTAS</span></button>
+            </div>
+
+        </form>
+
+
+        <!-- ###################################################################### -->
+        <div class="footer">
+          <form role="form" action=""  method="post">
+            {% csrf_token %}
+
+
+              <div class="body">
+
+              <div class="row">
+
+            <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos próprios (R$)</label>
+                        <input disabled type="text" name="recusos_proprioss" value="{{ totais_pagos.recursos_proprios }}" class="form-control" id="id_recursos_proprios" readonly>
+                    </div>
+                  </div>
+                </div>
+
+          <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Valor total recursos da empresa (R$)</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ totais_pagos.recursos_empresa }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+                 <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <label>Avaliação</label><br>
+                        <input disabled type="radio" name="avaliacao_pc" id="radio_pc_aprovada" value="0" {% if aprovar_pc == '1' %}checked="checked"{% endif %} />
+                        <label for="radio_ida"><strong>Aprovada</strong></label>
+
+                        <input disabled type="radio" name="avaliacao_pc" id="radio_pc_rejeitada" value="1" {% if aprovar_pc == '2' %}checked="checked"{% endif %} />
+                      <label for="radio_idavolta"><strong>Rejeitada</strong></label>
+
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>Motivo da recusa</label>
+                        <input disabled type="text" name="recursos_empresa" value="{{ motivo_pc_reprovacao }}" class="form-control" id="id_recursos_empresa" readonly>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+{#                   {% include 'base/search.html' %}#}
+
+                   <div class="table-responsive">
+                    <table id="lista-database" class="table table-bordered table-striped lista-table">
+                      <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Tipo de Despesa</th>
+                            <th>Valor</th>
+                            <th>Pagamento</th>
+                            <th>Anexo</th>
+                            <th>Remover</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                       {% if arquivos%}
+                       {% for natop in arquivos %}
+
+                       <tr>
+                           <td>{{natop.numero_item}}</td>
+                           <td>{{natop.tipo_despesa}}</td>
+                           <td>R$ {{natop.valor_pago_reais}}</td>
+                           <td>{{natop.pagamento}}</td>
+                           <td><a href="{{natop.file.url}}">Download</a></td>
+                           <td class="lista-remove">
+                               <a href="{% url 'viagem:remover_arquivo' natop.id  viagem_pk %}" class="btn btn-red  btn-success btn-xs"><i class="material-icons">&#xE872;</i><span> REMOVER</span></a>
+                           </td>
+                      </tr>
+                      {% endfor %}
+                      {%else%}
+                      {%endif%}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+          </form>
+        </div>
+        <!-- ###################################################################### -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+{%endblock%}
+
+{% block js %}
+
+  {% load static %}
+
+  <script src="{% static 'js/jquery.mask.js' %}"></script>
+
+    {% include 'base/load_jqueryui.html' %}
+    {% include 'base/datepicker_js.html' %}
+
+  <script type="text/javascript">
+      $.Admin.viagemForm.init()
+
+        $('#id_cotacao, #id_valor_pago').on('change', function (){
+            let valor_pago = parseFloat($('#id_valor_pago').val())
+            let cotacao = parseFloat($('#id_cotacao').val())
+            $('#id_valor_pago_reais').val((valor_pago * cotacao).toFixed(2))
+        })
+
+  </script>
+
+{% endblock %}
