@@ -74,7 +74,7 @@
                         {% elif  natop.recusado_sup %}
                             <a class="btn btn-red btn-success disabled"><span> RECUSADA</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -86,7 +86,7 @@
                          {% elif  natop.recusado_dus %}
                             <a class="btn btn-red btn-success disabled"><span> RECUSADA</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -95,7 +95,7 @@
                         {% if natop.homologada  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -118,7 +118,7 @@
                             <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS </span></a>
                        {% endif %}
                        {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
-                            <a class="btn"><span> Enviado Para Aprovação</span></a>
+                            <a class="btn"><span> ENVIADO PARA APROVAÇÃO</span></a>
                        {% endif %}
                         {% if natop.aprovar_pc == '1' %}
                             <a class="btn btn-success disabled"><span> APROVADA</span></a>
