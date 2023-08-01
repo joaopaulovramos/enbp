@@ -29,7 +29,7 @@ class ListTipoViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoViagensView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Viagem'
+        context['title_complete'] = 'Tipo de Viagem'
         context['add_url'] = reverse_lazy('viagem:adicionartiposviagens')
         return context
 
@@ -74,7 +74,7 @@ class ListTipoSolicitacaoView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoSolicitacaoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Solicitação'
+        context['title_complete'] = 'Tipo de Solicitação'
         context['add_url'] = reverse_lazy('viagem:adicionartiposolicitacao')
         return context
 
