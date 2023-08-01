@@ -74,7 +74,7 @@ class TipoDespesaForm(forms.ModelForm):
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '300'}),
         }
         labels = {
-            'sigla': _('Silga'),
+            'sigla': _('Sigla'),
             'descricao': _('Descrição'),
         }
 
