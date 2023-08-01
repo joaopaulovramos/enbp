@@ -339,7 +339,7 @@ class ListHorarioPreferencialView(CustomListView):
     template_name = 'viagem/list_horario_preferencial.html'
     model = HorarioPreferencialModel
     context_object_name = 'all_natops'
-    success_url = reverse_lazy('viagem:listahorarioprefencial')
+    success_url = reverse_lazy('viagem:listahorariopreferencial')
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
