@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from django.forms import ValidationError
 from django.template.defaultfilters import date
 from django_fsm import FSMField, transition
 from django_cpf_cnpj.fields import CPFField, CNPJField
@@ -57,10 +58,20 @@ class StatusAnaliseFinaceira(object):
 # Caso venha a surgir outros tipos de documentos
 # subir para a classe abstrata os campos em comum
 
+class ArquivoDocumentoUnico(models.Model):
+    descricao = models.CharField(max_length=255, null=True, blank=True)
+    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
+    data_inclusao = models.DateTimeField(auto_now_add=True)
+    documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_arquivo", on_delete=models.CASCADE, null=True, blank=True)
+    class Meta:
+        pass
+        
+
 
 class DocumentoUnico(models.Model):
     class Meta:
         abstract = True
+
 
 
 class DocumentoUnicoFinanceiro(DocumentoUnico):
@@ -179,6 +190,9 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             if self.emit_entrada.endereco_padrao:
                 return self.emit_entrada.endereco_padrao.uf
         return ''
+    
+    # def can_reprovar_gerencia(self):
+    #     return self.observacao_gerencia
 
     # Workflow
     def logar_detalhes(self, request, mensagem):
@@ -200,7 +214,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
                 target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA,
                 permission='janela_unica.gerencia_documento_unico')
-    def aprovacao_gerencia(self, by=None, request=None):
+    def aprovar_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = True
         self.usuario_gerencia = request.user
         #https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
@@ -208,22 +222,24 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico')
-    def reprovacao_gerencia(self, by=None, request=None):
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico'
+                # , conditions=[can_reprovar_gerencia]
+    )
+    def reprovar_gerencia(self, by=None, request=None):
         self.aprovado_gerencia = False
         self.usuario_gerencia = request.user
         self.logar_detalhes(request, mensagem='Reprovado pela gerência')
 
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, permission='janela_unica.superintendencia_documento_unico')
-    def aprovacao_superintendencia(self, by=None, request=None):
+    def aprovar_superintendencia(self, by=None, request=None):
         self.aprovado_superintendencia = True
         self.usuario_superintencencia = request.user
         self.logar_detalhes(request, mensagem='Aprovado pela superintendência')
 
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, permission='janela_unica.superintendencia_documento_unico')
-    def reprovado_superintendencia(self, by=None, request=None):
+    def reprovar_superintendencia(self, by=None, request=None):
         self.usuario_superintencencia = request.user
         self.aprovado_superintendencia = False
         self.logar_detalhes(request, mensagem='Reprovado pela superintendência')

@@ -1,12 +1,20 @@
 from django.contrib import admin
 from django import forms
+from django.utils.safestring import mark_safe
 
 from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
 from djangosige.apps.janela_unica.models.Models import StatusAnaliseFinaceira
-from .models import TramitacaoModel, DocumentoUnicoFinanceiro
+from .models import TramitacaoModel, DocumentoUnicoFinanceiro, ArquivoDocumentoUnico
 from fsm_admin.mixins import FSMTransitionMixin
 from simple_history.admin import SimpleHistoryAdmin
 from django.utils.html import format_html
+
+
+class ArquivoDocumentoUnicoInline(admin.TabularInline):
+    model = ArquivoDocumentoUnico
+    extra = 0
+    insert_after = 'descricao'
+
 
 
 @admin.register(TramitacaoModel)
@@ -31,24 +39,11 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
 
     history_list_display = ["changed_fields", "list_changes"]
 
-    def changed_fields(self, obj):
-        if obj.prev_record:
-            delta = obj.diff_against(obj.prev_record)
-            return delta.changed_fields
-        return None
-
-    def list_changes(self, obj):
-        fields = ""
-        if obj.prev_record:
-            delta = obj.diff_against(obj.prev_record)
-
-            for change in delta.changes:
-                fields += str("<strong>{}</strong> de <span style='background-color:#ffb5ad'>{}</span> para <span style='background-color:#b3f7ab'>{}</span> . <br/>".format(change.field, change.old, change.new))
-            return format_html(fields)
-        return None
-
-    def has_delete_permission(self, request, obj=None):
-        return False
+    class Media:
+        css = {
+            'all': ('css/janela-unica.css',)
+        }
+        js = ['admin/js/jquery.init.js', 'js/janela-unica.js']
 
     # TODO: Ajustar aqui
     fieldsets = (
@@ -58,11 +53,14 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
                 ('tipo_arquivo', 'tipo_anexo', 'arquivo', 'observacoes'),
                 ('chave', 'numero', 'serie', 'cfop'),
                 ('cnpj', 'data_emissao', 'valor_total'),
-                'descricao'
-            ),
-            'classes': ({
-                'pk': 'sm-3',
-            })
+                'descricao',
+                # ('arquivo_documento_unico_inline')
+            )
+        }),
+
+        ('Arquivos adicionais', {
+            'fields': (),
+            'classes': ('replacein',),
         }),
 
         ('Dados pagamento', {
@@ -105,8 +103,31 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         }),
     )
 
+    inlines = [ArquivoDocumentoUnicoInline]    
+
+    def changed_fields(self, obj):
+        if obj.prev_record:
+            delta = obj.diff_against(obj.prev_record)
+            return delta.changed_fields
+        return None
+
+    def list_changes(self, obj):
+        fields = ""
+        if obj.prev_record:
+            delta = obj.diff_against(obj.prev_record)
+
+            for change in delta.changes:
+                fields += str("<strong>{}</strong> de <span style='background-color:#ffb5ad'>{}</span> para <span style='background-color:#b3f7ab'>{}</span> . <br/>".format(change.field, change.old, change.new))
+            return format_html(fields)
+        return None
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    
+
     def get_readonly_fields(self, request, obj=None):
-        ret = ['pk', 'responsavel', 'data_inclusao']
+        ret = ['pk', 'responsavel', 'data_inclusao', 'arquivo_documento_unico_inline']
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
         if not obj or not obj.situacao or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
             ret.extend(['aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia',

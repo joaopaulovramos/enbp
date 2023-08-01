@@ -77,6 +77,7 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'responsavel': forms.Select(attrs={'class': 'form-control'}),
             'data_emissao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_gerencia': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     # TODO: Melhorar isso, gambiarra para funcionar o form-control
