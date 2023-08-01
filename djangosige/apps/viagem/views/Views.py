@@ -413,6 +413,7 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
     def get(self, request, *args, **kwargs):
         return super(AdicionarTipoNecessidadeEspecialView, self).get(request, *args, **kwargs)
 
+
 class EditarTipoNecessidadeEspecialView(CustomUpdateView):
     form_class = TiposNecessidadeEspecialForm
     model = TiposNecessidadeEspecialModel
@@ -427,6 +428,7 @@ class EditarTipoNecessidadeEspecialView(CustomUpdateView):
         context['return_url'] = reverse_lazy('viagem:listatiposnecessidadeespecial')
         context['id'] = self.object.id
         return context
+
 
 #### Localidades
 class ListLocalidadeView(CustomListView):
@@ -523,6 +525,7 @@ class EditarTabelaDiariaView(CustomUpdateView):
         context['id'] = self.object.id
         return context
 
+
 #### Viagem
 class ListViagensView(CustomListView):
     template_name = 'viagem/list_viagens.html'
@@ -548,7 +551,8 @@ class ListViagensView(CustomListView):
 
         # return self.model.objects.all()
         current_user = self.request.user
-        user_viagens = ViagemModel.objects.filter(solicitante=current_user, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(solicitante=current_user, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
 
         return user_viagens
 
@@ -638,7 +642,8 @@ class AdicionarViagemView(CustomCreateView):
                 _valor_diaria = tabela_diaria.valor_diaria
                 _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
             except TabelaDiariaModel.DoesNotExist:
-                form.add_error('localidade_destino',  'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
+                form.add_error('localidade_destino',
+                               'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
         if form.is_valid():
             self.object = form.save(commit=False)
@@ -654,7 +659,7 @@ class AdicionarViagemView(CustomCreateView):
         context['title_complete'] = 'ADICIONAR VIAGEM'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
-        #usuario = Usuario.objects.get(user=self.request.user.id)
+        # usuario = Usuario.objects.get(user=self.request.user.id)
         usuario = Usuario.objects.get(user=self.request.user)
         context['pcd'] = usuario.pcd
 
@@ -736,7 +741,6 @@ class EditarViagemView(CustomUpdateView):
 
             print(form.errors)
 
-
         if form.is_valid():
             self.object = form.save(commit=False)
             self.object.qtd_diarias = _qtd_diarias
@@ -803,11 +807,13 @@ class ListSupAutorizarViagensView(CustomListView):
             self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
+        if (
+                current_user.usuario.perfil != '2' and current_user.usuario.perfil != '1' and not current_user.is_superuser):
             return
-        user_viagens = ViagemModel.objects.filter(autorizada_sup=False, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(autorizada_sup=False, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(recusado_sup=False)
-        if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
+        if (not current_user.is_superuser and current_user.usuario.perfil != '1'):
             user_viagens = user_viagens.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
         return user_viagens
@@ -865,10 +871,11 @@ class ListAutorizarViagensView(CustomListView):
             self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        if (current_user.usuario.perfil!='1'):
+        if (current_user.usuario.perfil != '1'):
             return
 
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=False, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=False, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(autorizada_sup=True)
         user_viagens = user_viagens.filter(recusado_dus=False)
         return user_viagens
@@ -925,7 +932,8 @@ class ListHomologarViagensView(CustomListView):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(homologada=False)
 
         return user_viagens
@@ -1039,7 +1047,6 @@ class RemoverArquivoView(CustomUpdateView):
         return context
 
 
-
 class PrestarContasArquivosView(CustomUpdateView):
     form_class = PrestacaoContaForm
     model = ViagemModel
@@ -1085,10 +1092,11 @@ class PrestarContasArquivosView(CustomUpdateView):
         data_evento = datetime.datetime.strptime(request.POST['data_evento'], "%d/%m/%Y")
         data_evento = timezone.make_aware(data_evento, timezone.utc)
         if viagem.dada_fim:
-            data_fim_viagem = viagem.dada_fim+timedelta(days=1)
+            data_fim_viagem = viagem.dada_fim + timedelta(days=1)
             data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
             if data_evento < data_inicio_viagem or data_evento > data_fim_viagem:
-                form.add_error('data_evento', 'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
+                form.add_error('data_evento',
+                               'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
         else:
             data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
             if data_evento < data_inicio_viagem:
@@ -1114,7 +1122,7 @@ class PrestarContasArquivosView(CustomUpdateView):
         context['viagem_pk'] = pk
         context['arquivos'] = Arquivos.objects.filter(viagem=context['viagem_pk'])
 
-        #Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
+        # Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
         if context['arquivos'].count() >= 1:
             _qtd_arquivos_enviados = context['arquivos'].latest('numero_item').numero_item
             if _qtd_arquivos_enviados is None:
@@ -1122,8 +1130,6 @@ class PrestarContasArquivosView(CustomUpdateView):
             context['num_item'] = _qtd_arquivos_enviados + 1
         else:
             context['num_item'] = 1
-
-
 
         total_recursos_proprios = 0
         total_recursos_empresa = 0
@@ -1276,7 +1282,8 @@ class ListAprovarPCViagensView(CustomListView):
             self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(homologada=True)
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
@@ -1310,6 +1317,7 @@ class ListAprovarPCViagensView(CustomListView):
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens'
         return context
+
 
 class AvaliarPrestacaoDeContas(CustomUpdateView):
     form_class = AvaliarPrestacaoContaForm
@@ -1423,7 +1431,6 @@ class AvaliarArquivosView(CustomUpdateView):
     def post(self, request, *args, **kwargs):
 
         # self.object.qtd_diarias.di
-
 
         if 'acao' in request.POST.keys():
             acao = request.POST['acao']
