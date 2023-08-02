@@ -3,7 +3,9 @@
 <!-- https://github.com/feincms/feincms/blob/main/feincms/templates/admin/filter.html -->
 
 <script type="text/javascript">var go_from_select = function (opt) { window.location = window.location.pathname + opt };</script>
-<h3>{% blocktrans with title as filter_title %} By {{ filter_title }} {% endblocktrans %}</h3>
+
+<div class="form-group">
+    <label>{% blocktrans with title as filter_title %} By {{ filter_title }} {% endblocktrans %}</label>
     {% if choices|slice:"4:" %}
         <select class="form-control" onchange="go_from_select(this.options[this.selectedIndex].value)">
             {% for choice in choices %}
@@ -12,10 +14,9 @@
                 {% endfor %}
         </select>
     {% else %}
-
-    {% for choice in choices %}
-    <li{% if choice.selected %} class="selected" {% endif %}>
-        <a href="{{ choice.query_string|iriencode }}">{{ choice.display }}</a></li>
+        {% for choice in choices %}
+        <li{% if choice.selected %} class="selected" {% endif %}>
+            <a href="{{ choice.query_string|iriencode }}">{{ choice.display }}</a></li>
         {% endfor %}
-
-        {% endif %}
+    {% endif %}
+</div>
