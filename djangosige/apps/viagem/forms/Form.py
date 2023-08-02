@@ -138,6 +138,7 @@ class LocalidadeForm(forms.ModelForm):
             'descricao': _('Descrição'),
         }
 
+
 class TabelaDiariaForm(forms.ModelForm):
     class Meta:
         model = TabelaDiariaModel
@@ -313,7 +314,8 @@ class VerViagemForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'id': 'valor_passagem_viagem', 'disabled': 'disabled'}),
             'itinerario': forms.RadioSelect(attrs={'class': 'form-control', 'disabled': 'disabled'}),
             'escalas': forms.RadioSelect(attrs={'class': 'form-control', 'disabled': 'disabled'}),
-            'dada_inicio': forms.TextInput(attrs={'class': 'form-control datepicker', 'size': '200', 'disabled': 'disabled'}),
+            'dada_inicio': forms.TextInput(
+                attrs={'class': 'form-control datepicker', 'size': '200', 'disabled': 'disabled'}),
             'dada_fim': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
             'origem': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
             'destino': forms.TextInput(attrs={'class': 'form-control', 'size': '200', 'disabled': 'disabled'}),
@@ -453,7 +455,8 @@ class ArquivosForm(forms.ModelForm):
             'pagamento': forms.Select(attrs={'class': 'form-control'}),
             'valor_pago': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
             'cotacao': forms.NumberInput(attrs={'class': 'form-control', 'size': '200'}),
-            'valor_pago_reais': forms.NumberInput(attrs={'class': 'form-control', 'size': '200', 'readonly': 'readonly'}),
+            'valor_pago_reais': forms.NumberInput(
+                attrs={'class': 'form-control', 'size': '200', 'readonly': 'readonly'}),
         }
         labels = {
             'descricao': _('Descrição do Item'),
@@ -566,4 +569,29 @@ class AvaliarSolicitacaoViagemForm(forms.ModelForm):
             'motivo': _('Motivo'),
             'tipo_transporte': _('Tipo de Transporte'),
 
+        }
+
+
+class TrechoForm(forms.ModelForm):
+    class Meta:
+        model = TrechoModel
+        fields = ('origem_trecho',
+                  'destino_trecho',
+                  'data_inicio_trecho',
+                  'data_fim_trecho',
+                  'tipo_transporte_trecho',
+                  )
+        widgets = {
+            'origem_trecho': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'destino_trecho': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'data_inicio_trecho': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
+            'data_fim_trecho': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
+            'tipo_transporte_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+        }
+        labels = {
+            'origem_trecho': _('Origem'),
+            'destino_trecho': _('Destino'),
+            'data_inicio_trecho': _('Data Origen'),
+            'data_fim_trecho': _('Data Destino'),
+            'tipo_transporte_trecho': _('Tipo Transporte'),
         }

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
@@ -584,14 +584,26 @@ class ListViagensView(CustomListView):
 
 class AdicionarViagemView(CustomCreateView):
     form_class = ViagemForm
+    form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=1)
+
     template_name = 'viagem/add_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Tipo de Viagem adicionado com sucesso."
     permission_codename = 'solicitar_viagens'
 
+    def get(self, request, form_class=form_class, *args, **kwargs):
+        self.object = None
+
+        form = self.get_form(form_class)
+        form_trecho = self.form_trecho_factory()
+
+        return self.render_to_response(self.get_context_data(form=form, formset=form_trecho))
+
     def post(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
+
+        form_trecho = self.form_trecho_factory(request.POST, prefix='viagem_trechos')
 
         form = self.get_form(form_class)
         form.request_user = self.request.user
@@ -645,14 +657,18 @@ class AdicionarViagemView(CustomCreateView):
                 form.add_error('localidade_destino',
                                'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
-        if form.is_valid():
+        if form.is_valid() and form_trecho.is_valid():
             self.object = form.save(commit=False)
             self.object.qtd_diarias = _qtd_diarias
             self.object.valor_diaria = _valor_diaria
             self.object.valor_total_diarias = _valor_total_diarias
             self.object.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
+
+            form_trecho.instance = self.object
+            form_trecho.save()
+
+            return self.form_valid(form=form)
+        return self.form_invalid(form=form, form_trecho=form_trecho)
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarViagemView, self).get_context_data(**kwargs)

@@ -154,7 +154,8 @@ class ViagemModel(models.Model):
                                              on_delete=models.CASCADE, null=True,
                                              blank=True)
 
-    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino", on_delete=models.CASCADE)
+    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
+                                           on_delete=models.CASCADE)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
@@ -237,4 +238,15 @@ class Arquivos(models.Model):
     pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
     valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     cotacao = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2,
+                                           validators=[MinValueValidator(Decimal('0.01'))])
+
+
+class TrechoModel(models.Model):
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, related_name='viagem_trechos')
+    data_inicio_trecho = models.DateTimeField()
+    data_fim_trecho = models.DateTimeField(blank=True, null=True)
+    origem_trecho = models.CharField(max_length=200)
+    destino_trecho = models.CharField(max_length=200)
+    tipo_transporte_trecho = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_trecho_transporte",
+                                               on_delete=models.CASCADE)

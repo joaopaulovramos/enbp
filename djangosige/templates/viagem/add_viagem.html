@@ -25,52 +25,16 @@
 
           <form id="" role="form" action="" method="post">
             {% csrf_token %}
-            <!-- Body-->
+{#            {{ form_trecho.management_form }}#}
+
+              <!-- Body-->
             <div class="body">
-              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">                
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-{#                {% for field in form %}#}
-{#                <div class="col-sm-6">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}#}
-{#                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}#}
-{#                      {{field}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{#                {% endfor %}#}
+              <div class="row">
+                {% include 'formset/formset_table.html' %}</div>
 
-{#              <div class="col-sm-4">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>#}
-{#                      {{form.valor_passagem}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{##}
-{#              <div class="col-sm-4">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>#}
-{#                      {{form.valor_passagem}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{##}
-{#              <div class="col-sm-4">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>#}
-{#                      {{form.valor_passagem}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
+
 
               <div class="col-sm-4">
                   <div class="form-group">
