@@ -62,10 +62,13 @@ class ArquivoDocumentoUnico(models.Model):
     descricao = models.CharField(max_length=255, null=True, blank=True)
     arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
-    documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_arquivo", on_delete=models.CASCADE, null=True, blank=True)
+    documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_arquivo", on_delete=models.PROTECT, null=True, blank=True)
     class Meta:
-        pass
+        verbose_name = 'Arquivo do Documento Unico'
+        verbose_name_plural = 'Arquivos do Documento Unico'
         
+    def __str__(self):
+        return u'%s - %s' % (self.pk, self.descricao)
 
 
 class DocumentoUnico(models.Model):

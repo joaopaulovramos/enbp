@@ -1,6 +1,9 @@
-if (typeof jQuery === "undefined") {
-    throw new Error("Carregar JQuery antes deste arquivo.");
-}
+// if (typeof jQuery === "undefined") {
+//     throw new Error("Carregar JQuery antes deste arquivo.");
+// }
+
+// window.django = {jQuery: jQuery.noConflict()};
+
 
 $.Admin = {};
 

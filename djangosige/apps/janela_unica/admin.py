@@ -1,5 +1,7 @@
+from typing import Any, List, Optional, Tuple, Union
 from django.contrib import admin
 from django import forms
+from django.http.request import HttpRequest
 from django.utils.safestring import mark_safe
 
 from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
@@ -9,12 +11,42 @@ from fsm_admin.mixins import FSMTransitionMixin
 from simple_history.admin import SimpleHistoryAdmin
 from django.utils.html import format_html
 
-
+# https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.InlineModelAdmin.form
 class ArquivoDocumentoUnicoInline(admin.TabularInline):
     model = ArquivoDocumentoUnico
-    extra = 0
-    insert_after = 'descricao'
+    extra = 1
+    max_num = 5
+    
+    class Meta:
+        verbose_name = 'Arquivo do Documento'
+        verbose_name_plural = 'Arquivos do Documento'
+        fields = ['descricao', 'arquivo',]
+        can_delete = True
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'arquivo': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
+    # def __init__(self, *args, **kwargs):
+    #     super(ArquivoDocumentoUnicoInline, self).__init__(*args, **kwargs)
+    #     for visible in self.visible_fields():
+    #         visible.field.widget.attrs['class'] = 'form-control'
+
+    def has_add_permission(self, request, obj=None):
+        if not obj or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
+            return True
+        return False
+    
+    def get_readonly_fields(self, request, obj=None):
+        ret = []
+        # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
+        if obj and not obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
+            ret.extend(['descricao', 'arquivo',])
+        return ret
+
+    def __str__(self):
+        return u'%s - %s' % (self.pk, self.descricao,)
+        
 
 
 @admin.register(TramitacaoModel)
@@ -57,8 +89,8 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
                 # ('arquivo_documento_unico_inline')
             )
         }),
-
-        ('Arquivos adicionais', {
+        #('Arquivos adicionais', {
+        (None, {
             'fields': (),
             'classes': ('replacein',),
         }),
