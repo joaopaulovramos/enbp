@@ -656,7 +656,7 @@ class AdicionarViagemView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR VIAGEM'
+        context['title_complete'] = 'Adicionar Viagem'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
         # usuario = Usuario.objects.get(user=self.request.user.id)
@@ -1254,7 +1254,7 @@ class ArquivosViagemView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ArquivosViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR ARQUIVOS'
+        context['title_complete'] = 'Adicionar Arquivo'
         context['return_url'] = reverse_lazy('viagem:arquivosviagem')
         return context
 
