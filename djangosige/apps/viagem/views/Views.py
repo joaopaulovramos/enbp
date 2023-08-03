@@ -7,6 +7,9 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from datetime import datetime, date, timedelta
 from django.contrib import messages
+
+from djangosige.apps.cadastro.models import ContaBancaria
+from djangosige.apps.cadastro.models.bancos import BANCOS
 from djangosige.apps.login.models import Usuario
 from djangosige.apps.viagem.forms import *
 from djangosige.apps.viagem.models import *
@@ -942,18 +945,8 @@ class ListPagamentoDiariasView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
         user_viagens = user_viagens.filter(homologada=True)
-        user_viagens = user_viagens.filter(pagamento_diarias_autorizado=False)
-
+        user_viagens = user_viagens.exclude(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
         return user_viagens
-
-    # Remover items selecionados da database
-    def post(self, request, *args, **kwargs):
-        for key, value in request.POST.items():
-            if value == "on":
-                instance = self.model.objects.get(id=key)
-                instance.pagamento_diarias_autorizado = True
-                instance.save()
-        return redirect(self.success_url)
 
     def get_object(self):
         current_user = self.request.user
@@ -965,6 +958,150 @@ class ListPagamentoDiariasView(CustomListView):
         return context
 
 
+class AprovarPagamentoDiariasView(CustomCreateView):
+    form_class = AprovarPagamentoDiariasForm
+    model = AprovarPagamentoDiariasModel
+    template_name = 'viagem/aprovar_diaria_viagem.html'
+    success_url = reverse_lazy('viagem:listapagamentodiarias')
+    success_message = "Pagamento de Diárias Aprovado."
+    permission_codename = 'autorizar_pagamento_diarias'
+
+    def get_context_data(self, **kwargs):
+        context = super(AprovarPagamentoDiariasView, self).get_context_data(**kwargs)
+        context['return_url'] = reverse_lazy('viagem:listapagamentodiarias')
+        context['title_complete'] = 'Edição - Financeiro - Pagamento de Diárias'
+        context['user'] = self.request.user
+        viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
+
+        if (AprovarPagamentoDiariasModel.objects.filter(viagem=self.kwargs['pk']).exists()):
+            instance = AprovarPagamentoDiariasModel.objects.get(viagem=self.kwargs['pk'])
+            context['form'].fields['tipo_pagamento'].initial = instance.tipo_pagamento
+            context['form'].fields['tipo_pagamento'].disabled = True
+            context["conta"] = instance.conta + "-" + instance.digito
+            context["agencia"] = instance.agencia
+            context["banco"] = instance.banco
+            context["qtd_diarias"] = instance.qtd_diarias
+            context["valor_diaria"] = instance.valor_diaria
+            context["valor_total_diarias"] = instance.valor_total_diarias
+            context["pagamento_diarias_autorizado"] = True
+        else:
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+            banco = next(b for b in BANCOS if b[0] == cb.banco)
+            if (banco):
+                context["banco"] = banco[1]
+            context["conta"] = cb.conta + "-" + cb.digito
+            context["agencia"] = cb.agencia
+            context["qtd_diarias"] = viagem.qtd_diarias
+            context["valor_diaria"] = viagem.valor_diaria
+            context["valor_total_diarias"] = viagem.valor_total_diarias
+            context["pagamento_diarias_autorizado"] = False
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = form_class(request.POST, instance=self.object)
+        current_user = self.request.user
+        data_hoje = datetime.datetime.now()
+
+        if form.is_valid():
+            self.object = form.save(commit=False)
+            viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+            self.object.qtd_diarias = viagem.qtd_diarias
+            self.object.viagem = viagem
+            self.object.banco = cb.banco
+            self.object.agencia = cb.agencia
+            self.object.conta=cb.conta
+            self.object.digito=cb.digito
+            self.object.qtd_diarias=viagem.qtd_diarias
+            self.object.valor_diaria=viagem.valor_diaria
+            self.object.valor_total_diarias=viagem.valor_total_diarias
+            self.object.data_autorizacao = data_hoje
+            self.object.autorizado_por = current_user.usuario
+            self.object.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+class AprovarPagamentoReembolsoView(CustomCreateView):
+    form_class = AprovarPagamentoReembolsoForm
+    model = AprovarPagamentoReembolsoModel
+    template_name = 'viagem/aprovar_reembolso_viagem.html'
+    success_url = reverse_lazy('viagem:listapagamentoreembolso')
+    success_message = "Pagamento de Reembolso Aprovado."
+    permission_codename = 'autorizar_pagamento_reembolso'
+
+    def get_context_data(self, **kwargs):
+        context = super(AprovarPagamentoReembolsoView, self).get_context_data(**kwargs)
+        context['return_url'] = reverse_lazy('viagem:listapagamentoreembolso')
+        context['title_complete'] = 'Edição - Financeiro - Pagamento de Reembolso'
+        context['user'] = self.request.user
+        viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
+
+        if (AprovarPagamentoReembolsoModel.objects.filter(viagem=self.kwargs['pk']).exists()):
+            instance = AprovarPagamentoReembolsoModel.objects.get(viagem=self.kwargs['pk'])
+            context['form'].fields['tipo_pagamento'].initial = instance.tipo_pagamento
+            context['form'].fields['tipo_pagamento'].disabled = True
+            context["conta"] = instance.conta + "-" + instance.digito
+            context["agencia"] = instance.agencia
+            context["banco"] = instance.banco
+            context['total_recursos_proprios'] = instance.total_recursos_proprios
+            context['total_recursos_empresa'] = instance.total_recursos_empresa
+            context['valor_total_reembolso'] = instance.valor_total_reembolso
+            context["pagamento_reembolso_autorizado"] = True
+        else:
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+            banco = next(b for b in BANCOS if b[0] == cb.banco)
+            if (banco):
+                context["banco"] = banco[1]
+            context["conta"] = cb.conta + "-" + cb.digito
+            context["agencia"] = cb.agencia
+            context["pagamento_reembolso_autorizado"] = False
+            total_recursos_empresa, total_recursos_proprios = self.calc_arquivo_pagamentos(viagem)
+            context['total_recursos_proprios'] = total_recursos_proprios
+            context['total_recursos_empresa'] = total_recursos_empresa
+            context['valor_total_reembolso'] = total_recursos_proprios - total_recursos_empresa
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = form_class(request.POST, instance=self.object)
+        current_user = self.request.user
+        data_hoje = datetime.datetime.now()
+
+        if form.is_valid():
+            self.object = form.save(commit=False)
+            viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+            self.object.qtd_diarias = viagem.qtd_diarias
+            self.object.viagem = viagem
+            self.object.banco = cb.banco
+            self.object.agencia = cb.agencia
+            self.object.conta=cb.conta
+            self.object.digito=cb.digito
+            total_recursos_empresa, total_recursos_proprios = self.calc_arquivo_pagamentos(viagem)
+            self.object.total_recursos_proprios = total_recursos_proprios
+            self.object.total_recursos_empresa = total_recursos_empresa
+            self.object.valor_total_reembolso = total_recursos_proprios - total_recursos_empresa
+            self.object.data_autorizacao = data_hoje
+            self.object.autorizado_por = current_user.usuario
+            self.object.save()
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+    def calc_arquivo_pagamentos(self, viagem):
+        total_recursos_proprios = 0
+        total_recursos_empresa = 0
+        for arquivo in Arquivos.objects.filter(viagem=viagem):
+            if arquivo.pagamento == 'RECURSOS PRÓPRIOS':
+                total_recursos_proprios += arquivo.valor_pago_reais
+            if arquivo.pagamento == 'RECURSOS DA EMPRESA':
+                total_recursos_empresa += arquivo.valor_pago_reais
+        return total_recursos_empresa, total_recursos_proprios
+
 class ListPagamentoReembolsoView(CustomListView):
     template_name = 'viagem/list_pagamento_reembolso.html'
     model = ViagemModel
@@ -975,18 +1112,9 @@ class ListPagamentoReembolsoView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(homologada_reembolso=True)
         user_viagens = user_viagens.filter(tem_reembolso=True)
-        user_viagens = user_viagens.filter(pagamento_reembolso_autorizado=False)
+        user_viagens = user_viagens.exclude(pk__in=AprovarPagamentoReembolsoModel.objects.all().values_list('viagem', flat=True))
 
         return user_viagens
-
-    # Remover items selecionados da database
-    def post(self, request, *args, **kwargs):
-        for key, value in request.POST.items():
-            if value == "on":
-                instance = self.model.objects.get(id=key)
-                instance.pagamento_reembolso_autorizado = True
-                instance.save()
-        return redirect(self.success_url)
 
     def get_object(self):
         current_user = self.request.user
@@ -1303,7 +1431,7 @@ class ListAprovarPCViagensView(CustomListView):
         # return self.model.objects.all()
         current_user = self.request.user
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-        user_viagens = user_viagens.filter(pagamento_diarias_autorizado=True)
+        user_viagens = user_viagens.filter(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
         return user_viagens

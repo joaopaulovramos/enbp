@@ -77,7 +77,9 @@ urlpatterns = [
     url(r'viagem/listarautorizarviagem/$', views.ListAutorizarViagensView.as_view(), name='listaautorizarviagem'),
     url(r'viagem/listarhomologarviagem/$', views.ListHomologarViagensView.as_view(), name='listahomologacaoviagem'),
     url(r'viagem/listapagamentodiarias/$', views.ListPagamentoDiariasView.as_view(), name='listapagamentodiarias'),
+    url(r'viagem/aprovarpagamentodiarias/(?P<pk>[0-9]+)/$', views.AprovarPagamentoDiariasView.as_view(), name='aprovarpagamentodiarias'),
     url(r'viagem/listapagamentoreembolso/$', views.ListPagamentoReembolsoView.as_view(), name='listapagamentoreembolso'),
+    url(r'viagem/aprovarpagamentoreembolso/(?P<pk>[0-9]+)/$', views.AprovarPagamentoReembolsoView.as_view(), name='aprovarpagamentoreembolso'),
     url(r'viagem/prestar_contas/(?P<pk>[0-9]+)/$', views.PrestarContasView.as_view(), name='prestar_contas'),
     url(r'viagem/prestar_contas_arquivos/(?P<pk>[0-9]+)/$', views.PrestarContasArquivosView.as_view(), name='prestar_contas_arquivos'),
 

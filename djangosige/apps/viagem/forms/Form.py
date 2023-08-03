@@ -284,6 +284,34 @@ class ViagemForm(forms.ModelForm):
             instance.save()
         return instance
 
+class AprovarPagamentoDiariasForm(forms.ModelForm):
+    class Meta:
+        model = AprovarPagamentoDiariasModel
+        fields = (
+            'tipo_pagamento',
+        )
+        widgets = {
+            'tipo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+
+        }
+        labels = {
+            'tipo_pagamento': _('Origem'),
+        }
+
+class AprovarPagamentoReembolsoForm(forms.ModelForm):
+    class Meta:
+        model = AprovarPagamentoReembolsoModel
+        fields = (
+            'tipo_pagamento',
+        )
+        widgets = {
+            'tipo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+
+        }
+        labels = {
+            'tipo_pagamento': _('Origem'),
+        }
+
 
 class VerViagemForm(forms.ModelForm):
 
