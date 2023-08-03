@@ -78,6 +78,10 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'data_emissao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control'}),
             'observacao_gerencia': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_superintendencia': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_diretoria': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_analise_financeira': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_analise_fiscal': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     # TODO: Melhorar isso, gambiarra para funcionar o form-control

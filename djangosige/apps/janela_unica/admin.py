@@ -64,7 +64,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     # Desabilita as ações em massa
     actions = None
     # Atributos de filtragem
-    list_filter = ('situacao', 'data_inclusao', 'projeto', 'plano_conta')
+    list_filter = ('situacao', 'data_inclusao', 'projeto', 'plano_conta', 'tipo_arquivo')
     search_fields = ('situacao',)
     # Atributos da tabela
     list_display = ('pk', 'descricao', 'situacao', 'data_inclusao', 'data_finalizacao', 'tipo_arquivo', 'numero', 'responsavel', 'fornecedor', 'projeto', 'plano_conta', 'valor_total',)
