@@ -87,7 +87,8 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
                 ('cnpj', 'data_emissao', 'valor_total'),
                 'descricao',
                 # ('arquivo_documento_unico_inline')
-            )
+            ),
+            # 'classes': ('formset-box',),
         }),
         #('Arquivos adicionais', {
         (None, {
