@@ -12,6 +12,7 @@ from simple_history.admin import SimpleHistoryAdmin
 from django.utils.html import format_html
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.InlineModelAdmin.form
+# class ArquivoDocumentoUnicoInline(admin.StackedInline):
 class ArquivoDocumentoUnicoInline(admin.TabularInline):
     model = ArquivoDocumentoUnico
     extra = 1
@@ -98,7 +99,10 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
 
         ('Dados pagamento', {
             'fields': (
-                ('fornecedor', 'plano_conta', 'projeto'),
+                ('forma_pagamento', 'fornecedor')
+                ('plano_conta', 'projeto'),
+                ('linha_digitaval',),
+                ('chave_pix',),
                 ('banco', 'agencia', 'conta', 'digito')
             )
         }),

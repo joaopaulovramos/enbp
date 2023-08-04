@@ -23,6 +23,14 @@ TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO = (
     (u'9', u'Outros'),
 )
 
+TIPO_FORMA_PAGAMENTO = (
+    (u'0', u'Boleto'),
+    (u'1', u'TED'),
+    (u'2', u'PIX'),
+    (u'9', u'Outros'),
+)
+
+
 TIPO_ANEXO = (
     (u'0', u'.xml'),
     (u'1', u'.pdf'),
@@ -99,24 +107,35 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     data_emissao = models.DateField(null=True, blank=True)
     cfop = models.CharField(max_length=5, null=True, blank=True)
 
-    # TODO: Trocar para cadastro.Pessoa
-    fornecedor = models.ForeignKey('cadastro.Pessoa', related_name="pessoa_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
-    valor_total = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], null=True, blank=True)
-
     # Plano de contas
     plano_conta = models.ForeignKey('financeiro.PlanoContasGrupo', related_name="nfe_entrada_analise_plano_conta", on_delete=models.PROTECT, null=True, blank=True)
 
-    rateio = models.BooleanField(null=True, blank=True,)
-    observacoes = models.CharField(max_length=1055, null=True, blank=True)
+    # projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=False, blank=False)
+    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=True, blank=True)
 
-    # dados bancarios
+    # Dados para o pagamento
+    forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO)
+    fornecedor = models.ForeignKey('cadastro.Pessoa', related_name="pessoa_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+
+    # dados boleto
+    linha_digitavel = models.CharField(max_length=48, null=True, blank=True)
+
+    # dados chave pix
+    chave_pix = models.CharField(max_length=255, null=True, blank=True)
+
+    # dados bancarios para Ted
     banco = models.CharField(max_length=3, choices=BANCOS, null=True, blank=True)
     agencia = models.CharField(max_length=8, null=True, blank=True)
     conta = models.CharField(max_length=32, null=True, blank=True)
     digito = models.CharField(max_length=8, null=True, blank=True)
 
-    # projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=False, blank=False)
-    projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=True, blank=True)
+    valor_total = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
+    valor_liquido = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], null=True, blank=True)
+    valor_retencao = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], null=True, blank=True)
+
+    rateio = models.BooleanField(null=True, blank=True,)
+    observacoes = models.CharField(max_length=1055, null=True, blank=True)
+
 
     # Dados informações financeiras
     possui_parcelamento = models.BooleanField(null=True, blank=True)
