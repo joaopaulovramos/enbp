@@ -3299,6 +3299,9 @@ $.Admin.ajaxRequest = {
 
 $.Admin.datetimepicker_viagem = {
     init: function(){
+        //habilita a reinicialização do componente
+        $('.datetimepicker').datetimepicker('destroy');
+
         $('.datetimepicker').datetimepicker({
             format: 'd/m/Y H:i:s',
         });
@@ -4092,6 +4095,11 @@ $.Admin.timesheet = {
 $.Admin.viagemForm = {
 
      init: function () {
+
+         // garante o funcionamento correto dos campos com DateTimePicker
+         $('.formset').on('formCreated', function(){
+             $.Admin.datetimepicker_viagem.init()
+        });
 
          $.Admin.maskInput.maskViagem();
          Handle_definir_categoria_passagem();

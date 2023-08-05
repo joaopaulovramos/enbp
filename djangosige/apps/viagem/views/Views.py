@@ -584,11 +584,12 @@ class ListViagensView(CustomListView):
 
 class AdicionarViagemView(CustomCreateView):
     form_class = ViagemForm
-    form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=1)
+    form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
+                                                validate_min=True, can_delete=True)
 
     template_name = 'viagem/add_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
-    success_message = "Tipo de Viagem adicionado com sucesso."
+    success_message = "Solicitação de Viagem adicionada com sucesso."
     permission_codename = 'solicitar_viagens'
 
     def get(self, request, form_class=form_class, *args, **kwargs):
@@ -657,6 +658,21 @@ class AdicionarViagemView(CustomCreateView):
                 form.add_error('localidade_destino',
                                'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
+        # Validando campos do formset
+        for index, formumlario in enumerate(form_trecho):
+
+            if form_trecho.is_valid():
+                _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
+                _data_fim_trecho = formumlario.cleaned_data.get("data_fim_trecho")
+
+                if _data_inicio_trecho < timezone.make_aware(data_inicio, timezone.utc):
+                    formumlario.add_error('data_inicio_trecho',
+                                          'Início do trecho não pode ser anterior ao início da viagem')
+                if data_fim:
+                    if _data_fim_trecho > timezone.make_aware(data_fim, timezone.utc):
+                        formumlario.add_error('data_fim_trecho',
+                                              'Fim do trecho não pode ser posterior ao fim da viagem')
+
         if form.is_valid() and form_trecho.is_valid():
             self.object = form.save(commit=False)
             self.object.qtd_diarias = _qtd_diarias
@@ -668,11 +684,11 @@ class AdicionarViagemView(CustomCreateView):
             form_trecho.save()
 
             return self.form_valid(form=form)
-        return self.form_invalid(form=form, form_trecho=form_trecho)
+        return self.form_invalid(form=form, formset=form_trecho)
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR VIAGEM'
+        context['title_complete'] = 'Adicionar Viagem'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
         # usuario = Usuario.objects.get(user=self.request.user.id)
@@ -689,6 +705,17 @@ class EditarViagemView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
+
+    # form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
+    #                                             validate_min=True, can_delete=True)
+
+    def get(self, request, form_class=form_class, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form(form_class)
+        form_trecho = TrechoFormSet(instance=self.object, prefix='viagem_trechos')
+
+        return self.render_to_response(self.get_context_data(form=form, formset=form_trecho))
 
     def get_context_data(self, **kwargs):
         context = super(EditarViagemView, self).get_context_data(**kwargs)
@@ -708,6 +735,8 @@ class EditarViagemView(CustomUpdateView):
         form_class = self.get_form_class()
         form = form_class(request.POST, instance=self.object)
         form.request_user = self.request.user
+
+        form_trecho = TrechoFormSet(request.POST, prefix='viagem_trechos', instance=self.object)
 
         data_hoje = datetime.datetime.now()
         data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%d/%m/%Y %H:%M:%S")
@@ -753,18 +782,27 @@ class EditarViagemView(CustomUpdateView):
             _valor_diaria = tabela_diaria.valor_diaria
             _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
-            print(f'{_valor_total_diarias} * {_qtd_diarias} = {_valor_total_diarias}')
+        # if form.is_valid():
+        #     self.object = form.save(commit=False)
+        #     self.object.qtd_diarias = _qtd_diarias
+        #     self.object.valor_diaria = _valor_diaria
+        #     self.object.valor_total_diarias = _valor_total_diarias
+        #     self.object.save()
+        #     return redirect(self.success_url)
+        # return self.form_invalid(form)
 
-            print(form.errors)
-
-        if form.is_valid():
+        if form.is_valid() and form_trecho.is_valid():
             self.object = form.save(commit=False)
             self.object.qtd_diarias = _qtd_diarias
             self.object.valor_diaria = _valor_diaria
             self.object.valor_total_diarias = _valor_total_diarias
             self.object.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
+
+            form_trecho.instance = self.object
+            form_trecho.save()
+
+            return self.form_valid(form=form)
+        return self.form_invalid(form=form, formset=form_trecho)
 
 
 class VerSolicitacaoViagem(CustomUpdateView):

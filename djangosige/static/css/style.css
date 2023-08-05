@@ -1194,7 +1194,7 @@ fieldset[disabled] .form-control {
   background-color: transparent; }
 
 .form-table thead{
-  background-color: lightblue;
+  background-color: #b9d7f5;
   font-size: 12px;}
 .form-table .field-td{
   min-width: 110px; }

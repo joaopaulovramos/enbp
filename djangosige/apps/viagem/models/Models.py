@@ -245,8 +245,10 @@ class Arquivos(models.Model):
 class TrechoModel(models.Model):
     viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, related_name='viagem_trechos')
     data_inicio_trecho = models.DateTimeField()
-    data_fim_trecho = models.DateTimeField(blank=True, null=True)
+    data_fim_trecho = models.DateTimeField()
     origem_trecho = models.CharField(max_length=200)
     destino_trecho = models.CharField(max_length=200)
     tipo_transporte_trecho = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_trecho_transporte",
                                                on_delete=models.CASCADE)
+    categoria_passagem_trecho = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_trecho_passagem",
+                                                  on_delete=models.CASCADE)

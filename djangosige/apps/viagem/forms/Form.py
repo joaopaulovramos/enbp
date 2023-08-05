@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 import datetime
 from djangosige.apps.viagem.models import *
@@ -575,11 +577,12 @@ class AvaliarSolicitacaoViagemForm(forms.ModelForm):
 class TrechoForm(forms.ModelForm):
     class Meta:
         model = TrechoModel
-        fields = ('origem_trecho',
+        fields = ('tipo_transporte_trecho',
+                  'origem_trecho',
                   'destino_trecho',
                   'data_inicio_trecho',
                   'data_fim_trecho',
-                  'tipo_transporte_trecho',
+                  'categoria_passagem_trecho',
                   )
         widgets = {
             'origem_trecho': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
@@ -587,11 +590,31 @@ class TrechoForm(forms.ModelForm):
             'data_inicio_trecho': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'data_fim_trecho': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'tipo_transporte_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'categoria_passagem_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
         }
         labels = {
             'origem_trecho': _('Origem'),
             'destino_trecho': _('Destino'),
-            'data_inicio_trecho': _('Data Origen'),
+            'data_inicio_trecho': _('Data Origem'),
             'data_fim_trecho': _('Data Destino'),
             'tipo_transporte_trecho': _('Tipo Transporte'),
+            'categoria_passagem_trecho': _('Passagem'),
         }
+
+    def __init__(self, *arg, **kwarg):
+        super(TrechoForm, self).__init__(*arg, **kwarg)
+        self.empty_permitted = False
+
+    def clean(self):
+        super().clean()
+
+        data_inicio_trecho = self.cleaned_data.get("data_inicio_trecho")
+        data_fim_trecho = self.cleaned_data.get("data_fim_trecho")
+
+        if data_inicio_trecho and data_fim_trecho and data_inicio_trecho > data_fim_trecho:
+            self.add_error('data_inicio_trecho', 'Início do trecho não pode ser posterior ao fim do trecho')
+            self.add_error('data_fim_trecho', 'Fim do trecho não pode ser anterior ao início do trecho')
+
+
+TrechoFormSet = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
+                                      validate_min=True, can_delete=True)
