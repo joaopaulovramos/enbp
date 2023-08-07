@@ -700,17 +700,18 @@ class AdicionarViagemView(CustomCreateView):
                     form.add_error('bagagem_despachada',
                                    'Você não pode despachar bagagem para esta viagem.')
 
-        if data_fim:
-            _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
-            usuario = Usuario.objects.get(id=self.request.user.id)
-            tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
-            try:
-                tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
-                _valor_diaria = tabela_diaria.valor_diaria
-                _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
-            except TabelaDiariaModel.DoesNotExist:
-                form.add_error('localidade_destino',
-                               'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
+        # Cálculo de diárias suspenso
+        # if data_fim:
+        #     _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+        #     usuario = Usuario.objects.get(id=self.request.user.id)
+        #     tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
+        #     try:
+        #         tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+        #         _valor_diaria = tabela_diaria.valor_diaria
+        #         _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+        #     except TabelaDiariaModel.DoesNotExist:
+        #         form.add_error('localidade_destino',
+        #                        'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
         # Validando campos do formset
         for index, formumlario in enumerate(form_trecho):
@@ -828,13 +829,15 @@ class EditarViagemView(CustomUpdateView):
                 if diff_dias.days < 3 and request.POST['bagagem_despachada']:
                     form.add_error('bagagem_despachada',
                                    'Você não pode despachar bagagem para esta viagem.')
-        if data_fim:
-            _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
-            usuario = Usuario.objects.get(id=self.object.solicitante_id)
-            tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
-            tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
-            _valor_diaria = tabela_diaria.valor_diaria
-            _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+
+        # calcula de diárias suspenso
+        # if data_fim:
+        #     _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+        #     usuario = Usuario.objects.get(id=self.object.solicitante_id)
+        #     tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
+        #     tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+        #     _valor_diaria = tabela_diaria.valor_diaria
+        #     _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
         # Validando campos do formset
         for index, formumlario in enumerate(form_trecho):
@@ -1457,8 +1460,8 @@ class PrestarContasArquivosView(CustomUpdateView):
         viagem_solicitada = ViagemModel.objects.get(pk=pk)
 
         context['id'] = viagem_solicitada.id
-        context['origem'] = viagem_solicitada.origem
-        context['destino'] = viagem_solicitada.destino
+        # context['origem'] = viagem_solicitada.origem
+        # context['destino'] = viagem_solicitada.destino
         context['data_inicio'] = viagem_solicitada.dada_inicio
         context['data_fim'] = viagem_solicitada.dada_fim
         context['data_inclusao'] = viagem_solicitada.data_inclusao
@@ -1784,8 +1787,8 @@ class AvaliarArquivosView(CustomUpdateView):
                                    'recursos_empresa': total_recursos_empresa}
 
         context['id'] = viagem_solicitada.id
-        context['origem'] = viagem_solicitada.origem
-        context['destino'] = viagem_solicitada.destino
+        # context['origem'] = viagem_solicitada.origem
+        # context['destino'] = viagem_solicitada.destino
         context['data_inicio'] = viagem_solicitada.dada_inicio
         context['data_fim'] = viagem_solicitada.dada_fim
         context['data_inclusao'] = viagem_solicitada.data_inclusao

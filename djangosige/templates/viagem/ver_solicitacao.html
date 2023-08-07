@@ -90,7 +90,7 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-3">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -123,27 +123,38 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-3">
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>{{form.origem.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.origem.errors %}<label class="error">{% for error in form.origem.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.origem}}
+                      <label>{{form.horario_preferencial.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form.horario_preferencial.errors %}<label class="error">{% for error in form.horario_preferencial.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.horario_preferencial}}
                     </div>
                   </div>
                 </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.destino.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.destino.errors %}<label class="error">{% for error in form.destino.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.destino}}
-                    </div>
-                  </div>
-                </div>
+{#              <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{##}
+{#                      <label>{{form.origem.label}}</label><strong style="color:red;"> *</strong>#}
+{#                      {% if form.origem.errors %}<label class="error">{% for error in form.origem.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{form.origem}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{##}
+{#              <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{##}
+{#                      <label>{{form.destino.label}}</label><strong style="color:red;"> *</strong>#}
+{#                      {% if form.destino.errors %}<label class="error">{% for error in form.destino.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{form.destino}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
 
               <div class="col-sm-6">
                   <div class="form-group">
@@ -201,49 +212,40 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
+{#              <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{##}
+{#                      <label>{{form.motivo.label}}</label><strong style="color:red;"> *</strong>#}
+{#                      {% if form.motivo.errors %}<label class="error">{% for error in form.motivo.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{form.motivo}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{##}
+{#               <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{##}
+{#                      <label>{{form.tipo_transporte.label}}</label><strong style="color:red;"> *</strong>#}
+{#                      {% if form.tipo_transporte.errors %}<label class="error">{% for error in form.tipo_transporte.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{form.tipo_transporte}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
 
-                      <label>{{form.motivo.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.motivo.errors %}<label class="error">{% for error in form.motivo.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.motivo}}
-                    </div>
-                  </div>
-                </div>
+{#              <div class="col-sm-6">#}
+{#                  <div class="form-group">#}
+{#                    <div class="form-line">#}
+{##}
+{#                      <label>{{form.categoria_passagem.label}}</label><strong style="color:red;"> *</strong>#}
+{#                      {% if form.categoria_passagem.errors %}<label class="error">{% for error in form.categoria_passagem.errors %}{{error}}{% endfor %}</label>{% endif %}#}
+{#                      {{form.categoria_passagem}}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
 
-               <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
 
-                      <label>{{form.tipo_transporte.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.tipo_transporte.errors %}<label class="error">{% for error in form.tipo_transporte.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.tipo_transporte}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.categoria_passagem.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.categoria_passagem.errors %}<label class="error">{% for error in form.categoria_passagem.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.categoria_passagem}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.horario_preferencial.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.horario_preferencial.errors %}<label class="error">{% for error in form.horario_preferencial.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.horario_preferencial}}
-                    </div>
-                  </div>
-                </div>
 
               <div class="col-sm-6">
                   <div class="form-group">
