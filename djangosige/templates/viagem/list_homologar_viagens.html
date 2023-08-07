@@ -3,6 +3,7 @@
 {%block title%}{{title_complete|title}}{%endblock%}
 {%block content%}
 <section class="content">
+
   <div class="container-fluid lista">
 
     {% include 'base/title_header.html' %}
@@ -21,7 +22,7 @@
                 <!-- <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> ADICIONAR</span></a> -->
                 <!--<button class="btn btn-red btn-remove"><i class="material-icons">&#xE872;</i></button> -->
 
-                  <button class="btn btn-success btn-autorizar-viagem" ><i class="material-icons">check</i><span> Homologar</span></button>
+                  <button class="btn btn-success btn-autorizar-viagem" ><i class="material-icons">check</i><span> HOMOLOGAR</span></button>
 
               </div>
           </div>
@@ -29,9 +30,10 @@
           <div class="body">
 
            {% include 'base/search.html' %}
+           {% include 'base/select_mes.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[2, "desc"]]'>
               <thead>
                 <tr>
                     <th>Id</th>
@@ -65,8 +67,8 @@
                    <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
 
-                   <td>{{natop.dada_inicio}}</td>
-                   <td>{{natop.dada_fim}}</td>
+                   <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
+                   <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
 
@@ -77,7 +79,7 @@
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
                     </td>
@@ -85,7 +87,7 @@
                         {% if natop.autorizada_dus  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
                     </td>
@@ -93,7 +95,7 @@
                         {% if natop.homologada  %}
                             <a class="btn btn-success disabled"><span> HOMOLOGADA</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NÃO HOMOLOGADA</span></a>
+                     <a class="btn btn-red btn-success disabled"><span> NÃO HOMOLOGADA</span></a>
                         {% endif %}
                    </td>
                    <td>
@@ -145,6 +147,13 @@
   <script src="{% static 'js/jquery.mask.js' %}"></script>
   <script type="text/javascript">
       $.Admin.viagemForm.init()
+
+      $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'viagem:listahomologacaoviagem' %}?mes=${mes}&ano=${ano}`;
+        })
+
   </script>
 
 {% endblock %}

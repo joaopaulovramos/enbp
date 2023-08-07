@@ -25,64 +25,30 @@
 
           <form id="" role="form" action="" method="post">
             {% csrf_token %}
-            <!-- Body-->
+{#            {{ form_trecho.management_form }}#}
+
+              <!-- Body-->
             <div class="body">
-              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">                
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-{#                {% for field in form %}#}
-{#                <div class="col-sm-6">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{field.label}}</label>{% if field.field.required %}<strong style="color:red;"> *</strong>{% endif %}#}
-{#                      {% if field.errors %}<label class="error">{% for error in field.errors %}{{error}}{% endfor %}</label>{% endif %}#}
-{#                      {{field}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{#                {% endfor %}#}
 
-{#              <div class="col-sm-4">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>#}
-{#                      {{form.valor_passagem}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{##}
-{#              <div class="col-sm-4">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>#}
-{#                      {{form.valor_passagem}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{##}
-{#              <div class="col-sm-4">#}
-{#                  <div class="form-group">#}
-{#                    <div class="form-line">#}
-{##}
-{#                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>#}
-{#                      {{form.valor_passagem}}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
 
-              <div class="col-sm-6">
+
+            <div class="row">
+              <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
                         <label>{{form.itinerario.label}}</label><strong style="color:red;"> *</strong> <br>
 
-                      <input type="radio" name="itinerario" id="radio_ida" value="0" {% if form.itinerario.value == '0' %}checked="checked"{% endif %} checked="checked" />
-                      <label for="radio_ida"><strong>Somente Ida</strong></label>
+                        <input type="radio" name="itinerario" id="radio_ida" value="0" {% if form.itinerario.value == '0' %}checked="checked"{% endif %} checked="checked" />
+                        <label for="radio_ida"><strong>Somente Ida</strong></label>
 
                         <input type="radio" name="itinerario" id="radio_idavolta" value="1" {% if form.itinerario.value == '1' %}checked="checked"{% endif %} />
-                      <label for="radio_idavolta"><strong>Ida e Volta</strong></label>
+                        <label for="radio_idavolta"><strong>Ida e Volta</strong></label>
+
+                        <input type="radio" name="itinerario" id="radio_emtransito" value="2" {% if form.itinerario.value == '2' %}checked="checked"{% endif %} />
+                        <label for="radio_emtransito"><strong>Em trânsito</strong></label>
 
                     {% if form.itinerario.errors %}<label class="error">{% for error in form.itinerario.errors %}{{error}}{% endfor %}</label>{% endif %}
 
@@ -92,7 +58,7 @@
                 </div>
 
 
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -104,7 +70,7 @@
                         <input type="radio" name="escalas" id="escala_1" value="1" {% if form.escalas.value == '1' %}checked="checked"{% endif %}/>
                       <label for="escala_1"><strong>1 escala</strong></label>
 
-                        <input type="radio" name="escalas" id="escala_2" value="2" {% if form.escalas.value == '2' %}checked="checked"{% endif %}/>
+                        <input type="radio" name="escalas" id="escala_2" value="2" {% if form.escalas.value == '2' %}checked="checked"{% endif %} />
                       <label for="escala_2"><strong>2+ escalas</strong></label>
 
                       {% if form.escalas.errors %}<label class="error">{% for error in form.escalas.errors %}{{error}}{% endfor %}</label>{% endif %}
@@ -114,8 +80,29 @@
                   </div>
                 </div>
 
+              <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
 
+                        <label>{{form.duracao.label}}</label><strong style="color:red;"> *</strong> <br>
+
+                        <input type="radio" name="duracao" id="duracao_0" value="0" {% if form.duracao.value == '0' %}checked="checked"{% endif %}/>
+                        <label for="duracao_0"><strong>Inferior a 6hs</strong></label>
+
+                        <input type="radio" name="duracao" id="duracao_1" value="1" {% if form.duracao.value == '1' %}checked="checked"{% endif %}/>
+                        <label for="duracao_1"><strong>Igual/Superior a 6hs</strong></label>
+
+                        {% if form.duracao.errors %}<label class="error">{% for error in form.duracao.errors %}{{error}}{% endfor %}</label>{% endif %}
+
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="row">
               <div class="col-sm-3">
+
                   <div class="form-group">
                     <div class="form-line">
 
@@ -159,6 +146,11 @@
                   </div>
                 </div>
 
+            </div>
+
+
+
+          <div class="row">
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -180,6 +172,9 @@
                     </div>
                   </div>
                 </div>
+          </div>
+
+          <div class="row">
 
               <div class="col-sm-6">
                   <div class="form-group">
@@ -215,6 +210,10 @@
                   </div>
                 </div>
 
+          </div>
+
+          <div class="row">
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -236,6 +235,10 @@
                     </div>
                   </div>
                 </div>
+
+          </div>
+
+          <div class="row">
 
               <div class="col-sm-6">
                   <div class="form-group">
@@ -259,6 +262,10 @@
                   </div>
                 </div>
 
+          </div>
+
+          <div class="row">
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -281,6 +288,20 @@
                   </div>
                 </div>
 
+          </div>
+
+              <hr/>
+
+          <div class="row">
+            <div class="col-sm-12">
+              {% include 'formset/formset_table_viagem.html' %}
+            </div>
+          </div>
+
+              <hr/>
+
+          <div class="row">
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -302,6 +323,9 @@
                     </div>
                   </div>
                 </div>
+          </div>
+
+          <div class="row">
 
                <div class="col-sm-12">
                   <div class="form-group">
@@ -320,13 +344,6 @@
                                title="Caso selecionado, o viajante terá direito a uma bagagem despachada.">
                             {{ form.bagagem_despachada.label }}
                             {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
-                        </label> <br>
-
-                        {{form.crianca_colo}}
-                        <label for="id_crianca_colo"
-                               style="font-weight: bold;"
-                               title="Caso selecionado, viajará com uma criança de colo.">
-                            {{ form.crianca_colo.label }}
                         </label> <br>
 
                         {{form.local_risco}}
@@ -361,10 +378,12 @@
                   </div>
                 </div>
 
+          </div>
+
                   
               </div>
 
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">save</i><span> SALVAR</span></button>
             </div>
             <!--#Body-->
           </form>

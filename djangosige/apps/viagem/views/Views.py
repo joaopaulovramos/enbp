@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
+
+
 from django.db.models import Q
+import pytz
+from django.forms import inlineformset_factory
+
+
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
@@ -32,7 +38,7 @@ class ListTipoViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoViagensView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'TIPOS DE VIAGEM'
+        context['title_complete'] = 'Tipos de Viagem'
         context['add_url'] = reverse_lazy('viagem:adicionartiposviagens')
         return context
 
@@ -46,7 +52,7 @@ class AdicionarTipoViagemView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE VIAGEM'
+        context['title_complete'] = 'Adicionar Tipo de Viagem'
         context['return_url'] = reverse_lazy('viagem:listatiposviagens')
         return context
 
@@ -61,7 +67,7 @@ class EditarTipoViagemView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Tipo de Viagem'
+        context['title_complete'] = 'Editar Tipo de Viagem'
         context['return_url'] = reverse_lazy('viagem:listatiposviagens')
         context['id'] = self.object.id
         return context
@@ -77,7 +83,7 @@ class ListTipoSolicitacaoView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoSolicitacaoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'TIPOS DE SOLICITAÇÃO'
+        context['title_complete'] = 'Tipos de Solicitação'
         context['add_url'] = reverse_lazy('viagem:adicionartiposolicitacao')
         return context
 
@@ -91,7 +97,7 @@ class AdicionarTipoSolicitacaoView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoSolicitacaoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE SOLICITAÇÃO'
+        context['title_complete'] = 'Adicionar Tipo de Solicitação'
         context['return_url'] = reverse_lazy('viagem:listatiposolicitacao')
         return context
 
@@ -106,7 +112,7 @@ class EditarTipoSolicitacaoView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoSolicitacaoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Tipo de Solicitação'
+        context['title_complete'] = 'Editar Tipo de Solicitação'
         context['return_url'] = reverse_lazy('viagem:listatiposolicitacao')
         context['id'] = self.object.id
         return context
@@ -122,7 +128,7 @@ class ListTipoTransporteView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoTransporteView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Transporte'
+        context['title_complete'] = 'Tipo de Transporte'
         context['add_url'] = reverse_lazy('viagem:adicionartipotransporte')
         return context
 
@@ -136,7 +142,7 @@ class AdicionarTipoTransporteView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoTransporteView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE TRANSPORTE'
+        context['title_complete'] = 'Adicionar Tipo de Transporte'
         context['return_url'] = reverse_lazy('viagem:listatipotransporte')
         return context
 
@@ -151,7 +157,7 @@ class EditarTipoTransporteView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoTransporteView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Tipo de Transporte'
+        context['title_complete'] = 'Editar Tipo de Transporte'
         context['return_url'] = reverse_lazy('viagem:listatipotransporte')
         context['id'] = self.object.id
         return context
@@ -167,7 +173,7 @@ class ListMotivosView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListMotivosView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Motivos de Viagens'
+        context['title_complete'] = 'Motivo da Viagens'
         context['add_url'] = reverse_lazy('viagem:adicionarmotivo')
         return context
 
@@ -181,7 +187,7 @@ class AdicionarMotivoView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarMotivoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'MOTIVO DE VIAGEM'
+        context['title_complete'] = 'Adicionar Motivo de Viagem'
         context['return_url'] = reverse_lazy('viagem:listamotivos')
         return context
 
@@ -196,7 +202,7 @@ class EditarMotivoView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarMotivoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Motivo da Viagem'
+        context['title_complete'] = 'Editar Motivo de Viagem'
         context['return_url'] = reverse_lazy('viagem:listamotivos')
         context['id'] = self.object.id
         return context
@@ -212,7 +218,7 @@ class ListTipoDespesaView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoDespesaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Despesa'
+        context['title_complete'] = 'Tipo de Despesa'
         context['add_url'] = reverse_lazy('viagem:adicionartipodespesa')
         return context
 
@@ -226,7 +232,7 @@ class AdicionarTipoDespesaView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoDespesaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE DESPESA'
+        context['title_complete'] = 'Adicionar Tipo de Despesa'
         context['return_url'] = reverse_lazy('viagem:listatipodespesa')
         return context
 
@@ -241,7 +247,7 @@ class EditarTipoDespesaView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoDespesaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de tipo de Despesa'
+        context['title_complete'] = 'Editar Tipo de Despesa'
         context['return_url'] = reverse_lazy('viagem:listatipodespesa')
         context['id'] = self.object.id
         return context
@@ -257,7 +263,7 @@ class ListMoedaView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListMoedaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Moeda'
+        context['title_complete'] = 'Moeda'
         context['add_url'] = reverse_lazy('viagem:adicionarmoeda')
         return context
 
@@ -271,7 +277,7 @@ class AdicionarMoedaView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarMoedaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE MOEDA'
+        context['title_complete'] = 'Adicionar Moeda'
         context['return_url'] = reverse_lazy('viagem:listamoeda')
         return context
 
@@ -286,7 +292,7 @@ class EditarMoedaView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarMoedaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de tipo de Moeda'
+        context['title_complete'] = 'Editar Moeda'
         context['return_url'] = reverse_lazy('viagem:listamoeda')
         context['id'] = self.object.id
         return context
@@ -347,7 +353,7 @@ class ListCategoriaPassagemView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListCategoriaPassagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Categorias de Passagem'
+        context['title_complete'] = 'Categoria de Passagem'
         context['add_url'] = reverse_lazy('viagem:adicionarcategoriapassagem')
         return context
 
@@ -361,7 +367,7 @@ class AdicionarCategoriaPassagemView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarCategoriaPassagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR CATEGORIA DE PASSAGEM'
+        context['title_complete'] = 'Adicionar Categoria de Passagem'
         context['return_url'] = reverse_lazy('viagem:listacategoriapassagem')
         return context
 
@@ -376,7 +382,7 @@ class EditarCategoriaPassagemView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarCategoriaPassagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de Categoria de Passagem'
+        context['title_complete'] = 'Editar Categoria de Passagem'
         context['return_url'] = reverse_lazy('viagem:listacategoriapassagem')
         context['id'] = self.object.id
         return context
@@ -387,12 +393,12 @@ class ListHorarioPreferencialView(CustomListView):
     template_name = 'viagem/list_horario_preferencial.html'
     model = HorarioPreferencialModel
     context_object_name = 'all_natops'
-    success_url = reverse_lazy('viagem:listahorarioprefencial')
+    success_url = reverse_lazy('viagem:listahorariopreferencial')
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
         context = super(ListHorarioPreferencialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Horários Preferenciais'
+        context['title_complete'] = 'Horário Preferencial'
         context['add_url'] = reverse_lazy('viagem:adicionarhorariopreferencial')
         return context
 
@@ -406,7 +412,7 @@ class AdicionarHorarioPreferencialView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarHorarioPreferencialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR HORÁRIO PREFERENCIAL'
+        context['title_complete'] = 'Adicionar Horário Preferencial'
         context['return_url'] = reverse_lazy('viagem:listahorariopreferencial')
         return context
 
@@ -421,7 +427,7 @@ class EditarHorarioPreferencialView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarHorarioPreferencialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de Horário Preferencial'
+        context['title_complete'] = 'Editar Horário Preferencial'
         context['return_url'] = reverse_lazy('viagem:listahorariopreferencial')
         context['id'] = self.object.id
         return context
@@ -437,7 +443,7 @@ class ListTiposNecessidadeEspecialView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTiposNecessidadeEspecialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Necessidades Especiais'
+        context['title_complete'] = 'Tipo de Necessidade Especial'
         context['add_url'] = reverse_lazy('viagem:adicionartiponecessidadeespecial')
         return context
 
@@ -454,12 +460,13 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR NECESSIDADE ESPECIAL'
+        context['title_complete'] = 'Adicionar Tipo de Necessidade Especial'
         context['return_url'] = reverse_lazy('viagem:listatiposnecessidadeespecial')
         return context
 
     def get(self, request, *args, **kwargs):
         return super(AdicionarTipoNecessidadeEspecialView, self).get(request, *args, **kwargs)
+
 
 class EditarTipoNecessidadeEspecialView(CustomUpdateView):
     form_class = TiposNecessidadeEspecialForm
@@ -471,10 +478,11 @@ class EditarTipoNecessidadeEspecialView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoNecessidadeEspecialView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de Tipo de Necessidade Especial'
+        context['title_complete'] = 'Editar Tipo de Necessidade Especial'
         context['return_url'] = reverse_lazy('viagem:listatiposnecessidadeespecial')
         context['id'] = self.object.id
         return context
+
 
 #### Localidades
 class ListLocalidadeView(CustomListView):
@@ -486,7 +494,7 @@ class ListLocalidadeView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListLocalidadeView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Localidades'
+        context['title_complete'] = 'Localidade'
         context['add_url'] = reverse_lazy('viagem:adicionarlocalidade')
         return context
 
@@ -500,7 +508,7 @@ class AdicionarLocalidadeView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarLocalidadeView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR LOCALIDADE'
+        context['title_complete'] = 'Adicionar Localidade'
         context['return_url'] = reverse_lazy('viagem:listalocalidades')
         return context
 
@@ -518,7 +526,7 @@ class EditarLocalidadeView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarLocalidadeView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de Localidades'
+        context['title_complete'] = 'Editar Localidade'
         context['return_url'] = reverse_lazy('viagem:listalocalidades')
         context['id'] = self.object.id
         return context
@@ -534,7 +542,7 @@ class ListTabelaDiariaView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTabelaDiariaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tabela de Diárias'
+        context['title_complete'] = 'Tabela de Diária'
         context['add_url'] = reverse_lazy('viagem:adicionartabeladiaria')
         return context
 
@@ -548,7 +556,7 @@ class AdicionarTabelaDiariaView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTabelaDiariaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TABELA DIÁRIA'
+        context['title_complete'] = 'Adicionar Tabela de Diária'
         context['return_url'] = reverse_lazy('viagem:listatabeladiarias')
         return context
 
@@ -566,10 +574,11 @@ class EditarTabelaDiariaView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTabelaDiariaView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de Tabela de Diárias'
+        context['title_complete'] = 'Editar Tabela de Diária'
         context['return_url'] = reverse_lazy('viagem:listatabeladiarias')
         context['id'] = self.object.id
         return context
+
 
 #### Viagem
 class ListViagensView(CustomListView):
@@ -578,11 +587,26 @@ class ListViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaviagem')
     permission_codename = 'solicitar_viagens'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         # return self.model.objects.all()
         current_user = self.request.user
-        user_viagens = ViagemModel.objects.filter(solicitante=current_user)
+        user_viagens = ViagemModel.objects.filter(solicitante=current_user, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
 
         return user_viagens
 
@@ -602,7 +626,11 @@ class ListViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListViagensView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Viagens'
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
+        context['title_complete'] = 'Minhas Solicitações de Viagem'
         context['add_url'] = reverse_lazy('viagem:adicionarviagem')
         context['login'] = self.request.user
         return context
@@ -610,14 +638,27 @@ class ListViagensView(CustomListView):
 
 class AdicionarViagemView(CustomCreateView):
     form_class = ViagemForm
+    form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
+                                                validate_min=True, can_delete=True)
+
     template_name = 'viagem/add_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
-    success_message = "Tipo de Viagem adicionado com sucesso."
+    success_message = "Solicitação de Viagem adicionada com sucesso."
     permission_codename = 'solicitar_viagens'
+
+    def get(self, request, form_class=form_class, *args, **kwargs):
+        self.object = None
+
+        form = self.get_form(form_class)
+        form_trecho = self.form_trecho_factory()
+
+        return self.render_to_response(self.get_context_data(form=form, formset=form_trecho))
 
     def post(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
+
+        form_trecho = self.form_trecho_factory(request.POST, prefix='viagem_trechos')
 
         form = self.get_form(form_class)
         form.request_user = self.request.user
@@ -668,23 +709,43 @@ class AdicionarViagemView(CustomCreateView):
                 _valor_diaria = tabela_diaria.valor_diaria
                 _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
             except TabelaDiariaModel.DoesNotExist:
-                form.add_error('localidade_destino',  'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
+                form.add_error('localidade_destino',
+                               'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
-        if form.is_valid():
+        # Validando campos do formset
+        for index, formumlario in enumerate(form_trecho):
+
+            if form_trecho.is_valid():
+                _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
+                _data_fim_trecho = formumlario.cleaned_data.get("data_fim_trecho")
+
+                if _data_inicio_trecho < timezone.make_aware(data_inicio, pytz.timezone('America/Sao_Paulo')):
+                    formumlario.add_error('data_inicio_trecho',
+                                          'Início do trecho não pode ser anterior ao início da viagem')
+                if data_fim:
+                    if _data_fim_trecho > timezone.make_aware(data_fim, pytz.timezone('America/Sao_Paulo')):
+                        formumlario.add_error('data_fim_trecho',
+                                              'Fim do trecho não pode ser posterior ao fim da viagem')
+
+        if form.is_valid() and form_trecho.is_valid():
             self.object = form.save(commit=False)
             self.object.qtd_diarias = _qtd_diarias
             self.object.valor_diaria = _valor_diaria
             self.object.valor_total_diarias = _valor_total_diarias
             self.object.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
+
+            form_trecho.instance = self.object
+            form_trecho.save()
+
+            return self.form_valid(form=form)
+        return self.form_invalid(form=form, formset=form_trecho)
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR VIAGEM'
+        context['title_complete'] = 'Adicionar Viagem'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
-        #usuario = Usuario.objects.get(user=self.request.user.id)
+        # usuario = Usuario.objects.get(user=self.request.user.id)
         usuario = Usuario.objects.get(user=self.request.user)
         context['pcd'] = usuario.pcd
 
@@ -698,6 +759,17 @@ class EditarViagemView(CustomUpdateView):
     success_url = reverse_lazy('viagem:listaviagem')
     success_message = "Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
+
+    # form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
+    #                                             validate_min=True, can_delete=True)
+
+    def get(self, request, form_class=form_class, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form(form_class)
+        form_trecho = TrechoFormSet(instance=self.object, prefix='viagem_trechos')
+
+        return self.render_to_response(self.get_context_data(form=form, formset=form_trecho))
 
     def get_context_data(self, **kwargs):
         context = super(EditarViagemView, self).get_context_data(**kwargs)
@@ -717,6 +789,8 @@ class EditarViagemView(CustomUpdateView):
         form_class = self.get_form_class()
         form = form_class(request.POST, instance=self.object)
         form.request_user = self.request.user
+
+        form_trecho = TrechoFormSet(request.POST, prefix='viagem_trechos', instance=self.object)
 
         data_hoje = datetime.datetime.now()
         data_inicio = datetime.datetime.strptime(request.POST['dada_inicio'], "%d/%m/%Y %H:%M:%S")
@@ -762,19 +836,33 @@ class EditarViagemView(CustomUpdateView):
             _valor_diaria = tabela_diaria.valor_diaria
             _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
-            print(f'{_valor_total_diarias} * {_qtd_diarias} = {_valor_total_diarias}')
+        # Validando campos do formset
+        for index, formumlario in enumerate(form_trecho):
 
-            print(form.errors)
+            if form_trecho.is_valid():
+                _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
+                _data_fim_trecho = formumlario.cleaned_data.get("data_fim_trecho")
 
+                if _data_inicio_trecho < timezone.make_aware(data_inicio, pytz.timezone('America/Sao_Paulo')):
+                    formumlario.add_error('data_inicio_trecho',
+                                          'Início do trecho não pode ser anterior ao início da viagem')
+                if data_fim:
+                    if _data_fim_trecho > timezone.make_aware(data_fim, pytz.timezone('America/Sao_Paulo')):
+                        formumlario.add_error('data_fim_trecho',
+                                              'Fim do trecho não pode ser posterior ao fim da viagem')
 
-        if form.is_valid():
+        if form.is_valid() and form_trecho.is_valid():
             self.object = form.save(commit=False)
             self.object.qtd_diarias = _qtd_diarias
             self.object.valor_diaria = _valor_diaria
             self.object.valor_total_diarias = _valor_total_diarias
             self.object.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
+
+            form_trecho.instance = self.object
+            form_trecho.save()
+
+            return self.form_valid(form=form)
+        return self.form_invalid(form=form, formset=form_trecho)
 
 
 class VerSolicitacaoViagem(CustomUpdateView):
@@ -816,14 +904,30 @@ class ListSupAutorizarViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listasupautorizarviagem')
     permission_codename = 'autorizar_viagens_sup'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         current_user = self.request.user
-        if (current_user.usuario.perfil!='2' and current_user.usuario.perfil!='1' and not current_user.is_superuser):
+        if (
+                current_user.usuario.perfil != '2' and current_user.usuario.perfil != '1' and not current_user.is_superuser):
             return
-        user_viagens = ViagemModel.objects.filter(autorizada_sup=False)
-        user_viagens = user_viagens.filter(recusado_sup =False)
-        if (not current_user.is_superuser and current_user.usuario.perfil!='1'):
+        user_viagens = ViagemModel.objects.filter(autorizada_sup=False, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(recusado_sup=False)
+        if (not current_user.is_superuser and current_user.usuario.perfil != '1'):
             user_viagens = user_viagens.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
         return user_viagens
@@ -850,7 +954,11 @@ class ListSupAutorizarViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListSupAutorizarViagensView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Viagens para autorização - Superintendente'
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
+        context['title_complete'] = 'Autorizar Viagens – Sup'
         return context
 
 
@@ -860,14 +968,28 @@ class ListAutorizarViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaautorizarviagem')
     permission_codename = 'autorizar_viagens_dus'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        # return self.model.objects.all()
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         current_user = self.request.user
-        if (current_user.usuario.perfil!='1'):
+        if (current_user.usuario.perfil != '1'):
             return
 
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=False)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=False, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(autorizada_sup=True)
         user_viagens = user_viagens.filter(recusado_dus=False)
         return user_viagens
@@ -894,7 +1016,11 @@ class ListAutorizarViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAutorizarViagensView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Viagens para autorização - DUS'
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
+        context['title_complete'] = 'Autorizar Viagens - DUS'
         return context
 
 
@@ -904,13 +1030,32 @@ class ListHomologarViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listahomologacaoviagem')
     permission_codename = 'homologar_viagens'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-        user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
-        for viagem in user_viagens:
-            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+      user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
+      user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
+      for viagem in user_viagens:
+        viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+       # tratamento do filtro de seleção ano e mês
+       if self.request.GET.get('mes'):
+          self.request.session['mes_select'] = self.request.GET.get('mes')
+       if 'mes_select' in self.request.session:
+          self._mes = self.request.session['mes_select']
+
+       if self.request.GET.get('ano'):
+          self.request.session['ano_select'] = self.request.GET.get('ano')
+       if 'ano_select' in self.request.session:
+          self._ano = self.request.session['ano_select']
+
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(homologada=False)
         return user_viagens
+         
+
+        
 
     # Remover items selecionados da database
     def post(self, request, *args, **kwargs):
@@ -931,6 +1076,10 @@ class ListHomologarViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListHomologarViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens'
         return context
 
@@ -1212,7 +1361,6 @@ class RemoverArquivoView(CustomUpdateView):
         return context
 
 
-
 class PrestarContasArquivosView(CustomUpdateView):
     form_class = PrestacaoContaForm
     model = ViagemModel
@@ -1225,7 +1373,7 @@ class PrestarContasArquivosView(CustomUpdateView):
 
         viagem = ViagemModel.objects.get(pk=kwargs['pk'])
 
-        # Verifica a submimissão do botão finalizar
+        # Verifica a submimissão do botão finalizar (que é o salvar prestação de contas)
         if 'finalizar' in request.POST.keys():
             url = reverse_lazy('viagem:prestar_contas_arquivos', kwargs={'pk': kwargs['pk']}, )
 
@@ -1233,6 +1381,11 @@ class PrestarContasArquivosView(CustomUpdateView):
                 viagem.remarcacao_interesse_particular = '1'
             else:
                 viagem.remarcacao_interesse_particular = '0'
+
+            if 'check_cancelada' in request.POST.keys():
+                viagem.justificativa_cancelamento = request.POST['justificativa_cancelamento']
+            else:
+                viagem.justificativa_cancelamento = ""
 
             if 'finalizar_pc' in request.POST.keys():
                 viagem.finalizar_pc = '1'
@@ -1253,10 +1406,11 @@ class PrestarContasArquivosView(CustomUpdateView):
         data_evento = datetime.datetime.strptime(request.POST['data_evento'], "%d/%m/%Y")
         data_evento = timezone.make_aware(data_evento, timezone.utc)
         if viagem.dada_fim:
-            data_fim_viagem = viagem.dada_fim+timedelta(days=1)
+            data_fim_viagem = viagem.dada_fim + timedelta(days=1)
             data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
             if data_evento < data_inicio_viagem or data_evento > data_fim_viagem:
-                form.add_error('data_evento', 'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
+                form.add_error('data_evento',
+                               'O Evento tem que estar entre o inicio e o fim da viagem com intervalo máximo de 1 dia')
         else:
             data_inicio_viagem = viagem.dada_inicio + timedelta(days=-1)
             if data_evento < data_inicio_viagem:
@@ -1282,7 +1436,7 @@ class PrestarContasArquivosView(CustomUpdateView):
         context['viagem_pk'] = pk
         context['arquivos'] = Arquivos.objects.filter(viagem=context['viagem_pk'])
 
-        #Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
+        # Captura o último número de item inserido. Idealmente, os números deveriam ser reorganizados depois de um exclusão
         if context['arquivos'].count() >= 1:
             _qtd_arquivos_enviados = context['arquivos'].latest('numero_item').numero_item
             if _qtd_arquivos_enviados is None:
@@ -1290,8 +1444,6 @@ class PrestarContasArquivosView(CustomUpdateView):
             context['num_item'] = _qtd_arquivos_enviados + 1
         else:
             context['num_item'] = 1
-
-
 
         total_recursos_proprios = 0
         total_recursos_empresa = 0
@@ -1316,6 +1468,7 @@ class PrestarContasArquivosView(CustomUpdateView):
         context['motivo_pc_reprovacao'] = viagem_solicitada.motivo_reprovacao_pc
         context['remarcacao_interesse_particular'] = viagem_solicitada.remarcacao_interesse_particular
         context['finalizar_pc'] = viagem_solicitada.finalizar_pc
+        context['justificativa_cancelamento'] = viagem_solicitada.justificativa_cancelamento
 
         usuario_solicitante_id = viagem_solicitada.solicitante_id
         usuario_solicitante = User.objects.get(id=usuario_solicitante_id)
@@ -1426,12 +1579,28 @@ class ListAprovarPCViagensView(CustomListView):
     context_object_name = 'all_natops'
     success_url = reverse_lazy('viagem:listaaprovarpcviagem')
     permission_codename = 'aprovar_pc_viagens'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        # return self.model.objects.all()
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
         current_user = self.request.user
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
+        
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
+        
+        
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
         return user_viagens
@@ -1458,8 +1627,13 @@ class ListAprovarPCViagensView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAprovarPCViagensView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Viagens'
         return context
+
 
 class AvaliarPrestacaoDeContas(CustomUpdateView):
     form_class = AvaliarPrestacaoContaForm
@@ -1574,7 +1748,6 @@ class AvaliarArquivosView(CustomUpdateView):
 
         # self.object.qtd_diarias.di
 
-
         if 'acao' in request.POST.keys():
             acao = request.POST['acao']
             instance = self.model.objects.get(pk=kwargs['pk'])
@@ -1619,6 +1792,7 @@ class AvaliarArquivosView(CustomUpdateView):
         context['data_fim'] = viagem_solicitada.dada_fim
         context['data_inclusao'] = viagem_solicitada.data_inclusao
         context['remarcacao_interesse_particular'] = viagem_solicitada.remarcacao_interesse_particular
+        context['justificativa_cancelamento'] = viagem_solicitada.justificativa_cancelamento
 
         usuario_solicitante_id = viagem_solicitada.solicitante_id
         usuario_solicitante = User.objects.get(id=usuario_solicitante_id)

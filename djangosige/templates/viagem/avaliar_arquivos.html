@@ -26,8 +26,8 @@
             </h2>
 
               <div class="header-btn">
-                  <button type="submit" name="aprovar_pc" class="btn btn-success btn-aprovar_pc" ><i class="material-icons">check</i><span> Aprovar </span></button>
-                  <button class="btn btn-red btn-reprovar_pc" id="btn_reprovar_pc"><i class="material-icons">clear</i><span> Reprovar </span></button>
+                  <button type="submit" name="aprovar_pc" class="btn btn-success btn-aprovar_pc" ><i class="material-icons">check</i><span> APROVAR </span></button>
+                  <button class="btn btn-red btn-reprovar_pc" id="btn_reprovar_pc"><i class="material-icons">clear</i><span> REPROVAR </span></button>
               </div>
 
           </div>
@@ -129,7 +129,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -139,7 +139,7 @@
                   </div>
                 </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -149,7 +149,7 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-3">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -159,6 +159,21 @@
                                style="font-weight: bold;"
                                title=""> Remarcação por Interesse particular
                         </label>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-5">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        <label>Viagem cancelada:</label><br>
+                        <input disabled type="checkbox" name="check_justificativa_cancelamento" class="form-control" id="id_justificativa_cancelamento" {% if justificativa_cancelamento != '' %}checked="checked"{% endif %}>
+                        <label for="id_justificativa_cancelamento"
+                               style="font-weight: bold;"
+                               title=""> {% if justificativa_cancelamento %}{{ justificativa_cancelamento }}{% endif %}
+                        </label>
+
                     </div>
                   </div>
                 </div>

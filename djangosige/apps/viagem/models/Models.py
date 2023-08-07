@@ -34,11 +34,17 @@ ESCALAS = [
 ITINERARIO = [
     ('0', 'Ida'),
     ('1', 'Ida e Volta'),
+    ('2', 'Em trânsito'),
 ]
 
 GRUPO_FUNCIONAL = [
     ('0', 'A - DIRETORES e CONSELHEIROS'),
     ('1', 'B – PROFISSIONAIS'),
+]
+
+DURACAO_VIAGEM = [
+    ('0', 'Inferior a 6hs'),
+    ('1', 'Igual/Superior a 6hs'),
 ]
 
 
@@ -138,6 +144,7 @@ class ViagemModel(models.Model):
 
     itinerario = models.CharField(max_length=2, choices=ITINERARIO)
     escalas = models.CharField(max_length=1, choices=ESCALAS)
+    duracao = models.CharField(max_length=1, choices=DURACAO_VIAGEM)
 
     dada_inicio = models.DateTimeField()
     dada_fim = models.DateTimeField(blank=True, null=True)
@@ -152,7 +159,8 @@ class ViagemModel(models.Model):
                                              on_delete=models.CASCADE, null=True,
                                              blank=True)
 
-    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino", on_delete=models.CASCADE)
+    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
+                                           on_delete=models.CASCADE)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
@@ -188,7 +196,6 @@ class ViagemModel(models.Model):
 
     bagagem_tecnica = models.BooleanField(blank=True, default=False)
     bagagem_despachada = models.BooleanField(blank=True, default=False)
-    crianca_colo = models.BooleanField(blank=True, default=False)
     local_risco = models.BooleanField(blank=True, default=False)
     exige_vacina = models.BooleanField(blank=True, default=False)
     reservar_hotel = models.BooleanField(blank=True, default=False)
@@ -201,11 +208,15 @@ class ViagemModel(models.Model):
     valor_total_diarias = models.DecimalField(max_digits=16, decimal_places=2,
                                               validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
-
+    justificativa_cancelamento = models.TextField(blank=True, null=True)
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.pagamento_diarias_autorizado = AprovarPagamentoDiariasModel.objects.filter(viagem=self).exists()
         self.pagamento_reembolso_autorizado = AprovarPagamentoReembolsoModel.objects.filter(viagem=self).exists()
+        
+    def data_inicio_formated(self):
+        return '%s' % date(self.dada_inicio, "d/m/Y")
 
     def __str__(self):
         return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
@@ -276,4 +287,17 @@ class Arquivos(models.Model):
     pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
     valor_pago = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     cotacao = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    valor_pago_reais = models.DecimalField(max_digits=16, decimal_places=2,
+                                           validators=[MinValueValidator(Decimal('0.01'))])
+
+
+class TrechoModel(models.Model):
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, related_name='viagem_trechos')
+    data_inicio_trecho = models.DateTimeField()
+    data_fim_trecho = models.DateTimeField()
+    origem_trecho = models.CharField(max_length=200)
+    destino_trecho = models.CharField(max_length=200)
+    tipo_transporte_trecho = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_trecho_transporte",
+                                               on_delete=models.CASCADE)
+    categoria_passagem_trecho = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_trecho_passagem",
+                                                  on_delete=models.CASCADE)
