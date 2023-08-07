@@ -18,57 +18,61 @@
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                    <div class="form-line">
+              <div class="row">
 
-                      <label>Código</label>
-                        <input disabled type="text" name="nome" value="{{ id }}" class="form-control" id="id_codigo" readonly>
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>Código</label>
+                            <input disabled type="text" name="nome" value="{{ id }}" class="form-control" id="id_codigo" readonly>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                    <div class="form-line">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>Inclusão</label>
-                        <input disabled type="text" name="nome" value="{{ data_inclusao }}" class="form-control" id="id_codigo" readonly>
+                          <label>Inclusão</label>
+                            <input disabled type="text" name="nome" value="{{ data_inclusao }}" class="form-control" id="id_codigo" readonly>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                    <div class="form-line">
+                  <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>Usuário</label>
-                      <input disabled type="text" name="nome" value="{{ user }}" class="form-control" id="id_codigo" readonly>
+                          <label>Usuário</label>
+                          <input disabled type="text" name="nome" value="{{ user }}" class="form-control" id="id_codigo" readonly>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
+              </div>
 
-                        <label>{{form.itinerario.label}}</label><strong style="color:red;"> *</strong> <br>
+              <div class="row">
 
-                      <input disabled type="radio" name="itinerario" id="radio_ida" value="0" {% if form.itinerario.value == '0' %}checked="checked"{% endif %} checked="checked"  />
-                      <label for="radio_ida"><strong>Somente Ida</strong></label>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                        <input disabled type="radio" name="itinerario" id="radio_idavolta" value="1" {% if form.itinerario.value == '1' %}checked="checked"{% endif %} />
-                      <label for="radio_idavolta"><strong>Ida e Volta</strong></label>
+                            <label>{{form.itinerario.label}}</label><strong style="color:red;"> *</strong> <br>
 
-                    {% if form.itinerario.errors %}<label class="error">{% for error in form.itinerario.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          <input disabled type="radio" name="itinerario" id="radio_ida" value="0" {% if form.itinerario.value == '0' %}checked="checked"{% endif %} checked="checked"  />
+                          <label for="radio_ida"><strong>Somente Ida</strong></label>
+
+                            <input disabled type="radio" name="itinerario" id="radio_idavolta" value="1" {% if form.itinerario.value == '1' %}checked="checked"{% endif %} />
+                          <label for="radio_idavolta"><strong>Ida e Volta</strong></label>
+
+                        {% if form.itinerario.errors %}<label class="error">{% for error in form.itinerario.errors %}{{error}}{% endfor %}</label>{% endif %}
 
 
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-
-
-              <div class="col-sm-6">
+                  <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -90,49 +94,56 @@
                   </div>
                 </div>
 
-              <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
+              </div>
 
-                      <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.valor_passagem.errors %}<label class="error">{% for error in form.valor_passagem.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.valor_passagem}}
+              <div class="row">
+
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.valor_passagem.label}}</label><strong style="color:red;"> *</strong>
+                          {% if form.valor_passagem.errors %}<label class="error">{% for error in form.valor_passagem.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.valor_passagem}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-              <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>{{form.dada_inicio.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.dada_inicio.errors %}<label class="error">{% for error in form.dada_inicio.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.dada_inicio}}
+                          <label>{{form.dada_inicio.label}}</label><strong style="color:red;"> *</strong>
+                          {% if form.dada_inicio.errors %}<label class="error">{% for error in form.dada_inicio.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.dada_inicio}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-               <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
+                   <div class="col-sm-3">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>{{form.dada_fim.label}}</label><strong style="color:red;"> </strong>
-                      {% if form.dada_fim.errors %}<label class="error">{% for error in form.dada_fim.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.dada_fim}}
+                          <label>{{form.dada_fim.label}}</label><strong style="color:red;"> </strong>
+                          {% if form.dada_fim.errors %}<label class="error">{% for error in form.dada_fim.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.dada_fim}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-              <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>{{form.horario_preferencial.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.horario_preferencial.errors %}<label class="error">{% for error in form.horario_preferencial.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.horario_preferencial}}
+                          <label>{{form.horario_preferencial.label}}</label><strong style="color:red;"> *</strong>
+                          {% if form.horario_preferencial.errors %}<label class="error">{% for error in form.horario_preferencial.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.horario_preferencial}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+
+              </div>
+
 
 {#              <div class="col-sm-6">#}
 {#                  <div class="form-group">#}
@@ -156,61 +167,112 @@
 {#                  </div>#}
 {#                </div>#}
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
+              <div class="row">
 
-                        <input disabled type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante" {% if form.acompanhante.value %}checked="checked"{% endif %}>
-                        <label for="id_check_acompanhante"
-                               style="font-weight: bold;"
-                               title=""> Acompanhante/convocado/Substituto
-                        </label>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>{{form.acompanhante.label}}</label>
-                      {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.acompanhante}}
+                            <input disabled type="checkbox" name="check_acompanhante" class="form-control" id="id_check_acompanhante" {% if form.acompanhante.value %}checked="checked"{% endif %}>
+                            <label for="id_check_acompanhante"
+                                   style="font-weight: bold;"
+                                   title=""> Acompanhante/convocado/Substituto
+                            </label>
+
+                          <label>{{form.acompanhante.label}}</label>
+                          {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.acompanhante}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                            <input disabled type="checkbox" name="check_pcd" class="form-control" id="id_check_pcd" {% if pcd == '1' %}checked="checked"{% endif %}>
+                            <label for="id_check_pcd"
+                                   style="font-weight: bold;"
+                                   title=""> PCD (Pessoa com deficiência)
+                            </label>
+
+                          <label>{{form.necessidade_especial.label}}</label>
+                          {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.necessidade_especial}}
+                        </div>
+                      </div>
+                    </div>
+
+              </div>
+
+              <div class="row">
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.tipo_viagem.label}}</label><strong style="color:red;"> *</strong>
+                          {% if form.tipo_viagem.errors %}<label class="error">{% for error in form.tipo_viagem.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.tipo_viagem}}
+                        </div>
+                      </div>
+                    </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.tipo_solicitacao.label}}</label><strong style="color:red;"> *</strong>
+                          {% if form.tipo_solicitacao.errors %}<label class="error">{% for error in form.tipo_solicitacao.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.tipo_solicitacao}}
+                        </div>
+                      </div>
+                    </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+
+                    <h5>Trechos</h5>
+
+                  <div class="table-responsive">
+                    <table id="lista-database" class="table table-bordered table-striped ">
+                      <thead>
+                        <tr>
+                            <th>Origem</th>
+                            <th>Destino</th>
+                            <th>Período</th>
+                            <th>Transporte</th>
+                            <th>Passagem</th>
+                            <th>Motivo</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                           {% if trechos%}
+                           {% for natop in trechos %}
+
+                           <tr>
+                               <td>{{natop.origem_trecho}}</td>
+                               <td>{{natop.destino_trecho}}</td>
+                               <td>{{natop.format_data_inicio}} - {{natop.format_data_fim}}</td>
+                               <td>{{natop.tipo_transporte_trecho}}</td>
+                               <td>{{natop.categoria_passagem_trecho}}</td>
+                               <td>{{natop.motivo_trecho}}</td>
+                            </tr>
+
+                           {% endfor %}
+                           {%else%}
+                           {%endif%}
+                    </tbody>
+                  </table>
+                </div>
+                <hr/>
+
                 </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                        <input disabled type="checkbox" name="check_pcd" class="form-control" id="id_check_pcd" {% if pcd == '1' %}checked="checked"{% endif %}>
-                        <label for="id_check_pcd"
-                               style="font-weight: bold;"
-                               title=""> PCD (Pessoa com deficiência)
-                        </label>
-
-                      <label>{{form.necessidade_especial.label}}</label>
-                      {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.necessidade_especial}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.tipo_viagem.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.tipo_viagem.errors %}<label class="error">{% for error in form.tipo_viagem.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.tipo_viagem}}
-                    </div>
-                  </div>
-                </div>
-
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.tipo_solicitacao.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.tipo_solicitacao.errors %}<label class="error">{% for error in form.tipo_solicitacao.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.tipo_solicitacao}}
-                    </div>
-                  </div>
-                </div>
+              </div>
 
 {#              <div class="col-sm-6">#}
 {#                  <div class="form-group">#}
@@ -245,35 +307,35 @@
 {#                  </div>#}
 {#                </div>#}
 
+              <div class="row">
 
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>{{form.objetivo.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.objetivo.errors %}<label class="error">{% for error in form.objetivo.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.objetivo}}
+                          <label>{{form.objetivo.label}}</label><strong style="color:red;"> *</strong>
+                          {% if form.objetivo.errors %}<label class="error">{% for error in form.objetivo.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.objetivo}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-              <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <div class="form-line">
 
-                      <label>{{form.justificativa.label}}</label>
-                      {% if form.justificativa.errors %}<label class="error">{% for error in form.justificativa.errors %}{{error}}{% endfor %}</label>{% endif %}
-                      {{form.justificativa}}
+                          <label>{{form.justificativa.label}}</label>
+                          {% if form.justificativa.errors %}<label class="error">{% for error in form.justificativa.errors %}{{error}}{% endfor %}</label>{% endif %}
+                          {{form.justificativa}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
+              </div>
 
+               <div class="row">
 
-               <div class="col-sm-12">
-
-                   <div class="col-sm-4">
+                    <div class="col-sm-4">
                       <div class="form-group">
                         <div class="form-line">
 
@@ -292,6 +354,14 @@
                                 {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
                             </label> <br>
 
+                        </div>
+                      </div>
+                   </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
+
+
                             {{form.local_risco}}
                             <label for="id_local_risco"
                                    style="font-weight: bold;"
@@ -305,6 +375,15 @@
                                    title="Caso selecionado, viajará com uma criança de colo.">
                                 {{ form.exige_vacina.label }}
                             </label> <br>
+
+
+
+                        </div>
+                      </div>
+                   </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
 
                             {{form.reservar_hotel}}
                             <label for="id_reservar_hotel"
@@ -324,41 +403,41 @@
                       </div>
                    </div>
 
-                    <div class="col-sm-8">
+               </div>
 
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <div class="form-line">
+              <div class="row">
 
-                              <label>{{form.qtd_diarias.label}}</label>
-                              {{form.qtd_diarias}}
-                            </div>
-                          </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.qtd_diarias.label}}</label>
+                          {{form.qtd_diarias}}
                         </div>
-
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <div class="form-line">
-
-                              <label>{{form.valor_diaria.label}}</label>
-                              {{form.valor_diaria}}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <div class="form-line">
-
-                              <label>{{form.valor_total_diarias.label}}</label>
-                              {{form.valor_total_diarias}}
-                            </div>
-                          </div>
-                        </div>
-
+                      </div>
                     </div>
 
-               </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.valor_diaria.label}}</label>
+                          {{form.valor_diaria}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="form-line">
+
+                          <label>{{form.valor_total_diarias.label}}</label>
+                          {{form.valor_total_diarias}}
+                        </div>
+                      </div>
+                    </div>
+
+              </div>
 
                   
               </div>

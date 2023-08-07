@@ -258,3 +258,11 @@ class TrechoModel(models.Model):
 
     motivo_trecho = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_trecho_motivo",
                                       on_delete=models.CASCADE)
+
+    @property
+    def format_data_inicio(self):
+        return '%s' % date(self.data_inicio_trecho, "d/m/Y")
+
+    @property
+    def format_data_fim(self):
+        return '%s' % date(self.data_fim_trecho, "d/m/Y")
