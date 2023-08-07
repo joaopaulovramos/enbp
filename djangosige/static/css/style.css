@@ -999,7 +999,7 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
     .card .header button,
     .card .header .header-btn{
       float:right;
-      margin-right:10px; }
+      margin-left:10px; }
       .card .header .header-btn .btn-remove{
         display: none; }
       .card .header .header-btn .dropdown a{
@@ -1194,7 +1194,7 @@ fieldset[disabled] .form-control {
   background-color: transparent; }
 
 .form-table thead{
-  background-color: lightblue;
+  background-color: #b9d7f5;
   font-size: 12px;}
 .form-table .field-td{
   min-width: 110px; }

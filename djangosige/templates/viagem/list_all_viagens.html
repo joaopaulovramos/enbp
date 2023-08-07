@@ -30,9 +30,10 @@
           <div class="body">
 
            {% include 'base/search.html' %}
+           {% include 'base/select_mes.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[2, "desc"]]'>
               <thead>
                 <tr>
                     <th>Código</th>
@@ -61,7 +62,7 @@
                    <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
 
-                   <td>{{natop.dada_inicio}}</td>
+                   <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
@@ -74,7 +75,7 @@
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
                     </td>
@@ -82,7 +83,7 @@
                         {% if natop.autorizada_dus  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -91,7 +92,7 @@
                         {% if natop.homologada  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
                    </td>
                 <td class="lista-remove">
@@ -132,6 +133,13 @@
   <script src="{% static 'js/jquery.mask.js' %}"></script>
   <script type="text/javascript">
       $.Admin.viagemForm.init()
+
+      $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'viagem:listaautorizarviagem' %}?mes=${mes}&ano=${ano}`;
+        })
+
   </script>
 
 {% endblock %}

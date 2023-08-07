@@ -29,9 +29,10 @@
           <div class="body">
 
            {% include 'base/search.html' %}
+           {% include 'base/select_mes.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[2, "desc"]]'>
               <thead>
                 <tr>
                     <th>Código</th>
@@ -61,7 +62,7 @@
                >
                    <td>{{natop.id}}</td>
                    <td>{{login}}</td>
-                   <td>{{natop.dada_inicio}}</td>
+                   <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{%if natop.tipo_viagem%}{{natop.tipo_viagem}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
@@ -73,7 +74,7 @@
                         {% elif  natop.recusado_sup %}
                             <a class="btn btn-red btn-success disabled"><span> RECUSADA</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -85,7 +86,7 @@
                          {% elif  natop.recusado_dus %}
                             <a class="btn btn-red btn-success disabled"><span> RECUSADA</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -94,7 +95,7 @@
                         {% if natop.homologada  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NAO</span></a>
+                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
                         {% endif %}
 
 
@@ -117,7 +118,7 @@
                             <a href="{% url 'viagem:prestar_contas_arquivos'  natop.id %}" class="btn btn-yellow"><span> PRESTAR CONTAS </span></a>
                        {% endif %}
                        {% if natop.autorizada_dus and natop.homologada and natop.finalizar_pc == '1' and  not natop.aprovar_pc == '1' %}
-                            <a class="btn"><span> Enviado Para Aprovação</span></a>
+                            <a class="btn"><span> ENVIADO PARA APROVAÇÃO</span></a>
                        {% endif %}
                         {% if natop.aprovar_pc == '1' %}
                             <a class="btn btn-success disabled"><span> APROVADA</span></a>
@@ -168,3 +169,15 @@
 
 
 {%endblock%}
+
+{% block js %}
+
+   <script>
+        $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'viagem:listaviagem' %}?mes=${mes}&ano=${ano}`;
+        })
+   </script>
+
+{% endblock %}
