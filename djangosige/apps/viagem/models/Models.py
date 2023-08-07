@@ -143,8 +143,8 @@ class ViagemModel(models.Model):
 
     dada_inicio = models.DateTimeField()
     dada_fim = models.DateTimeField(blank=True, null=True)
-    origem = models.CharField(max_length=200)
-    destino = models.CharField(max_length=200)
+    # origem = models.CharField(max_length=200)
+    # destino = models.CharField(max_length=200)
     objetivo = models.TextField(max_length=512)
     justificativa = models.TextField(max_length=512, blank=True)
 
@@ -154,17 +154,17 @@ class ViagemModel(models.Model):
                                              on_delete=models.CASCADE, null=True,
                                              blank=True)
 
-    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
-                                           on_delete=models.CASCADE)
+    # localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
+    #                                        on_delete=models.CASCADE)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
                                          on_delete=models.CASCADE)
-    motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.CASCADE)
-    tipo_transporte = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_transporte",
-                                        on_delete=models.CASCADE)
-    categoria_passagem = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_passagem",
-                                           on_delete=models.CASCADE)
+    # motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.CASCADE)
+    # tipo_transporte = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_transporte",
+    #                                     on_delete=models.CASCADE)
+    # categoria_passagem = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_passagem",
+    #                                        on_delete=models.CASCADE)
     horario_preferencial = models.ForeignKey(HorarioPreferencialModel, related_name="viagem_horario",
                                              on_delete=models.CASCADE)
 
@@ -207,7 +207,7 @@ class ViagemModel(models.Model):
         return '%s' % date(self.dada_inicio, "d/m/Y")
 
     def __str__(self):
-        return self.origem + ' - ' + self.destino + ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
+        return ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
 
     class Meta:
         verbose_name = "Viagens"
@@ -252,3 +252,9 @@ class TrechoModel(models.Model):
                                                on_delete=models.CASCADE)
     categoria_passagem_trecho = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_trecho_passagem",
                                                   on_delete=models.CASCADE)
+
+    localidade_trecho = models.ForeignKey(LocalidadeModel, related_name="viagem_trecho_localidade_destino",
+                                          on_delete=models.CASCADE)
+
+    motivo_trecho = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_trecho_motivo",
+                                      on_delete=models.CASCADE)
