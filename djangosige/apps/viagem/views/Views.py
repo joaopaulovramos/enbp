@@ -782,14 +782,20 @@ class EditarViagemView(CustomUpdateView):
             _valor_diaria = tabela_diaria.valor_diaria
             _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
 
-        # if form.is_valid():
-        #     self.object = form.save(commit=False)
-        #     self.object.qtd_diarias = _qtd_diarias
-        #     self.object.valor_diaria = _valor_diaria
-        #     self.object.valor_total_diarias = _valor_total_diarias
-        #     self.object.save()
-        #     return redirect(self.success_url)
-        # return self.form_invalid(form)
+        # Validando campos do formset
+        for index, formumlario in enumerate(form_trecho):
+
+            if form_trecho.is_valid():
+                _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
+                _data_fim_trecho = formumlario.cleaned_data.get("data_fim_trecho")
+
+                if _data_inicio_trecho < timezone.make_aware(data_inicio, timezone.utc):
+                    formumlario.add_error('data_inicio_trecho',
+                                          'Início do trecho não pode ser anterior ao início da viagem')
+                if data_fim:
+                    if _data_fim_trecho > timezone.make_aware(data_fim, timezone.utc):
+                        formumlario.add_error('data_fim_trecho',
+                                              'Fim do trecho não pode ser posterior ao fim da viagem')
 
         if form.is_valid() and form_trecho.is_valid():
             self.object = form.save(commit=False)
