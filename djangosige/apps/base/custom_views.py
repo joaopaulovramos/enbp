@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.db import IntegrityError
 
 from djangosige.apps.base.views_mixins import CheckPermissionMixin, FormValidationMessageMixin
 
@@ -76,7 +77,12 @@ class CustomListView(CheckPermissionMixin, ListView):
             for key, value in request.POST.items():
                 if value == "on":
                     instance = self.model.objects.get(id=key)
-                    instance.delete()
+                    try:
+                        instance.delete()
+                    except IntegrityError:
+                        messages.success(self.request, "Esta exclusão não é permitida pois compromete a integridade do banco. Verifique se existem dependências relacionadas e este cadastro.")
+
+
         return redirect(self.success_url)
 
 
