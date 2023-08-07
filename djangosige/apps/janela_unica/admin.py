@@ -99,7 +99,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
 
         ('Dados pagamento', {
             'fields': (
-                ('forma_pagamento', 'fornecedor')
+                ('forma_pagamento', 'fornecedor'),
                 ('plano_conta', 'projeto'),
                 ('linha_digitaval',),
                 ('chave_pix',),

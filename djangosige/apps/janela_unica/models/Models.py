@@ -114,7 +114,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=True, blank=True)
 
     # Dados para o pagamento
-    forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO)
+    forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO, default='9')
     fornecedor = models.ForeignKey('cadastro.Pessoa', related_name="pessoa_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
 
     # dados boleto

@@ -375,8 +375,6 @@ class ContaBancaria(models.Model):
         return s
 
 
-
-
 class EnderecoUsuario(models.Model):
     usuario_endereco = models.ForeignKey(
         'login.Usuario', related_name="usuario_endereco", on_delete=models.CASCADE)
