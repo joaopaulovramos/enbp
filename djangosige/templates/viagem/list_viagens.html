@@ -40,8 +40,8 @@
                     <th>Data Inicio</th>
                     <th>Data Fim</th>
                     <th>Tipo</th>
-                    <th>Origem</th>
-                    <th>Destino</th>
+{#                    <th>Origem</th>#}
+{#                    <th>Destino</th>#}
                     <th>Superintendente</th>
                     <th>DUS</th>
                     <th>Homologada</th>
@@ -65,8 +65,8 @@
                    <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{%if natop.tipo_viagem%}{{natop.tipo_viagem}}{%else%}---{%endif%}</td>
-                   <td>{{natop.origem}}</td>
-                   <td>{{natop.destino}}</td>
+{#                   <td>{{natop.origem}}</td>#}
+{#                   <td>{{natop.destino}}</td>#}
                    <td>
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
