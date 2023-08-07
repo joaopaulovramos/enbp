@@ -60,20 +60,33 @@
     <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
       <div class="changelist-form-container lista">
         {% block search %}{% search_form cl %}{% endblock %}
-        {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
+        {% block date_hierarchy %}
+          {% if cl.date_hierarchy %}
+            {% date_hierarchy cl %}
+          {% endif %}
+        {% endblock %}
 
       {% block filters %}
         {% if cl.has_filters %}
           <div id="changelist-filter">
-            <h2>{% translate 'Filter' %}</h2>
-            {% if cl.has_active_filters %}<h3 id="changelist-filter-clear">
+            <h4 style="border-bottom: 1px solid #afabab;">{% translate 'Filter' %}</h4>
+            {% if cl.has_active_filters %}
+            <span id="changelist-filter-clear">
               <a href="{{ cl.clear_all_filters_qs }}">&#10006; {% translate "Clear all filters" %}</a>
-            </h3>{% endif %}
-            {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+            </span>{% endif %}
+            <div id="changelist-filter-content row clearfix">
+              {% for spec in cl.filter_specs %}
+              <div class="col-sm-6">
+                {% admin_list_filter cl spec %}
+              </div>
+              {% endfor %}
+            </div>
           </div>
         {% endif %}
       {% endblock %}
+          <div class="row clearfix">
 
+          </div>
         <form id="changelist-form" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
         {% if cl.formset %}
           <div>{{ cl.formset.management_form }}</div>

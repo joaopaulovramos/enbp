@@ -6,7 +6,7 @@
 {% endif %}
 {% if results %}
 <div class="table-responsive">
-<table id="result_list" class="table table-bordered table-striped lista-table dataTable no-footer" role="grid">
+<table id="lista-database" class="table table-bordered table-striped lista-table" role="grid">
 <thead>
 <tr role="row">
 {% for header in result_headers %}
@@ -32,7 +32,9 @@
       <td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td>
     </tr>
 {% endif %}
-<tr>{% for item in result %}{{ item }}{% endfor %}</tr>
+<tr>
+  {% for item in result %}{{ item }}{% endfor %}
+</tr>
 {% endfor %}
 </tbody>
 </table>

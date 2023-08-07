@@ -1809,28 +1809,28 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
 }
 
 /* Bootstrap */
-input[class*=" transition-reprov"]
+button[class*=" transition-reprov"]
  {
   color:#fff;
   background-color:#ec971f;
   border-color:#d58512
  }
 
- input[class*=" transition-aprov"]
+ button[class*=" transition-aprov"]
  {
   color:#fff;
   background-color:#5cb85c;
   border-color:#4cae4c
  }
 
- input[class*=" transition-enviar"]
+ button[class*=" transition-enviar"]
  {
   color:#fff;
   background-color:#5cb85c;
   border-color:#4cae4c
  }
 
- input[class*=" transition-cancelar"]
+ button[class*=" transition-cancelar"]
  {
   color:#fff;
   background-color:#ec971f;
