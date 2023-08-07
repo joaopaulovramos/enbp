@@ -3303,7 +3303,7 @@ $.Admin.datetimepicker_viagem = {
         $('.datetimepicker').datetimepicker('destroy');
 
         $('.datetimepicker').datetimepicker({
-            format: 'd/m/Y H:i:s',
+            format: 'd/m/Y H:i:00',
         });
 
         $.datetimepicker.setLocale('pt-BR');

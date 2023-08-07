@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pytz
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 
@@ -665,11 +666,11 @@ class AdicionarViagemView(CustomCreateView):
                 _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
                 _data_fim_trecho = formumlario.cleaned_data.get("data_fim_trecho")
 
-                if _data_inicio_trecho < timezone.make_aware(data_inicio, timezone.utc):
+                if _data_inicio_trecho < timezone.make_aware(data_inicio, pytz.timezone('America/Sao_Paulo')):
                     formumlario.add_error('data_inicio_trecho',
                                           'Início do trecho não pode ser anterior ao início da viagem')
                 if data_fim:
-                    if _data_fim_trecho > timezone.make_aware(data_fim, timezone.utc):
+                    if _data_fim_trecho > timezone.make_aware(data_fim, pytz.timezone('America/Sao_Paulo')):
                         formumlario.add_error('data_fim_trecho',
                                               'Fim do trecho não pode ser posterior ao fim da viagem')
 
@@ -789,11 +790,11 @@ class EditarViagemView(CustomUpdateView):
                 _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
                 _data_fim_trecho = formumlario.cleaned_data.get("data_fim_trecho")
 
-                if _data_inicio_trecho < timezone.make_aware(data_inicio, timezone.utc):
+                if _data_inicio_trecho < timezone.make_aware(data_inicio, pytz.timezone('America/Sao_Paulo')):
                     formumlario.add_error('data_inicio_trecho',
                                           'Início do trecho não pode ser anterior ao início da viagem')
                 if data_fim:
-                    if _data_fim_trecho > timezone.make_aware(data_fim, timezone.utc):
+                    if _data_fim_trecho > timezone.make_aware(data_fim, pytz.timezone('America/Sao_Paulo')):
                         formumlario.add_error('data_fim_trecho',
                                               'Fim do trecho não pode ser posterior ao fim da viagem')
 
