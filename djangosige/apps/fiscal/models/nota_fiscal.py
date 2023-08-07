@@ -73,7 +73,7 @@ IND_PRES_ESCOLHAS = (
 )
 
 VERSOES = (
-    ('3.10', 'v3.10'),
+    ('4.00', 'v4.00'),
 )
 
 ORIENTACAO_LOGO_DANFE = (
@@ -114,7 +114,7 @@ def arquivo_proc_path(instance, filename):
 
 class NotaFiscal(models.Model):
     chave = models.CharField(max_length=44)
-    versao = models.CharField(max_length=4, choices=VERSOES, default='3.10')
+    versao = models.CharField(max_length=4, choices=VERSOES, default='4.00')
     natop = models.CharField(max_length=60)
     indpag = models.CharField(max_length=1, choices=IND_PAG_ESCOLHAS)
     mod = models.CharField(
@@ -180,7 +180,7 @@ class NotaFiscalSaida(NotaFiscal):
     venda = models.ForeignKey('vendas.PedidoVenda', related_name="venda_nfe",
                               on_delete=models.SET_NULL, null=True, blank=True)
     emit_saida = models.ForeignKey(
-        'cadastro.Empresa', related_name="emit_nfe_saida", on_delete=models.PROTECT, null=True, blank=True)
+        'cadastro.Empresa', related_name="emit_nfe_saida", on_delete=models.SET_NULL, null=True, blank=True)
     dest_saida = models.ForeignKey(
         'cadastro.Cliente', related_name="dest_nfe_saida", on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -239,7 +239,7 @@ class NotaFiscalEntrada(NotaFiscal):
     emit_entrada = models.ForeignKey(
         'cadastro.Fornecedor', related_name="emit_nfe_entrada", on_delete=models.SET_NULL, null=True, blank=True)
     dest_entrada = models.ForeignKey(
-        'cadastro.Empresa', related_name="dest_nfe_entrada", on_delete=models.PROTECT, null=True, blank=True)
+        'cadastro.Empresa', related_name="dest_nfe_entrada", on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = "Nota Fiscal de Fornecedor"
