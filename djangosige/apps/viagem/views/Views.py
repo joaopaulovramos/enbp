@@ -1034,24 +1034,22 @@ class ListHomologarViagensView(CustomListView):
     _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-      user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-      user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
-      for viagem in user_viagens:
-        viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
-       # tratamento do filtro de seleção ano e mês
-       if self.request.GET.get('mes'):
-          self.request.session['mes_select'] = self.request.GET.get('mes')
-       if 'mes_select' in self.request.session:
-          self._mes = self.request.session['mes_select']
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
+        user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
+        for viagem in user_viagens:
+            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+            if 'mes_select' in self.request.session:
+                self._mes = self.request.session['mes_select']
 
-       if self.request.GET.get('ano'):
-          self.request.session['ano_select'] = self.request.GET.get('ano')
-       if 'ano_select' in self.request.session:
-          self._ano = self.request.session['ano_select']
-
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
-                                                  dada_inicio__year=self._ano)
-        user_viagens = user_viagens.filter(homologada=False)
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+            user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,dada_inicio__year=self._ano)
+            user_viagens = user_viagens.filter(homologada=False)
         return user_viagens
          
 
