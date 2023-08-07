@@ -119,6 +119,11 @@ class LocalidadeModel(models.Model):
     def __str__(self):
         return u'%s - %s' % (self.id, self.descricao)
 
+class TipoDePagamentoModel(models.Model):
+    nome = models.CharField(max_length=200)
+
+    def __str__(self):
+        return u'%s - %s' % (self.id, self.nome)
 
 class TabelaDiariaModel(models.Model):
     grupo_funcional = models.CharField(max_length=1, choices=GRUPO_FUNCIONAL, default=GRUPO_FUNCIONAL[1][0])
@@ -175,6 +180,9 @@ class ViagemModel(models.Model):
     recusado_dus = models.BooleanField(default=False)
 
     homologada = models.BooleanField(default=False)
+    homologada_reembolso = models.BooleanField(default=False)
+    tem_reembolso = models.BooleanField(default=False)
+
     pagamento = models.CharField(max_length=50, null=True, blank=True, choices=PAGAMENTO)
     descricao = models.TextField(blank=True, null=True)
 
@@ -200,9 +208,13 @@ class ViagemModel(models.Model):
     valor_total_diarias = models.DecimalField(max_digits=16, decimal_places=2,
                                               validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
-
     justificativa_cancelamento = models.TextField(blank=True, null=True)
-
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.pagamento_diarias_autorizado = AprovarPagamentoDiariasModel.objects.filter(viagem=self).exists()
+        self.pagamento_reembolso_autorizado = AprovarPagamentoReembolsoModel.objects.filter(viagem=self).exists()
+        
     def data_inicio_formated(self):
         return '%s' % date(self.dada_inicio, "d/m/Y")
 
@@ -217,13 +229,50 @@ class ViagemModel(models.Model):
             ("autorizar_viagens_dus", "Pode autorizar viagens - Diretor de Unidade de Serviço"),
             ("homologar_viagens", "Pode homologar viagens"),
             ("cadastrar_item_viagens", "Cadastrar Items de Viagem"),
-            ("aprovar_pc_viagens", "Aprovar prestação de contras de Viagem")
+            ("aprovar_pc_viagens", "Aprovar prestação de contras de Viagem"),
+            ("autorizar_pagamento_diarias", "Pode autorizar pagamento de diárias"),
+            ("autorizar_pagamento_reembolso", "Pode autorizar pagamento de reembolso")
         )
 
     @property
     def format_data_pagamento(self):
         return '%s' % date(self.dada_inicio, "d/m/Y")
 
+class AprovarPagamentoDiariasModel(models.Model):
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, null=True, blank=True)
+    banco = models.CharField(max_length=3, null=True, blank=True)
+    agencia = models.CharField(max_length=8, null=True, blank=True)
+    conta = models.CharField(max_length=32, null=True, blank=True)
+    digito = models.CharField(max_length=8, null=True, blank=True)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    qtd_diarias = models.FloatField(blank=True, null=True)
+    valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
+                                       validators=[MinValueValidator(Decimal('0.00'))],
+                                       default=Decimal('0.00'), blank=True, null=True)
+    valor_total_diarias = models.DecimalField(max_digits=16, decimal_places=2,
+                                              validators=[MinValueValidator(Decimal('0.00'))],
+                                              default=Decimal('0.00'), blank=True, null=True)
+    data_autorizacao = models.DateTimeField(null=True, blank=True)
+    autorizado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+
+class AprovarPagamentoReembolsoModel(models.Model):
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, null=True, blank=True)
+    banco = models.CharField(max_length=3, null=True, blank=True)
+    agencia = models.CharField(max_length=8, null=True, blank=True)
+    conta = models.CharField(max_length=32, null=True, blank=True)
+    digito = models.CharField(max_length=8, null=True, blank=True)
+    total_recursos_proprios = models.DecimalField(max_digits=16, decimal_places=2,
+                                              validators=[MinValueValidator(Decimal('0.00'))],
+                                              default=Decimal('0.00'), blank=True, null=True)
+    total_recursos_empresa = models.DecimalField(max_digits=16, decimal_places=2,
+                                              validators=[MinValueValidator(Decimal('0.00'))],
+                                              default=Decimal('0.00'), blank=True, null=True)
+    valor_total_reembolso = models.DecimalField(max_digits=16, decimal_places=2,
+                                              validators=[MinValueValidator(Decimal('0.00'))],
+                                              default=Decimal('0.00'), blank=True, null=True)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    data_autorizacao = models.DateTimeField(null=True, blank=True)
+    autorizado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
 
 class Arquivos(models.Model):
     descricao = models.TextField(blank=False, null=False)

@@ -93,6 +93,19 @@ class MoedaForm(forms.ModelForm):
         }
 
 
+class TipoDePagamentoForm(forms.ModelForm):
+    class Meta:
+        model = TipoDePagamentoModel
+        fields = ('nome',)
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+
+        }
+        labels = {
+            'nome': _('Descrição'),
+        }
+
+
 class CategoriaPassagemForm(forms.ModelForm):
     class Meta:
         model = CategoriaPassagemModel
@@ -273,6 +286,34 @@ class ViagemForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class AprovarPagamentoDiariasForm(forms.ModelForm):
+    class Meta:
+        model = AprovarPagamentoDiariasModel
+        fields = (
+            'tipo_pagamento',
+        )
+        widgets = {
+            'tipo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+
+        }
+        labels = {
+            'tipo_pagamento': _('Origem'),
+        }
+
+class AprovarPagamentoReembolsoForm(forms.ModelForm):
+    class Meta:
+        model = AprovarPagamentoReembolsoModel
+        fields = (
+            'tipo_pagamento',
+        )
+        widgets = {
+            'tipo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+
+        }
+        labels = {
+            'tipo_pagamento': _('Origem'),
+        }
 
 
 class VerViagemForm(forms.ModelForm):

@@ -261,6 +261,13 @@
                                                  <span>Tabela de Diária</span>
                                             </a>
                                         </li>
+
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipopagamento' %}">
+                                                 <span>Tipos de Pagamento</span>
+                                            </a>
+                                        </li>
                                 </ul>
 
                         </li>
@@ -299,13 +306,23 @@
 
                                 {% if perms.viagem.aprovar_pc_viagens  %}
                                 <li>
+                                    <a href="{% url 'viagem:listapagamentodiarias' %}">
+                                         <span>Financeiro - Diárias</span>
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="{% url 'viagem:listaaprovarpcviagem' %}">
                                          <span>Aprovar Prestação de Contas</span>
                                     </a>
                                 </li>
                                 {% endif %}
 
-
+                                <li>
+                                    <a href="{% url 'viagem:listapagamentoreembolso' %}">
+                                         <span>Financeiro - Reembolso</span>
+                                    </a>
+                                </li>
                             </li>
                         </ul>
                     </li>
