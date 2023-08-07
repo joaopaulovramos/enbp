@@ -127,8 +127,8 @@ class TipoDePagamentoModel(models.Model):
 
 class TabelaDiariaModel(models.Model):
     grupo_funcional = models.CharField(max_length=1, choices=GRUPO_FUNCIONAL, default=GRUPO_FUNCIONAL[1][0])
-    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="diaria_localidade", on_delete=models.CASCADE)
-    moeda = models.ForeignKey(MoedaModel, related_name="diaria_moeda", on_delete=models.CASCADE)
+    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="diaria_localidade", on_delete=models.RESTRICT)
+    moeda = models.ForeignKey(MoedaModel, related_name="diaria_moeda", on_delete=models.RESTRICT)
     valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
                                        validators=[MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
 
@@ -137,7 +137,7 @@ class TabelaDiariaModel(models.Model):
 
 
 class ViagemModel(models.Model):
-    solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.CASCADE, null=True, blank=True)
+    solicitante = models.ForeignKey(User, related_name="viagem_user", on_delete=models.RESTRICT, null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     valor_passagem = models.DecimalField(max_digits=16, decimal_places=2, validators=[
         MinValueValidator(Decimal('0.01'))], default=Decimal('0.00'))
@@ -153,25 +153,25 @@ class ViagemModel(models.Model):
     objetivo = models.TextField(max_length=512)
     justificativa = models.TextField(max_length=512, blank=True)
 
-    acompanhante = models.ForeignKey(Usuario, related_name="viagem_acompanhante", on_delete=models.CASCADE, null=True,
+    acompanhante = models.ForeignKey(Usuario, related_name="viagem_acompanhante", on_delete=models.RESTRICT, null=True,
                                      blank=True, limit_choices_to={'grupo_funcional': GRUPO_FUNCIONAL_DIRETOR})
     necessidade_especial = models.ForeignKey(TiposNecessidadeEspecialModel, related_name="viagem_necessidade_especial",
-                                             on_delete=models.CASCADE, null=True,
+                                             on_delete=models.RESTRICT, null=True,
                                              blank=True)
 
     # localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
-    #                                        on_delete=models.CASCADE)
+    #                                        on_delete=models.RESTRICT)
 
-    tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.CASCADE)
+    tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.RESTRICT)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
-                                         on_delete=models.CASCADE)
-    # motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.CASCADE)
+                                         on_delete=models.RESTRICT)
+    # motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.RESTRICT)
     # tipo_transporte = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_transporte",
-    #                                     on_delete=models.CASCADE)
+    #                                     on_delete=models.RESTRICT)
     # categoria_passagem = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_passagem",
-    #                                        on_delete=models.CASCADE)
+    #                                        on_delete=models.RESTRICT)
     horario_preferencial = models.ForeignKey(HorarioPreferencialModel, related_name="viagem_horario",
-                                             on_delete=models.CASCADE)
+                                             on_delete=models.RESTRICT)
 
     autorizada_sup = models.BooleanField(default=False)
     recusado_sup = models.BooleanField(default=False)
@@ -239,12 +239,12 @@ class ViagemModel(models.Model):
         return '%s' % date(self.dada_inicio, "d/m/Y")
 
 class AprovarPagamentoDiariasModel(models.Model):
-    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, null=True, blank=True)
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.RESTRICT, null=True, blank=True)
     banco = models.CharField(max_length=3, null=True, blank=True)
     agencia = models.CharField(max_length=8, null=True, blank=True)
     conta = models.CharField(max_length=32, null=True, blank=True)
     digito = models.CharField(max_length=8, null=True, blank=True)
-    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.RESTRICT, null=True, blank=True)
     qtd_diarias = models.FloatField(blank=True, null=True)
     valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
                                        validators=[MinValueValidator(Decimal('0.00'))],
@@ -253,10 +253,10 @@ class AprovarPagamentoDiariasModel(models.Model):
                                               validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
     data_autorizacao = models.DateTimeField(null=True, blank=True)
-    autorizado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    autorizado_por = models.ForeignKey(Usuario, on_delete=models.RESTRICT, null=True, blank=True)
 
 class AprovarPagamentoReembolsoModel(models.Model):
-    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, null=True, blank=True)
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.RESTRICT, null=True, blank=True)
     banco = models.CharField(max_length=3, null=True, blank=True)
     agencia = models.CharField(max_length=8, null=True, blank=True)
     conta = models.CharField(max_length=32, null=True, blank=True)
@@ -270,18 +270,18 @@ class AprovarPagamentoReembolsoModel(models.Model):
     valor_total_reembolso = models.DecimalField(max_digits=16, decimal_places=2,
                                               validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
-    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.CASCADE, null=True, blank=True)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.RESTRICT, null=True, blank=True)
     data_autorizacao = models.DateTimeField(null=True, blank=True)
-    autorizado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True, blank=True)
+    autorizado_por = models.ForeignKey(Usuario, on_delete=models.RESTRICT, null=True, blank=True)
 
 class Arquivos(models.Model):
     descricao = models.TextField(blank=False, null=False)
     file = models.FileField(upload_to='files/', null=False, blank=False)
-    viagem = models.ForeignKey(ViagemModel, related_name="arquivos_viagem", null=True, on_delete=models.CASCADE)
+    viagem = models.ForeignKey(ViagemModel, related_name="arquivos_viagem", null=True, on_delete=models.RESTRICT)
 
     numero_item = models.IntegerField(null=False)
-    tipo_despesa = models.ForeignKey(TipoDeDespesaModel, related_name="arquivos_despesa", on_delete=models.CASCADE)
-    moeda = models.ForeignKey(MoedaModel, related_name="arquivos_moeda", on_delete=models.CASCADE)
+    tipo_despesa = models.ForeignKey(TipoDeDespesaModel, related_name="arquivos_despesa", on_delete=models.RESTRICT)
+    moeda = models.ForeignKey(MoedaModel, related_name="arquivos_moeda", on_delete=models.RESTRICT)
 
     data_evento = models.DateField(null=True, blank=True)
     pagamento = models.CharField(max_length=50, blank=True, choices=PAGAMENTO)
@@ -292,18 +292,18 @@ class Arquivos(models.Model):
 
 
 class TrechoModel(models.Model):
-    viagem = models.ForeignKey(ViagemModel, on_delete=models.CASCADE, related_name='viagem_trechos')
+    viagem = models.ForeignKey(ViagemModel, on_delete=models.RESTRICT, related_name='viagem_trechos')
     data_inicio_trecho = models.DateTimeField()
     data_fim_trecho = models.DateTimeField()
     origem_trecho = models.CharField(max_length=200)
     destino_trecho = models.CharField(max_length=200)
     tipo_transporte_trecho = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_trecho_transporte",
-                                               on_delete=models.CASCADE)
+                                               on_delete=models.RESTRICT)
     categoria_passagem_trecho = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_trecho_passagem",
-                                                  on_delete=models.CASCADE)
+                                                  on_delete=models.RESTRICT)
 
     localidade_trecho = models.ForeignKey(LocalidadeModel, related_name="viagem_trecho_localidade_destino",
-                                          on_delete=models.CASCADE)
+                                          on_delete=models.RESTRICT)
 
     motivo_trecho = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_trecho_motivo",
-                                      on_delete=models.CASCADE)
+                                      on_delete=models.RESTRICT)
