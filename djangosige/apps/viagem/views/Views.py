@@ -1135,7 +1135,8 @@ class AprovarPagamentoDiariasView(CustomCreateView):
             context["valor_total_diarias"] = instance.valor_total_diarias
             context["pagamento_diarias_autorizado"] = True
         else:
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
             banco = next(b for b in BANCOS if b[0] == cb.banco)
             if (banco):
                 context["banco"] = banco[1]
