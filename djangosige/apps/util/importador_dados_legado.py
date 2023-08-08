@@ -312,7 +312,7 @@ class ImportadorLegado:
     
     def importar_contas_lancamentos(self, verbose=True):
         sql = """
-            Select pc.cd_conta, pc.ds_classificacao, pc.ds_conta, pc.ds_abreviacao, pc.nr_natureza, pc.nr_conta_vinculada_agco, pc.nr_cpfcnpj 
+            Select pc.cd_conta, pc.ds_classificacao, pc.ds_conta, pc.ds_abreviacao, pc.nr_natureza, pc.nr_conta_vinculada_agco, pc.nr_cpfcnpj, pc.x_tipo as tipo
             from TBL_CONTABIL_PLANO_CONTAS pc INNER JOIN
                 (SELECT tb.cd_conta, ds_classificacao, sum(ordf) as ord
                 from (SELECT CD_CONTA, DS_CLASSIFICACAO, ordinal, value, cast(value as int) as value_int, -(power(10, ordinal) * cast(value as int))  as ordf 
@@ -336,19 +336,29 @@ class ImportadorLegado:
         
         while row:
             rcliente = {
+                'codigo_legado': row['cd_conta'],
                 'codigo': str(row['ds_classificacao']).title(),
-                'descricao': str(row['ds_conta']).lower(),
-                'tipo_grupo': natureza[row['nr_natureza']] 
+                'descricao': str(row['ds_conta']),
+                'tipo_grupo': natureza[row['nr_natureza']],
+                'observacao': 'Abreviação: ' + str(row['ds_abreviacao']) + ' CNPJ: ' + str(row['nr_cpfcnpj']),
             }
-            if not PlanoContasGrupo.objects.filter(codigo=rcliente['codigo']).exists():
+            # print(rcliente)
+            if not PlanoContasGrupo.objects.filter(codigo_legado=rcliente['codigo_legado']).exists():
                 if '.' not in rcliente['codigo']:
-                    ct = PlanoContasGrupo.objects.create(codigo=rcliente['codigo'], descricao=rcliente['descricao'], tipo_grupo=rcliente['tipo_grupo'])
+                    ct = PlanoContasGrupo.objects.create(codigo=rcliente['codigo'], descricao=rcliente['descricao'], tipo_grupo=rcliente['tipo_grupo'], observacao=rcliente['observacao'], codigo_legado=rcliente['codigo_legado'])
                     ct.save()
                 else:
-                    codigo_pai = rcliente['codigo'][rcliente['codigo'].rindex('.')+1:]
+                    codigo_pai = rcliente['codigo'][:rcliente['codigo'].rindex('.')]
+                    codigo_filho = rcliente['codigo'][rcliente['codigo'].rindex('.')+1:]
                     print(codigo_pai)
-                    pt = PlanoContasGrupo.objects.get(codigo=codigo_pai)
-                    ct = PlanoContasSubgrupo.objects.create(codigo=rcliente['codigo'], descricao=rcliente['descricao'], tipo_grupo=rcliente['tipo_grupo'], grupo=pt)
+                    try:
+                        pt = PlanoContasGrupo.objects.filter(codigo=codigo_pai)[:1].get()
+                    except PlanoContasGrupo.DoesNotExist:
+                        print('Grupo não encontrado: ' + codigo_pai)
+                        #print('registrado não sera migrado: ' + str(rcliente))
+                        pt = PlanoContasGrupo.objects.create(codigo=codigo_pai, descricao='Conta: ' + codigo_pai, tipo_grupo=rcliente['tipo_grupo'], observacao='Gerado automaticamente conta ' + codigo_pai + ' não encontrado no legado', codigo_legado=rcliente['codigo_legado'])        
+                    ct = PlanoContasSubgrupo.objects.create(codigo=rcliente['codigo'], descricao=rcliente['descricao'], tipo_grupo=rcliente['tipo_grupo'], grupo=pt, observacao=rcliente['observacao'], codigo_legado=rcliente['codigo_legado'])        
+                        
 
             row = cur.fetchone()
         cur.close()
@@ -377,8 +387,6 @@ class ImportadorLegado:
             row = cur.fetchone()
 
         cur.close()
-        if verbose:
-            stdout.write("\rImportando contas: 100%\r\n")
 
     def importar_notas_faturadas(self, verbose=True):
         sql = """
@@ -412,10 +420,11 @@ class ImportadorLegado:
                 'data_emissao': row['DT_EMISSAO'],
                 'valor_total': row['VL_TOTAL'],
                 'impostos': row['total_impostos'],
-                'status': row['CD_STATUS'],
+                'status': row['CD_STATUS']-1,
             }
             if not PedidoVenda.objects.filter(codigo_legado=rvenda['codigo']).exists():
                 venda = PedidoVenda()
+                venda.status = rvenda['status']
                 venda.codigo_legado=rvenda['codigo']
                 venda.data_emissao = rvenda['data_emissao']
                 venda.cliente = Cliente.objects.filter(
