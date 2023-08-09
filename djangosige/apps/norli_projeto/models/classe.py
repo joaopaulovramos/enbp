@@ -64,6 +64,7 @@ class ExemploModel(models.Model):
         permissions = (
             ("controle_projeto", "Pode controlar projetos"),
         )
+        ordering = ["nome"]
 
 
     def __str__(self):
