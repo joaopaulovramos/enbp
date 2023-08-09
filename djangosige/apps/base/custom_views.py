@@ -71,7 +71,7 @@ class CustomListView(CheckPermissionMixin, ListView):
     def get_queryset(self):
         return self.model.objects.all()
 
-    # Remover items selecionados da database
+       # Remover items selecionados da database
     def post(self, request, *args, **kwargs):
         if self.check_user_delete_permission(request, self.model):
             for key, value in request.POST.items():
@@ -79,11 +79,22 @@ class CustomListView(CheckPermissionMixin, ListView):
                     instance = self.model.objects.get(id=key)
                     try:
                         instance.delete()
-                    except IntegrityError:
-                        messages.success(self.request, "Esta exclusão não é permitida pois compromete a integridade do banco. Verifique se existem dependências relacionadas e este cadastro.")
+                    except IntegrityError as e:
+                        pattern = r"'([^']*)'"
+                        matches = re.findall(pattern, e.args[0])
+
+                        matches[0] = matches[0].replace('Model', '')
+                        matches[1] = matches[1].replace('Model', '')
+                        restricao = matches[1].split('.')
+
+                        matches[0] = re.sub(r'(?<=\w)(?=[A-Z])', ' ', matches[0])
+                        restricao[0] = re.sub(r'(?<=\w)(?=[A-Z])', ' ', restricao[0])
+
+                        messages.success(self.request, f'Não é permitido excluir o item: {instance} - {matches[0]}, ele esta sendo usado em {restricao[0]}')
 
 
         return redirect(self.success_url)
+
 
 
 class CustomListViewFilter(CheckPermissionMixin, ListView):
