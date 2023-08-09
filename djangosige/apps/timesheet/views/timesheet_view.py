@@ -266,7 +266,7 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Aprovar lançamento de horas'
+        context['title_complete'] = 'Aprovar Horas - Percentual'
         context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
         return context
 
@@ -302,7 +302,7 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Horas Aprovadas'
+        context['title_complete'] = 'Horas Aprovadas - Percentual'
         return context
 
 
@@ -480,7 +480,7 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
     def get_context_data(self, **kwargs):
         self.form_class.Meta.model.user = self.request.user
         context = super(AdicionarPercentualDiarioView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR PERCENTUAL DE HORAS'
+        context['title_complete'] = 'Adicionar Percentual de Horas'
         context['return_url'] = reverse_lazy('timesheet:listarpercentualdiario')
 
         lista_timesheet = PercentualDiario.objects.filter(solicitante=self.request.user)
@@ -528,7 +528,7 @@ class EditarPercentualDiarioView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarPercentualDiarioView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de percentual de horas'
+        context['title_complete'] = 'Editar Percentual de Horas'
         context['return_url'] = reverse_lazy('timesheet:listarpercentualdiario')
         context['id'] = self.object.id
         context['motivo_reprovacao'] = self.object.motivo_reprovacao
@@ -706,7 +706,7 @@ class ListPercentualDiarioView(CustomListViewFilter):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Timesheet'
+        context['title_complete'] = 'Minhas Horas - Percentual'
         context['add_url'] = reverse_lazy('timesheet:adicionarpercentualdiario')
         return context
 
