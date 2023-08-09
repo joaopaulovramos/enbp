@@ -118,7 +118,7 @@ class PercentualDiario(models.Model):
     data = models.DateField(null=False, blank=False)
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_timesheet",
                                 on_delete=models.CASCADE, null=False, blank=False)
-    percentual = models.DecimalField(null=False, blank=False, default=0.00, max_digits=16, decimal_places=2,
+    percentual = models.DecimalField(null=False, blank=False, max_digits=16, decimal_places=2,
                                      validators=[MinValueValidator(Decimal('0.01')),
                                                  MaxValueValidator(Decimal('100.00'))])
     solicitante = models.ForeignKey(User, related_name="timesheet_diaria_user", on_delete=models.CASCADE, null=True,
