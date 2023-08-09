@@ -6,7 +6,7 @@ from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.db import IntegrityError
-
+import re
 from djangosige.apps.base.views_mixins import CheckPermissionMixin, FormValidationMessageMixin
 
 
