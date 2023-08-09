@@ -1120,7 +1120,9 @@ class AprovarPagamentoDiariasView(CustomCreateView):
         context = super(AprovarPagamentoDiariasView, self).get_context_data(**kwargs)
         context['return_url'] = reverse_lazy('viagem:listapagamentodiarias')
         context['title_complete'] = 'Edição - Financeiro - Pagamento de Diárias'
-        context['user'] = self.request.user
+        context['login'] = self.request.user
+        context['matricula'] = self.request.user.usuario.matricula
+        context['centro_custo'] = ''
         viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
 
         if (AprovarPagamentoDiariasModel.objects.filter(viagem=self.kwargs['pk']).exists()):
@@ -1135,13 +1137,13 @@ class AprovarPagamentoDiariasView(CustomCreateView):
             context["valor_total_diarias"] = instance.valor_total_diarias
             context["pagamento_diarias_autorizado"] = True
         else:
-
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
-            banco = next(b for b in BANCOS if b[0] == cb.banco)
-            if (banco):
-                context["banco"] = banco[1]
-            context["conta"] = cb.conta + "-" + cb.digito
-            context["agencia"] = cb.agencia
+            if (ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+                banco = next(b for b in BANCOS if b[0] == cb.banco)
+                if (banco):
+                    context["banco"] = banco[1]
+                context["conta"] = cb.conta + "-" + cb.digito
+                context["agencia"] = cb.agencia
             context["qtd_diarias"] = viagem.qtd_diarias
             context["valor_diaria"] = viagem.valor_diaria
             context["valor_total_diarias"] = viagem.valor_total_diarias
@@ -1157,9 +1159,11 @@ class AprovarPagamentoDiariasView(CustomCreateView):
         data_hoje = datetime.datetime.now()
 
         if form.is_valid():
-            self.object = form.save(commit=False)
             viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+            if (not ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                return self.form_invalid(form)
+            self.object = form.save(commit=False)
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
             self.object.qtd_diarias = viagem.qtd_diarias
             self.object.viagem = viagem
             self.object.banco = cb.banco
@@ -1187,7 +1191,9 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
         context = super(AprovarPagamentoReembolsoView, self).get_context_data(**kwargs)
         context['return_url'] = reverse_lazy('viagem:listapagamentoreembolso')
         context['title_complete'] = 'Edição - Financeiro - Pagamento de Reembolso'
-        context['user'] = self.request.user
+        context['login'] = self.request.user
+        context['matricula'] = self.request.user.usuario.matricula
+        context['centro_custo'] = ''
         viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
 
         if (AprovarPagamentoReembolsoModel.objects.filter(viagem=self.kwargs['pk']).exists()):
@@ -1202,12 +1208,13 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
             context['valor_total_reembolso'] = instance.valor_total_reembolso
             context["pagamento_reembolso_autorizado"] = True
         else:
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
-            banco = next(b for b in BANCOS if b[0] == cb.banco)
-            if (banco):
-                context["banco"] = banco[1]
-            context["conta"] = cb.conta + "-" + cb.digito
-            context["agencia"] = cb.agencia
+            if (ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+                banco = next(b for b in BANCOS if b[0] == cb.banco)
+                if (banco):
+                    context["banco"] = banco[1]
+                context["conta"] = cb.conta + "-" + cb.digito
+                context["agencia"] = cb.agencia
             context["pagamento_reembolso_autorizado"] = False
             total_recursos_empresa, total_recursos_proprios = self.calc_arquivo_pagamentos(viagem)
             context['total_recursos_proprios'] = total_recursos_proprios
@@ -1224,9 +1231,11 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
         data_hoje = datetime.datetime.now()
 
         if form.is_valid():
-            self.object = form.save(commit=False)
             viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.pk)
+            if (not ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                return self.form_invalid(form)
+            self.object = form.save(commit=False)
+            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
             self.object.qtd_diarias = viagem.qtd_diarias
             self.object.viagem = viagem
             self.object.banco = cb.banco
