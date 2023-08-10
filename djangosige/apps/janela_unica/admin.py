@@ -70,8 +70,13 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     search_fields = ('situacao',)
     # Atributos da tabela
     list_display = ('pk', 'descricao', 'situacao', 'data_inclusao', 'data_finalizacao', 'tipo_arquivo', 'numero', 'responsavel', 'fornecedor', 'projeto', 'plano_conta', 'valor_total',)
-
+    
     history_list_display = ["changed_fields", "list_changes"]
+
+    def has_change_permission(self, request, obj=None):
+        retorno = super().has_change_permission(request, obj)
+        return True    
+
 
     class Media:
         css = {
