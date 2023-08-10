@@ -73,9 +73,9 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     
     history_list_display = ["changed_fields", "list_changes"]
 
-    def has_change_permission(self, request, obj=None):
-        retorno = super().has_change_permission(request, obj)
-        return True    
+    # def has_change_permission(self, request, obj=None):
+    #     retorno = super().has_change_permission(request, obj)
+    #     return True    
 
 
     class Media:
