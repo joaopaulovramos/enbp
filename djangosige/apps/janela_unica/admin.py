@@ -13,11 +13,13 @@ from django.utils.html import format_html
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.InlineModelAdmin.form
 # class ArquivoDocumentoUnicoInline(admin.StackedInline):
+
+
 class ArquivoDocumentoUnicoInline(admin.TabularInline):
     model = ArquivoDocumentoUnico
-    extra = 1
-    max_num = 5
-    
+    extra = 0
+    max_num = 10
+
     class Meta:
         verbose_name = 'Arquivo do Documento'
         verbose_name_plural = 'Arquivos do Documento'
@@ -37,7 +39,7 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
         if not obj or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
             return True
         return False
-    
+
     def get_readonly_fields(self, request, obj=None):
         ret = []
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
@@ -47,7 +49,6 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
 
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao,)
-        
 
 
 @admin.register(TramitacaoModel)
@@ -91,7 +92,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ),
             # 'classes': ('formset-box',),
         }),
-        #('Arquivos adicionais', {
+        # ('Arquivos adicionais', {
         (None, {
             'fields': (),
             'classes': ('replacein',),
@@ -101,7 +102,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             'fields': (
                 ('forma_pagamento', 'fornecedor'),
                 ('plano_conta', 'projeto'),
-                #('linha_digitaval',),
+                ('linha_digitavel',),
                 ('chave_pix',),
                 ('banco', 'agencia', 'conta', 'digito')
             )
@@ -110,8 +111,8 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         ('Informações financeiras', {
             'fields': (
                 ('possui_parcelamento', 'extra_orcamentaria',
-                       'possui_contrato', 'antecipacao_pagamento', 'pagamento_boleto'),
-                )
+                 'possui_contrato', 'antecipacao_pagamento', 'pagamento_boleto'),
+            )
         }),
 
 
@@ -128,6 +129,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         ('Analise fiscal e lançamento questor', {
             'fields': (
                 ('aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal'),
+                ('valor_retencao', 'valor_liquido',),
                 ('usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'comprovante_lancamento')
             )
         }),
@@ -140,7 +142,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         }),
     )
 
-    inlines = [ArquivoDocumentoUnicoInline]    
+    inlines = [ArquivoDocumentoUnicoInline]
 
     def formfield_for_dbfield(self, *args, **kwargs):
         formfield = super().formfield_for_dbfield(*args, **kwargs)
@@ -171,8 +173,6 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    
-
     def get_readonly_fields(self, request, obj=None):
         ret = ['pk', 'responsavel', 'data_inclusao', 'arquivo_documento_unico_inline']
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
@@ -180,7 +180,9 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ret.extend(['aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia',
                         'aprovado_diretoria', 'usuario_diretoria', 'observacao_diretoria',
                         'aprovado_analise_financeira', 'usuario_analise_financeira', 'observacao_analise_financeira',
-                        'aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal', 'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'comprovante_pagamento', 'comprovante_lancamento'])
+                        'aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal', 'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento',
+                        'valor_retencao', 'valor_liquido',
+                        'comprovante_pagamento', 'comprovante_lancamento'])
             return ret
 
         ret.extend(['fornecedor', 'observacoes', 'descricao',
@@ -189,7 +191,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
                     'observacao_gerencia', 'aprovado_superintendencia',
                     'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
                     'aprovado_analise_fiscal', 'observacao_analise_fiscal',
-                    'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia', 'usuario_analise_financeira', 'usuario_analise_fiscal', 'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria', 'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia', 'conta', 'digito', 'projeto', 'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop', 'comprovante_pagamento', 'comprovante_lancamento',
+                    'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia', 'usuario_analise_financeira', 'usuario_analise_fiscal', 'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria', 'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia', 'conta', 'digito', 'projeto', 'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop', 'comprovante_pagamento', 'comprovante_lancamento', 'forma_pagamento', 'linha_digitavel', 'chave_pix', 'valor_retencao', 'valor_liquido',
                     ])
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
@@ -205,6 +207,8 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ret.remove('data_lancamento')
             ret.remove('numero_lancamento')
             ret.remove('comprovante_lancamento')
+            ret.remove('valor_retencao')
+            ret.remove('valor_liquido')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA:
             ret.remove('observacao_analise_financeira')
             ret.remove('pagamento_realizado')

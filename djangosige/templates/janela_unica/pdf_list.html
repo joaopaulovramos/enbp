@@ -32,6 +32,11 @@
                                         Número da solicitação: {{obj.numero_solicitacao}}</td>
                                 </tr>
                                 <tr>
+                                    <td
+                                        style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+                                        Situação: {{obj.get_situacao_display}}</td>
+                                </tr>
+                                <tr>
                                     <td>&nbsp;</td>
                                 </tr>
                                 <tr>
@@ -52,6 +57,24 @@
                                     {% endif %}
 
                                 </td>
+
+                                <tr>
+                                    <td
+                                        style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:14px;">
+                                        {{obj.get_forma_pagamento_display}} 
+                                        
+                                        {% if obj.banco %}
+                                        Banco: {{obj.banco}}  Agência: {{obj.agencia}} Conta: {{obj.conta}}-{{obj.digito}}
+                                        {% endif %}
+
+                                        {% if obj.chave_pix %}
+                                        Chave PIX: {{obj.chave_pix}}
+                                        {% endif %}
+
+                                        {% if obj.linha_digitavel %} Linha digitavel: {{obj.linha_digitável}}
+                                        {%endif%}
+                                    </td>
+                                </tr>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -76,8 +99,18 @@
             </tr>
             <tr>
                 <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
-                    Data inclusão :{{obj.data_inclusao}} por {{obj.responsavel}}
+                    Data inclusão: {{obj.data_inclusao}} 
+
                 </td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                Responsável: {{obj.responsavel}}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                    &nbsp;</td>
             </tr>
             <tr>
                 <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;" align="right">
@@ -92,9 +125,15 @@
             <tr>
                 <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
                     Descrição: {{obj.descricao|default_if_none:"--"}} <br>
-                    Valor total: {{obj.valor_total}}</td>
+                    Valor total: {{obj.valor_total}}
+                </td>
             </tr>
-
+            <tr>
+            <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" align="right">
+                Valor retenção: {{obj.valor_retencao|default_if_none:"--"}} <br>
+                Valor líquido: {{obj.valor_liquido|default_if_none:obj.valor_total}}
+            </td>
+            </tr>
         </table>
     </td>
     </tr>
@@ -114,16 +153,28 @@
                 </tr>
                 <tr>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
-                        height="32" align="center">Gerência: {%if obj.aprovado_gerencia %} Sim {% else %} Não {% endif %}</td>
+                        height="32" align="center">
+                        Gerência: 
+                        {%if obj.aprovado_gerencia %} 
+                        Sim 
+                        {% else %}
+                         Não  
+                        {% endif %}
+                    </td>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
                         align="center">{{obj.usuario_gerencia}}</td>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
-                        align="center">{%if obj.observacao_gerencia %} {{obj.observacao_gerencia}} {%else%} -- {%endif%}</td>
+                        align="center">{%if obj.observacao_gerencia %} {{obj.observacao_gerencia}} {%else%} -- {%endif%}
+                    </td>
                 </tr>
 
                 <tr>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
-                        height="32" align="center">Superintendência: {%if obj.aprovado_superintendencia %} Sim {% else %} Não {% endif %}</td>
+                        height="32" align="center">Superintendência: 
+                        {%if obj.aprovado_superintendencia %} Sim 
+                        {% else %} Não 
+                        {% endif %}
+                    </td>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
                         align="center">{{obj.usuario_superintencencia|default_if_none:""}}</td>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
@@ -132,7 +183,10 @@
 
                 <tr>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-left:1px solid #333; border-right:1px solid #333;"
-                        height="32" align="center">Diretoria: {%if obj.aprovado_diretoria%} Sim {% else %} Não {% endif %}</td>
+                        height="32" align="center">Diretoria: 
+                        {%if obj.aprovado_diretoria%} Sim {% else %} Não 
+                        {% endif %}
+                    </td>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
                         align="center">{{obj.usuario_diretoria|default_if_none:""}}</td>
                     <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px; border-bottom:1px solid #333; border-right:1px solid #333;"
@@ -149,34 +203,91 @@
         <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
-        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Observações</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Observações
+        </td>
         </td>
     </tr>
     <tr>
-        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2">{{obj.observacao|default_if_none:"--"}}</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2">
+            {{obj.observacao|default_if_none:"--"}}</td>
     </tr>
     <tr>
         <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
-        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Dados arquivo anexo</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Dados arquivo
+            anexo</td>
     </tr>
     <!-- <td colspan="2">&nbsp;</td>
     </tr> -->
     <tr>
         <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Tipo</td>
-        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">{{obj.tipo_documento_formatado}}</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+            {{obj.tipo_documento_formatado}}</td>
     </tr>
+    {% if obj.numero%}
     <tr>
         <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Número</td>
-        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">{{obj.numero|default_if_none:"--"}}</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+            {{obj.numero|default_if_none:"--"}}</td>
     </tr>
+    {% endif %}
+    {% if obj.chave%}
     <tr>
         <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Chave</td>
-        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">{{obj.chave|default_if_none:"--"}}</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+            {{obj.chave|default_if_none:"--"}}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
-        <td colspan="2" >&nbsp;</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Analise fiscal e Lançamento</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Usuário lançamento</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+            {{obj.usuario_lancamento|default_if_none:"--"}}</td>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Data lançamento</td>
+            <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+                {{obj.data_lancamento|default_if_none:"--"}}</td>
+            </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Número lançamento</td>
+            <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+                {{obj.numero_lancamento|default_if_none:"--"}}</td>
+            </td>
+    </tr>
+    
+
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px;" colspan="2">Analise financeira e Pagamento</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Pagamento realizado</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+            {{obj.get_pagamento_realizado_display|default:"--"}}</td>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">Observação pagamento</td>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;">
+            {{obj.get_observacao_pagamento_display|default:"--"}}</td>
+        </td>
+    </tr>
+    <!-- <td colspan="2">&nbsp;</td>
+    </tr> -->
+
+    <tr>
+        <td colspan="2">&nbsp;</td>
     </tr>
     <tr>
         <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
