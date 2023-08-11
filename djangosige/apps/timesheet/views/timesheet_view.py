@@ -1,11 +1,15 @@
 import random
 import string
+from collections import defaultdict
 
 import requests
+from django.db.models import Avg
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, \
     CustomCreateViewAddUser
+
+from djangosige.apps.norli_projeto.models import ExemploModel
 
 from djangosige.apps.timesheet.forms.timesheet_forms import *
 from djangosige.apps.timesheet.models.timesheet_model import *
@@ -293,8 +297,77 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
+        # query = self.model.objects.select_related('solicitante')
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
-        return query
+        query = query.values('solicitante', 'projeto').annotate(total_percentual=Avg('percentual'))
+
+        registros_transposed = defaultdict(dict)
+        projetos_set = set()
+
+        # criando um dicionario pivotando solicitante pelos projetos
+        for registro in query:
+            solicitante = User.objects.get(pk=registro['solicitante']).username
+            projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
+            projetos_set.add(projeto)
+
+            registros_transposed[solicitante][projeto] = registro['total_percentual']
+
+        projetos_set = list(projetos_set)
+        projetos_set.sort()
+
+        # adicionando ao dicionário os projetos nos quais o solicitante não trabalhou
+        # para facilitar a impressão no template
+        for key, values in registros_transposed.items():
+            for projeto in projetos_set:
+                if not projeto in values.keys():
+                    registros_transposed[key][projeto] = Decimal(0.0)
+
+        # ordenando os projetos de cada solicitante
+        # opcionalmente, seria possível usar OrderedDict, mas o retorno como lista atrapalharia a remontagem no template
+        # registros_transposed[key] = OrderedDict(sorted(values.items()))
+        ordered_data = {}
+        for key, values in registros_transposed.items():
+            ordered_values = {}
+            soma = 0
+
+            for prj in sorted(values.keys()):
+                ordered_values[prj] = int(values[prj])
+                soma += int(values[prj])
+
+            ordered_values['total'] = soma
+            ordered_data[key] = ordered_values
+
+        self.projetos = projetos_set
+
+        # for q in query:
+        #     q['nome_solicitante'] = User.objects.get(pk=q['solicitante']).username
+        #     q['nome_projeto'] = ExemploModel.objects.get(pk=q['projeto']).nome
+        #
+        # self.projetos = query.values('projeto').distinct()
+        # self.usuarios = query.values('solicitante').distinct()
+        #
+        # colunas_vazias = {'Nome': None}
+        # for p in self.projetos:
+        #     colunas_vazias[p['projeto']] = None
+        #
+        # lista = []
+        # for user in self.usuarios:
+        #     projetos = colunas_vazias.copy()
+        #     projetos['Nome'] = User.objects.get(pk=user['solicitante']).username
+        #     total = 0
+        #     for q in query:
+        #
+        #         if user['solicitante'] == q['solicitante']:
+        #             if projetos[q['projeto']] is None:
+        #                 projetos[q['projeto']] = int(q['total_percentual'])
+        #                 total += q['total_percentual']
+        #
+        #     projetos['total'] = int(total)
+        #     lista.append(projetos)
+        #
+        # # query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
+        # return lista
+        return ordered_data
 
     def get_context_data(self, **kwargs):
         context = super(VerTimesheetPercentualAprovadoView, self).get_context_data(**kwargs, object_list=None)
@@ -303,6 +376,7 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Horas Aprovadas - Percentual'
+        context['projetos'] = self.projetos
         return context
 
 
@@ -829,8 +903,6 @@ class AdicionarOpiniaoView(CustomCreateView):
         nome_antigo = request.FILES['anexo'].name
         nome_antigo = nome_antigo.split('.')
         ext = nome_antigo[-1]
-
-
 
         if form.is_valid():
             request.FILES['anexo'].name = name + '.' + ext
