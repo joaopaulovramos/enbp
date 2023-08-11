@@ -305,6 +305,8 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
 
         dias_trabalhados_query = query.values('solicitante').annotate(dias_trabalhados=Count('data', distinct=True))
 
+        print(dias_trabalhados_query)
+
         registros_transposed = defaultdict(dict)
         projetos = set()
 
@@ -338,8 +340,8 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
             soma = 0
 
             for prj in sorted(values.keys()):
-                ordered_values[prj] = int(values[prj])
-                soma += int(values[prj])
+                ordered_values[prj] = values[prj]
+                soma += values[prj]
 
             ordered_values['total'] = soma
             ordered_data[key] = ordered_values
