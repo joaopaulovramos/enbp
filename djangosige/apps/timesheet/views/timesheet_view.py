@@ -3,7 +3,7 @@ import string
 from collections import defaultdict
 
 import requests
-from django.db.models import Avg
+from django.db.models import Avg, Sum, Count
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, \
@@ -297,28 +297,35 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
-        # query = self.model.objects.select_related('solicitante')
+        # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
-        query = query.values('solicitante', 'projeto').annotate(total_percentual=Avg('percentual'))
+
+        # simulando uma agregação de média agrupando por solicitante e projeto
+        query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
+
+        dias_trabalhados_query = query.values('solicitante').annotate(dias_trabalhados=Count('data', distinct=True))
 
         registros_transposed = defaultdict(dict)
-        projetos_set = set()
+        projetos = set()
 
         # criando um dicionario pivotando solicitante pelos projetos
+        # na prática, fazendo os projetos virarem colunas
         for registro in query:
             solicitante = User.objects.get(pk=registro['solicitante']).username
             projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
-            projetos_set.add(projeto)
+            projetos.add(projeto)
 
-            registros_transposed[solicitante][projeto] = registro['total_percentual']
+            dias_trabalhados_solicitante = dias_trabalhados_query.get(solicitante=registro['solicitante'])['dias_trabalhados']
 
-        projetos_set = list(projetos_set)
-        projetos_set.sort()
+            registros_transposed[solicitante][projeto] = registro['total_percentual'] / int(dias_trabalhados_solicitante)
+
+        projetos = list(projetos)
+        projetos.sort()
 
         # adicionando ao dicionário os projetos nos quais o solicitante não trabalhou
         # para facilitar a impressão no template
         for key, values in registros_transposed.items():
-            for projeto in projetos_set:
+            for projeto in projetos:
                 if not projeto in values.keys():
                     registros_transposed[key][projeto] = Decimal(0.0)
 
@@ -337,36 +344,8 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
             ordered_values['total'] = soma
             ordered_data[key] = ordered_values
 
-        self.projetos = projetos_set
+        self.projetos = projetos
 
-        # for q in query:
-        #     q['nome_solicitante'] = User.objects.get(pk=q['solicitante']).username
-        #     q['nome_projeto'] = ExemploModel.objects.get(pk=q['projeto']).nome
-        #
-        # self.projetos = query.values('projeto').distinct()
-        # self.usuarios = query.values('solicitante').distinct()
-        #
-        # colunas_vazias = {'Nome': None}
-        # for p in self.projetos:
-        #     colunas_vazias[p['projeto']] = None
-        #
-        # lista = []
-        # for user in self.usuarios:
-        #     projetos = colunas_vazias.copy()
-        #     projetos['Nome'] = User.objects.get(pk=user['solicitante']).username
-        #     total = 0
-        #     for q in query:
-        #
-        #         if user['solicitante'] == q['solicitante']:
-        #             if projetos[q['projeto']] is None:
-        #                 projetos[q['projeto']] = int(q['total_percentual'])
-        #                 total += q['total_percentual']
-        #
-        #     projetos['total'] = int(total)
-        #     lista.append(projetos)
-        #
-        # # query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
-        # return lista
         return ordered_data
 
     def get_context_data(self, **kwargs):
