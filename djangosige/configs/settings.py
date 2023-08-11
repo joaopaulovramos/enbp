@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'djangosige.apps.norli_projeto',
     'djangosige.apps.timesheet',
     'djangosige.apps.viagem',
+    'djangosige.apps.opiniao',
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
