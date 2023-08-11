@@ -1,0 +1,49 @@
+<div>
+    <h2 style="margin-bottom: -20px">Horas Aprovadas - Percentual</h2>
+    <div><small>Relatório do mês de {{ mes }} de {{ ano }}</small></div>
+    <br/>
+</div>
+
+<div>
+    <table>
+      <thead>
+        <tr style="background-color: #0a9edc; padding-top: 5px; color: #ffffff">
+
+            <th style="text-align: left">Solicitante</th>
+
+            {% if projetos %}
+
+                {% for projeto in projetos %}
+
+                    <th style="text-align: left">
+                        {{projeto}}
+                    </th>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <th style="text-align: left">Total</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+
+       {% if all_natops%}
+       {% for key, value in all_natops.items %}
+         <tr style="padding-top: 5px">
+            <td>{{ key }}</td>
+
+            {% for projeto, percentual in value.items %}
+                <td>{{ percentual }}%</td>
+            {% endfor %}
+
+        </tr>
+      {% endfor %}
+      {%endif%}
+
+    </tbody>
+    </table>
+</div>
+<hr/>
