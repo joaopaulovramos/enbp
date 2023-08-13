@@ -5,7 +5,7 @@
 </div>
 
 <div>
-    <table>
+    <table cellpadding="2">
       <thead>
         <tr style="background-color: #0a9edc; padding-top: 5px; color: #ffffff">
 
@@ -33,10 +33,16 @@
        {% if all_natops%}
        {% for key, value in all_natops.items %}
          <tr style="padding-top: 5px">
-            <td>{{ key }}</td>
+             <td><strong>{{ key }}</strong></td>
 
             {% for projeto, percentual in value.items %}
-                <td>{{ percentual }}%</td>
+                <td>
+                    {% if percentual > 0.0 %}
+                        {{ percentual|floatformat:2 }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             {% endfor %}
 
         </tr>
@@ -47,3 +53,9 @@
     </table>
 </div>
 <hr/>
+
+<div style="text-align: center; margin-top: 100px">
+    <div style="border-top: black 1px solid; width: 300px; display: block; padding-top: 5px">
+        {{ aprovador }}
+    </div>
+</div>

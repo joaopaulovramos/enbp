@@ -326,7 +326,7 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
             dias_trabalhados_solicitante = dias_trabalhados_query.get(solicitante=registro['solicitante'])[
                 'dias_trabalhados']
 
-            registros_transposed[solicitante][projeto] = registro['total_percentual'] / int(
+            registros_transposed[solicitante][projeto] = float(registro['total_percentual']) / int(
                 dias_trabalhados_solicitante)
 
         projetos = list(projetos)
@@ -337,24 +337,41 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         for key, values in registros_transposed.items():
             for projeto in projetos:
                 if not projeto in values.keys():
-                    registros_transposed[key][projeto] = Decimal(0.0)
+                    registros_transposed[key][projeto] = 0.0
 
         # ordenando os projetos de cada solicitante
         # opcionalmente, seria possível usar OrderedDict, mas o retorno como lista atrapalharia a remontagem no template
         # ex. registros_transposed[key] = OrderedDict(sorted(values.items()))
         ordered_data = {}
+        total_percentuais = 0.0
         for key, values in registros_transposed.items():
             ordered_values = {}
-            soma = 0
+            soma = 0.0
 
             for prj in sorted(values.keys()):
                 ordered_values[prj] = values[prj]
                 soma += values[prj]
 
-            ordered_values['total'] = int(soma)
+            ordered_values['total'] = soma
             ordered_data[key] = ordered_values
+            total_percentuais += soma
 
         self.projetos = projetos
+
+        # somatório dos percentuais por projeto
+        percentual_por_projetos = {}
+        for _, value in ordered_data.items():
+            for projeto, percentual in value.items():
+                if projeto in percentual_por_projetos.keys():
+                    percentual_por_projetos[projeto] += float(percentual)
+                else:
+                    percentual_por_projetos[projeto] = float(percentual)
+
+        # por algum motivo, o arredondamento não funcionado fazendo a divisão no loop anterior
+        for key, value in percentual_por_projetos.items():
+            percentual_por_projetos[key] /= total_percentuais * .01
+
+        ordered_data['Percentual por projeto'] = percentual_por_projetos
 
         return ordered_data
 
@@ -412,7 +429,7 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
             dias_trabalhados_solicitante = dias_trabalhados_query.get(solicitante=registro['solicitante'])[
                 'dias_trabalhados']
 
-            registros_transposed[solicitante][projeto] = registro['total_percentual'] / int(
+            registros_transposed[solicitante][projeto] = float(registro['total_percentual']) / int(
                 dias_trabalhados_solicitante)
 
         projetos = list(projetos)
@@ -423,22 +440,41 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         for key, values in registros_transposed.items():
             for projeto in projetos:
                 if not projeto in values.keys():
-                    registros_transposed[key][projeto] = Decimal(0.0)
+                    registros_transposed[key][projeto] = 0.0
 
         # ordenando os projetos de cada solicitante
         # opcionalmente, seria possível usar OrderedDict, mas o retorno como lista atrapalharia a remontagem no template
         # ex. registros_transposed[key] = OrderedDict(sorted(values.items()))
         ordered_data = {}
+        total_percentuais = 0.0
         for key, values in registros_transposed.items():
             ordered_values = {}
-            soma = 0
+            soma = 0.0
 
             for prj in sorted(values.keys()):
                 ordered_values[prj] = values[prj]
                 soma += values[prj]
 
-            ordered_values['total'] = int(soma)
+            ordered_values['total'] = soma
             ordered_data[key] = ordered_values
+            total_percentuais += soma
+
+        self.projetos = projetos
+
+        # somatório dos percentuais por projeto
+        percentual_por_projetos = {}
+        for _, value in ordered_data.items():
+            for projeto, percentual in value.items():
+                if projeto in percentual_por_projetos.keys():
+                    percentual_por_projetos[projeto] += float(percentual)
+                else:
+                    percentual_por_projetos[projeto] = float(percentual)
+
+        # por algum motivo, o arredondamento não funcionado fazendo a divisão no loop anterior
+        for key, value in percentual_por_projetos.items():
+            percentual_por_projetos[key] /= total_percentuais * .01
+
+        ordered_data['Percentual por projeto'] = percentual_por_projetos
 
         meses = ['Janeiro',
                  'Fevereiro',
@@ -460,6 +496,7 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
             "projetos": projetos,
             "ano": self._ano,
             "mes": meses[int(self._mes) - 1],
+            "aprovador": "Nome do aprovador"
         }
         html = template.render(context)
         result = BytesIO()

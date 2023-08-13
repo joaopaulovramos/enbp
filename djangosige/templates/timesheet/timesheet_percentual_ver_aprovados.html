@@ -18,8 +18,7 @@
               {{title_complete}}
             </h2>
               <div class="header-btn">
-{#                  <button class="btn btn-success"><i class="material-icons">picture_as_pdf</i> <span>Exportar</span></button>#}
-                  <a target="_blank" href="{{add_url}}" class="btn btn-success"><i class="material-icons">picture_as_pdf</i><span> Exportar</span></a>
+                  <a target="_blank" href="{{add_url}}" class="btn btn-info"><i class="material-icons">picture_as_pdf</i><span> Exportar</span></a>
               </div>
           </div>
 
@@ -31,6 +30,7 @@
            {% if all_natops %}
 
            <div class="table-responsive">
+{#           Adicionar id="lista-database" no table para virar DataTables#}
             <table class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[0, "asc"]]'>
 {#               <table >#}
               <thead>
@@ -63,7 +63,7 @@
                     <td>{{ key }}</td>
 
                     {% for projeto, percentual in value.items %}
-                        <td>{{ percentual }}%</td>
+                        <td>{{ percentual|floatformat:2 }}%</td>
                     {% endfor %}
 
                 </tr>
