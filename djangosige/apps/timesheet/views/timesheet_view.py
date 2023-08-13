@@ -1,3 +1,4 @@
+import os.path
 import random
 import string
 from collections import defaultdict
@@ -23,6 +24,8 @@ from pypdf import PdfWriter
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.template.loader import get_template
+
+from djangosige.configs import settings
 
 LIMITE_HORAS_DIA = 8
 
@@ -371,7 +374,8 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         for key, value in percentual_por_projetos.items():
             percentual_por_projetos[key] /= total_percentuais * .01
 
-        ordered_data['Percentual por projeto'] = percentual_por_projetos
+        if ordered_data:
+            ordered_data['Percentual por projeto'] = percentual_por_projetos
 
         return ordered_data
 
@@ -385,6 +389,10 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         context['projetos'] = self.projetos
         context['add_url'] = reverse_lazy('timesheet:gerarpdfpercentualaprovados')
         return context
+
+
+def fetch_resources(uri, rel):
+    return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
 
 
 class GerarPDFTimesheetPercentualAprovadoView(CustomView):
@@ -476,31 +484,17 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
 
         ordered_data['Percentual por projeto'] = percentual_por_projetos
 
-        meses = ['Janeiro',
-                 'Fevereiro',
-                 'Março',
-                 'Abril',
-                 'Maio',
-                 'Junho',
-                 'Julho',
-                 'Agosto',
-                 'Setembro',
-                 'Outubro',
-                 'Novembro',
-                 'Dezembro',
-                 ]
-
         template = get_template(self.template_name)
         context = {
             "all_natops": ordered_data,
             "projetos": projetos,
             "ano": self._ano,
-            "mes": meses[int(self._mes) - 1],
+            "mes": calendar.month_name[int(self._mes)],
             "aprovador": "Nome do aprovador"
         }
         html = template.render(context)
         result = BytesIO()
-        pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
+        pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result, link_callback=fetch_resources)
 
         if not pdf.err:
             return HttpResponse(result.getvalue(), content_type='application/pdf')
