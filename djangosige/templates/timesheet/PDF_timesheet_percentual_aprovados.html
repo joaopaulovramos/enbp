@@ -1,3 +1,16 @@
+<style>
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+    table#quadro tbody > tr:last-child > td {
+        background:#f1f1f1;
+        border-top: #0a9edc solid 1px;
+        color: #0a9edc;
+        font-weight: bold;
+    }
+</style>
+
 <table>
     <tr>
         <td>
@@ -16,7 +29,7 @@
 </table>
 
 <div>
-    <table cellpadding="2">
+    <table cellpadding="2" id="quadro">
       <thead>
         <tr style="background-color: #0a9edc; padding-top: 5px; color: #ffffff">
 
@@ -44,7 +57,7 @@
        {% if all_natops%}
        {% for key, value in all_natops.items %}
          <tr style="padding-top: 5px">
-             <td><strong>{{ key }}</strong></td>
+             <td style="background-color: #f1f1f1"><strong>{{ key }}</strong></td>
 
             {% for projeto, percentual in value.items %}
                 <td>
@@ -63,12 +76,10 @@
     </tbody>
     </table>
 </div>
-<hr/>
 
 <div style="text-align: center; margin: 100px 200px 0px 200px">
     <div style="border-top: black 1px solid; width: 300px; display: block; padding-top: 5px">
         <strong>{{ aprovador }}</strong><BR/>
         SUPERINTENDENTE
     </div>
-    <div>
 </div>

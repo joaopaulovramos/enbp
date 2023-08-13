@@ -314,8 +314,6 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         # simulando uma agregação de contagem dias distintos agrupando por solicitante
         dias_trabalhados_query = query.values('solicitante').annotate(dias_trabalhados=Count('data', distinct=True))
 
-        print(dias_trabalhados_query)
-
         registros_transposed = defaultdict(dict)
         projetos = set()
 
@@ -422,8 +420,6 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         # simulando uma agregação de contagem dias distintos agrupando por solicitante
         dias_trabalhados_query = query.values('solicitante').annotate(dias_trabalhados=Count('data', distinct=True))
 
-        print(dias_trabalhados_query)
-
         registros_transposed = defaultdict(dict)
         projetos = set()
 
@@ -482,7 +478,7 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         for key, value in percentual_por_projetos.items():
             percentual_por_projetos[key] /= total_percentuais * .01
 
-        ordered_data['Percentual por projeto'] = percentual_por_projetos
+        ordered_data['Projeto (%)'] = percentual_por_projetos
 
         template = get_template(self.template_name)
         context = {
@@ -658,8 +654,6 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
 
             if float(total_percentual_dia) + float(self.request.POST['percentual']) > 100.00:
                 form.add_error('percentual', 'O percentual diário não pode ultrapassar 100% de horas')
-
-            print(request.POST['data'])
 
             if form.is_valid():
                 self.object = form.save()
