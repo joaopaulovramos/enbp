@@ -60,18 +60,18 @@ class AdicionarOpiniaoView(CustomCreateView):
 
         form = OpiniaoForm(request.POST, request.FILES, instance=self.object)
         form.request_user = self.request.user
-
-        letters = string.ascii_lowercase
-        name = ''.join(random.choice(letters) for i in range(20))
-        nome_antigo = request.FILES['anexo'].name
-        nome_antigo = nome_antigo.split('.')
-        ext = nome_antigo[-1]
+        if(request.FILES.get('anexo')):
+            letters = string.ascii_lowercase
+            name = ''.join(random.choice(letters) for i in range(20))
+            nome_antigo = request.FILES['anexo'].name
+            nome_antigo = nome_antigo.split('.')
+            ext = nome_antigo[-1]
 
 
 
         if form.is_valid():
-            request.FILES['anexo'].name = name + '.' + ext
-
+            if(request.FILES.get('anexo')):
+                request.FILES['anexo'].name = name + '.' + ext            
             self.object = form.save(commit=False)
             # self.object.rating = 5
             self.object.save()

@@ -26,9 +26,11 @@
 
            {% include 'base/search.html' %}
 
-              {% include 'base/select_mes.html' %}
 
+               {% include 'base/select_mes.html' %}
 
+               {% include 'base/select_user.html' %}
+           </div>
 
            <div class="table-responsive">
             <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[1, "desc"]]'>
@@ -83,10 +85,11 @@
 {% block js %}
 
    <script>
-        $('#id_select_mes, #id_select_ano').on('change', function () {
+        $('#id_select_mes, #id_select_ano, #id_select_user').on('change', function () {
             let mes = $('#id_select_mes').val()
             let ano = $('#id_select_ano').val()
-            window.location.href = `{% url 'timesheet:aprovarpercentuaisdiarios' %}?mes=${mes}&ano=${ano}`;
+            let user = $('#id_select_user').val()
+            window.location.href = `{% url 'timesheet:aprovarpercentuaisdiarios' %}?mes=${mes}&ano=${ano}&user=${user}`;
         })
    </script>
 

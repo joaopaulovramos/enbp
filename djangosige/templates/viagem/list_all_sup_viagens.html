@@ -31,7 +31,9 @@
           <div class="body">
 
            {% include 'base/search.html' %}
-          {% include 'base/select_mes.html' %}
+          <div class="row">
+               {% include 'base/select_mes.html' %}
+           </div>
 
            <div class="table-responsive">
             <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[2, "desc"]]'>

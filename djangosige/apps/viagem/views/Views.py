@@ -701,20 +701,23 @@ class AdicionarViagemView(CustomCreateView):
                                    'Você não pode despachar bagagem para esta viagem.')
 
         # Cálculo de diárias suspenso
-        # if data_fim:
-        #     _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
-        #     usuario = Usuario.objects.get(id=self.request.user.id)
-        #     tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
-        #     try:
-        #         tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
-        #         _valor_diaria = tabela_diaria.valor_diaria
-        #         _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
-        #     except TabelaDiariaModel.DoesNotExist:
-        #         form.add_error('localidade_destino',
-        #                        'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
+        if data_fim:
+            _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+            usuario = Usuario.objects.get(id=self.request.user.id)
+            tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
+            try:
+                tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+                _valor_diaria = tabela_diaria.valor_diaria
+                _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+            except TabelaDiariaModel.DoesNotExist:
+                form.add_error('localidade_destino',
+                               'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
         # Validando campos do formset
         for index, formumlario in enumerate(form_trecho):
+
+            if f'viagem_trechos-{index}-DELETE' in request.POST.keys():
+                continue
 
             if form_trecho.is_valid():
                 _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
@@ -830,17 +833,23 @@ class EditarViagemView(CustomUpdateView):
                     form.add_error('bagagem_despachada',
                                    'Você não pode despachar bagagem para esta viagem.')
 
-        # calcula de diárias suspenso
-        # if data_fim:
-        #     _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
-        #     usuario = Usuario.objects.get(id=self.object.solicitante_id)
-        #     tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
-        #     tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
-        #     _valor_diaria = tabela_diaria.valor_diaria
-        #     _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+        if data_fim:
+            _qtd_diarias = get_diarias(data_inicio, data_fim, 'reservar_hotel' in request.POST.keys())
+            usuario = Usuario.objects.get(id=self.object.solicitante_id)
+            tabela_diaria = TabelaDiariaModel.objects.filter(localidade_destino=request.POST['localidade_destino'])
+            try:
+                tabela_diaria = tabela_diaria.get(grupo_funcional=usuario.grupo_funcional)
+                _valor_diaria = tabela_diaria.valor_diaria
+                _valor_total_diarias = _valor_diaria * Decimal(_qtd_diarias)
+            except TabelaDiariaModel.DoesNotExist:
+                form.add_error('localidade_destino',
+                               'Seu grupo funcional não tem valores de diárias cadastrado para este destino')
 
         # Validando campos do formset
         for index, formumlario in enumerate(form_trecho):
+
+            if f'viagem_trechos-{index}-DELETE' in request.POST.keys():
+                continue
 
             if form_trecho.is_valid():
                 _data_inicio_trecho = formumlario.cleaned_data.get("data_inicio_trecho")
@@ -886,6 +895,7 @@ class VerSolicitacaoViagem(CustomUpdateView):
 
         usuario = Usuario.objects.get(id=self.object.solicitante_id)
         context['pcd'] = usuario.pcd
+        context['trechos'] = TrechoModel.objects.filter(viagem=self.object)
 
         return context
 
@@ -1037,26 +1047,25 @@ class ListHomologarViagensView(CustomListView):
     _mes = datetime.datetime.now().month
 
     def get_queryset(self):
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
-        user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
-        for viagem in user_viagens:
-            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+
         # tratamento do filtro de seleção ano e mês
         if self.request.GET.get('mes'):
             self.request.session['mes_select'] = self.request.GET.get('mes')
-            if 'mes_select' in self.request.session:
-                self._mes = self.request.session['mes_select']
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
 
         if self.request.GET.get('ano'):
             self.request.session['ano_select'] = self.request.GET.get('ano')
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
-            user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,dada_inicio__year=self._ano)
-            user_viagens = user_viagens.filter(homologada=False)
+
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
+        for viagem in user_viagens:
+            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+
         return user_viagens
          
-
-        
 
     # Remover items selecionados da database
     def post(self, request, *args, **kwargs):
