@@ -71,8 +71,7 @@ class AdicionarOpiniaoView(CustomCreateView):
 
         if form.is_valid():
             if(request.FILES.get('anexo')):
-                request.FILES['anexo'].name = name + '.' + ext
-
+                request.FILES['anexo'].name = name + '.' + ext            
             self.object = form.save(commit=False)
             # self.object.rating = 5
             self.object.save()
