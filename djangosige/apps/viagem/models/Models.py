@@ -159,8 +159,8 @@ class ViagemModel(models.Model):
                                              on_delete=models.RESTRICT, null=True,
                                              blank=True)
 
-    # localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
-    #                                        on_delete=models.RESTRICT)
+    localidade_destino = models.ForeignKey(LocalidadeModel, related_name="viagem_localidade_destino",
+                                           on_delete=models.RESTRICT)
 
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.RESTRICT)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
@@ -302,8 +302,16 @@ class TrechoModel(models.Model):
     categoria_passagem_trecho = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_trecho_passagem",
                                                   on_delete=models.RESTRICT)
 
-    localidade_trecho = models.ForeignKey(LocalidadeModel, related_name="viagem_trecho_localidade_destino",
-                                          on_delete=models.RESTRICT)
+    # localidade_trecho = models.ForeignKey(LocalidadeModel, related_name="viagem_trecho_localidade_destino",
+    #                                       on_delete=models.RESTRICT)
 
     motivo_trecho = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_trecho_motivo",
                                       on_delete=models.RESTRICT)
+
+    @property
+    def format_data_inicio(self):
+        return '%s' % date(self.data_inicio_trecho, "d/m/Y")
+
+    @property
+    def format_data_fim(self):
+        return '%s' % date(self.data_fim_trecho, "d/m/Y")
