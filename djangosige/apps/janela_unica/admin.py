@@ -5,7 +5,7 @@ from django.http.request import HttpRequest
 from django.utils.safestring import mark_safe
 
 from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
-from djangosige.apps.janela_unica.models.Models import StatusAnaliseFinaceira
+from djangosige.apps.janela_unica.models.Models import Contrato, StatusAnaliseFinaceira, TipoContrato
 from .models import TramitacaoModel, DocumentoUnicoFinanceiro, ArquivoDocumentoUnico
 from fsm_admin.mixins import FSMTransitionMixin
 from simple_history.admin import SimpleHistoryAdmin
@@ -49,11 +49,38 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
         return u'%s - %s' % (self.pk, self.descricao,)
         
 
+class TipoContratoForm(forms.ModelForm):
+    class Meta:
+        model = TipoContrato
+        fields = '__all__'
+        verbose_name = 'Tipo de Contrato'
+        verbose_name_plural = 'Tipos de Contratos'
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            }
 
-@admin.register(TramitacaoModel)
-class TramitacaoModelAdmin(admin.ModelAdmin,):
-    list_display = ('user_enviado', 'user_recebido', 'data', 'doc',)
-    fields = ()
+@admin.register(TipoContrato)
+class TipoContratoModelAdmin(admin.ModelAdmin,):
+    form = TipoContratoForm
+    list_display = ('descricao',)
+    fields = ('descricao',)
+
+class ContratoForm(forms.ModelForm):
+    class Meta:
+        model = Contrato
+        verbose_name = 'Contrato'
+        verbose_name_plural = 'Contratos'
+        fields = '__all__'
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control'}),
+            }
+
+@admin.register(Contrato)
+class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
+    fsm_field = ['situacao',]
+    form = ContratoForm
+    list_display = ('descricao', 'data_inclusao', 'data_validade',)
+
 
 # https://stackoverflow.com/questions/46892851/django-simple-history-displaying-changed-fields-in-admin
 

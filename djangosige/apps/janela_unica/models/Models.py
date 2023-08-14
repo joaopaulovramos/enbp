@@ -79,6 +79,47 @@ class ArquivoDocumentoUnico(models.Model):
         return u'%s - %s' % (self.pk, self.descricao)
 
 
+class SituacaoContrato(object):
+    RASCUNHO = 'Rascunho'
+    EXECUCAO = 'Em Execução'
+    FINALIZADO = 'Finalizado'
+    CANCELADO = 'Cancelado'
+    CHOICES = (
+        (RASCUNHO, RASCUNHO),
+        (EXECUCAO, EXECUCAO),
+        (FINALIZADO, FINALIZADO),
+        (CANCELADO, CANCELADO),
+    )
+
+class TipoContrato(models.Model):
+    descricao = models.CharField('Descrição', max_length=100)
+
+    class Meta:
+        verbose_name = 'Tipo de Contrato'
+        verbose_name_plural = 'Tipos de Contratos'
+
+    def __str__(self):
+        return self.descricao
+
+class Contrato(models.Model):
+    class Meta:
+        verbose_name = 'Contrato'
+        verbose_name_plural = 'Contratos'
+    descricao = models.CharField(max_length=255, null=True, blank=True)
+    arquivo = models.FileField(upload_to='janela_unica/contratos', null=True, blank=True)
+    data_inclusao = models.DateTimeField(auto_now_add=True)
+    data_validade = models.DateTimeField(null=True, blank=True)
+    valor_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    tipo_contrato = models.ForeignKey(TipoContrato, related_name="tipo_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    situacao = FSMField(
+        default=SituacaoContrato.RASCUNHO,
+        verbose_name='Situação',
+        choices=SituacaoContrato.CHOICES,
+        protected=True,  # Impede alteração de estado por usuários sem permissão
+    )
+    #TODO: Adicionar demais campos
+
+
 class DocumentoUnico(models.Model):
     class Meta:
         abstract = True
