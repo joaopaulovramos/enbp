@@ -197,7 +197,7 @@ class ViagemForm(forms.ModelForm):
             'dada_fim',
             # 'origem',
             # 'destino',
-            # 'localidade_destino',
+            'localidade_destino',
             'acompanhante',
             'necessidade_especial',
             'objetivo',
@@ -232,7 +232,7 @@ class ViagemForm(forms.ModelForm):
             'objetivo': forms.Textarea(attrs={'class': 'form-control', 'size': '200'}),
             'justificativa': forms.Textarea(attrs={'class': 'form-control', 'size': '200'}),
             'tipo_viagem': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
-            # 'localidade_destino': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'localidade_destino': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             # 'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             # 'tipo_transporte': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
@@ -338,6 +338,7 @@ class VerViagemForm(forms.ModelForm):
             'justificativa',
             'tipo_viagem',
             'tipo_solicitacao',
+            'localidade_destino',
             # 'motivo',
             # 'tipo_transporte',
             # 'categoria_passagem',
@@ -370,6 +371,7 @@ class VerViagemForm(forms.ModelForm):
             'tipo_viagem': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
             'tipo_solicitacao': forms.Select(
                 attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'localidade_destino': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             # 'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
             # 'tipo_transporte': forms.Select(
             #     attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
@@ -401,6 +403,7 @@ class VerViagemForm(forms.ModelForm):
             'justificativa': _('Justificativa de Excepcionalidade'),
             'tipo_viagem': _('Tipo de Viagem'),
             'tipo_solicitacao': _('Tipo de Solicitação'),
+            'localidade_destino': _('Localidade'),
             # 'motivo': _('Motivo'),
             # 'tipo_transporte': _('Tipo de Transporte'),
             # 'categoria_passagem': _('Catergoria da Passagem'),
@@ -624,7 +627,7 @@ class TrechoForm(forms.ModelForm):
                   'data_inicio_trecho',
                   'data_fim_trecho',
                   'categoria_passagem_trecho',
-                  'localidade_trecho',
+                  # 'localidade_trecho',
                   'motivo_trecho',
                   )
         widgets = {
@@ -634,7 +637,7 @@ class TrechoForm(forms.ModelForm):
             'data_fim_trecho': forms.DateTimeInput(attrs={'class': 'form-control datetimepicker', 'size': '200'}),
             'tipo_transporte_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'categoria_passagem_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
-            'localidade_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            # 'localidade_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'motivo_trecho': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
         }
         labels = {
@@ -644,7 +647,7 @@ class TrechoForm(forms.ModelForm):
             'data_fim_trecho': _('Data Destino'),
             'tipo_transporte_trecho': _('Tipo Transporte'),
             'categoria_passagem_trecho': _('Passagem'),
-            'localidade_trecho': _('Localidade'),
+            # 'localidade_trecho': _('Localidade'),
             'motivo_trecho': _('Motivo'),
         }
 

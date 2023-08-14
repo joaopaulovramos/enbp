@@ -13,7 +13,9 @@ def get_diarias(data_hora_inicio: datetime, data_hora_fim: datetime, hospedagem:
             else:
                 return delta_dias
         else:
-            return 0
+            # definindo meia diária para viagens de ida e volta que não atinjam 12 horas.
+            # na fórmula da planilha fornecida este valor é 0.0
+            return 0.5
     else:
         if data_hora_fim > data_hora_inicio:
             return delta_dias / 2

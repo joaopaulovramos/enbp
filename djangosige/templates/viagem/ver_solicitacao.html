@@ -1,22 +1,14 @@
-{#{%extends 'base/base.html'%}#}
-{##}
-{#{%block title%}{{title_complete|title}}{%endblock%}#}
-{#{%block content%}#}
-{#<section class="content">#}
-{##}
-{#  <div class="container-fluid">#}
-{##}
-{#    {% include 'base/title_header.html' %}#}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+  <div class="row">
+    <div class="card">
 
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <div class="row">
-        <div class="card">
+      <form id="" role="form" action="" method="post">
+        {% csrf_token %}
+        <!-- Body-->
+        <div class="body">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-          <form id="" role="form" action="" method="post">
-            {% csrf_token %}
-            <!-- Body-->
-            <div class="body">
-              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="row">
 
               <div class="col-sm-4">
                   <div class="form-group">
@@ -48,6 +40,10 @@
                   </div>
                 </div>
 
+          </div>
+
+          <div class="row">
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -66,29 +62,31 @@
                     </div>
                   </div>
                 </div>
-
-
               <div class="col-sm-6">
-                  <div class="form-group">
-                    <div class="form-line">
+              <div class="form-group">
+                <div class="form-line">
 
-                    <label>{{form.escalas.label}}</label><strong style="color:red;"> *</strong> <br>
+                <label>{{form.escalas.label}}</label><strong style="color:red;"> *</strong> <br>
 
-                      <input disabled type="radio" name="escalas" id="escala_0" value="0" {% if form.escalas.value == '0' %}checked="checked"{% endif %} readonly/>
-                      <label for="escala_0"><strong>Direto</strong></label>
+                  <input disabled type="radio" name="escalas" id="escala_0" value="0" {% if form.escalas.value == '0' %}checked="checked"{% endif %} readonly/>
+                  <label for="escala_0"><strong>Direto</strong></label>
 
-                        <input disabled type="radio" name="escalas" id="escala_1" value="1" {% if form.escalas.value == '1' %}checked="checked"{% endif %} readonly/>
-                      <label for="escala_1"><strong>1 escala</strong></label>
+                    <input disabled type="radio" name="escalas" id="escala_1" value="1" {% if form.escalas.value == '1' %}checked="checked"{% endif %} readonly/>
+                  <label for="escala_1"><strong>1 escala</strong></label>
 
-                        <input disabled type="radio" name="escalas" id="escala_2" value="2" {% if form.escalas.value == '2' %}checked="checked"{% endif %} readonly/>
-                      <label for="escala_2"><strong>2+ escalas</strong></label>
+                    <input disabled type="radio" name="escalas" id="escala_2" value="2" {% if form.escalas.value == '2' %}checked="checked"{% endif %} readonly/>
+                  <label for="escala_2"><strong>2+ escalas</strong></label>
 
-                      {% if form.escalas.errors %}<label class="error">{% for error in form.escalas.errors %}{{error}}{% endfor %}</label>{% endif %}
+                  {% if form.escalas.errors %}<label class="error">{% for error in form.escalas.errors %}{{error}}{% endfor %}</label>{% endif %}
 
 
-                    </div>
-                  </div>
                 </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
 
               <div class="col-sm-3">
                   <div class="form-group">
@@ -134,6 +132,9 @@
                   </div>
                 </div>
 
+          </div>
+
+
 {#              <div class="col-sm-6">#}
 {#                  <div class="form-group">#}
 {#                    <div class="form-line">#}
@@ -156,6 +157,8 @@
 {#                  </div>#}
 {#                </div>#}
 
+          <div class="row">
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="form-line">
@@ -167,7 +170,6 @@
                         </label>
 
                       <label>{{form.acompanhante.label}}</label>
-                      {% if form.acompanhante.errors %}<label class="error">{% for error in form.acompanhante.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.acompanhante}}
                     </div>
                   </div>
@@ -184,33 +186,89 @@
                         </label>
 
                       <label>{{form.necessidade_especial.label}}</label>
-                      {% if form.necessidade_especial.errors %}<label class="error">{% for error in form.necessidade_especial.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.necessidade_especial}}
                     </div>
                   </div>
                 </div>
 
-              <div class="col-sm-6">
+          </div>
+
+          <div class="row">
+
+              <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
                       <label>{{form.tipo_viagem.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.tipo_viagem.errors %}<label class="error">{% for error in form.tipo_viagem.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.tipo_viagem}}
                     </div>
                   </div>
                 </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
                       <label>{{form.tipo_solicitacao.label}}</label><strong style="color:red;"> *</strong>
-                      {% if form.tipo_solicitacao.errors %}<label class="error">{% for error in form.tipo_solicitacao.errors %}{{error}}{% endfor %}</label>{% endif %}
                       {{form.tipo_solicitacao}}
                     </div>
                   </div>
                 </div>
+
+          <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.localidade_destino.label}}</label><strong style="color:red;"> *</strong>
+                      {{form.localidade_destino}}
+                    </div>
+                  </div>
+                </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+
+                <h5>Trechos</h5>
+
+              <div class="table-responsive">
+                <table id="lista-database" class="table table-bordered table-striped ">
+                  <thead>
+                    <tr>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Período</th>
+                        <th>Transporte</th>
+                        <th>Passagem</th>
+                        <th>Motivo</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                       {% if trechos%}
+                       {% for natop in trechos %}
+
+                       <tr>
+                           <td>{{natop.origem_trecho}}</td>
+                           <td>{{natop.destino_trecho}}</td>
+                           <td>{{natop.format_data_inicio}} - {{natop.format_data_fim}}</td>
+                           <td>{{natop.tipo_transporte_trecho}}</td>
+                           <td>{{natop.categoria_passagem_trecho}}</td>
+                           <td>{{natop.motivo_trecho}}</td>
+                        </tr>
+
+                       {% endfor %}
+                       {%else%}
+                       {%endif%}
+                </tbody>
+              </table>
+            </div>
+            <hr/>
+
+            </div>
+
+          </div>
 
 {#              <div class="col-sm-6">#}
 {#                  <div class="form-group">#}
@@ -245,7 +303,7 @@
 {#                  </div>#}
 {#                </div>#}
 
-
+          <div class="row">
 
               <div class="col-sm-6">
                   <div class="form-group">
@@ -269,122 +327,121 @@
                   </div>
                 </div>
 
+          </div>
 
+           <div class="row">
 
-               <div class="col-sm-12">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
 
-                   <div class="col-sm-4">
-                      <div class="form-group">
-                        <div class="form-line">
+                        {{form.bagagem_tecnica}}
+                        <label for="id_bagagem_tecnica"
+                               style="font-weight: bold;"
+                               title="Caso selecionado, o viajante terá direito a uma bagagem técnica.">
+                            {{ form.bagagem_tecnica.label }}
+                        </label> <br>
 
-                            {{form.bagagem_tecnica}}
-                            <label for="id_bagagem_tecnica"
-                                   style="font-weight: bold;"
-                                   title="Caso selecionado, o viajante terá direito a uma bagagem técnica.">
-                                {{ form.bagagem_tecnica.label }}
-                            </label> <br>
-
-                            {{form.bagagem_despachada}}
-                            <label for="id_bagagem_despachada"
-                                   style="font-weight: bold;"
-                                   title="Caso selecionado, o viajante terá direito a uma bagagem despachada.">
-                                {{ form.bagagem_despachada.label }}
-                                {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
-                            </label> <br>
-
-                            {{form.local_risco}}
-                            <label for="id_local_risco"
-                                   style="font-weight: bold;"
-                                   title="Caso selecionado, viajará com uma criança de colo.">
-                                {{ form.local_risco.label }}
-                            </label> <br>
-
-                            {{form.exige_vacina}}
-                            <label for="id_exige_vacina"
-                                   style="font-weight: bold;"
-                                   title="Caso selecionado, viajará com uma criança de colo.">
-                                {{ form.exige_vacina.label }}
-                            </label> <br>
-
-                            {{form.reservar_hotel}}
-                            <label for="id_reservar_hotel"
-                                   style="font-weight: bold;"
-                                   title="Caso selecionado, viajará com uma criança de colo.">
-                                {{ form.reservar_hotel.label }}
-                            </label> <br>
-
-                            {{form.alimentacao_terceiros}}
-                            <label for="id_alimentacao_terceiros"
-                                   style="font-weight: bold;"
-                                   title="Caso selecionado, viajará com uma criança de colo.">
-                                {{ form.alimentacao_terceiros.label }}
-                            </label>
-
-                        </div>
-                      </div>
-                   </div>
-
-                    <div class="col-sm-8">
-
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <div class="form-line">
-
-                              <label>{{form.qtd_diarias.label}}</label>
-                              {{form.qtd_diarias}}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <div class="form-line">
-
-                              <label>{{form.valor_diaria.label}}</label>
-                              {{form.valor_diaria}}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                            <div class="form-line">
-
-                              <label>{{form.valor_total_diarias.label}}</label>
-                              {{form.valor_total_diarias}}
-                            </div>
-                          </div>
-                        </div>
+                        {{form.bagagem_despachada}}
+                        <label for="id_bagagem_despachada"
+                               style="font-weight: bold;"
+                               title="Caso selecionado, o viajante terá direito a uma bagagem despachada.">
+                            {{ form.bagagem_despachada.label }}
+                            {% if form.bagagem_despachada.errors %}<label class="error">{% for error in form.bagagem_despachada.errors %}{{error}}{% endfor %}</label>{% endif %}
+                        </label> <br>
 
                     </div>
+                  </div>
+               </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
 
+
+                        {{form.local_risco}}
+                        <label for="id_local_risco"
+                               style="font-weight: bold;"
+                               title="Caso selecionado, viajará com uma criança de colo.">
+                            {{ form.local_risco.label }}
+                        </label> <br>
+
+                        {{form.exige_vacina}}
+                        <label for="id_exige_vacina"
+                               style="font-weight: bold;"
+                               title="Caso selecionado, viajará com uma criança de colo.">
+                            {{ form.exige_vacina.label }}
+                        </label> <br>
+
+
+
+                    </div>
+                  </div>
+               </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                        {{form.reservar_hotel}}
+                        <label for="id_reservar_hotel"
+                               style="font-weight: bold;"
+                               title="Caso selecionado, viajará com uma criança de colo.">
+                            {{ form.reservar_hotel.label }}
+                        </label> <br>
+
+                        {{form.alimentacao_terceiros}}
+                        <label for="id_alimentacao_terceiros"
+                               style="font-weight: bold;"
+                               title="Caso selecionado, viajará com uma criança de colo.">
+                            {{ form.alimentacao_terceiros.label }}
+                        </label>
+
+                    </div>
+                  </div>
                </div>
 
-                  
-              </div>
+           </div>
 
-            </div>
-            <!--#Body-->
-          </form>
+          <div class="row">
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.qtd_diarias.label}}</label>
+                      {{form.qtd_diarias}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.valor_diaria.label}}</label>
+                      {{form.valor_diaria}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.valor_total_diarias.label}}</label>
+                      {{form.valor_total_diarias}}
+                    </div>
+                  </div>
+                </div>
+
+          </div>
+
+
+          </div>
 
         </div>
-      </div>
-    </div>
+        <!--#Body-->
+      </form>
 
-{#  </div>#}
-{#</section>#}
-{##}
-{##}
-{##}
-{#{%endblock%}#}
-{##}
-{#{% block js %}#}
-{##}
-{#  {% load static %}#}
-{##}
-{#  <script src="{% static 'js/jquery.mask.js' %}"></script>#}
-{#  <script type="text/javascript">#}
-{#      $.Admin.viagemForm.init()#}
-{#  </script>#}
-{##}
-{#{% endblock %}#}
+    </div>
+  </div>
+</div>

@@ -214,7 +214,7 @@
 
           <div class="row">
 
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -225,7 +225,7 @@
                   </div>
                 </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -235,6 +235,17 @@
                     </div>
                   </div>
                 </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+
+                  <label>{{form.localidade_destino.label}}</label><strong style="color:red;"> *</strong>
+                  {% if form.localidade_destino.errors %}<label class="error">{% for error in form.localidade_destino.errors %}{{error}}{% endfor %}</label>{% endif %}
+                  {{form.localidade_destino}}
+                </div>
+              </div>
+            </div>
 
           </div>
 
@@ -323,6 +334,7 @@
                     </div>
                   </div>
                 </div>
+
           </div>
 
           <div class="row">
