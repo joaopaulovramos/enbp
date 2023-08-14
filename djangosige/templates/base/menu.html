@@ -144,6 +144,12 @@
                                 </a>
                             </li>
 
+                            <li>
+                                <a href="{% url 'timesheet:adicionaopiniao' %}">
+                                    <span>Dê a sua opinião</span>
+                                </a>
+                            </li>
+
 
                         </ul>
                     </li>
@@ -157,13 +163,18 @@
                         <ul class="ml-menu">
 
                             <li>
+                                <a href="{% url 'janela_unica:caixaentrada' %}">
+                                    <span>Caixa entrada</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="/admin/janela_unica/documentounicofinanceiro/">
                                     <span>Documento</span>
                                 </a>
                             </li>
 
-                            <li>
-                                <a href="admin/janela_unica/tramitacaomodel/add/">
+                            <!-- <li>
+                                <a href="admin/janela_unica/tramitacaomodel/add">
                                     <span>Adicionar Tramitação</span>
                                 </a>
                             </li>
@@ -172,10 +183,7 @@
                                 <a href="/admin/janela_unica/tramitacaomodel/">
                                     <span>Tramitar</span>
                                 </a>
-                            </li>
-
-
-
+                            </li> -->
                         </ul>
                     </li>
                     <!-- fim janela única -->
@@ -183,44 +191,46 @@
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">flight_takeoff</i>
-                            <span>Viagens</span>
+                            <span>Viagem</span>
                         </a>
                         <ul class="ml-menu">
+                        {% if perms.viagem.cadastrar_item_viagens  %}
                             <li>
                             <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">check_circle</i>
-                            <span>Itens de Viagem</span>
+{#                            <i class="material-icons">tune</i>#}
+
+                            <span><i class="fa-solid fa-sliders"></i> Itens de Viagem</span>
                             </a>
                                 <ul class="ml-menu">
                                     <li>
                                         <li>
                                             <a href="{% url 'viagem:listatiposviagens' %}">
-                                                 <span>Tipos de Viagens</span>
+                                                 <span>Tipo de Viagem</span>
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url 'viagem:listatiposolicitacao' %}">
-                                                 <span>Tipos de Solicitação</span>
+                                                 <span>Tipo de Solicitação</span>
                                             </a>
                                         </li>
 
 
                                         <li>
                                             <a href="{% url 'viagem:listatipotransporte' %}">
-                                                 <span>Tipos de Transporte</span>
+                                                 <span>Tipo de Transporte</span>
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url 'viagem:listamotivos' %}">
-                                                 <span>Motivos De Viagem</span>
+                                                 <span>Motivo da Viagem</span>
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url 'viagem:listatipodespesa' %}">
-                                                 <span>Tipos de Despesa</span>
+                                                 <span>Tipo de Despesa</span>
                                             </a>
                                         </li>
 
@@ -232,7 +242,7 @@
 
                                         <li>
                                             <a href="{% url 'viagem:listahorariopreferencial' %}">
-                                                 <span>Horários Preferenciais</span>
+                                                 <span>Horário Preferencial</span>
                                             </a>
                                         </li>
 
@@ -244,47 +254,68 @@
 
                                         <li>
                                             <a href="{% url 'viagem:listatiposnecessidadeespecial' %}">
-                                                 <span>Tipos de Necessidade Especial</span>
+                                                 <span>Tipo de Necessidade Especial</span>
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url 'viagem:listalocalidades' %}">
-                                                 <span>Localidades de destino</span>
+                                                 <span>Localidade</span>
                                             </a>
                                         </li>
 
                                         <li>
                                             <a href="{% url 'viagem:listatabeladiarias' %}">
-                                                 <span>Tabela de Diárias</span>
+                                                 <span>Tabela de Diária</span>
+                                            </a>
+                                        </li>
+
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipopagamento' %}">
+                                                 <span>Tipos de Pagamento</span>
                                             </a>
                                         </li>
                                 </ul>
 
                         </li>
-
-
+                        {% endif %}
+                                {% if perms.viagem.solicitar_viagens  %}
                                 <li>
                                     <a href="{% url 'viagem:listaviagem' %}">
-                                         <span>Minhas Solicitações de Viagens</span>
+                                         <span>Minhas Solicitações de Viagem</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.autorizar_viagens_sup  %}
                                 <li>
                                     <a href="{% url 'viagem:listasupautorizarviagem' %}">
                                          <span>Autorizar Viagens - Sup</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.autorizar_viagens_dus  %}
                                 <li>
                                     <a href="{% url 'viagem:listaautorizarviagem' %}">
                                          <span>Autorizar Viagens - DUS</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
+                                {% if perms.viagem.homologar_viagens  %}
                                 <li>
                                     <a href="{% url 'viagem:listahomologacaoviagem' %}">
                                          <span>Homologar RH</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% if perms.viagem.aprovar_pc_viagens  %}
+                                <li>
+                                    <a href="{% url 'viagem:listapagamentodiarias' %}">
+                                         <span>Financeiro - Diárias</span>
                                     </a>
                                 </li>
 
@@ -293,13 +324,35 @@
                                          <span>Aprovar Prestação de Contas</span>
                                     </a>
                                 </li>
+                                {% endif %}
 
-
+                                <li>
+                                    <a href="{% url 'viagem:listapagamentoreembolso' %}">
+                                         <span>Financeiro - Reembolso</span>
+                                    </a>
+                                </li>
                             </li>
                         </ul>
                     </li>
 
                     <!-- Fim Viagens-->
+
+                     <!-- inicio Opiniões-->
+                  <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">insert_drive_file</i>
+                            <span>Opiniões</span>
+                        </a>
+                        <ul class="ml-menu">
+
+                            <li>
+                                <a href="{% url 'opiniao:listaropinioes' %}">
+                                    <span>Dê a sua opinião</span>
+                                </a>
+                            </li>                           
+                        </ul>
+                    </li>
+                    <!-- fim Opiniões -->
 
 
 

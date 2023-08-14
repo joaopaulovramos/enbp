@@ -50,6 +50,7 @@ class StatusAnaliseFinaceira(object):
     REPROVADO = 'Reprovado'
     FINALIZADO = 'Finalizado'
     CANCELADO = 'Cancelado'
+    DEVOLVIDO = 'Devolvido'
     CHOICES = (
         (EDICAO_RESPONSAVEL, EDICAO_RESPONSAVEL),
         (AGUARDANDO_GERENCIA, AGUARDANDO_GERENCIA),
@@ -61,6 +62,7 @@ class StatusAnaliseFinaceira(object):
         (FINALIZADO, FINALIZADO),
         (CANCELADO, CANCELADO),
         (APROVADO, APROVADO),
+        (DEVOLVIDO, DEVOLVIDO),
     )
 
 # Caso venha a surgir outros tipos de documentos
@@ -226,6 +228,17 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     pagamento_realizado = models.BooleanField(null=True, blank=True)
     observacao_pagamento = models.CharField(max_length=1055, null=True, blank=True)
 
+    @property
+    def tipo_documento_formatado(self):
+        tipo_formatdo = ''
+        if self.tipo_arquivo:
+            tipo_formatdo = self.get_tipo_arquivo_display()
+        if self.tipo_anexo:
+            tipo_formatdo = tipo_formatdo + '/' +  self.get_tipo_anexo_display() 
+ 
+        return tipo_formatdo
+
+
     class Meta:
         verbose_name = "Documento Janela Única"
         permissions = (
@@ -287,7 +300,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
 
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico',
-                custom=dict(button_name='Reprovar Solictação')
+                custom=dict(button_name='Devolver Solictação')
                 # , conditions=[can_reprovar_gerencia]
     )
     def reprovar_gerencia(self, by=None, request=None):
@@ -303,7 +316,8 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.logar_detalhes(request, mensagem='Aprovado pela superintendência')
 
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, permission='janela_unica.superintendencia_documento_unico', custom=dict(button_name='Reprovar Solicitação'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, #target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, 
+                permission='janela_unica.superintendencia_documento_unico', custom=dict(button_name='Devolver Solicitação'))
     def reprovar_superintendencia(self, by=None, request=None):
         self.usuario_superintencencia = request.user
         self.aprovado_superintendencia = False
@@ -318,7 +332,8 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         Aprovado pela diretoria
         '''
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, permission='janela_unica.diretoria_documento_unico', custom=dict(button_name='Reprovar Solictação'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,  #target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, 
+                permission='janela_unica.diretoria_documento_unico', custom=dict(button_name='Devolver Solictação'))
     def reprovar_diretoria(self, by=None, request=None):
         self.aprovado_diretoria = False
         self.logar_detalhes(request, mensagem='Reprovado pela diretoria')
@@ -345,7 +360,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
 
     
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico', custom=dict(button_name='Reprovar Solictação'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico', custom=dict(button_name='Devolver Solictação'))
     def reprovar_analise_financeira(self, by=None, request=None):
         self.aprovado_analise_financeira = False
         self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')

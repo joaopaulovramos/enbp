@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DATABASES = {
 #     'default': config('DATABASE_URL', default=DEFAULT_DATABASE_URL, cast=dburl),
 # }
-#
+# #
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -41,15 +41,13 @@ DATABASES = {
     }
 }
 
-
-
 #
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'norli',
+#         'NAME': 'norli_timesheet_feedback',
 #         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
+#         'PASSWORD': 'admin',
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     }
@@ -68,7 +66,6 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
-    # 'tema',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,6 +97,7 @@ INSTALLED_APPS = [
     'djangosige.apps.norli_projeto',
     'djangosige.apps.timesheet',
     'djangosige.apps.viagem',
+    'djangosige.apps.opiniao',
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
@@ -111,7 +109,6 @@ INSTALLED_APPS = [
     'fsm_admin',
     'simple_history',
 ]
-
 
 
 MIDDLEWARE = [

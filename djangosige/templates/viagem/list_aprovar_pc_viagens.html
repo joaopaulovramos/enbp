@@ -21,7 +21,7 @@
                 <!-- <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> ADICIONAR</span></a> -->
                 <!--<button class="btn btn-red btn-remove"><i class="material-icons">&#xE872;</i></button> -->
 
-                    <button class="btn btn-success btn-aprovar_pc" ><i class="material-icons">check</i><span> Aprovar </span></button>
+                    <button class="btn btn-success btn-aprovar_pc" ><i class="material-icons">check</i><span> APROVAR </span></button>
 {#                    <button class="btn btn-red btn-reprovar_pc" ><i class="material-icons">clear</i><span> Reprovar </span></button>#}
 
               </div>
@@ -30,9 +30,10 @@
           <div class="body">
 
            {% include 'base/search.html' %}
+           {% include 'base/select_mes.html' %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[3, "desc"]]'>
               <thead>
                 <tr>
                     <th>Código</th>
@@ -61,17 +62,17 @@
                    <td>{{natop.id}}</td>
                    <td>{{natop.solicitante}}</td>
                    <td>R$ {{natop.valor_passagem}}</td>
-                   <td>{{natop.dada_inicio}}</td>
-                   <td>{{natop.dada_fim}}</td>
+                   <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
+                   <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
                    <td>{{natop.destino}}</td>
                    <td>{{natop.objetivo}}</td>
                    <td>{{natop.tipo_viagem}}</td>
                    <td>{{natop.tipo_solicitacao}}</td>
                    <td>{{natop.motivo}}</td>
-                   <td><a class="btn btn-success clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"><span> Ver Solicitação </span></a></td>
+                   <td><a class="btn btn-success clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"><span> VER SOLICITAÇÃO </span></a></td>
 {#                   <td><a href="{% url 'viagem:avaliar_prestacao_de_contas' natop.id %}" class="btn btn-success"><span> Ver Prestação de Contas </span></a></td>#}
-                   <td><a href="{% url 'viagem:avaliar_arquivos'  natop.id %}" class="btn btn-success"><span> Ver Prestação de Contas </span></a></td>
+                   <td><a href="{% url 'viagem:avaliar_arquivos'  natop.id %}" class="btn btn-success"><span> VER PRESTAÇÃO DE CONTAS </span></a></td>
 
                 <td class="lista-remove">
                   <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
@@ -111,6 +112,12 @@
   <script src="{% static 'js/jquery.mask.js' %}"></script>
   <script type="text/javascript">
       $.Admin.viagemForm.init()
+
+      $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'viagem:listaaprovarpcviagem' %}?mes=${mes}&ano=${ano}`;
+        })
   </script>
 
 {% endblock %}

@@ -19,7 +19,8 @@
             </h2>
               <div class="header-btn">
                   <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> LANÇAR HORAS</span></a>
-                  <button class="btn btn-info btn-submeter-horas"><i class="material-icons">check</i><span> SUBMETER</span></button>
+                  <button class="btn btn-info btn-submeter-horas"><i class="material-icons">send</i><span> SUBMETER</span></button>
+{#                  <button class="btn btn-info btn-submeter-horas"><i class="fa-solid fa-square-arrow-up-right"></i> <span> SUBMETER</span></button>#}
                   <button class="btn btn-red btn-remover-submeter-horas"><i class="material-icons">&#xE872;</i></button>
               </div>
           </div>
@@ -101,9 +102,10 @@
 {% block js %}
 
    <script>
-        $('#id_select_mes').on('change', function () {
-            let mes = $(this).val()
-            window.location.href = `{% url 'timesheet:listarpercentualdiario' %}?mes=${mes}`;
+        $('#id_select_mes, #id_select_ano').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            window.location.href = `{% url 'timesheet:listarpercentualdiario' %}?mes=${mes}&ano=${ano}`;
         })
    </script>
 

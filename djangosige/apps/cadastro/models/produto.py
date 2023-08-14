@@ -78,8 +78,8 @@ class Unidade(models.Model):
 class Produto(models.Model):
     # Dados gerais
     codigo = models.CharField(max_length=15)
-    codigo_barras = models.CharField(
-        max_length=16, null=True, blank=True)  # GTIN/EAN
+    codigo_legado = models.CharField(max_length=15, null=True, blank=True)
+    codigo_barras = models.CharField(max_length=16, null=True, blank=True)  # GTIN/EAN
     descricao = models.CharField(max_length=255)
     categoria = models.ForeignKey(
         Categoria, null=True, blank=True, on_delete=models.PROTECT)
