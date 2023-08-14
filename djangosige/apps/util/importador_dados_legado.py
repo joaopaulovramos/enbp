@@ -249,7 +249,8 @@ class ImportadorLegado:
                 'codigo': str(row['id_parcela']).title(),
                 'numero_pessoa': row['NR_CPFCNPJ'],
             }
-            if not Entrada.objects.filter(codigo_legado=rpagamento['codigo']).exists():
+            ef = Entrada.objects.filter(codigo_legado=rpagamento['codigo'])
+            if not ef.exists():
                 # Criar lancamento com data futura (sem movimentos)
                 saida = Entrada()
                 saida.descricao = 'referente documento: ' + str(row['nr_documento'])
@@ -260,12 +261,19 @@ class ImportadorLegado:
                 saida.valor_liquido = row['VL_PARCELA']
                 qf = Cliente.objects.filter(pessoa_jur_info__cnpj=rpagamento['numero_pessoa'])
                 if qf.exists():
-                    saida.cliente = qf.first()
+                    cliente = qf.first()
+                    saida.cliente = cliente
+                    # TODO: A relação plano contas com o cliente precisa ser estabelecida
+                    #saida.grupo_plano = saida.cliente.grupo_plano
+                    qc = PlanoContasGrupo.objects.filter(descricao=cliente.nome_razao_social)
+                    if qc.exists(): 
+                        saida.grupo_plano = qc.first()
                 saida.save()
             row = cur.fetchone()
         cur.close()
         if verbose:
             stdout.write("\rImportando contas a receber: 100%\r\n")
+
 
     def importar_lancamentos_apagar(self, verbose=True):
         sql = """

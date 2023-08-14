@@ -231,6 +231,7 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
     permission_codename = 'aprovar_horas'
     _ano = datetime.datetime.now().year
     _mes = datetime.datetime.now().month
+    _user = 'Todos'
 
     def get_queryset(self):
 
@@ -245,10 +246,23 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
+        if self.request.GET.get('user'):
+            self.request.session['user_select'] = self.request.GET.get('user')
+        if 'user_select' in self.request.session:
+            self._user = self.request.session['user_select']
+
+        self._user_list = list(User.objects.filter(pk__in=list(PercentualDiario.objects.filter(situacao=1, data__month=self._mes, data__year=self._ano).values_list(
+            'solicitante', flat=True).distinct())).order_by('username').values_list('username', flat=True))
+        self._user_list.insert(0, 'Todos')
+        PercentualDiario.objects.filter(situacao=1, data__month=self._mes, data__year=self._ano).values_list(
+            'solicitante', flat=True).distinct()
+
         current_user = self.request.user
         if current_user.usuario.perfil != '2' and current_user.usuario.perfil != '1' and not current_user.is_superuser:
             return
         query = PercentualDiario.objects.filter(situacao=1, data__month=self._mes, data__year=self._ano)
+        if (self._user != 'Todos'):
+            query = query.filter( solicitante__username=self._user)
         if not current_user.is_superuser and current_user.usuario.perfil != '1':
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
         return query
@@ -278,6 +292,9 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
+        if (self._user):
+            context['user_selecionado'] = str(self._user)
+        context['users_disponiveis'] = self._user_list
         context['title_complete'] = 'Aprovar Horas - Percentual'
         context['add_url'] = reverse_lazy('timesheet:aprovartimesheet')
         return context
@@ -759,6 +776,13 @@ class EditarPercentualDiarioView(CustomUpdateView):
 
     def post(self, request, *args, **kwargs):
 
+        if ('excluir_timesheet' in request.POST):
+            instance = self.model.objects.get(id=self.kwargs['pk'])
+            if instance.situacao == 0:
+                instance.delete()
+                return redirect(self.success_url)
+            # self.model.delete(self)
+
         # Sobreescreve a url de sucesso considerando o pk
         self.success_url = reverse_lazy('timesheet:editarpercentualdiario', kwargs={'pk': kwargs['pk']})
 
@@ -857,16 +881,16 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
         days = {}
         for lancamento in querry:
-            lancamento.full = False
+            # lancamento.full = False
             retVal = days.get(lancamento.data)
             if retVal is not None:
                 days[lancamento.data] = days[lancamento.data] + lancamento.percentual
             else:
                 days[lancamento.data] = lancamento.percentual
 
-        for lancamento in querry:
-            if days[lancamento.data] == 100.00:
-                lancamento.full = True
+        # for lancamento in querry:
+        #     if days[lancamento.data] == 100.00:
+        #         lancamento.full = True
 
         return querry
 

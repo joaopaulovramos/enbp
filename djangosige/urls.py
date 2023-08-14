@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^zeppelin/', include('djangosige.apps.timesheet.urls')),
     url(r'^zeppelin/', include('djangosige.apps.viagem.urls')),
     url(r'^zeppelin/', include('djangosige.apps.janela_unica.urls')),
+    url(r'^zeppelin/', include('djangosige.apps.opiniao.urls')),
     # url(r'^janela_unica/', include('djangosige.apps.janela_unica.urls')),
 ]
 

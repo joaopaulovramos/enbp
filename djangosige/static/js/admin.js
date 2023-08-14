@@ -4022,6 +4022,20 @@ $.Admin.timesheet = {
 
     init: function () {
 
+          var $btnExcluir = $('.btn-excluir-percentual-timesheet');
+
+          $btnExcluir.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "excluir_timesheet").val("excluir");
+
+            form.append($(input));
+            form.submit();
+          });
+          console.log($btnExcluir);
+
         $.Admin.maskInput.maskTimesheet()
 
         let data_padrao= $('#id_data').val() === ""? new Date() : $('#id_data').val()
