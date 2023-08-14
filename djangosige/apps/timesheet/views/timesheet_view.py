@@ -918,7 +918,7 @@ class ListTimesheetDiasView(CustomListViewFilter):
 
     def get_object(self):
         current_user = self.request.user
-        return self.model.objects.all()
+        return self.model.objects.filter(solicitante=current_user)
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
