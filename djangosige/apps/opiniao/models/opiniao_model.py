@@ -23,7 +23,7 @@ class OpiniaoModel(models.Model):
     usuario = models.ForeignKey(User, related_name="opiniao_opiniao_user", on_delete=models.CASCADE, null=True,
                                 blank=True)
     opiniao = models.CharField(max_length=500, blank=False, null=False)
-    rating = models.IntegerField(default=0, blank=True)
+    rating = models.IntegerField(default=0, null=True, blank=True)
     anexo = models.FileField(upload_to='files/', null=True, blank=True)
 
     class Meta:
