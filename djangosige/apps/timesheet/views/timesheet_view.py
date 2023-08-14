@@ -1,11 +1,16 @@
+import os.path
 import random
 import string
+from collections import defaultdict
 
 import requests
+from django.db.models import Avg, Sum, Count
 from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, \
-    CustomCreateViewAddUser
+    CustomCreateViewAddUser, CustomView
+
+from djangosige.apps.norli_projeto.models import ExemploModel
 
 from djangosige.apps.timesheet.forms.timesheet_forms import *
 from djangosige.apps.timesheet.models.timesheet_model import *
@@ -14,6 +19,13 @@ from django.views.generic import View
 from django.http import HttpResponse
 from django.core import serializers
 from django.shortcuts import redirect
+
+from pypdf import PdfWriter
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.template.loader import get_template
+
+from djangosige.configs import settings
 
 LIMITE_HORAS_DIA = 8
 
@@ -310,8 +322,77 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
+        # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
-        return query
+
+        # simulando uma agregação de soma agrupando por solicitante e projeto
+        query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
+
+        # simulando uma agregação de contagem dias distintos agrupando por solicitante
+        dias_trabalhados_query = query.values('solicitante').annotate(dias_trabalhados=Count('data', distinct=True))
+
+        registros_transposed = defaultdict(dict)
+        projetos = set()
+
+        # criando um dicionario pivotando solicitante pelos projetos
+        # na prática, fazendo os projetos virarem colunas
+        for registro in query:
+            solicitante = User.objects.get(pk=registro['solicitante']).username
+            projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
+            projetos.add(projeto)
+
+            dias_trabalhados_solicitante = dias_trabalhados_query.get(solicitante=registro['solicitante'])[
+                'dias_trabalhados']
+
+            registros_transposed[solicitante][projeto] = float(registro['total_percentual']) / int(
+                dias_trabalhados_solicitante)
+
+        projetos = list(projetos)
+        projetos.sort()
+
+        # adicionando ao dicionário os projetos nos quais o solicitante não trabalhou
+        # para facilitar a impressão no template
+        for key, values in registros_transposed.items():
+            for projeto in projetos:
+                if not projeto in values.keys():
+                    registros_transposed[key][projeto] = 0.0
+
+        # ordenando os projetos de cada solicitante
+        # opcionalmente, seria possível usar OrderedDict, mas o retorno como lista atrapalharia a remontagem no template
+        # ex. registros_transposed[key] = OrderedDict(sorted(values.items()))
+        ordered_data = {}
+        total_percentuais = 0.0
+        for key, values in registros_transposed.items():
+            ordered_values = {}
+            soma = 0.0
+
+            for prj in sorted(values.keys()):
+                ordered_values[prj] = values[prj]
+                soma += values[prj]
+
+            ordered_values['total'] = soma
+            ordered_data[key] = ordered_values
+            total_percentuais += soma
+
+        self.projetos = projetos
+
+        # somatório dos percentuais por projeto
+        percentual_por_projetos = {}
+        for _, value in ordered_data.items():
+            for projeto, percentual in value.items():
+                if projeto in percentual_por_projetos.keys():
+                    percentual_por_projetos[projeto] += float(percentual)
+                else:
+                    percentual_por_projetos[projeto] = float(percentual)
+
+        # por algum motivo, o arredondamento não funcionado fazendo a divisão no loop anterior
+        for key, value in percentual_por_projetos.items():
+            percentual_por_projetos[key] /= total_percentuais * .01
+
+        if ordered_data:
+            ordered_data['Percentual por projeto'] = percentual_por_projetos
+
+        return ordered_data
 
     def get_context_data(self, **kwargs):
         context = super(VerTimesheetPercentualAprovadoView, self).get_context_data(**kwargs, object_list=None)
@@ -320,7 +401,118 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
         context['title_complete'] = 'Horas Aprovadas - Percentual'
+        context['projetos'] = self.projetos
+        context['add_url'] = reverse_lazy('timesheet:gerarpdfpercentualaprovados')
         return context
+
+
+def fetch_resources(uri, rel):
+    return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+
+
+class GerarPDFTimesheetPercentualAprovadoView(CustomView):
+    template_name = 'timesheet/PDF_timesheet_percentual_aprovados.html'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
+
+    def get(self, request, *args, **kwargs):
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
+        # consulta dos lançamentos aprovados considerando ano e mês
+        query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
+
+        # simulando uma agregação de soma agrupando por solicitante e projeto
+        query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
+
+        # simulando uma agregação de contagem dias distintos agrupando por solicitante
+        dias_trabalhados_query = query.values('solicitante').annotate(dias_trabalhados=Count('data', distinct=True))
+
+        registros_transposed = defaultdict(dict)
+        projetos = set()
+
+        # criando um dicionario pivotando solicitante pelos projetos
+        # na prática, fazendo os projetos virarem colunas
+        for registro in query:
+            solicitante = User.objects.get(pk=registro['solicitante']).username
+            projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
+            projetos.add(projeto)
+
+            dias_trabalhados_solicitante = dias_trabalhados_query.get(solicitante=registro['solicitante'])[
+                'dias_trabalhados']
+
+            registros_transposed[solicitante][projeto] = float(registro['total_percentual']) / int(
+                dias_trabalhados_solicitante)
+
+        projetos = list(projetos)
+        projetos.sort()
+
+        # adicionando ao dicionário os projetos nos quais o solicitante não trabalhou
+        # para facilitar a impressão no template
+        for key, values in registros_transposed.items():
+            for projeto in projetos:
+                if not projeto in values.keys():
+                    registros_transposed[key][projeto] = 0.0
+
+        # ordenando os projetos de cada solicitante
+        # opcionalmente, seria possível usar OrderedDict, mas o retorno como lista atrapalharia a remontagem no template
+        # ex. registros_transposed[key] = OrderedDict(sorted(values.items()))
+        ordered_data = {}
+        total_percentuais = 0.0
+        for key, values in registros_transposed.items():
+            ordered_values = {}
+            soma = 0.0
+
+            for prj in sorted(values.keys()):
+                ordered_values[prj] = values[prj]
+                soma += values[prj]
+
+            ordered_values['total'] = soma
+            ordered_data[key] = ordered_values
+            total_percentuais += soma
+
+        self.projetos = projetos
+
+        # somatório dos percentuais por projeto
+        percentual_por_projetos = {}
+        for _, value in ordered_data.items():
+            for projeto, percentual in value.items():
+                if projeto in percentual_por_projetos.keys():
+                    percentual_por_projetos[projeto] += float(percentual)
+                else:
+                    percentual_por_projetos[projeto] = float(percentual)
+
+        # por algum motivo, o arredondamento não funcionado fazendo a divisão no loop anterior
+        for key, value in percentual_por_projetos.items():
+            percentual_por_projetos[key] /= total_percentuais * .01
+
+        ordered_data['Projeto (%)'] = percentual_por_projetos
+
+        template = get_template(self.template_name)
+        context = {
+            "all_natops": ordered_data,
+            "projetos": projetos,
+            "ano": self._ano,
+            "mes": calendar.month_name[int(self._mes)],
+            "aprovador": "Nome do aprovador"
+        }
+        html = template.render(context)
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result, link_callback=fetch_resources)
+
+        if not pdf.err:
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        else:
+            return None
 
 
 class ListGastosView(CustomListViewFilter):
@@ -479,8 +671,6 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
 
             if float(total_percentual_dia) + float(self.request.POST['percentual']) > 100.00:
                 form.add_error('percentual', 'O percentual diário não pode ultrapassar 100% de horas')
-
-            print(request.POST['data'])
 
             if form.is_valid():
                 self.object = form.save()
@@ -853,8 +1043,6 @@ class AdicionarOpiniaoView(CustomCreateView):
         nome_antigo = request.FILES['anexo'].name
         nome_antigo = nome_antigo.split('.')
         ext = nome_antigo[-1]
-
-
 
         if form.is_valid():
             request.FILES['anexo'].name = name + '.' + ext
