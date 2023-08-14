@@ -1,3 +1,4 @@
+from operator import is_
 from typing import Any, List, Optional, Tuple, Union
 from django.contrib import admin
 from django import forms
@@ -49,6 +50,22 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
 
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao,)
+    
+class NorliAdminModelForm(forms.ModelForm):
+    class Meta:
+        abstract = True
+
+    def __init__(self, *args, **kwargs):
+        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            print(visible)
+            visible.field.widget.attrs['class'] = 'form-control'
+            if isinstance(visible.field.widget, admin.widgets.RelatedFieldWidgetWrapper):
+                visible.field.widget.widget.attrs['class'] = 'form-control'
+                # visible.field.widget.can_add_related=False
+                visible.field.widget.can_change_related=False
+                visible.field.widget.can_delete_related=False
+
 
 class TipoContratoForm(forms.ModelForm):
     class Meta:
@@ -56,9 +73,8 @@ class TipoContratoForm(forms.ModelForm):
         fields = '__all__'
         verbose_name = 'Tipo de Contrato'
         verbose_name_plural = 'Tipos de Contratos'
-        widgets = {
-            'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
-            }
+
+
 
 @admin.register(TipoContrato)
 class TipoContratoModelAdmin(admin.ModelAdmin,):
@@ -66,7 +82,7 @@ class TipoContratoModelAdmin(admin.ModelAdmin,):
     list_display = ('descricao',)
     fields = ('descricao',)
 
-class ContratoForm(forms.ModelForm):
+class ContratoForm(NorliAdminModelForm):
     class Meta:
         model = Contrato
         verbose_name = 'Contrato'
@@ -74,6 +90,8 @@ class ContratoForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'descricao': forms.TextInput(attrs={'class': 'form-control'}),
+            'data_inclusao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
+            'data_validade': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             }
 
 @admin.register(Contrato)
