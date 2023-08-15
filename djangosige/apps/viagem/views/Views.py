@@ -746,7 +746,7 @@ class AdicionarViagemView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Adicionar Viagem'
+        context['title_complete'] = 'Adicionar Solicitação de Viagem'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
         # usuario = Usuario.objects.get(user=self.request.user.id)
@@ -761,7 +761,7 @@ class EditarViagemView(CustomUpdateView):
     model = ViagemModel
     template_name = 'viagem/edit_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
-    success_message = "Viagem Editada com Sucesso."
+    success_message = "Solicitação de Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
 
     # form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
