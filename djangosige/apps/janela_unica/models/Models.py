@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.forms import ValidationError
@@ -122,10 +122,43 @@ class Contrato(models.Model):
     #TODO: Adicionar demais campos
 
 
+class ArquivoSolicitacaoContrato(models.Model):
+    descricao = models.CharField(max_length=255, null=True, blank=True)
+    obrigatorio = models.BooleanField(default=False)
+    contrato = models.ForeignKey(Contrato, related_name="contrato_arquivo_solicitacao", on_delete=models.PROTECT, null=True, blank=True)
+    class Meta:
+        verbose_name = 'Contrato Arquivo Solicitação'
+        
+    def __str__(self):
+        return u'%s - %s' % (self.pk, self.descricao)
+
+class AprovadorContrato(models.Model):
+    sequencia = models.IntegerField(null=True, blank=True)
+    descricao = models.CharField(max_length=255, null=True, blank=True)
+    usuario = models.ForeignKey(User, related_name="aprovador_usuario_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    grupo = models.ForeignKey(Group, related_name="aprovador_grupo_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    obrigatorio = models.BooleanField(default=False)
+    contrato = models.ForeignKey('Contrato', related_name="contrato_aprovador_solicitacao", on_delete=models.PROTECT, null=True, blank=True)
+    class Meta:
+        verbose_name = 'Aprovador Solicitação'
+        
+    def __str__(self):
+        return u'%s - %s' % (self.pk, self.descricao)
+
+
+class FormaPagamentoContrato(models.Model):
+    descricao = models.CharField(max_length=255, null=True, blank=True)
+    # contrato = models.ForeignKey('Contrato', related_name="contrato_forma_pagamento", on_delete=models.PROTECT, null=True, blank=True)
+    class Meta:
+        verbose_name = 'Forma de Pagamento'
+        
+    def __str__(self):
+        return u'%s - %s' % (self.pk, self.descricao)
+
+
 class DocumentoUnico(models.Model):
     class Meta:
         abstract = True
-
 
 
 class DocumentoUnicoFinanceiro(DocumentoUnico):

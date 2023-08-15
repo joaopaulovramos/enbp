@@ -6,7 +6,7 @@ from django.http.request import HttpRequest
 from django.utils.safestring import mark_safe
 
 from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
-from djangosige.apps.janela_unica.models.Models import Contrato, StatusAnaliseFinaceira, TipoContrato
+from djangosige.apps.janela_unica.models.Models import AprovadorContrato, Contrato, StatusAnaliseFinaceira, TipoContrato, ArquivoSolicitacaoContrato
 from .models import TramitacaoModel, DocumentoUnicoFinanceiro, ArquivoDocumentoUnico
 from fsm_admin.mixins import FSMTransitionMixin
 from simple_history.admin import SimpleHistoryAdmin
@@ -82,6 +82,17 @@ class TipoContratoModelAdmin(admin.ModelAdmin,):
     list_display = ('descricao',)
     fields = ('descricao',)
 
+class AprovadorContratoInline(admin.TabularInline):
+    model = AprovadorContrato
+    extra = 0
+    max_num = 10
+
+class ArquivoSolicitacaoContrato(admin.TabularInline):
+    model = ArquivoSolicitacaoContrato
+    extra = 0
+    max_num = 10
+
+
 class ContratoForm(NorliAdminModelForm):
     class Meta:
         model = Contrato
@@ -99,6 +110,8 @@ class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     fsm_field = ['situacao',]
     form = ContratoForm
     list_display = ('descricao', 'data_inclusao', 'data_validade',)
+    inlines = [AprovadorContratoInline, ArquivoSolicitacaoContrato,]
+
 
 
 # https://stackoverflow.com/questions/46892851/django-simple-history-displaying-changed-fields-in-admin
