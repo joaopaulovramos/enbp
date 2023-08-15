@@ -308,7 +308,7 @@ class ListTipoPagamentoView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Pagamento'
+        context['title_complete'] = 'Forma de Pagamento'
         context['add_url'] = reverse_lazy('viagem:adicionartipopagamento')
         return context
 
