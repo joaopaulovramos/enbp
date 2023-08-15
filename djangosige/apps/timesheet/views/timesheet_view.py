@@ -337,7 +337,9 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         # criando um dicionario pivotando solicitante pelos projetos
         # na prática, fazendo os projetos virarem colunas
         for registro in query:
-            solicitante = User.objects.get(pk=registro['solicitante']).username
+            _user = User.objects.get(pk=registro['solicitante'])
+            nome = f'{_user.first_name} {_user.last_name}'
+            solicitante = f'{_user.pk} - {nome}'
             projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
             projetos.add(projeto)
 
@@ -443,7 +445,9 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         # criando um dicionario pivotando solicitante pelos projetos
         # na prática, fazendo os projetos virarem colunas
         for registro in query:
-            solicitante = User.objects.get(pk=registro['solicitante']).username
+            _user = User.objects.get(pk=registro['solicitante'])
+            nome = f'{_user.first_name} {_user.last_name}'
+            solicitante = f'{_user.pk} - {nome}'
             projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
             projetos.add(projeto)
 
@@ -480,8 +484,6 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
             ordered_data[key] = ordered_values
             total_percentuais += soma
 
-        self.projetos = projetos
-
         # somatório dos percentuais por projeto
         percentual_por_projetos = {}
         for _, value in ordered_data.items():
@@ -497,13 +499,16 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
 
         ordered_data['Projeto (%)'] = percentual_por_projetos
 
+        current_user = self.request.user
+        aprovador = f'{User.objects.get(pk=current_user.id).first_name} {User.objects.get(pk=current_user.id).last_name}'
+
         template = get_template(self.template_name)
         context = {
             "all_natops": ordered_data,
             "projetos": projetos,
             "ano": self._ano,
             "mes": calendar.month_name[int(self._mes)],
-            "aprovador": "Nome do aprovador"
+            "aprovador": aprovador
         }
         html = template.render(context)
         result = BytesIO()
