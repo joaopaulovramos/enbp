@@ -332,12 +332,12 @@ class EditarTipoPagamentoView(CustomUpdateView):
     model = TipoDePagamentoModel
     template_name = 'viagem/edit.html'
     success_url = reverse_lazy('viagem:listatipopagamento')
-    success_message = "Tipo de Pagamento Editado com Sucesso."
+    success_message = "Forma de Pagamento Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Tipo de Pagamento'
+        context['title_complete'] = 'Edição do Forma de Pagamento'
         context['return_url'] = reverse_lazy('viagem:listatipopagamento')
         context['id'] = self.object.id
         return context
