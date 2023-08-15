@@ -173,7 +173,7 @@ class ListMotivosView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListMotivosView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Motivo da Viagens'
+        context['title_complete'] = 'Motivo da Viagem'
         context['add_url'] = reverse_lazy('viagem:adicionarmotivo')
         return context
 
