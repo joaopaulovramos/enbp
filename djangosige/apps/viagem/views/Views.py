@@ -182,7 +182,7 @@ class AdicionarMotivoView(CustomCreateView):
     form_class = TipoMotivoForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listamotivos')
-    success_message = "Motivo de Viagem adicionado com sucesso."
+    success_message = "Motivo da Viagem Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
