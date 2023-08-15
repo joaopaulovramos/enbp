@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, \
     CustomCreateViewAddUser, CustomView
+from djangosige.apps.login.models import Usuario
 
 from djangosige.apps.norli_projeto.models import ExemploModel
 
@@ -261,8 +262,8 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
         if current_user.usuario.perfil != '2' and current_user.usuario.perfil != '1' and not current_user.is_superuser:
             return
         query = PercentualDiario.objects.filter(situacao=1, data__month=self._mes, data__year=self._ano)
-        if (self._user != 'Todos'):
-            query = query.filter( solicitante__username=self._user)
+        if self._user != 'Todos':
+            query = query.filter(solicitante__username=self._user)
         if not current_user.is_superuser and current_user.usuario.perfil != '1':
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
         return query
@@ -310,6 +311,7 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
     _mes = datetime.datetime.now().month
 
     def get_queryset(self):
+        current_user = self.request.user
 
         # tratamento do filtro de seleção ano e mês
         if self.request.GET.get('mes'):
@@ -325,6 +327,11 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
 
+        # limita a lista ao departamento para quem não for root ou perfil diretor
+        # TODO: checar se o diretor realmente deveria ver tudo
+        if not current_user.is_superuser and current_user.usuario.perfil != '1':
+            query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
+
         # simulando uma agregação de soma agrupando por solicitante e projeto
         query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
 
@@ -337,7 +344,9 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         # criando um dicionario pivotando solicitante pelos projetos
         # na prática, fazendo os projetos virarem colunas
         for registro in query:
-            solicitante = User.objects.get(pk=registro['solicitante']).username
+            _user = User.objects.get(pk=registro['solicitante'])
+            nome = f'{_user.first_name} {_user.last_name}'
+            solicitante = f'{_user.pk} - {nome}'
             projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
             projetos.add(projeto)
 
@@ -411,11 +420,13 @@ def fetch_resources(uri, rel):
 
 
 class GerarPDFTimesheetPercentualAprovadoView(CustomView):
+    permission_codename = 'aprovar_horas'
     template_name = 'timesheet/PDF_timesheet_percentual_aprovados.html'
     _ano = datetime.datetime.now().year
     _mes = datetime.datetime.now().month
 
     def get(self, request, *args, **kwargs):
+        current_user = self.request.user
 
         # tratamento do filtro de seleção ano e mês
         if self.request.GET.get('mes'):
@@ -431,6 +442,11 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
 
+        # limita a lista ao departamento para quem não for root ou perfil diretor
+        # TODO: checar se o diretor realmente deveria ver tudo
+        if not current_user.is_superuser and current_user.usuario.perfil != '1':
+            query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
+
         # simulando uma agregação de soma agrupando por solicitante e projeto
         query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
 
@@ -443,7 +459,9 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         # criando um dicionario pivotando solicitante pelos projetos
         # na prática, fazendo os projetos virarem colunas
         for registro in query:
-            solicitante = User.objects.get(pk=registro['solicitante']).username
+            _user = User.objects.get(pk=registro['solicitante'])
+            nome = f'{_user.first_name} {_user.last_name}'
+            solicitante = f'{_user.pk} - {nome}'
             projeto = ExemploModel.objects.get(pk=registro['projeto']).nome
             projetos.add(projeto)
 
@@ -480,8 +498,6 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
             ordered_data[key] = ordered_values
             total_percentuais += soma
 
-        self.projetos = projetos
-
         # somatório dos percentuais por projeto
         percentual_por_projetos = {}
         for _, value in ordered_data.items():
@@ -497,13 +513,17 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
 
         ordered_data['Projeto (%)'] = percentual_por_projetos
 
+        current_user = self.request.user
+        aprovador = f'{User.objects.get(pk=current_user.id).first_name} {User.objects.get(pk=current_user.id).last_name}'
+
         template = get_template(self.template_name)
         context = {
             "all_natops": ordered_data,
             "projetos": projetos,
             "ano": self._ano,
             "mes": calendar.month_name[int(self._mes)],
-            "aprovador": "Nome do aprovador"
+            "aprovador": aprovador,
+            "perfil": Usuario.PERFIS[int(current_user.usuario.perfil)][1]
         }
         html = template.render(context)
         result = BytesIO()
