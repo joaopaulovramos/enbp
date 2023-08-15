@@ -322,7 +322,7 @@ class AdicionarTipoPagamentoView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE PAGAMENTO'
+        context['title_complete'] = 'Adicionar Forma de Pagamento'
         context['return_url'] = reverse_lazy('viagem:listatipopagamento')
         return context
 
@@ -337,7 +337,7 @@ class EditarTipoPagamentoView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Forma de Pagamento'
+        context['title_complete'] = 'Editar Forma de Pagamento'
         context['return_url'] = reverse_lazy('viagem:listatipopagamento')
         context['id'] = self.object.id
         return context
