@@ -261,8 +261,8 @@ class AprovarTimesheetPercentualView(CustomListViewFilter):
         if current_user.usuario.perfil != '2' and current_user.usuario.perfil != '1' and not current_user.is_superuser:
             return
         query = PercentualDiario.objects.filter(situacao=1, data__month=self._mes, data__year=self._ano)
-        if (self._user != 'Todos'):
-            query = query.filter( solicitante__username=self._user)
+        if self._user != 'Todos':
+            query = query.filter(solicitante__username=self._user)
         if not current_user.is_superuser and current_user.usuario.perfil != '1':
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
         return query
@@ -324,6 +324,10 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
 
         # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
+
+        current_user = self.request.user
+        if not current_user.is_superuser and current_user.usuario.perfil != '1':
+            query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
         # simulando uma agregação de soma agrupando por solicitante e projeto
         query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
@@ -413,6 +417,7 @@ def fetch_resources(uri, rel):
 
 
 class GerarPDFTimesheetPercentualAprovadoView(CustomView):
+    permission_codename = 'aprovar_horas'
     template_name = 'timesheet/PDF_timesheet_percentual_aprovados.html'
     _ano = datetime.datetime.now().year
     _mes = datetime.datetime.now().month
@@ -432,6 +437,10 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
 
         # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
+
+        current_user = self.request.user
+        if not current_user.is_superuser and current_user.usuario.perfil != '1':
+            query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
         # simulando uma agregação de soma agrupando por solicitante e projeto
         query = query.values('solicitante', 'projeto').annotate(total_percentual=Sum('percentual'))
