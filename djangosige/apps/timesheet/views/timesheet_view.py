@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomListViewFilter, \
     CustomCreateViewAddUser, CustomView
+from djangosige.apps.login.models import Usuario
 
 from djangosige.apps.norli_projeto.models import ExemploModel
 
@@ -521,7 +522,8 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
             "projetos": projetos,
             "ano": self._ano,
             "mes": calendar.month_name[int(self._mes)],
-            "aprovador": aprovador
+            "aprovador": aprovador,
+            "perfil": Usuario.PERFIS[int(current_user.usuario.perfil)][1]
         }
         html = template.render(context)
         result = BytesIO()
