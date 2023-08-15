@@ -310,6 +310,7 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
     _mes = datetime.datetime.now().month
 
     def get_queryset(self):
+        current_user = self.request.user
 
         # tratamento do filtro de seleção ano e mês
         if self.request.GET.get('mes'):
@@ -325,7 +326,8 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
         # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
 
-        current_user = self.request.user
+        # limita a lista ao departamento para quem não for root ou perfil diretor
+        # TODO: checar se o diretor realmente deveria ver tudo
         if not current_user.is_superuser and current_user.usuario.perfil != '1':
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
@@ -423,6 +425,7 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
     _mes = datetime.datetime.now().month
 
     def get(self, request, *args, **kwargs):
+        current_user = self.request.user
 
         # tratamento do filtro de seleção ano e mês
         if self.request.GET.get('mes'):
@@ -438,7 +441,8 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         # consulta dos lançamentos aprovados considerando ano e mês
         query = PercentualDiario.objects.filter(situacao=2, data__month=self._mes, data__year=self._ano)
 
-        current_user = self.request.user
+        # limita a lista ao departamento para quem não for root ou perfil diretor
+        # TODO: checar se o diretor realmente deveria ver tudo
         if not current_user.is_superuser and current_user.usuario.perfil != '1':
             query = query.filter(solicitante__usuario__departamento=current_user.usuario.departamento)
 
