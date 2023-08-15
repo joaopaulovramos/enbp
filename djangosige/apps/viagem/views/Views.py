@@ -202,7 +202,7 @@ class EditarMotivoView(CustomUpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EditarMotivoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Editar Motivo de Viagem'
+        context['title_complete'] = 'Editar Motivo da Viagem'
         context['return_url'] = reverse_lazy('viagem:listamotivos')
         context['id'] = self.object.id
         return context
