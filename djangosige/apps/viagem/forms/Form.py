@@ -253,7 +253,7 @@ class ViagemForm(forms.ModelForm):
             'itinerario': _('Itinerário'),
             'escalas': _('Escalas'),
             'duracao': _('Duração da viagem'),
-            'dada_inicio': _('Data Inicio'),
+            'dada_inicio': _('Data Início'),
             'dada_fim': _('Data Fim'),
             # 'origem': _('Origem'),
             # 'destino': _('Destino'),

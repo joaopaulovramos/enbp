@@ -643,7 +643,7 @@ class AdicionarViagemView(CustomCreateView):
 
     template_name = 'viagem/add_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
-    success_message = "Solicitação de Viagem adicionada com sucesso."
+    success_message = "Solicitação de Viagem Adicionada com Sucesso."
     permission_codename = 'solicitar_viagens'
 
     def get(self, request, form_class=form_class, *args, **kwargs):
