@@ -317,7 +317,7 @@ class AdicionarTipoPagamentoView(CustomCreateView):
     form_class = TipoDePagamentoForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatipopagamento')
-    success_message = "Tipo de Pagamento adicionado com sucesso."
+    success_message = "Forma de Pagamento Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
