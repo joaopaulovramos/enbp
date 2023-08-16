@@ -2,6 +2,7 @@ import os.path
 import random
 import string
 from collections import defaultdict
+from django.contrib import messages
 
 import requests
 from django.db.models import Avg, Sum, Count
@@ -899,18 +900,8 @@ class ListPercentualDiarioView(CustomListViewFilter):
         current_user = self.request.user
         querry = self.model.objects.filter(solicitante=current_user, data__month=self._mes, data__year=self._ano)
 
-        days = {}
-        for lancamento in querry:
-            # lancamento.full = False
-            retVal = days.get(lancamento.data)
-            if retVal is not None:
-                days[lancamento.data] = days[lancamento.data] + lancamento.percentual
-            else:
-                days[lancamento.data] = lancamento.percentual
 
-        # for lancamento in querry:
-        #     if days[lancamento.data] == 100.00:
-        #         lancamento.full = True
+
 
         return querry
 
@@ -919,19 +910,43 @@ class ListPercentualDiarioView(CustomListViewFilter):
         return self.model.objects.all(user=current_user)
 
     def post(self, request, *args, **kwargs):
+        current_user = self.request.user
+        querry = self.model.objects.filter(solicitante=current_user, situacao=0, data__month=self._mes,
+                                           data__year=self._ano)
+
+        days = {}
+        for lancamento in querry:
+            # lancamento.full = False
+            retVal = days.get(lancamento.data)
+            if retVal is not None:
+                days[lancamento.data] = days[lancamento.data] + lancamento.percentual
+            else:
+                days[lancamento.data] = lancamento.percentual
+        incompleto = False
         for key, value in request.POST.items():
             if value == "on" and key != 'selecionar_todos':
                 acao = request.POST['acao']
+
                 if acao == 'submeter_horas':
+
                     instance = self.model.objects.get(id=key)
-                    instance.situacao = 1
-                    instance.save()
+                    if days[instance.data] == 100.00:
+                        instance.situacao = 1
+                        instance.save()
+                    else:
+                        incompleto = True
+
+
                 elif acao == 'excluir':
                     if key == 'selecionar_todos':
                         continue
                     instance = self.model.objects.get(id=key)
                     if instance.situacao == 0:
                         instance.delete()
+
+        if incompleto:
+            messages.success(self.request,
+                         f' Não é possivel submeter percentuais incompletos')
         return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
