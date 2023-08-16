@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
+from django.db import IntegrityError
 from django.db.models import Q
 import pytz
 from django.forms import inlineformset_factory
@@ -553,6 +552,24 @@ class AdicionarTabelaDiariaView(CustomCreateView):
     success_url = reverse_lazy('viagem:listatabeladiarias')
     success_message = "Tabela de Diária Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        # try:
+        #     form.valid_form()
+        # except IntegrityError as err:
+        #     messages.success(self.request, "Grupo e localidade não podem ser iguais")
+
+        if form.is_valid():
+            self.object = form.save()
+            messages.success(self.request, self.get_success_message(form.cleaned_data))
+            return redirect(self.success_url)
+        else:
+            return self.form_invalid(form)
+
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTabelaDiariaView, self).get_context_data(**kwargs)
