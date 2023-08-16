@@ -43,15 +43,12 @@
                     <th>Valor Da Passagem</th>
                     <th>Data Inicio</th>
                     <th>Data Fim</th>
-                    <th>Origem</th>
-                    <th>Destino</th>
                     <th>Objetivo</th>
                     <th>Tipo de Viagem</th>
                     <th>Tipo de Solicitação</th>
-                    <th>Motivo</th>
+{#                    <th>Motivo</th>#}
                     <th>Solicitado</th>
                     <th>Prestação de Contas</th>
-{#                    <th>Arquivos</th>#}
                   <th>Selecionar</th>
                 </tr>
               </thead>
@@ -67,13 +64,10 @@
                    <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>{{natop.origem}}</td>
-                   <td>{{natop.destino}}</td>
-                   <td>{{natop.objetivo}}</td>
                    <td>{{natop.tipo_viagem}}</td>
                    <td>{{natop.tipo_solicitacao}}</td>
-                   <td>{{natop.motivo}}</td>
+{#                   <td>{{natop.motivo}}</td>#}
                    <td><a class="btn btn-success clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"><span> VER SOLICITAÇÃO </span></a></td>
-{#                   <td><a href="{% url 'viagem:avaliar_prestacao_de_contas' natop.id %}" class="btn btn-success"><span> Ver Prestação de Contas </span></a></td>#}
                    <td><a href="{% url 'viagem:avaliar_arquivos'  natop.id %}" class="btn btn-success"><span> VER PRESTAÇÃO DE CONTAS </span></a></td>
 
                 <td class="lista-remove">
