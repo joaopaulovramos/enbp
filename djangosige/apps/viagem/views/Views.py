@@ -47,7 +47,7 @@ class AdicionarTipoViagemView(CustomCreateView):
     form_class = TipoViagemForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatiposviagens')
-    success_message = "Tipo de Viagem adicionado com sucesso."
+    success_message = "Tipo de Viagem Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -92,7 +92,7 @@ class AdicionarTipoSolicitacaoView(CustomCreateView):
     form_class = TipoDeSolicitacaoForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatiposolicitacao')
-    success_message = "Tipo de Solicitação adicionado com sucesso."
+    success_message = "Tipo de Solicitação Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -137,7 +137,7 @@ class AdicionarTipoTransporteView(CustomCreateView):
     form_class = TipoDeTransporteForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatipotransporte')
-    success_message = "Tipo de Transporte adicionado com sucesso."
+    success_message = "Tipo de Transporte Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -227,7 +227,7 @@ class AdicionarTipoDespesaView(CustomCreateView):
     form_class = TipoDespesaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatipodespesa')
-    success_message = "Tipo de despesa adicionado com sucesso."
+    success_message = "Tipo de Despesa Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -272,7 +272,7 @@ class AdicionarMoedaView(CustomCreateView):
     form_class = MoedaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listamoeda')
-    success_message = "Tipo de moeda adicionado com sucesso."
+    success_message = "Tipo de moeda Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -407,7 +407,7 @@ class AdicionarHorarioPreferencialView(CustomCreateView):
     form_class = HorarioPreferencialForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listahorariopreferencial')
-    success_message = "Horário Preferencial adicionado com sucesso."
+    success_message = "Horário Preferencial Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -452,7 +452,7 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
     form_class = TiposNecessidadeEspecialForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
-    success_message = "Tipo de Necessidade Especial adicionado com sucesso."
+    success_message = "Tipo de Necessidade Especial Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_success_message(self, cleaned_data):
@@ -503,7 +503,7 @@ class AdicionarLocalidadeView(CustomCreateView):
     form_class = LocalidadeForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listalocalidades')
-    success_message = "Localidade adicionada com sucesso."
+    success_message = "Localidade Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -1651,7 +1651,7 @@ class ListAprovarPCViagensView(CustomListView):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Viagens'
+        context['title_complete'] = 'Aprovar Prestação de Contas'
         return context
 
 

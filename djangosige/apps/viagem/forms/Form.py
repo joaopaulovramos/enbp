@@ -457,7 +457,7 @@ class PrestacaoContaForm(forms.ModelForm):
         }
         labels = {
             'pagamento': _('Forma de Pagamento'),
-            'dada_inicio_realizada': _('Data realizada de inicio'),
+            'dada_inicio_realizada': _('Data realizada de início'),
             'dada_fim_realizada': _('Data realizada de fim'),
             'remarcacao_interesse_particular': _('Remarcação por interesse particular'),
             'descricao': _('Descrição da Viagem'),
