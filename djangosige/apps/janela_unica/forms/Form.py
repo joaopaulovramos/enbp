@@ -77,6 +77,11 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
             'responsavel': forms.Select(attrs={'class': 'form-control'}),
             'data_emissao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_gerencia': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_superintendencia': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_diretoria': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_analise_financeira': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_analise_fiscal': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     # TODO: Melhorar isso, gambiarra para funcionar o form-control
@@ -85,5 +90,4 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DocumentoUnicoFinanceiroForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            # print(visible.field)
             visible.field.widget.attrs['class'] = 'form-control'

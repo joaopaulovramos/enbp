@@ -240,7 +240,7 @@ class Migration(migrations.Migration):
                     '3', 'Operação não presencial, Teleatendimento'), ('4', 'NFC-e em operação com entrega a domicílio'), ('9', 'Operação não presencial, outros.')], default='0', max_length=1)),
                 ('inf_ad_fisco', models.CharField(
                     blank=True, max_length=2000, null=True)),
-                ('inf_cpl', models.CharField(blank=True, max_length=4000, null=True)),
+                ('inf_cpl', models.CharField(blank=True, max_length=5000, null=True)),
                 ('status_nfe', models.CharField(choices=[('0', 'Assinada'), ('1', 'Autorizada'), ('2', 'Denegada'), ('3', 'Em Digitação'), (
                     '4', 'Em Processamento na SEFAZ'), ('5', 'Rejeitada'), ('6', 'Validada'), ('7', 'Pendente'), ('8', 'Cancelada'), ('9', 'Importada por XML')], max_length=1)),
                 ('arquivo_proc', models.FileField(blank=True, max_length=2055, null=True,

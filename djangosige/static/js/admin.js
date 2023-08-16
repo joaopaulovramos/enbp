@@ -1,6 +1,9 @@
-if (typeof jQuery === "undefined") {
-    throw new Error("Carregar JQuery antes deste arquivo.");
-}
+// if (typeof jQuery === "undefined") {
+//     throw new Error("Carregar JQuery antes deste arquivo.");
+// }
+
+// window.django = {jQuery: jQuery.noConflict()};
+
 
 $.Admin = {};
 
@@ -3299,8 +3302,11 @@ $.Admin.ajaxRequest = {
 
 $.Admin.datetimepicker_viagem = {
     init: function(){
+        //habilita a reinicialização do componente
+        $('.datetimepicker').datetimepicker('destroy');
+
         $('.datetimepicker').datetimepicker({
-            format: 'd/m/Y H:i:s',
+            format: 'd/m/Y H:i:00',
         });
 
         $.datetimepicker.setLocale('pt-BR');
@@ -4016,6 +4022,20 @@ $.Admin.timesheet = {
 
     init: function () {
 
+          var $btnExcluir = $('.btn-excluir-percentual-timesheet');
+
+          $btnExcluir.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "excluir_timesheet").val("excluir");
+
+            form.append($(input));
+            form.submit();
+          });
+          console.log($btnExcluir);
+
         $.Admin.maskInput.maskTimesheet()
 
         let data_padrao= $('#id_data').val() === ""? new Date() : $('#id_data').val()
@@ -4079,7 +4099,6 @@ $.Admin.timesheet = {
             if(datas_laranja.indexOf(data) >= 0){
                 return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
             } else {
-                console.log(date.getDay())
                 if(date.getDay() != 6 && date.getDay() != 0 && date <= hoje)
                     return [true, "multidatepicker-vermelho", "Horas não lançadas"];
                 else
@@ -4092,6 +4111,11 @@ $.Admin.timesheet = {
 $.Admin.viagemForm = {
 
      init: function () {
+
+         // garante o funcionamento correto dos campos com DateTimePicker
+         $('.formset').on('formCreated', function(){
+             $.Admin.datetimepicker_viagem.init()
+        });
 
          $.Admin.maskInput.maskViagem();
          Handle_definir_categoria_passagem();

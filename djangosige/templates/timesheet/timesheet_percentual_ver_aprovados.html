@@ -17,44 +17,66 @@
             <h2>
               {{title_complete}}
             </h2>
-              <div>
-{#                  <button class="btn btn-success"><i class="material-icons">picture_as_pdf</i> <span>Baixar</span></button>#}
+              <div class="header-btn">
+                  <a target="_blank" href="{{add_url}}" class="btn btn-info"><i class="material-icons">picture_as_pdf</i><span> Exportar</span></a>
               </div>
           </div>
 
           <div class="body">
 
            {% include 'base/search.html' %}
-           {% include 'base/select_mes.html' %}
+           <div class="row">
+               {% include 'base/select_mes.html' %}
+           </div>
+
+           {% if all_natops %}
 
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[1, "desc"]]'>
+{#           Adicionar id="lista-database" no table para virar DataTables#}
+            <table class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[0, "asc"]]'>
+{#               <table >#}
               <thead>
                 <tr>
+
                     <th>Solicitante</th>
-                    <th>Dia</th>
-                    <th>Percentual</th>
-                    <th>Projeto</th>
+
+                    {% if projetos %}
+
+                        {% for projeto in projetos %}
+
+                            <th>
+                                {{projeto}}
+                            </th>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                    <th>Total</th>
 
                 </tr>
               </thead>
 
               <tbody>
-               {% if all_natops%}
-               {% for natop in all_natops %}
-                 <tr>
-                     <td>{{natop.solicitante}}</td>
-                      <td data-order="{{natop.data_formated}}">{{natop.data}}</td>
-                     <td>{{natop.percentual}}%</td>
-                     <td>{{natop.projeto}}</td>
 
-              </tr>
+               {% if all_natops%}
+               {% for key, value in all_natops.items %}
+                 <tr>
+                    <td>{{ key }}</td>
+
+                    {% for projeto, percentual in value.items %}
+                        <td>{{ percentual|floatformat:2 }}%</td>
+                    {% endfor %}
+
+                </tr>
               {% endfor %}
-              {%else%}
               {%endif%}
+
             </tbody>
           </table>
         </div>
+
+          {% endif %}
 
       </div>
 

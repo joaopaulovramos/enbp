@@ -30,8 +30,9 @@
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     
           <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#tab_entradas" data-toggle="tab">ENTRADA</a></li>
-            <li role="presentation"><a href="#tab_saidas" data-toggle="tab">SAIDA</a></li>
+            <li role="presentation" class="active"><a href="#tab_entradas" data-toggle="tab">Entradas (agrupadas)</a></li>
+            <li role="presentation"><a href="#tab_saidas" data-toggle="tab">Saídas (agrupadas)</a></li>
+            <li role="presentation"><a href="#tab_todas" data-toggle="tab">Todas</a></li>
           </ul>
 
             <div class="tab-content">
@@ -126,6 +127,39 @@
 
               </div>
               <!-- #Tab SAIDAS -->
+
+              <div role="tabpanel" class="tab-pane" id="tab_todas">
+
+                <table class="table table-bordered lista-table">
+                  <thead>
+                    <tr>
+                      <th>Código</th>
+                      <th>Descrição</th>
+                      <th>Categoria</th>
+                      <th>Remover</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                  {% if all_grupos %}
+                  {% for ge in all_grupos %}
+                  <tr>
+                    <td>{{ge.codigo}}</td>
+                    <td>{{ge.descricao}}</td>
+                    <td>{{ge.get_tipo_grupo_display}}</td>
+                    <td class="lista-remove">
+                      <input type="checkbox" name="{{ge.id}}" id="remover-toda-{{ge.id}}"/>
+                      <label class="remove-entry-label" for="remover-toda-{{ge.id}}"></label>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  {%else%}
+                  {%endif%}
+                </tbody>
+              </table>
+
+              </div>
+              <!-- #Tab todas -->
 
             </div>
           </div>

@@ -9,6 +9,7 @@ from datetime import datetime
 from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomView
 from djangosige.apps.cadastro.models.empresa import MinhaEmpresa
 from django.template.defaultfilters import date
+from django.views.generic import TemplateView, ListView, View
 
 from djangosige.apps.janela_unica.forms import *
 from djangosige.apps.janela_unica.models import *
@@ -38,6 +39,36 @@ class ListDocumentosJanelaUnicaView(CustomListView):
         context['add_url'] = reverse_lazy('janela_unica:adicionardocumentos')
         return context
 
+
+class CaixaEntradaJanelaUnicaView(ListView):
+    template_name = 'janela_unica/caixa_entrada.html'
+    model = DocumentoUnicoFinanceiro
+    success_url = reverse_lazy('janela_unica:caixaentrada')
+    context_object_name = 'documentos'
+
+    # permission_codename = 'cadastrar_item_janela_unica'
+
+    def get_queryset(self):
+        # self.model.objects.filter()
+        if self.request.user.is_superuser:
+            return self.model.objects.all()
+        elif self.request.user.has_perm('janela_unica.gerencia_documento_unico'):
+            return self.model.objects.filter(situacao=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA)
+        elif self.request.user.has_perm('janela_unica.superintendencia_documento_unico'):
+            return self.model.objects.filter(situacao=StatusAnaliseFinaceira.AGUARDANDO_SUPERINTENDENCIA)
+        elif self.request.user.has_perm('janela_unica.diretoria_documento_unico'):
+            return self.model.objects.filter(situacao=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA)
+        elif self.request.user.has_perm('janela_unica.analise_fiscal_documento_unico'):
+            return self.model.objects.filter(situacao=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL)
+        elif self.request.user.has_perm('janela_unica.analise_financeira_documento_unico'):
+            return self.model.objects.filter(situacao=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA)
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(CaixaEntradaJanelaUnicaView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'CAIXA DE ENTRADA DOCUMENTOS'
+        # context['add_url'] = reverse_lazy('janela_unica:adicionardocumentos')
+        return context
 
 class AdicionarDocumentoView(CustomCreateView):
     form_class = DocumentoForm

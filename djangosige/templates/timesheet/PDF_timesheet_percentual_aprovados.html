@@ -1,0 +1,85 @@
+<style>
+    @page {
+        size: A4 landscape;
+        margin: 2cm;
+    }
+    table#quadro tbody > tr:last-child > td {
+        background:#f1f1f1;
+        border-top: #0a9edc solid 1px;
+        color: #0a9edc;
+        font-weight: bold;
+    }
+</style>
+
+<table>
+    <tr>
+        <td>
+            <img src="imagens/enbpar.jpg" width="200px"/>
+        </td>
+        <td>
+
+            <div style="text-align: right">
+                <h2 style="margin-bottom: -20px">Horas Aprovadas - Percentual</h2>
+                <div><small>Relat&oacute;rio do m&ecirc;s de <strong>{{ mes }} de {{ ano }}</strong></small></div>
+                <br/>
+            </div>
+
+        </td>
+    </tr>
+</table>
+
+<div>
+    <table cellpadding="2" id="quadro">
+      <thead>
+        <tr style="background-color: #0a9edc; padding-top: 5px; color: #ffffff">
+
+            <th style="text-align: left; white-space: nowrap;">Solicitante</th>
+
+            {% if projetos %}
+
+                {% for projeto in projetos %}
+
+                    <th style="text-align: left">
+                        {{projeto}}
+                    </th>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <th style="text-align: left">Total</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+
+       {% if all_natops%}
+       {% for key, value in all_natops.items %}
+         <tr style="padding-top: 5px">
+             <td style="background-color: #f1f1f1"><strong>{{ key }}</strong></td>
+
+            {% for projeto, percentual in value.items %}
+                <td>
+                    {% if percentual > 0.0 %}
+                        {{ percentual|floatformat:2 }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            {% endfor %}
+
+        </tr>
+      {% endfor %}
+      {%endif%}
+
+    </tbody>
+    </table>
+</div>
+
+<div style="text-align: center; margin: 100px 200px 0px 200px">
+    <div style="border-top: black 1px solid; width: 300px; display: block; padding-top: 5px">
+        <strong>{{ aprovador }}</strong><BR/>
+        {{ perfil }}
+    </div>
+</div>

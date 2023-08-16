@@ -118,7 +118,7 @@ class PercentualDiario(models.Model):
     data = models.DateField(null=False, blank=False)
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_timesheet",
                                 on_delete=models.CASCADE, null=False, blank=False)
-    percentual = models.DecimalField(null=False, blank=False, default=0.00, max_digits=16, decimal_places=2,
+    percentual = models.DecimalField(null=False, blank=False, max_digits=16, decimal_places=2,
                                      validators=[MinValueValidator(Decimal('0.01')),
                                                  MaxValueValidator(Decimal('100.00'))])
     solicitante = models.ForeignKey(User, related_name="timesheet_diaria_user", on_delete=models.CASCADE, null=True,
@@ -157,7 +157,7 @@ class OpiniaoModel(models.Model):
     usuario = models.ForeignKey(User, related_name="timesheet_opiniao_user", on_delete=models.CASCADE, null=True,
                                 blank=True)
     opiniao = models.CharField(max_length=500, blank=False, null=False)
-    rating = models.IntegerField(default=0,  null=True, blank=True)
+    rating = models.IntegerField(default=0, blank=True)
     anexo = models.FileField(upload_to='files/', null=True, blank=True)
 
     class Meta:

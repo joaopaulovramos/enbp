@@ -1,5 +1,5 @@
 {%extends 'base/base.html'%}
-
+{% load static %}
 {%block title%}{{title_complete|title}}{%endblock%}
 {%block content%}
 <section class="content">
@@ -17,9 +17,14 @@
             <h2>
               <a href="{{return_url}}"><i class="material-icons">&#xE5C4;</i></a>{{title_complete}}
             </h2>
+              <a class="header-btn"><h6><a target="_blank" href="{% static 'manuais/TIMESHEET-manual-v2.pdf' %}">Duvidas? Veja o manual de uso deste módulo aqui</a></h6>
 
 
-              <div><h6><a target="_blank" href="/static/manuais/TIMESHEET-manual.pdf">Duvidas? Veja o manual de uso deste módulo aqui</a></h6></div>
+
+
+              <div><small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small></div>
+
+
 
               <!-- <small>Campos marcados com <strong style="color:red;">*</strong> são obrigatórios.</small> -->
           </div>
@@ -105,7 +110,7 @@
 
               </div>
 
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">save</i><span> SALVAR</span></button>
             </div>
             <!--#Body-->
           </form>

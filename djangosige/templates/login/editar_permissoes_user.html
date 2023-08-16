@@ -16,11 +16,12 @@
           </h2>
         </div>
         <div class="body">
+
             <form action="{% url 'login:alteraperfil' user.id %}" method="post" class="form-top-select-perfil card col-sm-12">
                 {% csrf_token %}
-                <div class="perfis">
+                <div class="perfis col-sm-10", style="margin-top:15px">
                     <input type="hidden" name="user_id" value="{{user.id}}">
-                    <div class=" perfis-input">
+                    <div class=" ">
 
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -35,8 +36,8 @@
 
 
                     </div>
-                    </br>
-                    <div class="perfis-input">
+
+                    <div class=" ">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Departamento</label>
@@ -50,7 +51,18 @@
                     </div>
                 </div>
 
-                <button class="btn btn-success" id="brn_perfis"  type="submit"><i class="material-icons">autorenew</i><span>ALTERAR PERFIL</span></button>
+<!--                <button class="btn btn-success col-sm-2" id="brn_perfis"  type="submit"><i class="material-icons">autorenew</i><span>ALTERAR PERFIL</span></button>-->
+
+                <div class="col-sm-2 ">
+                  <div class="form-group">
+                    <div class="">
+                        <button class="btn btn-success" id="brn_perfis"  type="submit">
+                            <i class="material-icons">autorenew</i>
+                            <span>ALTERAR PERFIL</span>
+                        </button>
+                      </div>
+                    </div>
+                </div>
             </form>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
