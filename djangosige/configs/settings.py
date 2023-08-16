@@ -108,6 +108,7 @@ INSTALLED_APPS = [
     'django_fsm_log',
     'fsm_admin',
     'simple_history',
+    'simple_menu',
 ]
 
 
