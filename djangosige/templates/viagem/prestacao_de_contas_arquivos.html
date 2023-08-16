@@ -45,7 +45,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <div class="form-line">
-                  <label>Inclusão</label>
+                  <label>Data da Solicitação</label>
                     <input disabled type="text" name="data_fim" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
                 </div>
               </div>
@@ -54,7 +54,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <div class="form-line">
-                  <label>Usuário</label>
+                  <label>Usuário Solicitante</label>
                     <input disabled type="text" name="data_fim" value="{{solicitante}}" class="form-control" id="id_data_origen" readonly>
                 </div>
               </div>
@@ -72,7 +72,7 @@
               <div class="col-sm-3">
               <div class="form-group">
                 <div class="form-line">
-                  <label>Destino</label>
+                  <label>Localidade</label>
                      <input disabled type="text" name="data_fim" value="{{destino}}" class="form-control" id="id_destino" readonly>
                 </div>
               </div>
@@ -223,7 +223,7 @@
                 </div>
               </div>
               </div>
-              <button style="margin-right: 15px" name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> ADICIONAR ITEM</span></button>
+              <button style="margin-right: 15px" name="adicionar" class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR ITEM</span></button>
             </div>
             <!--#Body-->
           </form>
@@ -275,7 +275,7 @@
                       <input type="checkbox" name="check_remarcacao" class="form-control" id="id_check_remarcacao" {% if remarcacao_interesse_particular == '1' %}checked="checked"{% endif %}>
                         <label for="id_check_remarcacao"
                                style="font-weight: bold;"
-                               title=""> Remarcação por Interesse particular
+                               title=""> Remarcação por Interesse Particular
                         </label>
                     </div>
                   </div>
@@ -288,12 +288,12 @@
                       <input type="checkbox" name="finalizar_pc" class="form-control" id="id_finalizar_pc">
                         <label for="id_finalizar_pc"
                                style="font-weight: bold;"
-                               title=""> Finalizar Prestação de contas
+                               title=""> Finalizar Prestação de Contas
                         </label>
                     </div>
                   </div>
                 </div>
-                <button style="margin-right: 15px" name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVA PRESTAÇÃO DE CONTAS</span></button>
+                <button style="margin-right: 15px" name="finalizar" class="btn btn-warning foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR PRESTAÇÃO DE CONTAS</span></button>
             </div>
             </div>
 
@@ -314,7 +314,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>Valor total recursos próprios (R$)</label>
+                      <label>Valor Total em Recursos Próprios (R$)</label>
                         <input disabled type="text" name="recusos_proprioss" value="{{ totais_pagos.recursos_proprios }}" class="form-control" id="id_recursos_proprios" readonly>
                     </div>
                   </div>
@@ -324,7 +324,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>Valor total recursos da empresa (R$)</label>
+                      <label>Valor Total em Recursos da Empresa (R$)</label>
                         <input disabled type="text" name="recursos_empresa" value="{{ totais_pagos.recursos_empresa }}" class="form-control" id="id_recursos_empresa" readonly>
                     </div>
                   </div>
@@ -339,7 +339,7 @@
                         <label for="radio_ida"><strong>Aprovada</strong></label>
 
                         <input disabled type="radio" name="avaliacao_pc" id="radio_pc_rejeitada" value="1" {% if aprovar_pc == '2' %}checked="checked"{% endif %} />
-                      <label for="radio_idavolta"><strong>Rejeitada</strong></label>
+                      <label for="radio_idavolta"><strong>Reprovada</strong></label>
 
                     </div>
                   </div>
@@ -366,8 +366,8 @@
                             <th>Item</th>
                             <th>Tipo de Despesa</th>
                             <th>Valor</th>
-                            <th>Pagamento</th>
-                            <th>Anexo</th>
+                            <th>Forma de Pagamento</th>
+                            <th>Arquivo</th>
                             <th>Remover</th>
                         </tr>
                       </thead>
