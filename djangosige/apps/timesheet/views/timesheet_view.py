@@ -911,8 +911,10 @@ class ListPercentualDiarioView(CustomListViewFilter):
 
     def post(self, request, *args, **kwargs):
         current_user = self.request.user
-        querry = self.model.objects.filter(solicitante=current_user, situacao=0, data__month=self._mes,
-                                           data__year=self._ano)
+        mes = self.request.POST['select_mes']
+        ano =  self.request.POST['select_ano']
+        querry = self.model.objects.filter(solicitante=current_user, situacao=0, data__month=mes,
+                                           data__year=ano)
 
         days = {}
         for lancamento in querry:
