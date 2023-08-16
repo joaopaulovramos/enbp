@@ -47,7 +47,7 @@ class TipoModel(models.Model):
 
 
 class ExemploModel(models.Model):
-    nome = models.CharField(max_length=50, default='projeto')
+    nome = models.CharField(max_length=50, default='projeto', unique=True)
     cliente = models.ForeignKey('cadastro.Cliente', related_name="cliente_projeto",  on_delete=models.CASCADE, null=True, blank=True)
     filial = models.ForeignKey(FilialModel, related_name="filial_projeto",  on_delete=models.CASCADE, null=True, blank=True)
     tipo = models.ForeignKey(TipoModel, related_name="tipo_projeto", on_delete=models.CASCADE, null=True, blank=True)
