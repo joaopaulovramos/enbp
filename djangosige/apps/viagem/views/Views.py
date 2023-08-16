@@ -1090,7 +1090,7 @@ class ListHomologarViagensView(CustomListView):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Viagens'
+        context['title_complete'] = 'Homologar RH'
         return context
 
 
