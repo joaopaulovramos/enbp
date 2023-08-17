@@ -41,6 +41,7 @@ TIPO_ANEXO = (
 
 class StatusAnaliseFinaceira(object):
     EDICAO_RESPONSAVEL = 'Edição Responsável'
+    AGUARDANDO_AVALIACAO = 'Aguardando avaliação'
     AGUARDANDO_GERENCIA = 'Aguardando avaliação Gerência'
     AGUARDANDO_SUPERITENDENCIA = 'Aguardando avaliação Superintendencia'
     AGUARDANDO_DIRETORIA = 'Aguardando avaliação Diretoria'
@@ -53,6 +54,7 @@ class StatusAnaliseFinaceira(object):
     DEVOLVIDO = 'Devolvido'
     CHOICES = (
         (EDICAO_RESPONSAVEL, EDICAO_RESPONSAVEL),
+        (AGUARDANDO_AVALIACAO, AGUARDANDO_AVALIACAO),
         (AGUARDANDO_GERENCIA, AGUARDANDO_GERENCIA),
         (AGUARDANDO_SUPERITENDENCIA, AGUARDANDO_SUPERITENDENCIA),
         (AGUARDANDO_DIRETORIA, AGUARDANDO_DIRETORIA),
@@ -76,6 +78,21 @@ class ArquivoDocumentoUnico(models.Model):
     class Meta:
         verbose_name = 'Arquivo do Documento Unico'
         verbose_name_plural = 'Arquivos do Documento Unico'
+        
+    def __str__(self):
+        return u'%s - %s' % (self.pk, self.descricao)
+    
+class AvaliacaoDocumentoUnico(models.Model):
+    sequencia = models.IntegerField(null=True, blank=True)
+    usuario_avaliador = models.ForeignKey(User, related_name="documento_unico_usuario_avaliador", on_delete=models.SET_NULL, null=True, blank=True)
+    descricao = models.CharField(max_length=255, null=True, blank=True)
+    observacao = models.CharField(max_length=1055, null=True, blank=True)
+    aprovado = models.BooleanField(null=True, blank=True)
+    documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_avaliacao", on_delete=models.PROTECT, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Avaliação para Pagamento'
+        verbose_name_plural = 'Avaliações para Pagamento'
         
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
@@ -109,6 +126,8 @@ class Contrato(models.Model):
         verbose_name_plural = 'Contratos'
     descricao = models.CharField(max_length=255, null=True, blank=True)
     arquivo = models.FileField(upload_to='janela_unica/contratos', null=True, blank=True)
+    fornecedor = models.ForeignKey('cadastro.Pessoa', on_delete=models.SET_NULL,
+                                   related_name="fornecedor_contrato",  null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     data_validade = models.DateTimeField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
@@ -120,14 +139,16 @@ class Contrato(models.Model):
         protected=True,  # Impede alteração de estado por usuários sem permissão
     )
     #TODO: Adicionar demais campos
-
+    def __str__(self) -> str:
+        return f'Nº {self.pk} - {self.descricao}'
 
 class ArquivoSolicitacaoContrato(models.Model):
     descricao = models.CharField(max_length=255, null=True, blank=True)
     obrigatorio = models.BooleanField(default=False)
     contrato = models.ForeignKey(Contrato, related_name="contrato_arquivo_solicitacao", on_delete=models.PROTECT, null=True, blank=True)
     class Meta:
-        verbose_name = 'Contrato Arquivo Solicitação'
+        verbose_name = 'Documento para fim de Pagamento'
+        verbose_name_plural = 'Documentos para fins de Pagamento'
         
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
@@ -141,6 +162,7 @@ class AprovadorContrato(models.Model):
     contrato = models.ForeignKey('Contrato', related_name="contrato_aprovador_solicitacao", on_delete=models.PROTECT, null=True, blank=True)
     class Meta:
         verbose_name = 'Aprovador Solicitação'
+        verbose_name_plural = 'Avaliadores para fins de Pagamento'
         
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
@@ -161,49 +183,58 @@ class DocumentoUnico(models.Model):
         abstract = True
 
 
+# Campos removidos:
+# dados boleto
+# linha_digitavel = models.CharField(max_length=48, null=True, blank=True)
+
+# dados chave pix
+# chave_pix = models.CharField(max_length=255, null=True, blank=True)
+
+# dados bancarios para Ted
+
+# tipo_anexo = models.CharField(max_length=1, choices=TIPO_ANEXO, null=True, blank=True)
+
+# numero = models.CharField(max_length=9, null=True, blank=True)
+# chave = models.CharField(max_length=44, null=True, blank=True)
+# mod = models.CharField(max_length=2, choices=MOD_NFE_ESCOLHAS, null=True, blank=True)
+# serie = models.CharField(max_length=3, null=True, blank=True)
+# cnpj = CNPJField(masked=True, null=True, blank=True)
+# cfop = models.CharField(max_length=5, null=True, blank=True)
+
+# projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=False, blank=False)
+
+# banco = models.CharField(max_length=3, choices=BANCOS, null=True, blank=True)
+# agencia = models.CharField(max_length=8, null=True, blank=True)
+# conta = models.CharField(max_length=32, null=True, blank=True)
+# digito = models.CharField(max_length=8, null=True, blank=True)
+
 class DocumentoUnicoFinanceiro(DocumentoUnico):
     history = HistoricalRecords(history_change_reason_field=models.TextField(null=True))
     situacao = FSMField(
         default=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
         verbose_name='Situação',
         choices=StatusAnaliseFinaceira.CHOICES,
-        protected=True,  # Impede alteração de estado por usuários sem permissão
+        # protected=True,  # Impede alteração de estado por usuários sem permissão
     )
-    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     data_finalizacao = models.DateTimeField(null=True, blank=True)
-    tipo_arquivo = models.CharField(max_length=1, choices=TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO, null=True, blank=True)
-    tipo_anexo = models.CharField(max_length=1, choices=TIPO_ANEXO, null=True, blank=True)
 
-    numero = models.CharField(max_length=9, null=True, blank=True)
-    chave = models.CharField(max_length=44, null=True, blank=True)
-    mod = models.CharField(max_length=2, choices=MOD_NFE_ESCOLHAS, null=True, blank=True)
-    serie = models.CharField(max_length=3, null=True, blank=True)
-    cnpj = CNPJField(masked=True, null=True, blank=True)
+    contrato = models.ForeignKey('Contrato', related_name="documento_unico_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_emissao = models.DateField(null=True, blank=True)
-    cfop = models.CharField(max_length=5, null=True, blank=True)
 
+    
     # Plano de contas
     plano_conta = models.ForeignKey('financeiro.PlanoContasGrupo', related_name="nfe_entrada_analise_plano_conta", on_delete=models.PROTECT, null=True, blank=True)
 
-    # projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=False, blank=False)
+    tipo_arquivo = models.CharField(max_length=1, null=True, blank=True,
+                                    choices=TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO)
+    
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=True, blank=True)
 
     # Dados para o pagamento
     forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO, default='9')
     fornecedor = models.ForeignKey('cadastro.Pessoa', related_name="pessoa_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
-
-    # dados boleto
-    linha_digitavel = models.CharField(max_length=48, null=True, blank=True)
-
-    # dados chave pix
-    chave_pix = models.CharField(max_length=255, null=True, blank=True)
-
-    # dados bancarios para Ted
-    banco = models.CharField(max_length=3, choices=BANCOS, null=True, blank=True)
-    agencia = models.CharField(max_length=8, null=True, blank=True)
-    conta = models.CharField(max_length=32, null=True, blank=True)
-    digito = models.CharField(max_length=8, null=True, blank=True)
 
     valor_total = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
     valor_liquido = models.DecimalField(max_digits=13, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], null=True, blank=True)
@@ -314,10 +345,11 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             change_message=mensagem,
             action_flag=CHANGE)
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
+    @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
+                # target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
+                target=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
                 custom=dict(button_name='Enviar para Avaliação'))
     def enviar_avaliacao(self, by=None, request=None):
-        self.responsavel = request.user
         self.logar_detalhes(request, mensagem='Enviado para avaliação')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
@@ -328,6 +360,15 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.aprovado_gerencia = True
         self.usuario_gerencia = request.user
         #https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
+        # self.changeReason = 'Aprovado pela gerência'
+        self.logar_detalhes(request, mensagem='Aprovado pela gerência')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
+                custom=dict(button_name='Aprovar'))
+    def aprovar_documento(self, by=None, request=None):
+        self.aprovado_gerencia = True
+        self.usuario_gerencia = request.user
+        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_mod
         # self.changeReason = 'Aprovado pela gerência'
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
 
