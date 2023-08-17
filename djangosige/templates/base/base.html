@@ -83,9 +83,9 @@
             <div class="user-info">
                 <div class="image">
                     {% if user_foto_sidebar %}
-                    <a href="{% url 'login:perfilview' %}"><img src="/media/{{user_foto_sidebar}}" width="48" height="48" alt="User" /></a>
+                    <a href="{% url 'login:perfilview' %}"><img src="{% get_media_prefix %}{{user_foto_sidebar}}" width="48" height="48" alt="User" /></a>
                     {%else%}
-                    <a href="{% url 'login:perfilview' %}"><img src="/media/imagens/user.png" width="48" height="48" alt="User" /></a>
+                    <a href="{% url 'login:perfilview' %}"><img src="{% get_media_prefix %}imagens/user.png" width="48" height="48" alt="User" /></a>
                     {%endif%}
                 </div>
                 <div class="info-container">

@@ -417,7 +417,7 @@ class VerTimesheetPercentualAprovadoView(CustomListViewFilter):
 
 
 def fetch_resources(uri, rel):
-    return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+    return settings.MEDIA_URL
 
 
 class GerarPDFTimesheetPercentualAprovadoView(CustomView):
