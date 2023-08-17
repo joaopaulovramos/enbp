@@ -135,7 +135,7 @@ class NotaFiscal(models.Model):
         max_length=1, choices=IND_PRES_ESCOLHAS, default=u'0')
 
     inf_ad_fisco = models.CharField(max_length=2000, null=True, blank=True)
-    inf_cpl = models.CharField(max_length=5000, null=True, blank=True)
+    inf_cpl = models.CharField(max_length=4000, null=True, blank=True)
 
     status_nfe = models.CharField(max_length=1, choices=STATUS_NFE_ESCOLHAS)
     arquivo_proc = models.FileField(

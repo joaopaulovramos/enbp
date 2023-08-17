@@ -102,6 +102,7 @@ INSTALLED_APPS = [
 
     # Janela unica
     'djangosige.apps.janela_unica',
+    'djangosige.apps.opiniao',
     'django_fsm',
     'django_fsm_log',
     'fsm_admin',
