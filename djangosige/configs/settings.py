@@ -122,6 +122,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Middleware para paginas que exigem login
     'djangosige.middleware.LoginRequiredMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
