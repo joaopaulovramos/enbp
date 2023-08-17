@@ -57,6 +57,7 @@ class TiposDeViagemModel(models.Model):
 
 class TiposDeSolicitacaoModel(models.Model):
     nome = models.CharField(max_length=200, unique=True)
+    dias_antecedencia = models.IntegerField(null=False, blank=False, default=0)
 
     def __str__(self):
         return u'%s - %s' % (self.id, self.nome)
