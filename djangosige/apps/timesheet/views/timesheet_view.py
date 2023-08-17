@@ -3,6 +3,7 @@ import random
 import string
 from collections import defaultdict
 from django.contrib import messages
+import locale
 
 import requests
 from django.db.models import Avg, Sum, Count
@@ -29,7 +30,10 @@ from django.template.loader import get_template
 
 from djangosige.configs import settings
 
+
 LIMITE_HORAS_DIA = 8
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 
 
 class AprovarTimesheetView(CustomListViewFilter):
