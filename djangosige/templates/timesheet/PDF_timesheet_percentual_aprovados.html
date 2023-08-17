@@ -1,3 +1,7 @@
+{% load static %}
+<DOCTYPE html>
+<html lang="pt-br">
+<body>
 <style>
     @page {
         size: A4 landscape;
@@ -14,7 +18,7 @@
 <table>
     <tr>
         <td>
-            <img src="https://enbparblob.blob.core.windows.net/static/img/enbpar.jpg" width="200px"/>
+            <img src="{% static 'img/enbpar.jpg' %}" width="200px"/>
         </td>
         <td>
 
@@ -83,3 +87,5 @@
         {{ perfil }}
     </div>
 </div>
+</body>
+</html>
