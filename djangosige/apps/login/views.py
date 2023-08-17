@@ -161,7 +161,7 @@ class ForgotPasswordView(FormView):
                             'token': default_token_generator.make_token(associated_user),
                             'protocol': 'http://',
                         }
-                        subject = u"Redefinir sua senha - ERPZeppelin"
+                        subject = u"Redefinir sua senha - Norli"
                         email_template_name = 'login/trocar_senha_email.html'
                         email_mensagem = loader.render_to_string(
                             email_template_name, c)
