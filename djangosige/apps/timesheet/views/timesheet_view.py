@@ -518,7 +518,7 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
         aprovador = f'{User.objects.get(pk=current_user.id).first_name} {User.objects.get(pk=current_user.id).last_name}'
 
         template = get_template(self.template_name)
-        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+        #locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
         context = {
             "all_natops": ordered_data,
