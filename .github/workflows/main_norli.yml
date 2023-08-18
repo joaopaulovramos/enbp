@@ -19,10 +19,10 @@ jobs:
 
       - name: Locale
         run: |
-          apt-get update && \
-          apt-get install -y locales && \
-          sed -i -e 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen && \
-          dpkg-reconfigure --frontend=noninteractive locales
+          sudo apt update && \
+          sudo apt install -y locales && \
+          sudo sed -i -e 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen && \
+          sudo dpkg-reconfigure --frontend=noninteractive locales
           export LANG=pt_BR.UTF-8
           export LC_ALL=pt_BR.UTF-8
 
