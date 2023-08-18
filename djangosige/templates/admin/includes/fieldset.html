@@ -21,7 +21,9 @@
                     {% else %}
                     {{ field.label_tag }}
                     {% if field.is_readonly %}
-                    <div class="form-line readonly">{{ field.contents }}</div>
+                    <div class="form-line readonly">
+                        {{ field.contents|default_if_none:"" }}
+                    </div>
                     {% else %}
                     {{ field.field }}
                     {% endif %}

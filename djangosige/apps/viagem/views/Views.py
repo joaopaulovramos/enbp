@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
+from django.db import IntegrityError
 from django.db.models import Q
 import pytz
 from django.forms import inlineformset_factory
@@ -554,6 +553,24 @@ class AdicionarTabelaDiariaView(CustomCreateView):
     success_message = "Tabela de Diária Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        # try:
+        #     form.valid_form()
+        # except IntegrityError as err:
+        #     messages.success(self.request, "Grupo e localidade não podem ser iguais")
+
+        if form.is_valid():
+            self.object = form.save()
+            messages.success(self.request, self.get_success_message(form.cleaned_data))
+            return redirect(self.success_url)
+        else:
+            return self.form_invalid(form)
+
+
     def get_context_data(self, **kwargs):
         context = super(AdicionarTabelaDiariaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'Adicionar Tabela de Diária'
@@ -684,12 +701,12 @@ class AdicionarViagemView(CustomCreateView):
         if data_inicio < data_hoje:
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
-        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == ID_TIPO_VIAGEM_REGULAR:
-            diff_dias = data_inicio - data_hoje
-            if diff_dias.days < 15:
-                form.add_error('dada_inicio',
-                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+        tipo_solicitacao = TiposDeSolicitacaoModel.objects.get(id=request.POST['tipo_solicitacao']) 
+        # comparando a quantidade de dias entre a data atual e a data de início com o valor do campo dias_antecedencia               
+        diff_dias = data_inicio - data_hoje
+        if diff_dias.days < tipo_solicitacao.dias_antecedencia:
+            form.add_error('dada_inicio',
+                            f'Para viagens do tipo {tipo_solicitacao.nome}, solicitar com pelo menos {tipo_solicitacao.dias_antecedencia} dias de antecedência')
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
         if request.POST['tipo_viagem'] == ID_TIPO_VIAGEM_NACIONAL and data_fim:
@@ -817,12 +834,13 @@ class EditarViagemView(CustomUpdateView):
         if data_inicio < data_hoje:
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
-        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == ID_TIPO_VIAGEM_REGULAR:
-            diff_dias = data_inicio - data_hoje
-            if diff_dias.days < 15:
-                form.add_error('dada_inicio',
-                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+        tipo_solicitacao = TiposDeSolicitacaoModel.objects.get(id=request.POST['tipo_solicitacao']) 
+        # comparando a quantidade de dias entre a data atual e a data de início com o valor do campo dias_antecedencia               
+        diff_dias = data_inicio - data_hoje
+        if diff_dias.days < tipo_solicitacao.dias_antecedencia:
+            form.add_error('dada_inicio',
+                            f'Para viagens do tipo {tipo_solicitacao.nome}, solicitar com pelo menos {tipo_solicitacao.dias_antecedencia} dias de antecedência')
+
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
         if request.POST['tipo_viagem'] == ID_TIPO_VIAGEM_NACIONAL and data_fim:

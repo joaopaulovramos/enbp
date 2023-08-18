@@ -40,28 +40,10 @@ class TramitacaoForm(forms.ModelForm):
 # https://stackoverflow.com/questions/47113794/add-css-class-to-all-admin-form-field
 
 
-class DocumentoUnicoFinanceiroForm(forms.ModelForm):
+class AdicionaDocumentoUnicoFinanceiroForm(forms.ModelForm):
     class Meta:
         model = DocumentoUnicoFinanceiro
         fields = '__all__'
-        # (
-        #     'responsavel', 'descricao', 'fornecedor',
-        #     # Dados arquivo
-        #     'tipo_arquivo', 'arquivo',
-        #     # Dados Notas
-        #     'numero', 'chave', 'mod', 'serie',
-        #     # Dados financeiros
-        #     'plano_conta', 'rateio', 'observacoes',
-        #     # Dados bancarios
-        #     'banco', 'agencia', 'conta', 'digito',
-        #     #projeto
-        #     'projeto', 'cnpj',
-        #     # Aprovações
-        #     'aprovado_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria',
-        #     'aprovado_analise_financeira', 'observacao_analise_financeira',
-        #     'aprovado_analise_fiscal', 'observacao_analise_fiscal',
-        # )
-
         labels = {
             'pk': _('Solicitação'),
             'data_inclusao': _('Data de Inclusão'),
@@ -88,6 +70,6 @@ class DocumentoUnicoFinanceiroForm(forms.ModelForm):
     # https://stackoverflow.com/questions/48067882/django-admin-making-a-required-field-read-only
 
     def __init__(self, *args, **kwargs):
-        super(DocumentoUnicoFinanceiroForm, self).__init__(*args, **kwargs)
+        super(AdicionaDocumentoUnicoFinanceiroForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
