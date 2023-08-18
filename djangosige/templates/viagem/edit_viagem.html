@@ -344,8 +344,9 @@
 
               <hr/>
               <div class="row">
-{#                  {{ formset }}#}
-                {% include 'formset/formset_table_viagem.html' with formset=formset title='Trechos' %}
+                  <div class="col-sm-12">
+                    {% include 'formset/formset_table_viagem.html' with formset=formset title='Trechos' %}
+                  </div>
               </div>
               <hr/>
 

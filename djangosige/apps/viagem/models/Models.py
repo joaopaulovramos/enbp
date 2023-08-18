@@ -58,6 +58,7 @@ class TiposDeViagemModel(models.Model):
 
 class TiposDeSolicitacaoModel(models.Model):
     nome = models.CharField(max_length=200, unique=True)
+    dias_antecedencia = models.IntegerField(null=False, blank=False, default=0)
 
     def __str__(self):
         return u'%s - %s' % (self.id, self.nome)
@@ -218,6 +219,7 @@ class ViagemModel(models.Model):
                                               default=Decimal('0.00'), blank=True, null=True)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
