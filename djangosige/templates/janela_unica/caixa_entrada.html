@@ -1,0 +1,82 @@
+{%extends 'base/base.html'%}
+
+{%block title%}{{title_complete|title}}{%endblock%}
+{%block content%}
+<section class="content">
+  <div class="container-fluid lista">
+  
+    {% include 'base/title_header.html' %}
+    
+    {% include 'base/msg_sucesso.html' %}
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 lista-content">
+      <div class="card">
+        <form action="" method="post">
+          {% csrf_token %}
+          <div class="header">
+            <h2>
+              {{title_complete}}
+            </h2>
+              <!-- <div class="header-btn">
+                <a href="{{add_url}}" class="btn btn-success"><i class="material-icons">&#xE148;</i><span> ADICIONAR</span></a>
+                <button class="btn btn-red btn-remove"><i class="material-icons">&#xE872;</i></button>
+              </div> -->
+          </div>
+
+          <div class="body">
+
+           {% include 'base/search.html' %}
+
+           <div class="table-responsive">
+            <table id="lista-database" class="table table-bordered table-striped lista-table">
+              <thead>
+                <tr>
+                    <th>Nº Solicitação</th>
+                    <th>Situaçao</th>
+                    <th>Descrição</th>
+                    <th>Data inclusão</th>
+                    <th>Responsável</th>
+                    <th>Fornecedor</th>
+                    <th>Projeto</th>
+                    <th>Centro custo</th>
+                    <th>Valor</th>
+                    <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+               {% if documentos%}
+               {% for doc in documentos %}
+               <tr>
+                    <td>{{doc.pk}}</td>
+                    <td>{{doc.get_situacao_display}}</td>
+                    <td>{{doc.descricao|default_if_none:'--'}}</td>
+                    <td>{{doc.data_inclusao|default_if_none:'--'}}</td>
+                    <td>{{doc.responsavel|default_if_none:'--'}}</td>
+                    <td>{{doc.fornecedor|default_if_none:'--'}}</td>
+                    <td>{{doc.projeto|default_if_none:'--'}}</td>
+                    <td>{{doc.plano_conta|default_if_none:'--'}}</td>
+                    <td>{{doc.valor_total|default_if_none:'--'}}</td>
+                <td>
+                  <a href="/admin/janela_unica/documentounicofinanceiro/{{doc.id}}/change/" class="btn btn-info">Avaliar</a>
+                </td>
+              </tr>
+              {% endfor %}
+              {%else%}
+              {%endif%}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+</div>
+</section>
+
+
+{%endblock%}

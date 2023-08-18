@@ -1,6 +1,9 @@
-if (typeof jQuery === "undefined") {
-    throw new Error("Carregar JQuery antes deste arquivo.");
-}
+// if (typeof jQuery === "undefined") {
+//     throw new Error("Carregar JQuery antes deste arquivo.");
+// }
+
+// window.django = {jQuery: jQuery.noConflict()};
+
 
 $.Admin = {};
 
@@ -232,8 +235,38 @@ $.Admin.table = {
                     "sSortAscending": ": Ordenar colunas de forma ascendente",
                     "sSortDescending": ": Ordenar colunas de forma descendente"
                 },
+            },
+            "drawCallback": function( settings ) {
+
+                // sempre que desenha a tabela, verifica que se há pelo menos um checkbox marcado
+                // caso afirmativo, marca o checkbox geral
+                // especialmente útil para mudanças de páginas
+                $('.lista-remove input[type="checkbox"]').each(function(){
+                    if($(this).is(':checked')){
+                        $('#id_selecionar_todos').prop( "checked" , true )
+                        return false
+                    }
+                    $('#id_selecionar_todos').prop( "checked" , false )
+                });
+
             }
         });
+
+        //Habilita o funcionamento de popovers, pelo data-toggle, nas páginas da tabela
+        //Usando a chamada típica do BS, funcionaria apenas na primeira página
+        dTable.$('[data-toggle="popover"]').popover()
+
+        // Tratamento do checkbox selecionar todos
+        $('#id_selecionar_todos').click(function () {
+            if($(this).is(':checked')){
+                $('.lista-remove input[type="checkbox"]').prop( "checked" , true )
+                    .parents('tr').addClass("delete-row");
+            }
+            else {
+                $('.lista-remove input[type="checkbox"]').prop( "checked" , false )
+                    .parents('tr').removeClass("delete-row");
+            }
+        })
 
         //Campo de busca
         $('#search-bar').keyup(function(){
@@ -256,6 +289,10 @@ $.Admin.table = {
             var form = $(this).parents('form');
             $.Admin.messages.msgRemove("Os items selecionados serão removidos permanentemente da Base de Dados.");
             $('#btn-sim').one('click', function(){
+
+                // Antes de submeter o formulário remove a marcação do campo selecionar todos
+                $('#id_selecionar_todos').prop( "checked" , false )
+
                 form.submit();
             });
         });
@@ -3265,8 +3302,11 @@ $.Admin.ajaxRequest = {
 
 $.Admin.datetimepicker_viagem = {
     init: function(){
+        //habilita a reinicialização do componente
+        $('.datetimepicker').datetimepicker('destroy');
+
         $('.datetimepicker').datetimepicker({
-            format: 'd/m/Y H:i:s',
+            format: 'd/m/Y H:i:00',
         });
 
         $.datetimepicker.setLocale('pt-BR');
@@ -3528,48 +3568,6 @@ $.Admin.recusar_viagem_sup = {
 
     },
 }
-
-
-$.Admin.submeter_horas = {
-   init: function() {
-        var $btnAutoriza = $('.btn-submeter-horas');
-
-
-
-        $('body').on('change', '.lista-remove input[type=checkbox]', function(event){
-            if(this.checked){
-                $(this).parents('tr').addClass("delete-row");
-            }else{
-                $(this).parents('tr').removeClass("delete-row");
-            }
-            $btnAutoriza.show()
-        });
-
-        $btnAutoriza.on('click',function(event){
-            event.preventDefault();
-            var form = $(this).parents('form');
-
-
-            var input = $("<input>")
-                   .attr("type", "hidden")
-                   .attr("name", "acao").val("submeter_horas");
-
-            form.append($(input));
-
-
-            form.submit();
-        });
-
-        $('body').on('click', '.clickable-row:not(.popup)', function(event){
-            if(!$(event.target).is("input, label, i, .prevent-click-row")){
-                window.document.location = $(this).data("href");
-            }
-        });
-
-    },
-}
-
-
 
 $.Admin.reover_opcao = {
    init: function() {
@@ -3963,6 +3961,7 @@ $.Admin.aprovar_timesheet = {
                    .attr("name", "acao").val("aprovar_timesheet");
 
             form.append($(input));
+            $('#id_selecionar_todos').prop( "checked" , false )
             form.submit();
         });
 
@@ -4004,6 +4003,8 @@ $.Admin.submeter_horas = {
 
             form.append($(input));
 
+            // Antes de submeter o formulário remove a marcação do campo selecionar todos
+            $('#id_selecionar_todos').prop( "checked" , false )
 
             form.submit();
         });
@@ -4021,6 +4022,20 @@ $.Admin.timesheet = {
 
     init: function () {
 
+          var $btnExcluir = $('.btn-excluir-percentual-timesheet');
+
+          $btnExcluir.on('click',function(event){
+            event.preventDefault();
+            var form = $(this).parents('form');
+            var input = $("<input>")
+                   .attr("type", "hidden")
+                   .attr("name", "excluir_timesheet").val("excluir");
+
+            form.append($(input));
+            form.submit();
+          });
+          console.log($btnExcluir);
+
         $.Admin.maskInput.maskTimesheet()
 
         let data_padrao= $('#id_data').val() === ""? new Date() : $('#id_data').val()
@@ -4037,30 +4052,7 @@ $.Admin.timesheet = {
             inline: true,
             altField: '#id_data',
             maxDate: '+0m +0w',
-            beforeShowDay: function (date){
-
-                    let datas_verde = $('.dias_verdes').html().trim()
-                    let datas_laranja = $('.dias_laranjas').html().trim()
-
-                    let dia = date.getDate()
-                    dia = (dia < 10)? '0' + dia : dia
-
-                    let mes = date.getMonth() + 1
-                    mes = (mes < 10)? '0' + mes : mes
-
-                    let data = date.getFullYear() + '-' + mes + '-' + dia
-
-                    if(datas_verde.indexOf(data) >= 0){
-                        return [true, "multidatepicker-verde", "Todas as horas lançadas"];
-                    }
-                    else{
-                        if(datas_laranja.indexOf(data) >= 0){
-                        return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
-                    } else {
-                        return [true, " ", " "];
-                        }
-                    }
-                }
+            beforeShowDay: $.Admin.timesheet.pintar_calendario
         });
 
         // $('.datepicker-inline').datepicker('setDate', $('#id_data').val());
@@ -4078,40 +4070,52 @@ $.Admin.timesheet = {
                 inline: true,
                 altField: '#id_data',
                 maxDate: '+0m +0w',
-                beforeShowDay: function (date){
-
-                    let datas_verde = $('.dias_verdes').html().trim()
-                    let datas_laranja = $('.dias_laranjas').html().trim()
-
-                    let dia = date.getDate()
-                    dia = (dia < 10)? '0' + dia : dia
-
-                    let mes = date.getMonth() + 1
-                    mes = (mes < 10)? '0' + mes : mes
-
-                    let data = date.getFullYear() + '-' + mes + '-' + dia
-
-                    if(datas_verde.indexOf(data) >= 0){
-                        return [true, "multidatepicker-verde", "Todas as horas lançadas"];
-                    }
-                    else{
-                        if(datas_laranja.indexOf(data) >= 0){
-                        return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
-                    } else {
-                        return [true, " ", " "];
-                        }
-                    }
-                }
+                beforeShowDay: $.Admin.timesheet.pintar_calendario
           });
 
           $('.datepicker-inline').datepicker('setDate', new Date());
 
+    },
+
+    pintar_calendario: function (date){
+
+        let datas_verde = $('.dias_verdes').html().trim()
+        let datas_laranja = $('.dias_laranjas').html().trim()
+        let hoje = new Date()
+
+
+        let dia = date.getDate()
+        dia = (dia < 10)? '0' + dia : dia
+
+        let mes = date.getMonth() + 1
+        mes = (mes < 10)? '0' + mes : mes
+
+        let data = date.getFullYear() + '-' + mes + '-' + dia
+
+        if(datas_verde.indexOf(data) >= 0){
+            return [true, "multidatepicker-verde", "Todas as horas lançadas"];
+        }
+        else{
+            if(datas_laranja.indexOf(data) >= 0){
+                return [true, "multidatepicker-laranja", "Horas parcialmente lançadas"];
+            } else {
+                if(date.getDay() != 6 && date.getDay() != 0 && date <= hoje)
+                    return [true, "multidatepicker-vermelho", "Horas não lançadas"];
+                else
+                    return [true, " ", " "];
+                }
+            }
     }
 }
 
 $.Admin.viagemForm = {
 
      init: function () {
+
+         // garante o funcionamento correto dos campos com DateTimePicker
+         $('.formset').on('formCreated', function(){
+             $.Admin.datetimepicker_viagem.init()
+        });
 
          $.Admin.maskInput.maskViagem();
          Handle_definir_categoria_passagem();

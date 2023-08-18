@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DATABASES = {
 #     'default': config('DATABASE_URL', default=DEFAULT_DATABASE_URL, cast=dburl),
 # }
-#
+# #
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -42,14 +42,12 @@ DATABASES = {
 }
 
 
-
-#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'norli',
+#         'NAME': 'norli_timesheet_feedback',
 #         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
+#         'PASSWORD': 'admin',
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     }
@@ -98,12 +96,18 @@ INSTALLED_APPS = [
     # norli
     'djangosige.apps.norli_projeto',
     'djangosige.apps.timesheet',
-
     'djangosige.apps.viagem',
+    'djangosige.apps.opiniao',
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
-    # 'import_export',
+
+    # Janela unica
+    'djangosige.apps.janela_unica',
+    'django_fsm',
+    'django_fsm_log',
+    'fsm_admin',
+    'simple_history',
 ]
 
 
@@ -119,14 +123,17 @@ MIDDLEWARE = [
     # Middleware para paginas que exigem login
     'djangosige.middleware.LoginRequiredMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
+
+SIMPLE_HISTORY_REVERT_DISABLED=True
 
 ROOT_URLCONF = 'djangosige.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

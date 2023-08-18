@@ -1,0 +1,39 @@
+{% load i18n admin_urls fsm_admin %}
+<div class="submit-row">
+    <div class="row clearfix">
+        <div class="col-sm-6">
+            {% if show_save %}
+            <button class="btn btn-success foot-btn"
+                name="_save">
+                <i class="material-icons">&#xE148;</i>
+                {% trans 'Save' %}
+            </button>
+            {% endif %}
+            {% if show_delete_link %}
+            {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
+            <p class="deletelink-box"><a href="{% add_preserved_filters delete_url %}" class="deletelink">
+                {% trans "Delete" %}
+            </a>
+        </p>
+            {% endif %}
+
+
+            <!-- {% if show_save_as_new %}<input type="submit" value="{% trans 'Save as new' %}" name="_saveasnew" class="btn btn-success foot-btn" />{%endif%}
+{% if show_save_and_add_another %}<input type="submit" value="{% trans 'Save and add another' %}" name="_addanother" class="btn btn-success foot-btn"  />{% endif %} -->
+            {% if show_save_and_continue %}
+            <button name="_continue" class="btn btn-success foot-btn">
+                <i class="material-icons">check</i>
+                {% trans 'Save and continue editing' %}                
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="col-sm-6">
+            <div class="pull-right">
+                {% for transition in transitions %}
+                {% fsm_submit_button transition %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -32,14 +32,27 @@
             <div class="body">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
+
+
               <div class="col-sm-6">
                   <div class="form-group">
                     <div class="">
-                        <div class="datepicker-inline"></div>
+                        <div class="datepicker-inline" style="float: left"></div>
+                        <div style="margin-left:20px; float: left;">
+                                <strong>Legenda lançamentos:</strong>
+                              <div class="legenda">
+                                  <span class="multidatepicker-verde"></span> 100% <br>
+                                  <span class="multidatepicker-laranja"></span> <100% <br>
+                                  <span class="multidatepicker-vermelho"></span> 0% <br>
+                                  <span class="multidatepicker-azul"></span> Seleção <br>
+                              </div>
+                        </div>
                          {% if form.data.errors %}<label class="error">{% for error in form.data.errors %}{{error}}{% endfor %}</label>{% endif %}
                     </div>
                   </div>
-                </div>
+              </div>
+
+
 
               <div class="col-sm-6" style="display: none; visibility: hidden">
                   <div class="form-group">
@@ -83,7 +96,8 @@
                 </div>
 
               </div>
-              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">&#xE148;</i><span> SALVAR</span></button>
+              <button class="btn btn-success foot-btn" type="submit"><i class="material-icons">save</i><span> ALTERAR</span></button>
+              <button class="btn btn-red foot-btn btn-excluir-percentual-timesheet"><i class="material-icons">&#xE872;</i></button>
             </div>
             <!--#Body-->
           </form>
@@ -102,7 +116,7 @@
 {#                   {% include 'base/search.html' %}#}
 
                    <div class="table-responsive">
-                    <table id="lista-database" class="table table-bordered table-striped lista-table">
+                    <table id="lista-database" class="table table-bordered table-striped lista-table" data-order='[[0, "desc"]]'>
               <thead>
                 <tr>
                     <th>Dia</th>
@@ -124,14 +138,21 @@
                   {% if timesheet%}
                       {% for key, value in timesheet.items %}
                           <tr>
-                           <td>{{ key }}</td>
+                           <td>{{ value.3 }}</td>
                           {% for _, valor in value.0.items %}
 
                               <td {% if id == valor.id %} class="active_td {% if valor.situacao == 3 %}active_rejected_td{% endif %}" {% endif %}>
                                   {% if valor.percentual %}
 
+                                      {% if valor.obs  %}
+                                          <i style="float: right;cursor: pointer" data-toggle="popover" title="Observação" data-content="{{ valor.obs }}" class="material-icons">&#xe253;</i>
+                                      {% endif %}
+
                                       {% if valor.situacao == 0 or valor.situacao == 3 %}
-                                          <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}"> {{ valor.percentual }}%</a>
+                                          <a href="{% url 'timesheet:editarpercentualdiario' valor.id %}">
+                                              {{ valor.percentual }}%
+                                          </a>
+
                                       {% else %}
                                           {{ valor.percentual }}%
                                       {% endif %}

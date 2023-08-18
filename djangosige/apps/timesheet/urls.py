@@ -23,8 +23,15 @@ urlpatterns = [
     url(r'timesheet/verpercentuaisdiariosaprovados/$', views.VerTimesheetPercentualAprovadoView.as_view(), name='verpercentuaisdiariosaprovados'),
     url(r'timesheet/verpercentuaisdiario/(?P<pk>[0-9]+)$', views.VerPercentualDiarioView.as_view(), name='verpercentuaisdiario'),
 
-
     url(r'timesheet/listartimesheetdias/$', views.ListTimesheetDiasView.as_view(), name='listartimesheetdias'),
+
+    # PDF
+    url(r'timesheet/gerarpdfpercentualaprovados/$', views.GerarPDFTimesheetPercentualAprovadoView.as_view(), name='gerarpdfpercentualaprovados'),
+
+    # Timesheet - opinião
+    url(r'timesheet/listaropinioes/$', views.ListOpiniaoView.as_view(), name='listaropinioes'),
+    url(r'timesheet/adicionaopiniao/$', views.AdicionarOpiniaoView.as_view(), name='adicionaopiniao'),
+    url(r'timesheet/editaropiniao/(?P<pk>[0-9]+)$', views.EditarOpiniaoView.as_view(), name='editaropiniao'),
 
 
 ]

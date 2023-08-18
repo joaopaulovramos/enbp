@@ -5,7 +5,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
 from django.shortcuts import redirect
-
+from django.db import IntegrityError
+import re
 from djangosige.apps.base.views_mixins import CheckPermissionMixin, FormValidationMessageMixin
 
 
@@ -70,14 +71,30 @@ class CustomListView(CheckPermissionMixin, ListView):
     def get_queryset(self):
         return self.model.objects.all()
 
-    # Remover items selecionados da database
+       # Remover items selecionados da database
     def post(self, request, *args, **kwargs):
         if self.check_user_delete_permission(request, self.model):
             for key, value in request.POST.items():
                 if value == "on":
                     instance = self.model.objects.get(id=key)
-                    instance.delete()
+                    try:
+                        instance.delete()
+                    except IntegrityError as e:
+                        pattern = r"'([^']*)'"
+                        matches = re.findall(pattern, e.args[0])
+
+                        matches[0] = matches[0].replace('Model', '')
+                        matches[1] = matches[1].replace('Model', '')
+                        restricao = matches[1].split('.')
+
+                        matches[0] = re.sub(r'(?<=\w)(?=[A-Z])', ' ', matches[0])
+                        restricao[0] = re.sub(r'(?<=\w)(?=[A-Z])', ' ', restricao[0])
+
+                        messages.success(self.request, f'Não é permitido excluir o item: {instance} - {matches[0]}, ele esta sendo usado em {restricao[0]}')
+
+
         return redirect(self.success_url)
+
 
 
 class CustomListViewFilter(CheckPermissionMixin, ListView):
@@ -95,6 +112,7 @@ class CustomListViewFilter(CheckPermissionMixin, ListView):
     def post(self, request, *args, **kwargs):
         if self.check_user_delete_permission(request, self.model):
             for key, value in request.POST.items():
+                # adicionar um IF aqui
                 if value == "on":
                     instance = self.model.objects.get(id=key)
                     instance.delete()

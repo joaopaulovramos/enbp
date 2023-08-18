@@ -1,0 +1,42 @@
+{% load i18n %}
+
+{% if app_list %}
+<div class="table-responsive">
+  {% for app in app_list %}
+    <div class="app-{{ app.app_label }} module{% if app.app_url in request.path %} current-app{% endif %}">
+      <table class="table table-bordered table-striped lista-table dataTable no-footer"  role="grid" aria-describedby="lista-database_info">
+        <caption>
+          <a href="{{ app.app_url }}" class="section" title="{% blocktranslate with name=app.name %}Models in the {{ name }} application{% endblocktranslate %}">{{ app.name }}</a>
+        </caption>
+        {% for model in app.models %}
+          <tr class="model-{{ model.object_name|lower }}{% if model.admin_url in request.path %} current-model{% endif %}">
+            {% if model.admin_url %}
+              <th scope="row"><a href="{{ model.admin_url }}"{% if model.admin_url in request.path %} aria-current="page"{% endif %}>{{ model.name }}</a></th>
+            {% else %}
+              <th scope="row">{{ model.name }}</th>
+            {% endif %}
+
+            {% if model.add_url %}
+              <td style="width: 100px;"><a href="{{ model.add_url }}" class="btn btn-info addlink">{% translate 'Add' %}</a></td>
+            {% else %}
+              <td></td>
+            {% endif %}
+
+            {% if model.admin_url and show_changelinks %}
+              {% if model.view_only %}
+                <td style="width: 100px;"><a href="{{ model.admin_url }}" class="btn btn-info viewlink">{% translate 'View' %}</a></td>
+              {% else %}
+                <td style="width: 100px;"><a href="{{ model.admin_url }}" class="btn btn-info changelink">{% translate 'Change' %}</a></td>
+              {% endif %}
+            {% elif show_changelinks %}
+              <td></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+  <p>{% translate 'You don’t have permission to view or edit anything.' %}</p>
+{% endif %}

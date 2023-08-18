@@ -112,6 +112,9 @@ class Compra(models.Model):
     # Fornecedor
     fornecedor = models.ForeignKey(
         'cadastro.Fornecedor', related_name="compra_fornecedor", on_delete=models.CASCADE)
+    # Plano de contas
+    plano_conta = models.ForeignKey(
+        'financeiro.PlanoContasGrupo', related_name="compra_plano_conta", on_delete=models.PROTECT, null=True, blank=True)
     # Transporte
     mod_frete = models.CharField(
         max_length=1, choices=MOD_FRETE_ESCOLHAS, default='9')

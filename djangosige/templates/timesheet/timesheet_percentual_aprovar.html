@@ -26,16 +26,24 @@
 
            {% include 'base/search.html' %}
 
+            <div class="row">
+               {% include 'base/select_mes.html' %}
+
+               {% include 'base/select_user.html' %}
+           </div>
+
            <div class="table-responsive">
-            <table id="lista-database" class="table table-bordered table-striped lista-table">
+            <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[1, "desc"]]'>
               <thead>
                 <tr>
                     <th>Solicitante</th>
                     <th>Dia</th>
                     <th>Percentual</th>
                     <th>Projeto</th>
-                    <th>Selecionar</th>
-
+                    <th data-orderable="false" class="select-all">
+                        <input type="checkbox" name="selecionar_todos" id="id_selecionar_todos"/>
+                        <label class="remove-entry-label" for="id_selecionar_todos"></label>
+                    </th>
                 </tr>
               </thead>
 
@@ -44,7 +52,7 @@
                {% for natop in all_natops %}
                  <tr class="clickable-row"  data-href="{% url 'timesheet:verpercentuaisdiario' natop.id %}">
                      <td>{{natop.solicitante}}</td>
-                     <td>{{natop.data}}</td>
+                     <td data-order="{{natop.data_formated}}">{{natop.data}}</td>
                      <td>{{natop.percentual}}%</td>
                      <td>{{natop.projeto}}</td>
 
@@ -73,3 +81,16 @@
 
 
 {%endblock%}
+
+{% block js %}
+
+   <script>
+        $('#id_select_mes, #id_select_ano, #id_select_user').on('change', function () {
+            let mes = $('#id_select_mes').val()
+            let ano = $('#id_select_ano').val()
+            let user = $('#id_select_user').val()
+            window.location.href = `{% url 'timesheet:aprovarpercentuaisdiarios' %}?mes=${mes}&ano=${ano}&user=${user}`;
+        })
+   </script>
+
+{% endblock %}

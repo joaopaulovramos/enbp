@@ -28,7 +28,7 @@ from .models import Usuario
 from djangosige.configs.settings import DEFAULT_FROM_EMAIL
 
 from djangosige.apps.cadastro.forms import MinhaEmpresaForm
-from djangosige.apps.cadastro.models import MinhaEmpresa
+from djangosige.apps.cadastro.models import MinhaEmpresa, DepartamentoModel
 
 from djangosige.apps.taticca_cv.models import CVModel
 
@@ -43,11 +43,11 @@ from functools import reduce
 
 DEFAULT_PERMISSION_MODELS = ['cliente', 'fornecedor', 'produto',
                              'empresa', 'transportadora', 'unidade', 'marca', 'categoria', 'orcamentocompra', 'pedidocompra', 'condicaopagamento', 'orcamentovenda', 'pedidovenda',
-                             'naturezaoperacao', 'notafiscalentrada', 'notafiscalsaida', 'grupofiscal', 'lancamento', 'planocontasgrupo', 'localestoque', 'movimentoestoque', 'cadastrodefinalidademodel', 'cvmodel', 'carromodel', 'percentualdiario', ]
+                             'naturezaoperacao', 'notafiscalentrada', 'notafiscalsaida', 'grupofiscal', 'lancamento', 'planocontasgrupo', 'localestoque', 'movimentoestoque', 'cadastrodefinalidademodel', 'cvmodel', 'carromodel', 'percentualdiario', 'opiniaomodel', ]
 
 CUSTOM_PERMISSIONS = ['configurar_nfe', 'emitir_notafiscal', 'cancelar_notafiscal', 'gerar_danfe', 'consultar_cadastro', 'inutilizar_notafiscal', 'consultar_notafiscal',
                       'baixar_notafiscal', 'manifestacao_destinatario', 'faturar_pedidovenda', 'faturar_pedidocompra', 'acesso_fluxodecaixa', 'consultar_estoque', 'solicitar_viagens',
-                      'autorizar_viagens_sup', 'autorizar_viagens_dus', 'homologar_viagens', 'cadastrar_item_viagens', 'aprovar_pc_viagens', 'aprovar_horas', ]
+                      'autorizar_viagens_sup', 'autorizar_viagens_dus', 'autorizar_pagamento_diarias', 'autorizar_pagamento_reembolso', 'homologar_viagens', 'cadastrar_item_viagens', 'aprovar_pc_viagens', 'aprovar_horas', 'analisar_opinioes', ]
 
 
 #, 'editar_carro', 'cadastrar_carro', 'listar_carro'
@@ -443,6 +443,7 @@ class UsuarioDetailView(SuperUserRequiredMixin, TemplateView):
             context['perfil'] =  Usuario.PERFIS[int(us_perfil)][1]
             context['data_inativacao'] = usuario.data_inativacao.strftime('%d/%m/%Y às %H:%M:%S')
             context['user_foto'] = usuario.user_foto
+            context['departamento'] = usuario.departamento
 
 
 
@@ -473,10 +474,11 @@ class EditarPermissoesUsuarioView(SuperUserRequiredMixin, TemplateView):
         context['custom_permissions'] = Permission.objects.filter( codename__in=CUSTOM_PERMISSIONS)
 
         context['perfis'] = Usuario.PERFIS
-        obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+        # obj = Usuario.objects.get_or_create(user=self.request.user)[0]
+        context['perfil_user'] = Usuario.PERFIS[int(user.usuario.perfil)][1]
 
-
-        context['perfil_user'] = Usuario.PERFIS[int(obj.perfil)][1]
+        context['departamentos'] = DepartamentoModel.objects.all()
+        context['departamento_user'] = user.usuario.departamento
         return context
 
     def post(self, request, *args, **kwargs):
@@ -584,7 +586,9 @@ class AlteraPerfilView(UpdateView):
         user = User.objects.get(pk=self.kwargs['pk'])
         usuario = Usuario.objects.get_or_create(user=user)[0]
         permicao = request.POST.get('permicao')
+        departamento = request.POST.get('departamento')
         usuario.perfil = Usuario.PERFIS[int(permicao)][0]
+        usuario.departamento = DepartamentoModel.objects.filter(id=departamento).first()
         usuario.save()
         return redirect(self.success_url)
 
