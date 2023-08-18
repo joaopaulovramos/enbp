@@ -34,24 +34,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #     'default': config('DATABASE_URL', default=DEFAULT_DATABASE_URL, cast=dburl),
 # }
 # #
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'norli_timesheet_feedback',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'norli_timesheet_feedback',
+#         'USER': 'postgres',
+#         'PASSWORD': 'admin',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 LEGADO = {}
 # LEGADO['SISTEMA'] = 'q_LEGADO'
@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'djangosige.apps.norli_projeto',
     'djangosige.apps.timesheet',
     'djangosige.apps.viagem',
+    'djangosige.apps.opiniao',
 
     # Utilitarios e Importacao
     'djangosige.apps.util',

@@ -30,22 +30,23 @@
           <div class="body">
 
            {% include 'base/search.html' %}
-           {% include 'base/select_mes.html' %}
+           <div class="row">
+               {% include 'base/select_mes.html' %}
+           </div>
 
            <div class="table-responsive">
             <table id="lista-database" class="table table-bordered table-striped lista-table" data-page-length="50"  data-order='[[2, "desc"]]'>
               <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>Código</th>
                     <th>Solicitante</th>
 
-                    <th>Data Inicio</th>
+                    <th>Data Início</th>
                     <th>Data Fim</th>
-{#                    <th>Origem</th>#}
-{#                    <th>Destino</th>#}
                     <th>Superintendente</th>
                     <th>DUS</th>
-                    <th>Homologada</th>
+                    <th>Diárias</th>
+                    <th>Reembolso</th>
                   <th>Selecionar</th>
                 </tr>
               </thead>
@@ -63,12 +64,6 @@
 
                    <td data-sort="{{natop.data_inicio_formated}}">{{natop.dada_inicio}}</td>
                    <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
-{#                   <td>{{natop.origem}}</td>#}
-{#                   <td>{{natop.destino}}</td>#}
-
-
-
-
                    <td>
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
@@ -87,9 +82,20 @@
                     </td>
                    <td>
                         {% if natop.homologada  %}
-                            <a class="btn btn-success disabled"><span> SIM</span></a>
+                            <a class="btn btn-success disabled"><span> HOMOLOGADA</span></a>
                         {% else %}
-                            <a class="btn btn-red btn-success disabled"><span> NÃO</span></a>
+                     <a class="btn btn-red btn-success disabled"><span> NÃO HOMOLOGADA</span></a>
+                        {% endif %}
+                   </td>
+                   <td>
+                        {% if natop.homologada_reembolso  %}
+                            <a class="btn btn-success disabled"><span> HOMOLOGADA</span></a>
+                        {% else %}
+                            {% if natop.tem_reembolso  %}
+                                <a class="btn btn-red btn-success disabled"><span>NÃO HOMOLOGADA (C/ REEMBOLSO)</span></a>
+                            {% else %}
+                                <a class="btn btn-red btn-success disabled"><span> NÃO HOMOLOGADA (S/ REEMBOLSO)</span></a>
+                            {% endif %}
                         {% endif %}
                    </td>
                 <td class="lista-remove">

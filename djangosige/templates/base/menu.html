@@ -144,6 +144,12 @@
                                 </a>
                             </li>
 
+                            <li>
+                                <a href="{% url 'timesheet:adicionaopiniao' %}">
+                                    <span>Dê a sua opinião</span>
+                                </a>
+                            </li>
+
 
                         </ul>
                     </li>
@@ -157,13 +163,18 @@
                         <ul class="ml-menu">
 
                             <li>
+                                <a href="{% url 'janela_unica:caixaentrada' %}">
+                                    <span>Caixa entrada</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="/admin/janela_unica/documentounicofinanceiro/">
                                     <span>Documento</span>
                                 </a>
                             </li>
 
-                            <li>
-                                <a href="admin/janela_unica/tramitacaomodel/add/">
+                            <!-- <li>
+                                <a href="admin/janela_unica/tramitacaomodel/add">
                                     <span>Adicionar Tramitação</span>
                                 </a>
                             </li>
@@ -172,10 +183,7 @@
                                 <a href="/admin/janela_unica/tramitacaomodel/">
                                     <span>Tramitar</span>
                                 </a>
-                            </li>
-
-
-
+                            </li> -->
                         </ul>
                     </li>
                     <!-- fim janela única -->
@@ -261,6 +269,13 @@
                                                  <span>Tabela de Diária</span>
                                             </a>
                                         </li>
+
+
+                                        <li>
+                                            <a href="{% url 'viagem:listatipopagamento' %}">
+                                                 <span>Forma de Pagamento</span>
+                                            </a>
+                                        </li>
                                 </ul>
 
                         </li>
@@ -299,18 +314,45 @@
 
                                 {% if perms.viagem.aprovar_pc_viagens  %}
                                 <li>
+                                    <a href="{% url 'viagem:listapagamentodiarias' %}">
+                                         <span>Financeiro - Diárias</span>
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="{% url 'viagem:listaaprovarpcviagem' %}">
                                          <span>Aprovar Prestação de Contas</span>
                                     </a>
                                 </li>
                                 {% endif %}
 
-
+                                <li>
+                                    <a href="{% url 'viagem:listapagamentoreembolso' %}">
+                                         <span>Financeiro - Reembolso</span>
+                                    </a>
+                                </li>
                             </li>
                         </ul>
                     </li>
 
                     <!-- Fim Viagens-->
+
+                     <!-- inicio Opiniões-->
+                  <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">insert_drive_file</i>
+                            <span>Opiniões</span>
+                        </a>
+                        <ul class="ml-menu">
+
+                            <li>
+                                <a href="{% url 'opiniao:listaropinioes' %}">
+                                    <span>Dê a sua opinião</span>
+                                </a>
+                            </li>                           
+                        </ul>
+                    </li>
+                    <!-- fim Opiniões -->
 
 
 

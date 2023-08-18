@@ -61,56 +61,52 @@
               <div class="panel panel-default">
                 <div class="panel-body" style="background:#f5f5f5">
 
-                    <div class="row">
+                    <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Código da Solicitação</label>
+                    <input type="text" name="codigo" value="{{id}}" class="form-control" id="id_codigo" readonly>
+                </div>
+              </div>
+            </div>
 
-                        <div class="col-sm-1">
-                            <div class="form-group">
-                            <div class="form-line">
-                              <label>Solicitação</label>
-                                <input type="text" name="codigo" value="{{id}}" class="form-control" id="id_codigo" readonly>
-                            </div>
-                            </div>
-                        </div>
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data da Solicitação</label>
+                    <input disabled type="text" name="data_inicio" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
+                </div>
+              </div>
+            </div>
 
-                        <div class="col-sm-2">
-                            <div class="form-group">
-                                <div class="form-line">
-                                  <label>Usuário</label>
-                                    <input disabled type="text" name="solicitante" value="{{solicitante}}" class="form-control" id="id_solicitante" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <div class="form-line">
-                                  <label>Inclusão</label>
-                                    <input disabled type="text" name="data_inicio" value="{{data_inclusao}}" class="form-control" id="id_data_origen" readonly>
-                                </div>
-                            </div>
-                        </div>
+              <div class="col-sm-4">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Usuário Solicitante</label>
+                    <input disabled type="text" name="solicitante" value="{{solicitante}}" class="form-control" id="id_solicitante" readonly>
+                </div>
+              </div>
+            </div>
 
 
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <div class="form-line">
-                                  <label>Data Início</label>
-                                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data Início</label>
+                    <input disabled type="text" name="data_fim" value="{{data_inicio}}" class="form-control" id="id_data_inicio" readonly>
+                </div>
+              </div>
+            </div>
 
-                        <div class="col-sm-3">
-                        <div class="form-group">
-                            <div class="form-line">
-                              <label>Data fim</label>
-                                <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
+              <div class="col-sm-6">
+              <div class="form-group">
+                <div class="form-line">
+                  <label>Data fim</label>
+                    <input disabled type="text" name="data_fim" value="{{data_fim}}" class="form-control" id="id_data_fim" readonly>
 
-                            </div>
-                        </div>
-                    </div>
-
-                    </div>
+                </div>
+              </div>
+            </div>
 
 
                 </div>
@@ -120,7 +116,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>Valor total recursos próprios</label>
+                      <label>Valor Total em Recursos Próprios (R$)</label>
                         <input disabled type="text" name="recusos_proprioss" value="{{ totais_pagos.recursos_proprios }}" class="form-control" id="id_recursos_proprios" readonly>
                     </div>
                   </div>
@@ -130,7 +126,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                      <label>Valor total recursos da empresa</label>
+                      <label>Valor Total em Recursos da Empresa (R$)</label>
                         <input disabled type="text" name="recursos_empresa" value="{{ totais_pagos.recursos_empresa }}" class="form-control" id="id_recursos_empresa" readonly>
                     </div>
                   </div>
@@ -144,7 +140,7 @@
                         <input disabled type="checkbox" name="check_remarcacao" class="form-control" id="id_check_remarcacao" {% if remarcacao_interesse_particular == '1' %}checked="checked"{% endif %}>
                         <label for="id_check_remarcacao"
                                style="font-weight: bold;"
-                               title=""> Remarcação por Interesse particular
+                               title=""> Remarcação por Interesse Particular
                         </label>
                     </div>
                   </div>
@@ -154,7 +150,7 @@
                   <div class="form-group">
                     <div class="form-line">
 
-                        <label>Viagem cancelada:</label><br>
+                        <label>Viagem Cancelada:</label><br>
                         <input disabled type="checkbox" name="check_justificativa_cancelamento" class="form-control" id="id_justificativa_cancelamento" {% if justificativa_cancelamento != '' %}checked="checked"{% endif %}>
                         <label for="id_justificativa_cancelamento"
                                style="font-weight: bold;"
@@ -176,8 +172,8 @@
                             <th>Data</th>
                             <th>Tipo de Despesa</th>
                             <th>Valor</th>
-                            <th>Pagamento</th>
-                            <th>Anexo</th>
+                            <th>Forma de Pagamento</th>
+                            <th>Arquivo</th>
 
                         </tr>
                       </thead>

@@ -301,6 +301,9 @@ class Venda(models.Model):
         'vendas.CondicaoPagamento', related_name="venda_pagamento", on_delete=models.SET_NULL, null=True, blank=True)
     observacoes = models.CharField(max_length=1055, null=True, blank=True)
 
+    codigo_legado = models.CharField(max_length=10, null=True, blank=True)
+
+
     def get_total_sem_imposto(self):
         total_sem_imposto = self.valor_total - self.impostos
         return total_sem_imposto
