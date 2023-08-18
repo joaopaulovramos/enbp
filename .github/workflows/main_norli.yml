@@ -17,16 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Locale
-        run: |
-          sudo apt update && \
-          sudo apt install -y locales && \
-          sudo locale-gen pt_BR.UTF-8 && \
-          sudo dpkg-reconfigure --frontend=noninteractive locales
-          sudo update-locale LANG=pt_BR.UTF-8
-          export LC_ALL="pt_BR.UTF-8"
-          export LC_CTYPE="pt_BR.UTF-8"
-
       - name: Set up Python version
         uses: actions/setup-python@v1
         with:
@@ -60,16 +50,6 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Locale
-        run: |
-          sudo apt update && \
-          sudo apt install -y locales && \
-          sudo locale-gen pt_BR.UTF-8 && \
-          sudo dpkg-reconfigure --frontend=noninteractive locales
-          sudo update-locale LANG=pt_BR.UTF-8
-          export LC_ALL="pt_BR.UTF-8"
-          export LC_CTYPE="pt_BR.UTF-8"
-
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:

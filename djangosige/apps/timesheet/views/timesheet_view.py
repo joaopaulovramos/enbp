@@ -3,7 +3,6 @@ import random
 import string
 from collections import defaultdict
 from django.contrib import messages
-import locale
 
 import requests
 from django.db.models import Avg, Sum, Count
@@ -33,7 +32,21 @@ from djangosige.configs import settings
 
 LIMITE_HORAS_DIA = 8
 
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
+meses = {
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro'
+}
 
 
 class AprovarTimesheetView(CustomListViewFilter):
@@ -526,7 +539,7 @@ class GerarPDFTimesheetPercentualAprovadoView(CustomView):
             "all_natops": ordered_data,
             "projetos": projetos,
             "ano": self._ano,
-            "mes": calendar.month_name[int(self._mes)],
+            "mes": meses[int(self._mes)],
             "aprovador": aprovador,
             "perfil": Usuario.PERFIS[int(current_user.usuario.perfil)][1]
         }
