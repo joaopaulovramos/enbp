@@ -24,7 +24,8 @@ jobs:
           sudo locale-gen pt_BR.UTF-8 && \
           sudo dpkg-reconfigure --frontend=noninteractive locales
           sudo update-locale LANG=pt_BR.UTF-8
-          sudo echo "LANG=pt_BR.UTF-8" > /etc/default/locale
+          export LC_ALL="pt_BR.UTF-8"
+          export LC_CTYPE="pt_BR.UTF-8"
 
       - name: Set up Python version
         uses: actions/setup-python@v1
@@ -66,7 +67,9 @@ jobs:
           sudo locale-gen pt_BR.UTF-8 && \
           sudo dpkg-reconfigure --frontend=noninteractive locales
           sudo update-locale LANG=pt_BR.UTF-8
-          sudo echo "LANG=pt_BR.UTF-8" > /etc/default/locale
+          export LC_ALL="pt_BR.UTF-8"
+          export LC_CTYPE="pt_BR.UTF-8"
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
