@@ -915,6 +915,8 @@ class VerSolicitacaoViagem(CustomUpdateView):
         context['pcd'] = usuario.pcd
         context['trechos'] = TrechoModel.objects.filter(viagem=self.object)
 
+        context['trechos'] = TrechoModel.objects.filter(viagem=self.object)
+
         return context
 
     def post(self, request, *args, **kwargs):
