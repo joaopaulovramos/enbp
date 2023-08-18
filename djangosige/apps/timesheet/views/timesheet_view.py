@@ -356,28 +356,30 @@ class AdicionarGastoView(CustomCreateView):
         context['return_url'] = reverse_lazy('timesheet:listargastos')
         return context
 
+
 class EditarGastoView(CustomUpdateView):
     form_class = GastosForm
     template_name = 'timesheet/edit_gasto.html'
     success_url = reverse_lazy('timesheet:listargastos')
-    success_message = "Adicionar Exemplo <b>%(cfop)s </b>adicionado com sucesso."
+    success_message = "Gasto editado com sucesso."
     permission_codename = 'change_naturezaoperacao'
     context_object_name = 'all_natops'
 
     def post(self, request, *args, **kwargs):
-        self.object = None
+        self.object = self.get_object()
         req_post = request.POST.copy()
         req_post['valor'] = float(
             req_post['valor'].replace('.', '').replace(',', '.'))
         request.POST = req_post
 
         form_class = self.get_form_class()
-        form = self.get_form(form_class)
+        form = form_class(request.POST, instance=self.object)
         form.request_user = self.request.user
         form.files['file'] = Gastos.objects.get(pk=self.kwargs['pk']).file
         if form.is_valid():
+            form.instance.pessoa_id = self.object
             self.object = form.save()
-            return redirect(self.success_url)
+            return self.form_valid(form)
         return self.form_invalid(form)
 
     def get_queryset(self):
@@ -385,9 +387,6 @@ class EditarGastoView(CustomUpdateView):
         querry = Gastos.objects.filter(solicitante=current_user, id=self.kwargs['pk'])
         # querry = querry.filter(submetida=False)
         return querry
-
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(cleaned_data, cfop=self.object.cfop)
 
     def get_context_data(self, **kwargs):
         context = super(EditarGastoView, self).get_context_data(**kwargs)
@@ -413,34 +412,54 @@ class AdicionarPercentualDiarioView(CustomCreateViewAddUser):
     context_object_name = 'all_natops'
 
     def post(self, request, *args, **kwargs):
-        self.object = None
-        form_class = self.get_form_class()
 
-        form = self.get_form(form_class)
-        form.request_user = self.request.user
 
-        data = datetime.datetime.strptime(request.POST['data'], "%d/%m/%Y").date()
-        hoje = datetime.datetime.now().date()
+        datas_selecionadas = str(request.POST['data']).split(', ')
 
-        if data > hoje:
-            form.add_error('data', 'Não é possível lança horas futuras.')
+        post = request.POST.copy()  # to make it mutable
 
-        # seleciona os laçamentos do usuário já existentes para o dia
-        lancamentos_dia = PercentualDiario.objects.filter(solicitante=self.request.user, data=data)
+        for dt in datas_selecionadas:
 
-        total_percentual_dia = 0
-        for lancamento in lancamentos_dia:
-            total_percentual_dia += lancamento.percentual
-            if int(self.request.POST['projeto']) == lancamento.projeto_id:
-                form.add_error('projeto', 'Você já lançou horas para este projeto nesta data')
+            post['data'] = dt.strip()
+            request.POST = post
 
-        if float(total_percentual_dia) + float(self.request.POST['percentual']) > 100.00:
-            form.add_error('percentual', 'O percentual diário não pode ultrapassar 100% de horas')
+            self.object = None
+            form_class = self.get_form_class()
 
-        if form.is_valid():
-            self.object = form.save()
-            return redirect(self.success_url)
-        return self.form_invalid(form)
+            form = self.get_form(form_class)
+            form.request_user = self.request.user
+
+            data = datetime.datetime.strptime(dt.strip(), "%d/%m/%Y").date()
+            hoje = datetime.datetime.now().date()
+
+            if data > hoje:
+                form.add_error('data', 'Não é possível lança horas futuras.')
+
+            # seleciona os laçamentos do usuário já existentes para o dia
+            lancamentos_dia = PercentualDiario.objects.filter(solicitante=self.request.user, data=data)
+
+            total_percentual_dia = 0
+            for lancamento in lancamentos_dia:
+                total_percentual_dia += lancamento.percentual
+                if int(self.request.POST['projeto']) == lancamento.projeto_id:
+                    form.add_error('projeto', f'Você já lançou horas para este projeto em {dt}')
+
+            if float(total_percentual_dia) + float(self.request.POST['percentual']) > 100.00:
+                form.add_error('percentual', 'O percentual diário não pode ultrapassar 100% de horas')
+
+            print(request.POST['data'])
+
+            if form.is_valid():
+                self.object = form.save()
+            else:
+                return self.form_invalid(form)
+
+        return redirect(self.success_url)
+
+        # if form.is_valid():
+        #     self.object = form.save()
+        #     return redirect(self.success_url)
+        # return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         self.form_class.Meta.model.user = self.request.user
