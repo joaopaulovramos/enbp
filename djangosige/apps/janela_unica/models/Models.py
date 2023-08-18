@@ -89,6 +89,7 @@ class AvaliacaoDocumentoUnico(models.Model):
     observacao = models.CharField(max_length=1055, null=True, blank=True)
     aprovado = models.BooleanField(null=True, blank=True)
     documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_avaliacao", on_delete=models.PROTECT, null=True, blank=True)
+    data_avaliacao = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Avaliação para Pagamento'
@@ -132,6 +133,8 @@ class Contrato(models.Model):
     data_validade = models.DateTimeField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     tipo_contrato = models.ForeignKey(TipoContrato, related_name="tipo_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO, default='9')
+    detalhe_pagamento = models.CharField(max_length=1055, null=True, blank=True)
     situacao = FSMField(
         default=SituacaoContrato.RASCUNHO,
         verbose_name='Situação',
@@ -344,6 +347,20 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             object_repr=str(self),
             change_message=mensagem,
             action_flag=CHANGE)
+    
+    def aprovacao_atual(self):
+        ap = AvaliacaoDocumentoUnico.objects.filter(documento_unico=self,aprovado__isnull=True).order_by('sequencia').first()
+        return ap
+        
+    def pode_aprovar(self, user):
+        ap = self.aprovacao_atual()
+        if not ap:
+            return False
+        if user.is_superuser:
+            return True
+        if ap.usuario_avaliador == user:
+            return True
+        return False
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
                 # target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
@@ -351,6 +368,35 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
                 custom=dict(button_name='Enviar para Avaliação'))
     def enviar_avaliacao(self, by=None, request=None):
         self.logar_detalhes(request, mensagem='Enviado para avaliação')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
+                    custom=dict(button_name='Aprovar'),
+                    permission=lambda instance, user: instance.pode_aprovar(user))
+    def aprovar_documento(self, by=None, request=None):
+        ap = self.aprovacao_atual()
+        ap.aprovado = True
+        ap.usuario_avaliador = request.user
+        ap.data_avaliacao = datetime.now()
+        ap.save()
+        self.aprovado_gerencia = True
+        self.usuario_gerencia = request.user
+        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_mod
+        # self.changeReason = 'Aprovado pela gerência'
+        self.logar_detalhes(request, mensagem='Aprovado pela gerência')
+
+    @transition(field=situacao, source=[StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
+                                        StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
+                                        StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA,
+                                        StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA],
+                target=StatusAnaliseFinaceira.DEVOLVIDO,
+                permission='janela_unica.gerencia_documento_unico',
+                custom=dict(button_name='Devolver Solictação')
+                # , conditions=[can_reprovar_gerencia]
+                )
+    def devolver_documento(self, by=None, request=None):
+        self.aprovado_gerencia = False
+        self.usuario_gerencia = request.user
+        self.logar_detalhes(request, mensagem='Reprovado pela gerência')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
                 target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA,
@@ -362,16 +408,6 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         #https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
         # self.changeReason = 'Aprovado pela gerência'
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
-                custom=dict(button_name='Aprovar'))
-    def aprovar_documento(self, by=None, request=None):
-        self.aprovado_gerencia = True
-        self.usuario_gerencia = request.user
-        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_mod
-        # self.changeReason = 'Aprovado pela gerência'
-        self.logar_detalhes(request, mensagem='Aprovado pela gerência')
-
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico',
                 custom=dict(button_name='Devolver Solictação')

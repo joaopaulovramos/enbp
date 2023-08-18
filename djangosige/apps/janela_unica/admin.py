@@ -3,8 +3,10 @@ from typing import Any, List, Optional, Tuple, Type, Union
 from django.contrib import admin
 from django import forms
 from django.contrib.admin.sites import AdminSite
+from django.http import HttpResponseRedirect
 from django.http.request import HttpRequest
 from django.utils.safestring import mark_safe
+from django.contrib.admin.options import csrf_protect_m
 
 # from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
 from djangosige.apps.janela_unica.models.Models import AprovadorContrato, AvaliacaoDocumentoUnico, Contrato, StatusAnaliseFinaceira, TipoContrato, ArquivoSolicitacaoContrato
@@ -21,7 +23,7 @@ class AvaliacaoDocumentoUnicoInline(admin.TabularInline):
     model = AvaliacaoDocumentoUnico
     extra = 0
     max_num = 10
-
+    fields = ['sequencia', 'usuario_avaliador', 'descricao', 'observacao', 'aprovado']
     class Meta:
         verbose_name = 'Arquivo do Documento'
         verbose_name_plural = 'Arquivos do Documento'
@@ -49,11 +51,11 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
     model = ArquivoDocumentoUnico
     extra = 0
     max_num = 10
+    fields = ['sequencia', 'descricao', 'arquivo',]
 
     class Meta:
         verbose_name = 'Arquivo do Documento'
         verbose_name_plural = 'Arquivos do Documento'
-        fields = ['descricao', 'arquivo',]
         can_delete = True
         widgets = {
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
@@ -69,10 +71,10 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
         return False
 
     def get_readonly_fields(self, request, obj=None):
-        ret = ['descricao']
+        ret = ['sequencia', 'descricao',]
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
         if obj and not obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
-            ret.extend(['descricao', 'arquivo',])
+            ret.extend(['arquivo',])
         return ret
 
     def __str__(self):
@@ -140,9 +142,13 @@ class ContratoForm(NorliAdminModelForm):
         verbose_name_plural = 'Contratos'
         fields = '__all__'
         widgets = {
-            'descricao': forms.TextInput(attrs={'class': 'form-control'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control'}),
+            'detalhe_pagamento': forms.Textarea(attrs={'class': 'form-control'}),
             'data_inclusao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             'data_validade': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
+        }
+        labels = {
+            'pk': 'Nº Contrato',
         }
 
 
@@ -150,7 +156,9 @@ class ContratoForm(NorliAdminModelForm):
 class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     fsm_field = ['situacao',]
     form = ContratoForm
-    list_display = ('descricao', 'data_inclusao', 'data_validade',)
+    actions = None
+    list_display = ('pk', 'fornecedor', 'descricao', 'data_inclusao', 'data_validade', 'valor_total')
+    list_filter = ('fornecedor','data_validade')
     inlines = [AprovadorContratoInline, ArquivoSolicitacaoContratoInline,]
     fieldsets = (
         ('Dados contrato', {
@@ -158,6 +166,7 @@ class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
                 'fornecedor',
                 'descricao',
                 ('data_validade', 'valor_total', 'arquivo',),
+                ('forma_pagamento', 'detalhe_pagamento', ),
             ),
             # 'classes': ('formset-box',),
         }),
@@ -173,10 +182,8 @@ class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
 
 
 class DocumentoUnicoFinanceiroForm(NorliAdminModelForm):
-
     def clean(self):
         contrato = self.cleaned_data.get('contrato')
-        end_date = self.cleaned_data.get('end_date')
         if not contrato:
             raise forms.ValidationError("Contrato é obrigatorio")
         return self.cleaned_data
@@ -209,10 +216,34 @@ class DocumentoUnicoFinanceiroForm(NorliAdminModelForm):
 
 @admin.register(DocumentoUnicoFinanceiro)
 class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
+    actions = ['aprovar']
+
+    def aprovar(self, request, object_id):
+        msg = "Aprovado Objeto {}".format(object_id)
+        self.message_user(request, msg)
+
+    aprovar.short_description = "Aprovar solicitação"
+
+    @csrf_protect_m
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        # print('change form view')
+        if request.method == 'POST' and '_aprovar' in request.POST:
+            # obj = self.get_object(request, unquote(object_id))
+            self.make_published(request, object_id)
+            return HttpResponseRedirect(request.get_full_path())
+
+        return admin.ModelAdmin.changeform_view(
+            self, request,
+            object_id=object_id,
+            form_url=form_url,
+            extra_context=extra_context,
+        )
+
+
     def save_model(self, request, obj, form, change):
         obj.responsavel = request.user
         super().save_model(request, obj, form, change)
-        if obj.contrato:
+        if obj.contrato and not ArquivoDocumentoUnico.objects.filter(documento_unico=obj).exists():
             documentos_contrato = ArquivoSolicitacaoContrato.objects.filter(contrato=obj.contrato)
             # documentos_contrato = obj.contrato.arquivosolicitacaocontrato_set.all()
             for ar in documentos_contrato:
@@ -231,7 +262,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     fsm_field = ['situacao',]
     form = DocumentoUnicoFinanceiroForm
     # Desabilita as ações em massa
-    actions = None
+    # actions = None
     # Atributos de filtragem
     list_filter = ('situacao', 'data_inclusao', 'projeto', 'plano_conta', 'tipo_arquivo')
     search_fields = ('situacao',)
@@ -254,7 +285,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     fieldsets = (
         ('Dados solicitação', {
             'fields': (
-                ('pk', 'data_inclusao', 'responsavel'),
+                ('pk', 'situacao', 'data_inclusao', 'responsavel'),
                 ('contrato', 'observacoes'),
                 ('tipo_arquivo', 'arquivo', ),
                 ('data_emissao', 'valor_total'),
@@ -280,7 +311,6 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             'classes': ('replacein',),
         }),
 
-
         ('Informações financeiras', {
             'fields': (
                 ('possui_parcelamento', 'extra_orcamentaria',
@@ -299,20 +329,20 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         #     )
         # }),
 
-        # ('Analise fiscal e lançamento questor', {
-        #     'fields': (
-        #         ('aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal'),
-        #         ('valor_retencao', 'valor_liquido',),
-        #         ('usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'comprovante_lancamento')
-        #     )
-        # }),
+        ('Analise fiscal e lançamento questor', {
+            'fields': (
+                ('aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal'),
+                ('valor_retencao', 'valor_liquido',),
+                ('usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'comprovante_lancamento')
+            )
+        }),
 
-        # ('Analise financeira e pagamento', {
-        #     'fields': (
-        #         ('aprovado_analise_financeira', 'usuario_analise_financeira', 'observacao_analise_financeira'),
-        #         ('pagamento_realizado', 'observacao_pagamento', 'comprovante_pagamento')
-        #     )
-        # }),
+        ('Analise financeira e pagamento', {
+            'fields': (
+                ('aprovado_analise_financeira', 'usuario_analise_financeira', 'observacao_analise_financeira'),
+                ('pagamento_realizado', 'observacao_pagamento', 'comprovante_pagamento')
+            )
+        }),
     )
 
     inlines = [ArquivoDocumentoUnicoInline, AvaliacaoDocumentoUnicoInline,]
@@ -347,7 +377,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         return False
 
     def get_readonly_fields(self, request, obj=None):
-        ret = ['pk', 'responsavel', 'data_inclusao', 'arquivo_documento_unico_inline']
+        ret = ['pk', 'situacao', 'responsavel', 'data_inclusao', 'arquivo_documento_unico_inline']
         # Se é um novo registro ou retorno para edicação do responsavel todos os campos estarão disponíveis para edição, exceto os de aprovação
         if not obj or not obj.situacao or obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
             ret.extend(['aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia', 'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia',
