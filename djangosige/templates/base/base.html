@@ -53,6 +53,7 @@
     <div class="overlay"></div>
     <!--  #Overlay -->
 
+    {% load simple_menu %}
     {%block side_top_bars%}
 
     <!-- Top Bar -->
@@ -108,8 +109,8 @@
                 </div>
             </div>
             <!-- #User Info -->
-
-            {% include 'base/menu.html' %}
+            {% generate_menu %}
+            {% include 'base/menu.html' with menu=menus.main  %}
             <!-- #Menu -->
             <!-- Footer -->
             <div class="legal">
