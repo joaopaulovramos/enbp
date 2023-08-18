@@ -94,23 +94,6 @@ class AdicionarDocumentoView(CustomCreateView):
         context['return_url'] = reverse_lazy('janela_unica:listadocumentos')
         return context
 
-
-class EditarDocumentoView(CustomUpdateView):
-    form_class = DocumentoForm
-    model = DocumentoModel
-    template_name = 'janela_unica/edit.html'
-    success_url = reverse_lazy('janela_unica:listadocumentos')
-    success_message = "Documento Editado com Sucesso."
-    permission_codename = 'cadastrar_item_viagens'
-
-    def get_context_data(self, **kwargs):
-        context = super(EditarDocumentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição de Documento'
-        context['return_url'] = reverse_lazy('janela_unica:listadocumentos')
-        context['id'] = self.object.id
-        return context
-
-
 class TramitarView(CustomCreateView):
     form_class = TramitacaoForm
     template_name = 'janela_unica/add.html'
@@ -182,3 +165,106 @@ class GerarPDFDocumentoUnicoView(CustomView):
             merger.write(result)
             return HttpResponse(result.getvalue(), content_type='application/pdf')
         return None
+
+
+class EditarDocumentoView(CustomUpdateView):
+    form_class = DocumentoForm
+    model = DocumentoModel
+    template_name = 'janela_unica/edit.html'
+    success_url = reverse_lazy('janela_unica:listadocumentos')
+    success_message = "Documento Editado com Sucesso."
+    permission_codename = 'cadastrar_item_viagens'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditarDocumentoView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'Edição de Documento'
+        context['return_url'] = reverse_lazy('janela_unica:listadocumentos')
+        context['id'] = self.object.id
+        return context
+
+
+class AdicionarDocumentoUnicoFinanceiroView(CustomCreateView):
+    form_class = AdicionaDocumentoUnicoFinanceiroForm
+    # model = DocumentoUnicoFinanceiro
+    template_name = 'base/add.html'
+    success_url = reverse_lazy('janela_unica:listadocumentos')
+    success_message = "Documento Criado com Sucesso."
+    fieldsets = (
+                ('Dados solicitação', {
+                    'fields': (
+                        ('pk', 'data_inclusao', 'responsavel'),
+                        ('tipo_arquivo', 'tipo_anexo', 'arquivo', 'observacoes'),
+                        ('chave', 'numero', 'serie', 'cfop'),
+                        ('cnpj', 'data_emissao', 'valor_total'),
+                        'descricao',
+                        # ('arquivo_documento_unico_inline')
+                    ),
+                    # 'classes': ('formset-box',),
+                }),
+                # ('Arquivos adicionais', {
+                (None, {
+                    'fields': (),
+                    'classes': ('replacein',),
+                }),
+
+                ('Dados pagamento', {
+                    'fields': (
+                        ('forma_pagamento', 'fornecedor'),
+                        ('plano_conta', 'projeto'),
+                        ('linha_digitavel',),
+                        ('chave_pix',),
+                        ('banco', 'agencia', 'conta', 'digito')
+                    )
+                }),
+
+                ('Informações financeiras', {
+                    'fields': (
+                        ('possui_parcelamento', 'extra_orcamentaria',
+                        'possui_contrato', 'antecipacao_pagamento', 'pagamento_boleto'),
+                    )
+                }),
+
+
+                ('Aprovadores', {
+                    'fields': (
+                        ('aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia'),
+
+                        ('aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia'),
+
+                        ('aprovado_diretoria', 'usuario_diretoria', 'observacao_diretoria')
+                    )
+                }),
+
+                ('Analise fiscal e lançamento questor', {
+                    'fields': (
+                        ('aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal'),
+                        ('valor_retencao', 'valor_liquido',),
+                        ('usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'comprovante_lancamento')
+                    )
+                }),
+
+                ('Analise financeira e pagamento', {
+                    'fields': (
+                        ('aprovado_analise_financeira', 'usuario_analise_financeira', 'observacao_analise_financeira'),
+                        ('pagamento_realizado', 'observacao_pagamento', 'comprovante_pagamento')
+                    )
+                }),
+            )
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        form.instance.user_enviado = self.request.user
+        if form.is_valid():
+            self.object = form.save()
+            messages.success(self.request, self.get_success_message(form.cleaned_data))
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(AdicionarDocumentoUnicoFinanceiroView, self).get_context_data(**kwargs)
+        context['title_complete'] = 'TRAMITAR DOCUMENTO'
+        context['return_url'] = reverse_lazy('janela_unica:listadocumentos')
+        context['fieldsets'] = self.fieldsets
+        return context

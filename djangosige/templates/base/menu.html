@@ -154,8 +154,26 @@
                         </ul>
                     </li>
 <!-- fim timesheet-->
-                    <!-- inicio janela única-->
-                  <li>
+                {% for item in menu %}
+                {% if item.visible %}
+                <li>
+                    <a href="javascript:void(0);" class="menu-toggle">
+                        <i class="material-icons">{{ item.icon }}</i>
+                        <span>{{ item.title }}</span>
+                    </a>
+                    <ul class="ml-menu">
+                        {% for subitem in item.children %}
+                            <li>
+                                <a href="{{ subitem.url }}">
+                                    <span>{{ subitem.title }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">insert_drive_file</i>
                             <span>Janela Única</span>

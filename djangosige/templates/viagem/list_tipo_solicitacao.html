@@ -35,6 +35,7 @@
                 <tr>
                   <th>Código</th>
                   <th>Descrição</th>
+                  <th>Dias de Antecedência</th>
                   <th>Remover</th>
                 </tr>
               </thead>
@@ -46,6 +47,7 @@
                <tr class="clickable-row"  data-href="{% url 'viagem:editartiposolicitacao' natop.id %}">
                 <td>{{ natop.id }}</td>
                 <td>{{natop.nome}}</td>
+                <td>{{natop.dias_antecedencia}}</td>
                 <td class="lista-remove">
                   <input type="checkbox" name="{{natop.id}}" id="remover-entrada-{{natop.id}}"/>
                   <label class="remove-entry-label" for="remover-entrada-{{natop.id}}"></label>
