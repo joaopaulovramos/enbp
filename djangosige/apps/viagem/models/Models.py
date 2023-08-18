@@ -1,4 +1,5 @@
 from django.db import models
+from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import User
 from django.template.defaultfilters import date
 from django.core.validators import MinValueValidator
@@ -218,6 +219,8 @@ class ViagemModel(models.Model):
                                               validators=[MinValueValidator(Decimal('0.00'))],
                                               default=Decimal('0.00'), blank=True, null=True)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
+    history = HistoricalRecords()
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
