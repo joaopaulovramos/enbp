@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'djangosige.apps.viagem',
     'djangosige.apps.opiniao',
     'djangosige.apps.banco',
+    'djangosige.apps.orcamento',
 
     # Utilitarios e Importacao
     'djangosige.apps.util',
