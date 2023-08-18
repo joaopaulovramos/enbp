@@ -4131,6 +4131,17 @@ $.Admin.viagemForm = {
                   $.get(url, function (data, status) {
                       $('.modal-body').html(data);
                       $('.modal-title').html("Solicitação de viagem - Código: " + id);
+
+                      // cria um botão de exportar na modal copiando e ocultando o link original
+                      let link = $('.modal-body a#relatorio_pdf').attr('href')
+                      $('.modal-body a#relatorio_pdf').hide()
+
+                      let exportar = `<a id="relatorio_pdf" target="_blank" 
+                        href="${link}" class="btn btn-info">
+                        <i class="material-icons">picture_as_pdf</i><span> Exportar</span> </a>`
+
+                      $('.modal-footer').html(exportar);
+
                       $('#modal_viagem').modal('show');
                   });
               }

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+import os.path
 from django.db import IntegrityError
 from django.db.models import Q
 import pytz
 from django.forms import inlineformset_factory
-
+from django.http import HttpResponse
 
 from django.urls import reverse_lazy
 
-from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
+from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomView
 from django.shortcuts import redirect
 from django.utils import timezone
 from datetime import datetime, date, timedelta
@@ -22,6 +23,12 @@ import random
 import string
 
 from djangosige.apps.viagem.utils import *
+
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.template.loader import get_template
+
+from djangosige.configs import settings
 
 ID_TIPO_VIAGEM_REGULAR = '1'
 ID_TIPO_VIAGEM_NACIONAL = '1'
@@ -570,7 +577,6 @@ class AdicionarTabelaDiariaView(CustomCreateView):
         else:
             return self.form_invalid(form)
 
-
     def get_context_data(self, **kwargs):
         context = super(AdicionarTabelaDiariaView, self).get_context_data(**kwargs)
         context['title_complete'] = 'Adicionar Tabela de Diária'
@@ -1076,13 +1082,13 @@ class ListHomologarViagensView(CustomListView):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
         for viagem in user_viagens:
             viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
 
         return user_viagens
-         
 
     # Remover items selecionados da database
     def post(self, request, *args, **kwargs):
@@ -1091,7 +1097,7 @@ class ListHomologarViagensView(CustomListView):
                 instance = self.model.objects.get(id=key)
                 if (instance.homologada):
                     instance.homologada_reembolso = True
-                    instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count()>0
+                    instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count() > 0
                 else:
                     instance.homologada = True
                 instance.save()
@@ -1121,7 +1127,8 @@ class ListPagamentoDiariasView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
         user_viagens = user_viagens.filter(homologada=True)
-        user_viagens = user_viagens.exclude(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
+        user_viagens = user_viagens.exclude(
+            pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
         return user_viagens
 
     def get_object(self):
@@ -1194,16 +1201,17 @@ class AprovarPagamentoDiariasView(CustomCreateView):
             self.object.viagem = viagem
             self.object.banco = cb.banco
             self.object.agencia = cb.agencia
-            self.object.conta=cb.conta
-            self.object.digito=cb.digito
-            self.object.qtd_diarias=viagem.qtd_diarias
-            self.object.valor_diaria=viagem.valor_diaria
-            self.object.valor_total_diarias=viagem.valor_total_diarias
+            self.object.conta = cb.conta
+            self.object.digito = cb.digito
+            self.object.qtd_diarias = viagem.qtd_diarias
+            self.object.valor_diaria = viagem.valor_diaria
+            self.object.valor_total_diarias = viagem.valor_total_diarias
             self.object.data_autorizacao = data_hoje
             self.object.autorizado_por = current_user.usuario
             self.object.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
+
 
 class AprovarPagamentoReembolsoView(CustomCreateView):
     form_class = AprovarPagamentoReembolsoForm
@@ -1266,8 +1274,8 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
             self.object.viagem = viagem
             self.object.banco = cb.banco
             self.object.agencia = cb.agencia
-            self.object.conta=cb.conta
-            self.object.digito=cb.digito
+            self.object.conta = cb.conta
+            self.object.digito = cb.digito
             total_recursos_empresa, total_recursos_proprios = self.calc_arquivo_pagamentos(viagem)
             self.object.total_recursos_proprios = total_recursos_proprios
             self.object.total_recursos_empresa = total_recursos_empresa
@@ -1288,6 +1296,7 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
                 total_recursos_empresa += arquivo.valor_pago_reais
         return total_recursos_empresa, total_recursos_proprios
 
+
 class ListPagamentoReembolsoView(CustomListView):
     template_name = 'viagem/list_pagamento_reembolso.html'
     model = ViagemModel
@@ -1298,7 +1307,8 @@ class ListPagamentoReembolsoView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(homologada_reembolso=True)
         user_viagens = user_viagens.filter(tem_reembolso=True)
-        user_viagens = user_viagens.exclude(pk__in=AprovarPagamentoReembolsoModel.objects.all().values_list('viagem', flat=True))
+        user_viagens = user_viagens.exclude(
+            pk__in=AprovarPagamentoReembolsoModel.objects.all().values_list('viagem', flat=True))
 
         return user_viagens
 
@@ -1633,11 +1643,12 @@ class ListAprovarPCViagensView(CustomListView):
             self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
-        user_viagens = user_viagens.filter(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
-        
-        
+
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(
+            pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
+
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
         return user_viagens
@@ -1837,3 +1848,85 @@ class AvaliarArquivosView(CustomUpdateView):
         context['solicitante'] = f'{usuario_solicitante.get_username()} - ' \
                                  f'{usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
         return context
+
+
+def get_dados_autorizacoes(queryset):
+    if queryset:
+        queryset = queryset.last()
+        user_autorizador = User.objects.get(id=queryset.history_user_id)
+        usuario_autorizador = Usuario.objects.get(pk=queryset.history_user_id)
+        return {"nome": user_autorizador.get_full_name(),
+                "data": queryset.history_date,
+                "perfil": Usuario.PERFIS[int(usuario_autorizador.perfil)][1],
+                }
+
+    return None
+
+
+def fetch_resources(uri, rel):
+    return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+
+
+# def fetch_resources(uri, rel):
+#     return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+class GerarPDFRelatorioSolicitacaoView(CustomView):
+    permission_codename = ['solicitar_viagens']
+    template_name = 'viagem/PDF_solicitacao_viagem.html'
+    dia_semana = ['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo', ]
+
+    def get(self, request, *args, **kwargs):
+        # current_user = self.request.user
+
+        viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
+        trechos = TrechoModel.objects.filter(viagem=viagem)
+        usuario = Usuario.objects.get(user=viagem.solicitante)
+
+        # TODO: pegar apenas a conta padrão
+        dados_bancarios = ContaBancaria.objects.filter(usuario_banco=usuario)
+        if dados_bancarios:
+            dados_bancarios = dados_bancarios.first()
+
+        dados_solicitante = {'nome': User.objects.get(pk=usuario.pk).get_full_name(),
+                             'nivel': Usuario.PERFIS[int(usuario.perfil)][1],
+                             'matricula': usuario.matricula,
+                             'telefone': usuario.telefone}
+
+        dia_semana_fim = "" if not viagem.dada_fim else self.dia_semana[viagem.dada_fim.weekday()]
+
+        dados_aprovacao = {}
+
+        autorizacao_sup = ViagemModel.history.filter(history_type='~', id=viagem.id, autorizada_sup=True)
+        autorizacao_dus = ViagemModel.history.filter(history_type='~', id=viagem.id, autorizada_dus=True)
+        homologacao = ViagemModel.history.filter(history_type='~', id=viagem.id, homologada=True)
+
+        dados_aprovacao["autorizacao_sup"] = get_dados_autorizacoes(autorizacao_sup)
+        dados_aprovacao["autorizacao_dus"] = get_dados_autorizacoes(autorizacao_dus)
+        dados_aprovacao["homologacao"] = get_dados_autorizacoes(homologacao)
+
+        if AprovarPagamentoDiariasModel.objects.filter(viagem=viagem).exists():
+            aprovacao_diarias = AprovarPagamentoDiariasModel.objects.filter(viagem=viagem).last()
+            user_autorizador = User.objects.get(id=aprovacao_diarias.autorizado_por_id)
+            usuario_autorizador = Usuario.objects.get(pk=aprovacao_diarias.autorizado_por_id)
+            dados_aprovacao["aprovacao_diarias"] = {"nome": user_autorizador.get_full_name(),
+                                                    "data": aprovacao_diarias.data_autorizacao,
+                                                    "perfil": Usuario.PERFIS[int(usuario_autorizador.perfil)][1],
+                                                    }
+
+        template = get_template(self.template_name)
+        context = {
+            "solicitante": dados_solicitante,
+            "dados_bancarios": dados_bancarios,
+            "viagem": viagem,
+            "trechos": trechos,
+            "dia_semana_inicio": self.dia_semana[viagem.dada_inicio.weekday()],
+            "dia_semana_fim": dia_semana_fim,
+            "dados_aprovacao": dados_aprovacao,
+        }
+        html = template.render(context)
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result, link_callback=fetch_resources)
+
+        if not pdf.err:
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        else:
+            return None
