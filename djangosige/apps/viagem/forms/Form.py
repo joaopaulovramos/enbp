@@ -32,13 +32,15 @@ class TipoViagemForm(forms.ModelForm):
 class TipoDeSolicitacaoForm(forms.ModelForm):
     class Meta:
         model = TiposDeSolicitacaoModel
-        fields = ('nome',)
+        fields = ('nome','dias_antecedencia',)
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'dias_antecedencia': forms.NumberInput(attrs={'class': 'form-control',}),
 
         }
         labels = {
             'nome': _('Descrição'),
+            'dias_antecedencia': _('Dias de Antecedência'),
         }
 
 
