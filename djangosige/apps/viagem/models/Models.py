@@ -81,7 +81,6 @@ class TipoDeTransporteModel(models.Model):
 class TipoDeDespesaModel(models.Model):
     sigla = models.CharField(max_length=10, unique=True)
     descricao = models.CharField(max_length=300, unique=True)
-    nome = models.CharField(max_length=10, unique=True)
 
     def __str__(self):
         return u'%s - %s' % (self.id, self.sigla)
@@ -175,7 +174,7 @@ class ViagemModel(models.Model):
     tipo_viagem = models.ForeignKey(TiposDeViagemModel, related_name="viagem_tipo", on_delete=models.RESTRICT)
     tipo_solicitacao = models.ForeignKey(TiposDeSolicitacaoModel, related_name="viagem_solicitacao",
                                          on_delete=models.RESTRICT)
-    # motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.RESTRICT)
+    motivo = models.ForeignKey(MotivoDeViagemModel, related_name="viagem_motivo", on_delete=models.RESTRICT)
     # tipo_transporte = models.ForeignKey(TipoDeTransporteModel, related_name="viagem_transporte",
     #                                     on_delete=models.RESTRICT)
     # categoria_passagem = models.ForeignKey(CategoriaPassagemModel, related_name="viagem_passagem",
@@ -220,7 +219,7 @@ class ViagemModel(models.Model):
                                               default=Decimal('0.00'), blank=True, null=True)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
-    
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -229,6 +228,15 @@ class ViagemModel(models.Model):
 
     def data_inicio_formated(self):
         return '%s' % date(self.dada_inicio, "d/m/Y")
+
+    def hora_inicio_formated(self):
+        return '%s' % date(self.dada_inicio, "H:m:s")
+
+    def data_fim_formated(self):
+        return '%s' % date(self.dada_fim, "d/m/Y")
+
+    def hora_fim_formated(self):
+        return '%s' % date(self.dada_fim, "H:m:s")
 
     def __str__(self):
         return ' ( ' + str(self.dada_inicio) + ' - ' + str(self.dada_fim) + ' )'
@@ -330,3 +338,11 @@ class TrechoModel(models.Model):
     @property
     def format_data_fim(self):
         return '%s' % date(self.data_fim_trecho, "d/m/Y")
+
+    @property
+    def hora_inicio_formated(self):
+        return '%s' % date(self.data_inicio_trecho, "H:m:s")
+
+    @property
+    def hora_fim_formated(self):
+        return '%s' % date(self.data_fim_trecho, "H:m:s")

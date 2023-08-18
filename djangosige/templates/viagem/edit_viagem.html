@@ -244,7 +244,18 @@
 
               <div class="row">
 
-                  <div class="col-sm-4">
+              <div class="col-sm-3">
+                  <div class="form-group">
+                    <div class="form-line">
+
+                      <label>{{form.motivo.label}}</label><strong style="color:red;"> *</strong>
+                      {% if form.motivo.errors %}<label class="error">{% for error in form.motivo.errors %}{{error}}{% endfor %}</label>{% endif %}
+                      {{form.motivo}}
+                    </div>
+                  </div>
+                </div>
+
+                  <div class="col-sm-3">
                       <div class="form-group">
                         <div class="form-line">
 
@@ -255,7 +266,7 @@
                       </div>
                     </div>
 
-                  <div class="col-sm-4">
+                  <div class="col-sm-3">
                       <div class="form-group">
                         <div class="form-line">
 
@@ -266,7 +277,7 @@
                       </div>
                     </div>
 
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                       <div class="form-group">
                         <div class="form-line">
 

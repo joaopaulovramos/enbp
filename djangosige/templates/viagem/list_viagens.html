@@ -61,7 +61,10 @@
 
                <tr {% if not natop.autorizada_dus and not natop.autorizada_sup and not natop.homologada  and not natop.recusado_sup and not recusado_dus%}
                        class="clickable-row"  data-href="{% url 'viagem:editarviagem' natop.id %}"
-                    {% endif %}
+
+               {% else %}
+                        class="clickable-row-modal" data-norli-id="{{natop.id}}"  data-href="{% url 'viagem:ver_solicitacao_viagem' natop.id %}"
+               {% endif %}
                >
                    <td>{{natop.id}}</td>
                    <td>{{login}}</td>
@@ -199,6 +202,12 @@
   </div>
 </div>
 
+        {#  Modal para detalhes #}
+
+        {% include 'base/modal_viagem.html' %}
+
+        {#  Modal para detalhes #}
+
 </div>
 </section>
 
@@ -207,12 +216,18 @@
 
 {% block js %}
 
-   <script>
+    {% load static %}
+
+    <script src="{% static 'js/jquery.mask.js' %}"></script>
+
+    <script>
+        $.Admin.viagemForm.init()
+
         $('#id_select_mes, #id_select_ano').on('change', function () {
             let mes = $('#id_select_mes').val()
             let ano = $('#id_select_ano').val()
             window.location.href = `{% url 'viagem:listaviagem' %}?mes=${mes}&ano=${ano}`;
         })
-   </script>
+    </script>
 
 {% endblock %}

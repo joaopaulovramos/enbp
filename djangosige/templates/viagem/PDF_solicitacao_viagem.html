@@ -1,0 +1,286 @@
+<style>
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+    table#quadro tbody > tr:last-child > td {
+        background:#f1f1f1;
+        border-top: #0a9edc solid 1px;
+        color: #0a9edc;
+        font-weight: bold;
+    }
+    .titulo_box {
+        background-color: #0a9edc;
+        color: #f1f1f1;
+        border-bottom: none;
+        text-align: center;
+        font-weight: bold;
+        line-height: 1rem;
+        margin-top: 20px;
+    }
+
+    .box table {
+        border: none;
+        font-size: 10px;
+    }
+
+    .box {
+        padding: 4px;
+    }
+    table.trechos td, table.trechos th  {
+        border: #dcdcdc solid 1px;
+    }
+    .texto { font-size: 0.8rem}
+
+    .alerta { color: red; font-size: small}
+
+</style>
+
+<table>
+    <tr>
+        <td>
+            <img src="imagens/enbpar.jpg" width="200px"/>
+        </td>
+        <td>
+
+            <div style="text-align: right">
+                <h2 style="margin-bottom: -20px">Solicitação de viagem - {{ viagem.id }}</h2>
+                <br/>
+            </div>
+
+        </td>
+    </tr>
+</table>
+
+
+<div class="box">
+    <div class="titulo_box">
+        Solicitação de viagem
+    </div>
+
+    <table>
+        <tr>
+            <td>
+                <strong>Matrícula:</strong> {{ solicitante.matricula }} <br/>
+                <strong>Nome:</strong> {{ solicitante.nome }} <br/>
+                <strong>Nível:</strong> {{ solicitante.nivel }} <br/>
+            </td>
+            <td></td>
+            <td>
+                <strong>Telefone:</strong> {{ solicitante.telefone }} <br/>
+                <strong>Localidade:</strong> {{ viagem.localidade_destino }} <br/>
+                <strong>Centro de custo:</strong>  <br/>
+            </td>
+        </tr>
+        <tr>
+            <td>{{ dados_bancarios }}</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <div class="titulo_box">
+        Motivo da Viagem
+    </div>
+
+    <table>
+        <tr>
+            <td>
+                {{ viagem.motivo }}
+            </td>
+        </tr>
+    </table>
+
+    <div class="titulo_box">
+        Trechos
+    </div>
+    <table class="trechos">
+        <thead>
+            <tr>
+                <th>Transporte</th>
+                <th>Data origem</th>
+                <th>Hora origem</th>
+                <th>Origem</th>
+                <th>Destino</th>
+                <th>Data destino</th>
+                <th>Hora destino</th>
+                <th>Passagem</th>
+            </tr>
+        </thead>
+
+        <tbody>
+           {% if trechos%}
+           {% for natop in trechos %}
+
+           <tr>
+               <td>{{natop.tipo_transporte_trecho}}</td>
+               <td>{{natop.format_data_inicio}}</td>
+               <td>{{natop.hora_inicio_formated}}</td>
+               <td>{{natop.origem_trecho}}</td>
+               <td>{{natop.destino_trecho}}</td>
+               <td>{{natop.format_data_fim}}</td>
+               <td>{{natop.hora_fim_formated}}</td>
+               <td>{{natop.categoria_passagem_trecho}}</td>
+            </tr>
+
+           {% endfor %}
+           {%else%}
+           {%endif%}
+        </tbody>
+    </table>
+
+    <div class="titulo_box">
+        Período - Cálculo de Diárias
+    </div>
+    {% if viagem.itinerario == '1' %}
+
+        <table>
+        <tr style="line-height: 0.4rem">
+            <td>Data Início</td>
+            <td>Dia da Semana</td>
+            <td>Hora Início</td>
+            <td>Data Fim</td>
+            <td>Dia da Semana</td>
+            <td>Hora Fim</td>
+        </tr>
+        <tr>
+            <td>{{ viagem.data_inicio_formated }}</td>
+            <td>{{ dia_semana_inicio }}</td>
+            <td>{{ viagem.hora_inicio_formated }}</td>
+            <td>{{ viagem.data_fim_formated }}</td>
+            <td>{{ dia_semana_fim }}</td>
+            <td>{{ viagem.hora_fim_formated }}</td>
+        </tr>
+    </table>
+    {% else %}
+        <div class="texto">Diárias calculadas apenas em viagens Ida e Volta</div>
+    {% endif %}
+
+
+    <div class="titulo_box">
+        Diárias
+    </div>
+    <table>
+        <tr>
+            <td>Número de diárias</td>
+            <td>{{ viagem.qtd_diarias}}</td>
+            <td>Valor da Diária</td>
+            <td>R$ {{ viagem.valor_diaria}}</td>
+            <td>Valor total de Diária</td>
+            <td>R$ {{ viagem.valor_total_diarias}}</td>
+        </tr>
+    </table>
+
+    <div class="titulo_box">
+        Hospedagem - Pagamento de Hotel pela ENBPar ou por terceiros
+    </div>
+    <table>
+        <tr style="line-height: 0.4rem">
+            <td>Reserva de hotel</td>
+            <td> {% if viagem.reservar_hotel %} SIM {% else %} NÃO {% endif %} </td>
+            <td>Alimentação Terceiros</td>
+            <td> {% if viagem.alimentacao_terceiros %} SIM {% else %} NÃO {% endif %} </td>
+        </tr>
+        <tr>
+            <td>Bagagem técnica</td>
+            <td>{% if viagem.bagagem_tecnica %} SIM {% else %} NÃO {% endif %}</td>
+            <td>Bagagem Despachada</td>
+            <td>{% if viagem.bagagem_despachada %} SIM {% else %} NÃO {% endif %}</td>
+        </tr>
+        <tr>
+            <td>Local de Risco</td>
+            <td>{% if viagem.local_risco %} SIM {% else %} NÃO {% endif %}</td>
+            <td>Exige comprovante de vacina</td>
+            <td>{% if viagem.exige_vacina %} SIM {% else %} NÃO {% endif %}</td>
+        </tr>
+    </table>
+
+    <div class="titulo_box">
+        Justificativa de Excepcionalidade
+    </div>
+    <table>
+        <tr>
+            <td>
+                {{ viagem.justificativa }}
+            </td>
+        </tr>
+    </table>
+
+    <div class="titulo_box">
+        Autorizações
+    </div>
+    <table>
+        <tr>
+            <td>
+                <strong>{{ solicitante.nome }}</strong> <br/>
+                Solicitado em {{ viagem.data_inclusao }}
+            </td>
+            <td>
+                <strong>Autorização do Superintendente</strong> <br/>
+                {% if dados_aprovacao.autorizacao_sup %}
+                    {{ dados_aprovacao.autorizacao_sup.perfil }} -
+                    {{ dados_aprovacao.autorizacao_sup.nome }} <br/>
+                    Autorizado em {{ dados_aprovacao.autorizacao_sup.data }}
+                {% else %}
+                    <div class="alerta">Solicitação sem aprovação SUP</div>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+               <strong>Autorização do Diretor de Unidade</strong> <br/>
+                {% if dados_aprovacao.autorizacao_dus %}
+                    {{ dados_aprovacao.autorizacao_dus.perfil }} -
+                    {{ dados_aprovacao.autorizacao_dus.nome }} <br/>
+                    Autorizado em {{ dados_aprovacao.autorizacao_dus.data }}
+                {% else %}
+                    <div class="alerta">Solicitação sem aprovação DUS</div>
+                {% endif %}
+            </td>
+            <td>
+               <strong>Homologação do Recursos Humanos</strong> <br/>
+                {% if dados_aprovacao.homologacao %}
+                    {{ dados_aprovacao.homologacao.perfil }} -
+                    {{ dados_aprovacao.homologacao.nome }} <br/>
+                    Autorizado em {{ dados_aprovacao.homologacao.data }}
+                {% else %}
+                    <div class="alerta">Solicitação sem homologação</div>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Liberação de Diárias</strong> <br/>
+                {% if dados_aprovacao.aprovacao_diarias %}
+                    {{ dados_aprovacao.aprovacao_diarias.perfil }} -
+                    {{ dados_aprovacao.aprovacao_diarias.nome }} <br/>
+                    Autorizado em {{ dados_aprovacao.aprovacao_diarias.data }}
+                {% else %}
+                    <div class="alerta">Solicitação sem diárias liberadas</div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+{#<table>#}
+{#	<thead>#}
+{#		<tr>#}
+{#			<th>Question</th>#}
+{#			<th>History Date/Time</th>#}
+{#			<th>History Action</th>#}
+{#			<th>History User</th>#}
+{#		</tr>#}
+{#	</thead>#}
+{#	<tbody>#}
+{#		{% for t in hist %}#}
+{#		<tr>#}
+{#			<td>{{ hist.id }}</td>#}
+{#			<td>{{ autorizacao_sup.history_date }}</td>#}
+{#			<td>{{ hist.get_history_type_display }}</td>#}
+{#			<td>{{ autorizacao_sup.history_user }}</td>#}
+{#		</tr>#}
+{#		{% endfor %}#}
+{#	</tbody>#}
+{#</table>#}
+
