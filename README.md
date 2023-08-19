@@ -52,7 +52,9 @@ python manage.py loaddata djangosige/tests/fixtures/grupos.json
 
 python manage.py loaddata djangosige/tests/fixtures/classes.json
 
-python manage.py loaddata djangosige/tests/fixtures/sub_classes.json 
+python manage.py loaddata djangosige/tests/fixtures/sub_classes.json
+
+python manage.py loaddata djangosige/tests/fixtures/viagem_itens_initial_data.json
 ```
 
 6. Teste a instalação carregando o servidor de desenvolvimento (http://localhost:8000 no navegador):
