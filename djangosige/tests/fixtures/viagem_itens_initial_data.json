@@ -1,0 +1,374 @@
+[
+  {
+    "model": "viagem.tiposdeviagemmodel",
+    "pk": 1,
+    "fields": {
+      "nome": "Nacional"
+    }
+  },
+  {
+    "model": "viagem.tiposdeviagemmodel",
+    "pk": 2,
+    "fields": {
+      "nome": "Internacional"
+    }
+  },
+  {
+    "model": "viagem.tiposdesolicitacaomodel",
+    "pk": 1,
+    "fields": {
+      "nome": "Regular",
+      "dias_antecedencia": 15
+    }
+  },
+  {
+    "model": "viagem.tiposdesolicitacaomodel",
+    "pk": 2,
+    "fields": {
+      "nome": "Emergencial",
+      "dias_antecedencia": 0
+    }
+  },
+  {
+    "model": "viagem.motivodeviagemmodel",
+    "pk": 1,
+    "fields": {
+      "nome": "Congresso"
+    }
+  },
+  {
+    "model": "viagem.motivodeviagemmodel",
+    "pk": 2,
+    "fields": {
+      "nome": "Evento"
+    }
+  },
+  {
+    "model": "viagem.motivodeviagemmodel",
+    "pk": 3,
+    "fields": {
+      "nome": "Feira"
+    }
+  },
+  {
+    "model": "viagem.tipodetransportemodel",
+    "pk": 1,
+    "fields": {
+      "nome": "Avião"
+    }
+  },
+  {
+    "model": "viagem.tipodetransportemodel",
+    "pk": 2,
+    "fields": {
+      "nome": "Ônibus"
+    }
+  },
+  {
+    "model": "viagem.tipodedespesamodel",
+    "pk": 1,
+    "fields": {
+      "sigla": "TAXI",
+      "descricao": "Taxi em viagem"
+    }
+  },
+  {
+    "model": "viagem.tipodedespesamodel",
+    "pk": 2,
+    "fields": {
+      "sigla": "EXTR",
+      "descricao": "Extraordinárias"
+    }
+  },
+  {
+    "model": "viagem.tipodedespesamodel",
+    "pk": 3,
+    "fields": {
+      "sigla": "PAPS",
+      "descricao": "passagem aérea paga pelo Solicitante"
+    }
+  },
+  {
+    "model": "viagem.tipodedespesamodel",
+    "pk": 4,
+    "fields": {
+      "sigla": "DHPS",
+      "descricao": "Diferença de diária de hospedagem paga pelo Solicitante"
+    }
+  },
+  {
+    "model": "viagem.tipodedespesamodel",
+    "pk": 5,
+    "fields": {
+      "sigla": "HPS",
+      "descricao": "Hospedagem paga pelo Solicitante"
+    }
+  },
+  {
+    "model": "viagem.moedamodel",
+    "pk": 1,
+    "fields": {
+      "descricao": "Real"
+    }
+  },
+  {
+    "model": "viagem.moedamodel",
+    "pk": 2,
+    "fields": {
+      "descricao": "Dólar"
+    }
+  },
+  {
+    "model": "viagem.moedamodel",
+    "pk": 3,
+    "fields": {
+      "descricao": "Euro"
+    }
+  },
+  {
+    "model": "viagem.categoriapassagemmodel",
+    "pk": 1,
+    "fields": {
+      "descricao": "Econômica"
+    }
+  },
+  {
+    "model": "viagem.categoriapassagemmodel",
+    "pk": 2,
+    "fields": {
+      "descricao": "Executiva"
+    }
+  },
+  {
+    "model": "viagem.horariopreferencialmodel",
+    "pk": 1,
+    "fields": {
+      "descricao": "Manhã"
+    }
+  },
+  {
+    "model": "viagem.horariopreferencialmodel",
+    "pk": 2,
+    "fields": {
+      "descricao": "Tarde"
+    }
+  },
+  {
+    "model": "viagem.horariopreferencialmodel",
+    "pk": 3,
+    "fields": {
+      "descricao": "Noite"
+    }
+  },
+  {
+    "model": "viagem.horariopreferencialmodel",
+    "pk": 4,
+    "fields": {
+      "descricao": "Indiferente"
+    }
+  },
+  {
+    "model": "viagem.tiposnecessidadeespecialmodel",
+    "pk": 1,
+    "fields": {
+      "descricao": "Cadeira de rodas"
+    }
+  },
+  {
+    "model": "viagem.tiposnecessidadeespecialmodel",
+    "pk": 2,
+    "fields": {
+      "descricao": "Assistente"
+    }
+  },
+  {
+    "model": "viagem.tiposnecessidadeespecialmodel",
+    "pk": 3,
+    "fields": {
+      "descricao": "Moletas"
+    }
+  },
+  {
+    "model": "viagem.localidademodel",
+    "pk": 1,
+    "fields": {
+      "descricao": "Brasília - Manaus - São Paulo - Campinas - Rio de Janeiro"
+    }
+  },
+  {
+    "model": "viagem.localidademodel",
+    "pk": 2,
+    "fields": {
+      "descricao": "Foz do Iguaçu e Curitiba"
+    }
+  },
+  {
+    "model": "viagem.localidademodel",
+    "pk": 3,
+    "fields": {
+      "descricao": "Outras capitais e localidades no Brasil"
+    }
+  },
+  {
+    "model": "viagem.localidademodel",
+    "pk": 4,
+    "fields": {
+      "descricao": "América do Norte, Europa, Oriente Médio, Ásia e Oceania"
+    }
+  },
+  {
+    "model": "viagem.localidademodel",
+    "pk": 5,
+    "fields": {
+      "descricao": "África"
+    }
+  },
+  {
+    "model": "viagem.localidademodel",
+    "pk": 6,
+    "fields": {
+      "descricao": "Américas do Sul e Central"
+    }
+  },
+  {
+    "model": "viagem.tipodepagamentomodel",
+    "pk": 1,
+    "fields": {
+      "nome": "PIX"
+    }
+  },
+  {
+    "model": "viagem.tipodepagamentomodel",
+    "pk": 2,
+    "fields": {
+      "nome": "TED"
+    }
+  },
+  {
+    "model": "viagem.tipodepagamentomodel",
+    "pk": 3,
+    "fields": {
+      "nome": "DOC"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 1,
+    "fields": {
+      "grupo_funcional": "0",
+      "localidade_destino": 1,
+      "moeda": 1,
+      "valor_diaria": "650.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 2,
+    "fields": {
+      "grupo_funcional": "1",
+      "localidade_destino": 1,
+      "moeda": 1,
+      "valor_diaria": "550.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 3,
+    "fields": {
+      "grupo_funcional": "0",
+      "localidade_destino": 2,
+      "moeda": 1,
+      "valor_diaria": "630.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 4,
+    "fields": {
+      "grupo_funcional": "1",
+      "localidade_destino": 2,
+      "moeda": 1,
+      "valor_diaria": "530.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 5,
+    "fields": {
+      "grupo_funcional": "0",
+      "localidade_destino": 3,
+      "moeda": 1,
+      "valor_diaria": "600.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 6,
+    "fields": {
+      "grupo_funcional": "1",
+      "localidade_destino": 3,
+      "moeda": 1,
+      "valor_diaria": "500.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 7,
+    "fields": {
+      "grupo_funcional": "0",
+      "localidade_destino": 4,
+      "moeda": 2,
+      "valor_diaria": "600.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 8,
+    "fields": {
+      "grupo_funcional": "1",
+      "localidade_destino": 4,
+      "moeda": 2,
+      "valor_diaria": "500.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 9,
+    "fields": {
+      "grupo_funcional": "0",
+      "localidade_destino": 5,
+      "moeda": 2,
+      "valor_diaria": "500.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 10,
+    "fields": {
+      "grupo_funcional": "1",
+      "localidade_destino": 5,
+      "moeda": 2,
+      "valor_diaria": "400.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 11,
+    "fields": {
+      "grupo_funcional": "0",
+      "localidade_destino": 6,
+      "moeda": 2,
+      "valor_diaria": "400.00"
+    }
+  },
+  {
+    "model": "viagem.tabeladiariamodel",
+    "pk": 12,
+    "fields": {
+      "grupo_funcional": "1",
+      "localidade_destino": 6,
+      "moeda": 2,
+      "valor_diaria": "300.00"
+    }
+  }
+]
