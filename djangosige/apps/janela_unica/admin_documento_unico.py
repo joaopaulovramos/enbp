@@ -45,7 +45,7 @@ class AvaliacaoDocumentoUnicoInline(admin.TabularInline):
 
     def get_readonly_fields(self, request, obj=None):
         ret = ['sequencia', 'descricao', 'usuario_avaliador', 'observacao', 'aprovado']
-        if obj and not obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
+        if obj and obj.situacao in [StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO]:    #and request.user == obj.usuario_avaliador :
             ret.extend(['observacao',])
         return ret
 
@@ -145,6 +145,9 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.responsavel = request.user
+        if obj.contrato:
+            obj.fornecedor = obj.contrato.fornecedor
+            obj.empresa = obj.contrato.empresa
         super().save_model(request, obj, form, change)
         if obj.contrato and not ArquivoDocumentoUnico.objects.filter(documento_unico=obj).exists():
             documentos_contrato = ArquivoSolicitacaoContrato.objects.filter(contrato=obj.contrato)
@@ -282,7 +285,6 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         formfield.widget.can_change_related = False
         formfield.widget.can_add_related = False  # can change this, too
         # formfield.widget.can_view_related = False  # can change this, too
-
         return formfield
 
     def changed_fields(self, obj):
@@ -320,26 +322,31 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
                         'comprovante_pagamento', 'comprovante_lancamento',
                         'conta_pagadora', 'conta_recebedora', 'descricacao_pagamento', 'data_vencimento', 'data_pagamento', 'documento_remessa_pagamento', 'forma_pagamento', 'moeda_pagamento', 'data_cotacao', 'cotacao','valor_bruto', 'valor_desconto', 'valor_juros', 'valor_juros_mora', 'valor_multa', 'valor_outros', 'valor_liquido',
                         'aprovado_processamento_financeiro', 'usuario_processamento_financeiro', 'observacao_processamento_financeiro',
-                        'observacao_retorno_financeiro', 'comprovante_retorno'])
+                        'observacao_retorno_financeiro', 'comprovante_retorno','aprovado_analise_orcamentaria', 'usuario_analise_orcamentaria', 'observacao_analise_orcamentaria'])
             return ret
 
         ret.extend(['fornecedor', 'observacoes', 'descricao',
                     'tipo_arquivo', 'tipo_anexo', 'valor_total', 'arquivo', 'numero', 'chave', 'mod', 'serie',
-                    'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia',
-                    'observacao_gerencia', 'aprovado_superintendencia',
-                    'observacao_superintendencia', 'aprovado_diretoria', 'observacao_diretoria', 'aprovado_analise_financeira', 'observacao_analise_financeira',
-                    'aprovado_analise_fiscal', 'observacao_analise_fiscal',
-                    'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento', 'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia', 'usuario_analise_financeira', 'usuario_analise_fiscal', 'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria', 'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia', 'conta', 'digito', 'projeto', 'chave', 'numero', 'mod', 'serie', 'cnpj', 'data_emissao', 'cfop', 'comprovante_pagamento', 'comprovante_lancamento', 'forma_pagamento', 'linha_digitavel', 'chave_pix', 'valor_retencao', 'valor_liquido', 'contrato',
+                    'plano_conta', 'rateio', 'observacoes', 'aprovado_gerencia', 'usuario_gerencia', 'observacao_gerencia',
+                    'aprovado_superintendencia', 'usuario_superintencencia', 'observacao_superintendencia',
+                    'usuario_gerencia', 'usuario_diretoria', 'usuario_superintencencia',
+                    'usuario_analise_financeira', 'usuario_analise_fiscal',
+                    'possui_parcelamento', 'possui_contrato', 'extra_orcamentaria',
+                    'antecipacao_pagamento', 'pagamento_boleto', 'banco', 'agencia',
+                    'conta', 'digito', 'projeto', 'chave', 'numero', 'mod',
+                    'serie', 'cnpj', 'data_emissao', 'cfop'
+                    'aprovado_diretoria', 'usuario_diretoria', 'observacao_diretoria',
+                    'aprovado_analise_financeira', 'usuario_analise_financeira', 'observacao_analise_financeira',
+                    'aprovado_analise_fiscal', 'usuario_analise_fiscal', 'observacao_analise_fiscal', 'usuario_lancamento', 'data_lancamento', 'numero_lancamento', 'pagamento_realizado', 'observacao_pagamento',
+                    'valor_retencao', 'valor_liquido',
+                    'comprovante_pagamento', 'comprovante_lancamento',
+                    'conta_pagadora', 'conta_recebedora', 'descricacao_pagamento', 'data_vencimento', 'data_pagamento', 'documento_remessa_pagamento', 'forma_pagamento', 'moeda_pagamento', 'data_cotacao', 'cotacao','valor_bruto', 'valor_desconto', 'valor_juros', 'valor_juros_mora', 'valor_multa', 'valor_outros', 'valor_liquido',
+                    'aprovado_processamento_financeiro', 'usuario_processamento_financeiro', 'observacao_processamento_financeiro',
+                    'observacao_retorno_financeiro', 'comprovante_retorno','aprovado_analise_orcamentaria', 'usuario_analise_orcamentaria', 'observacao_analise_orcamentaria'
                     ])
 
         # Se o status for aprovado, todos os campos estarão disponíveis para edição
-        if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_GERENCIA:
-            ret.remove('observacao_gerencia')
-        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA:
-            ret.remove('observacao_superintendencia')
-        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA:
-            ret.remove('observacao_diretoria')
-        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL:
+        if obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL:
             ret.remove('observacao_analise_fiscal')
             ret.remove('usuario_lancamento')
             ret.remove('data_lancamento')
@@ -347,9 +354,38 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ret.remove('comprovante_lancamento')
             ret.remove('valor_retencao')
             ret.remove('valor_liquido')
+            ret.remove('conta_pagadora')
+            ret.remove('conta_recebedora')
+            ret.remove('descricacao_pagamento')
+            ret.remove('data_vencimento')
+            ret.remove('data_pagamento')
+            ret.remove('documento_remessa_pagamento')
+            ret.remove('forma_pagamento')
+            ret.remove('moeda_pagamento')
+            ret.remove('data_cotacao')
+            ret.remove('cotacao')
+            ret.remove('valor_bruto')
+            ret.remove('valor_desconto')
+            ret.remove('valor_juros')
+            ret.remove('valor_juros_mora')
+            ret.remove('valor_multa')
+            ret.remove('valor_retencao')
+            ret.remove('valor_outros')
+            ret.remove('valor_liquido')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA:
             ret.remove('observacao_analise_financeira')
             ret.remove('pagamento_realizado')
             ret.remove('observacao_pagamento')
             ret.remove('comprovante_pagamento')
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA:
+            ret.remove('aprovado_analise_orcamentaria')
+            ret.remove('usuario_analise_orcamentaria')
+            ret.remove('observacao_analise_orcamentaria')
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO:
+            ret.remove('aprovado_processamento_financeiro')
+            ret.remove('usuario_processamento_financeiro')
+            ret.remove('observacao_processamento_financeiro')
+        elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO:
+            ret.remove('observacao_retorno_financeiro')
+            ret.remove('comprovante_retorno')
         return ret

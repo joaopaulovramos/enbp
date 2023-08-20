@@ -57,6 +57,7 @@ class AprovadorContratoInline(admin.TabularInline):
     class Meta:
         fields = ('sequencia', 'descricao', 'usuario',),
         can_delete = True
+        classes = ['replace-input-css',]
         widgets = {
             'sequencia': forms.TextInput(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control'}),
@@ -97,6 +98,21 @@ class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     list_display = ('pk', 'fornecedor', 'descricao', 'data_inclusao', 'data_validade', 'valor_total')
     list_filter = ('fornecedor','data_validade')
     inlines = [AprovadorContratoInline, ArquivoSolicitacaoContratoInline,]
+    
+    class Media:
+        js = ['admin/js/jquery.init.js', 'js/replace-input-css.js']
+        # css = {
+        #     'all': ('css/janela-unica.css',)
+        # }
+
+
+    def formfield_for_dbfield(self, *args, **kwargs):
+        formfield = super().formfield_for_dbfield(*args, **kwargs)
+        formfield.widget.can_delete_related = False
+        formfield.widget.can_change_related = False
+        formfield.widget.can_add_related = False
+        return formfield
+    
     fieldsets = (
         ('Dados contrato', {
             'fields': (
@@ -116,6 +132,5 @@ class ContratoModelAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         #     'classes': ('replacein', ArquivoSolicitacaoContrato.__name__),
         # }),
     )
-
 
 from .admin_documento_unico import *
