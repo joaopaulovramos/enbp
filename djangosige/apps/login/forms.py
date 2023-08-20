@@ -11,7 +11,7 @@ from .models import Usuario
 
 
 class UserLoginForm(forms.ModelForm):
-
+    
     class Meta:
         model = User
         fields = ('username', 'password')
@@ -23,6 +23,7 @@ class UserLoginForm(forms.ModelForm):
             'username': _(u'person'),
             'password': _(u'lock'),
         }
+
 
     # Validar/autenticar campos de login
     def clean(self):
