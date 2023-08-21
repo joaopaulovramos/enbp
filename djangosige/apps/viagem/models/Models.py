@@ -265,7 +265,7 @@ class AprovarPagamentoDiariasModel(models.Model):
     agencia = models.CharField(max_length=8, null=True, blank=True)
     conta = models.CharField(max_length=32, null=True, blank=True)
     digito = models.CharField(max_length=8, null=True, blank=True)
-    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.RESTRICT, null=True, blank=True)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.RESTRICT, null=False, blank=False)
     qtd_diarias = models.FloatField(blank=True, null=True)
     valor_diaria = models.DecimalField(max_digits=16, decimal_places=2,
                                        validators=[MinValueValidator(Decimal('0.00'))],
@@ -292,7 +292,7 @@ class AprovarPagamentoReembolsoModel(models.Model):
     valor_total_reembolso = models.DecimalField(max_digits=16, decimal_places=2,
                                                 validators=[MinValueValidator(Decimal('0.00'))],
                                                 default=Decimal('0.00'), blank=True, null=True)
-    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.RESTRICT, null=True, blank=True)
+    tipo_pagamento = models.ForeignKey(TipoDePagamentoModel, on_delete=models.RESTRICT, null=False, blank=False)
     data_autorizacao = models.DateTimeField(null=True, blank=True)
     autorizado_por = models.ForeignKey(Usuario, on_delete=models.RESTRICT, null=True, blank=True)
 

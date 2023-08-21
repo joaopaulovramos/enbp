@@ -1197,6 +1197,7 @@ class AprovarPagamentoDiariasView(CustomCreateView):
         if form.is_valid():
             viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
             if (not ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                form.add_error('tipo_pagamento', 'Usuário não tem dados bancários cadastrados no sistema.')
                 return self.form_invalid(form)
             self.object = form.save(commit=False)
             cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
@@ -1270,6 +1271,7 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
         if form.is_valid():
             viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
             if (not ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                form.add_error('tipo_pagamento', 'Usuário não tem dados bancários cadastrados no sistema.')
                 return self.form_invalid(form)
             self.object = form.save(commit=False)
             cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
