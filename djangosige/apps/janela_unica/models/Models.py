@@ -411,6 +411,9 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             object_repr=str(self),
             change_message=mensagem,
             action_flag=CHANGE)
+    
+    def avaliacoes(self):
+        return AvaliacaoDocumentoUnico.objects.filter(documento_unico=self).order_by('sequencia')
 
     def aprovacao_atual(self):
         aprovacoe_pendentes = AvaliacaoDocumentoUnico.objects.filter(documento_unico=self, aprovado__isnull=True).order_by('sequencia')

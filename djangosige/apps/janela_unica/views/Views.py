@@ -143,7 +143,8 @@ from io import BytesIO
 from django.template.loader import get_template
 
 
-class GerarPDFDocumentoUnicoView(CustomView):
+class GerarPDFDocumentoUnicoView(View):
+    #permission_codename = ''
     def get(self, request, *args, **kwargs):
         documento_unico_id = kwargs.get('pk', None)
 
@@ -152,7 +153,8 @@ class GerarPDFDocumentoUnicoView(CustomView):
 
         obj = DocumentoUnicoFinanceiro.objects.get(pk=documento_unico_id)
         template = get_template('janela_unica/pdf_list.html')
-        context = {"obj": obj}
+        context = {"obj": obj, "avaliacoes": obj.avaliacoes().all()}
+
         html = template.render(context)
         result = BytesIO()
         pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)

@@ -33,7 +33,9 @@ class Usuario(models.Model):
         ('1', 'B – PROFISSIONAIS'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                # primary_key=True, related_name="usuario" #todo: avaliar essa possiblide, ou Usuario(User)
+                                )
     user_foto = models.ImageField(upload_to=user_directory_path, default='imagens/user.png', blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True, null=True, blank=True,)
     date_ultima_modificacao = models.DateTimeField(auto_now=True, null=True, blank=True,)
@@ -64,7 +66,7 @@ class Usuario(models.Model):
         return u'%s' % self.user
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.get_full_name()} ({self.user.username})'
 
 #teste
 @receiver(post_delete, sender=Usuario)
