@@ -21,9 +21,30 @@ from django.utils.html import format_html
 # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.InlineModelAdmin.form
 # class ArquivoDocumentoUnicoInline(admin.StackedInline):
 
+class AvaliacaoDocumentoUnicoForm(NorliAdminModelForm):
+    model = AvaliacaoDocumentoUnico
+    class Meta:
+        model = AvaliacaoDocumentoUnico
+        fields = ['sequencia', 'descricao', 'usuario_avaliador', 'observacao', 'aprovado']
+        widgets = {
+            'descricao': forms.TextInput(attrs={'class': 'form-control'}),
+            'observacao': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        if self.instance and self.instance.documento_unico:
+            if self.instance.documento_unico.situacao in [StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO]:
+                for f in self.fields:
+                    if f not in ['observacao']:
+                        self.fields[f].widget.attrs['readonly'] = 'readonly'
+                #   self.fields[f].widget.attrs['readonly'] = 'readonly'
+
 
 class AvaliacaoDocumentoUnicoInline(admin.TabularInline):
     model = AvaliacaoDocumentoUnico
+    form = AvaliacaoDocumentoUnicoForm
     extra = 0
     max_num = 10
     fields = ['sequencia', 'descricao', 'usuario_avaliador', 'observacao', 'aprovado']
@@ -45,8 +66,10 @@ class AvaliacaoDocumentoUnicoInline(admin.TabularInline):
 
     def get_readonly_fields(self, request, obj=None):
         ret = ['sequencia', 'descricao', 'usuario_avaliador', 'observacao', 'aprovado']
-        if obj and obj.situacao in [StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO]:    #and request.user == obj.usuario_avaliador :
-            ret.extend(['observacao',])
+        #  Tentar isso: https://stackoverflow.com/questions/70340853/how-to-make-some-django-inlines-read-only
+        
+        if obj and obj.situacao in [StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO] and obj.pode_aprovar(request.user):    #and request.user == obj.usuario_avaliador :
+            ret.remove('observacao')
         return ret
 
 #https://stackoverflow.com/questions/20339520/django-admin-default-values-in-stackedinline-tabularinline
@@ -110,6 +133,7 @@ class DocumentoUnicoFinanceiroForm(NorliAdminModelForm):
             'observacao_superintendencia': forms.Textarea(attrs={'class': 'form-control'}),
             'observacao_diretoria': forms.Textarea(attrs={'class': 'form-control'}),
             'observacao_analise_financeira': forms.Textarea(attrs={'class': 'form-control'}),
+            'observacao_analise_orcamentaria': forms.Textarea(attrs={'class': 'form-control'}),
             'observacao_analise_fiscal': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
@@ -144,7 +168,8 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
 
 
     def save_model(self, request, obj, form, change):
-        obj.responsavel = request.user
+        if not obj.responsavel:
+            obj.responsavel = request.user.usuario
         if obj.contrato:
             obj.fornecedor = obj.contrato.fornecedor
             obj.empresa = obj.contrato.empresa
@@ -170,10 +195,10 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
     # Desabilita as ações em massa
     # actions = None
     # Atributos de filtragem
-    list_filter = ('situacao', 'data_inclusao', 'projeto', 'plano_conta', 'tipo_arquivo')
+    list_filter = ('situacao', 'data_inclusao', 'projeto', 'plano_conta', 'tipo_arquivo', 'contrato')
     search_fields = ('situacao',)
     # Atributos da tabela
-    list_display = ('pk', 'descricao', 'situacao', 'data_inclusao', 'data_finalizacao', 'tipo_arquivo', 'responsavel', 'fornecedor', 'projeto', 'plano_conta', 'valor_total',)
+    list_display = ('pk', 'descricao', 'situacao', 'data_inclusao', 'data_finalizacao', 'tipo_arquivo', 'responsavel', 'contrato', 'fornecedor', 'projeto', 'valor_total',) #'plano_conta', 
 
     history_list_display = ["changed_fields", "list_changes"]
 
@@ -205,16 +230,23 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         }),
         # ('Arquivos adicionais', {
 
-        (None, {
-            'fields': (),
-            'classes': ('replacein',),
-        }),
-
         ('Informações financeiras', {
             'fields': (
                 ('possui_parcelamento', 'extra_orcamentaria',
                  'possui_contrato', 'antecipacao_pagamento', 'pagamento_boleto'),
             )
+        }),
+
+
+        (None, {
+            'fields': (),
+            'classes': ('documento_unico_arquivo-group',),
+        }),
+
+
+        (None, {
+            'fields': (),
+            'classes': ('documento_unico_avaliacao-group',),
         }),
 
 
@@ -369,7 +401,6 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ret.remove('valor_juros')
             ret.remove('valor_juros_mora')
             ret.remove('valor_multa')
-            ret.remove('valor_retencao')
             ret.remove('valor_outros')
             ret.remove('valor_liquido')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA:
@@ -378,12 +409,12 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
             ret.remove('observacao_pagamento')
             ret.remove('comprovante_pagamento')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA:
-            ret.remove('aprovado_analise_orcamentaria')
-            ret.remove('usuario_analise_orcamentaria')
+            # ret.remove('aprovado_analise_orcamentaria')
+            # ret.remove('usuario_analise_orcamentaria')
             ret.remove('observacao_analise_orcamentaria')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO:
-            ret.remove('aprovado_processamento_financeiro')
-            ret.remove('usuario_processamento_financeiro')
+            # ret.remove('aprovado_processamento_financeiro')
+            # ret.remove('usuario_processamento_financeiro')
             ret.remove('observacao_processamento_financeiro')
         elif obj.situacao == StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO:
             ret.remove('observacao_retorno_financeiro')

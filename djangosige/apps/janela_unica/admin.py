@@ -10,6 +10,7 @@ from django.contrib.admin.options import csrf_protect_m
 
 # from djangosige.apps.janela_unica.forms.Form import DocumentoUnicoFinanceiroForm
 from djangosige.apps.janela_unica.models.Models import AprovadorContrato, AvaliacaoDocumentoUnico, Contrato, StatusAnaliseFinaceira, TipoContrato, ArquivoSolicitacaoContrato
+from djangosige.apps.login.models import Usuario
 from .models import TramitacaoModel, DocumentoUnicoFinanceiro, ArquivoDocumentoUnico
 from fsm_admin.mixins import FSMTransitionMixin
 from simple_history.admin import SimpleHistoryAdmin
@@ -51,11 +52,12 @@ class TipoContratoModelAdmin(admin.ModelAdmin,):
 
 class AprovadorContratoInline(admin.TabularInline):
     model = AprovadorContrato
-    extra = 2
+    extra = 0
     max_num = 10
+    fields = ('sequencia', 'descricao', 'usuario',),
+    usuario = forms.ModelChoiceField(queryset=Usuario.objects.all(), required=True, widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
-        fields = ('sequencia', 'descricao', 'usuario',),
         can_delete = True
         classes = ['replace-input-css',]
         widgets = {
