@@ -25,8 +25,9 @@
 {% endfor %}
 {% endif %}
 <!-- FIXME: Trnasferir para o custom_action -->
+{% if opts.model_name == 'documentounicofinanceiro' %}
 <a class="btn btn-info" href="/zeppelin/pdf/documentounico/{{original.pk}}/">
     Gerar PDF
 </a>
-
+{%endif%}
 {% endblock %}

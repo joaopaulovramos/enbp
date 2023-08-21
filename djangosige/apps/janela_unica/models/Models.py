@@ -19,6 +19,7 @@ from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
 from djangosige.apps.login.models import Usuario
 from djangosige.apps.viagem.forms.Form import MoedaForm
 from djangosige.apps.viagem.models.Models import MoedaModel
+from djangosige.apps.util import notificacoes
 
 TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO = (
     (u'0', u'Nota Fiscal (NF-e)'),
@@ -421,6 +422,10 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         if aprovacoe_pendentes.exists():
             ap = aprovacoe_pendentes.first()
             ap.restantes = aprovacoe_pendentes.count()
+            if ap.restantes > 1:
+                ap.proximo = aprovacoe_pendentes[1]
+            else:
+                ap.proximo = None
         return ap
     
     def pode_devolver(self, user):
@@ -441,6 +446,21 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             if self.situacao == StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO and user.has_perm('janela_unica.retorno_financeiro_documento_unico'):
                 return True
         return False
+    
+    def notificar(self, mensagem, request, user=None):
+        try:
+            if not user:
+                user = self.responsavel.user
+            verb = '[Notificação de teste]: ' + mensagem
+            mensagem_detalhada = 'O documento único ' + str(self.pk) + ' foi alterado, por ' + str(request.user) + '.  Motivo: ' + mensagem + '.'
+            try:
+                mensagem_detalhada = mensagem_detalhada + ' Para acessar o documento, clique <a href="'+ str(request.get_full_path()) + '">aqui</a>.'
+            except:
+                pass
+            print(f'notificando {user} de {verb} - {mensagem_detalhada}')
+            notificacoes.send_notification(user, verb, mensagem_detalhada)
+        except Exception as e:
+            print(e)
 
     def pode_aprovar(self, user):
         ap = self.aprovacao_atual()
@@ -469,6 +489,9 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
                 # ap.observacao = None
                 ap.save()
     
+    def limpar_aprovacoes_notificar_correcao(self, request):
+        self.limpar_aprovacoes()
+        self.notificar('Documento devolvido para correção', request)
 
     @transition(field=situacao, source=[StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL],
                 # target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
@@ -499,7 +522,9 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.usuario_gerencia = request.user.usuario
         # https://django-simple-history.readthedocs.io/en/2.7.0/historical_mod
         # self.changeReason = 'Aprovado pela gerência'
-        self.logar_detalhes(request, mensagem='Aprovado pela gerência')
+        self.logar_detalhes(request, mensagem='Aprovado')
+        if ap.proximo:
+            self.notificar('Documento aprovado, aguardando sua avaliação', request, ap.proximo.usuario_avaliador.user)
 
     @transition(field=situacao, source=[StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
                                         # StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA,
@@ -512,9 +537,10 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
                 # , conditions=[can_reprovar_gerencia]
                 )
     def devolver_documento(self, by=None, request=None):
-        motivo = ''
-        self.limpar_aprovacoes()
-        self.logar_detalhes(request, mensagem='Reprovado pela gerência')
+        self.limpar_aprovacoes_notificar_correcao(request)
+        # self.limpar_aprovacoes()
+        self.notificar('Documento devolvido para correção', request)
+        # self.logar_detalhes(request, mensagem='Reprovado pela gerência')
         # self.notificar('Documento devolvido para correção', request.user)
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, permission='janela_unica.analise_fiscal_documento_unico',
@@ -526,42 +552,44 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             self.data_analise_fiscal = datetime.now()
         self.logar_detalhes(request, mensagem='Aprovado pela Analise Fiscal')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_fiscal_documento_unico', custom=dict(button_name='Devolver Solictação (Responsável)'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_fiscal_documento_unico', custom=dict(button_name='Devolver Solicitação (Responsável)'))
     def reprovar_analise_fiscal(self, by=None, request=None):
         self.aprovado_analise_fiscal = False
         self.usuario_analise_fiscal = request.user.usuario
-        self.limpar_aprovacoes()
+        # self.limpar_aprovacoes()
+        self.limpar_aprovacoes_notificar_correcao(request)
         self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, permission='janela_unica.analise_financeira_documento_unico',
-                custom=dict(button_name='Aprovar Solictação (Financeiro)'))
+                custom=dict(button_name='Aprovar Solicitação (Financeiro)'))
     def aprovar_analise_financeira(self, by=None, request=None):
         self.aprovado_analise_financeira = True
         self.usuario_analise_financeira = request.user.usuario
         self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico', custom=dict(button_name='Devolver Solictação'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico', custom=dict(button_name='Devolver Solicitação'))
     def reprovar_analise_financeira(self, by=None, request=None):
         self.aprovado_analise_financeira = False
         self.usuario_analise_financeira = request.user.usuario
-        self.limpar_aprovacoes()
+        # self.limpar_aprovacoes()
+        self.limpar_aprovacoes_notificar_correcao(request)
         self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, permission='janela_unica.processamento_financeiro_documento_unico',
-                custom=dict(button_name='Aprovar Solictação (Taticca)'))
+                custom=dict(button_name='Aprovar Solicitação (Taticca)'))
     def aprovar_processamento_financeiro(self, by=None, request=None):
         self.aprovado_processamento_financeiro = True
         self.usuario_processamento_financeiro = request.user.usuario
         self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, permission='janela_unica.processamento_financeiro_documento_unico', custom=dict(button_name='Devolver Solictação (Financeiro)'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, permission='janela_unica.processamento_financeiro_documento_unico', custom=dict(button_name='Devolver Solicitação (Financeiro)'))
     def reprovar_processamento_financeiro(self, by=None, request=None):
         self.aprovado_processamento_financeiro = False
         self.usuario_processamento_financeiro = request.user.usuario
         self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, target=StatusAnaliseFinaceira.FINALIZADO, permission='janela_unica.retorno_financeiro_documento_unico',
-                custom=dict(button_name='Finalizar Solictação'))
+                custom=dict(button_name='Finalizar Solicitação'))
     def aprovar_retorno_financeiro(self, by=None, request=None):
         self.data_finalizacao = datetime.now()
         self.aprovado_retorno_financeiro = True
@@ -569,19 +597,19 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
         self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, permission='janela_unica.analise_orcamentaria_documento_unico',
-                custom=dict(button_name='Aprovar Solictação (Orçamento)'))
+                custom=dict(button_name='Aprovar Solicitação (Orçamento)'))
     def aprovar_analise_orcamentaria(self, by=None, request=None):
         self.aprovado_analise_orcamentaria = True
         self.usuario_analise_orcamentaria = request.user.usuario
         self.logar_detalhes(request, mensagem='Aprovado pela Analise Orçamentaria')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_orcamentaria_documento_unico', custom=dict(button_name='Devolver  Solictação (Responsável)'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_orcamentaria_documento_unico', custom=dict(button_name='Devolver  Solicitação (Responsável)'))
     def reprovar_analise_orcamentaria(self, by=None, request=None):
         self.aprovado_analise_orcamentaria = False
         self.usuario_analise_orcamentaria = request.user.usuario
         self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, permission='janela_unica.retorno_financeiro_documento_unico', custom=dict(button_name='Devolver Solictação (Processamento)'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, permission='janela_unica.retorno_financeiro_documento_unico', custom=dict(button_name='Devolver Solicitação (Processamento)'))
     def reprovar_retorno_financeiro(self, by=None, request=None):
         self.aprovado_retorno_financeiro = False
         self.usuario_retorno_financeiro = request.user.usuario

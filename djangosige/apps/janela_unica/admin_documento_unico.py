@@ -33,14 +33,14 @@ class AvaliacaoDocumentoUnicoForm(NorliAdminModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        if self.instance and self.instance.documento_unico:
-            if self.instance.documento_unico.situacao in [StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO]:
-                for f in self.fields:
-                    if f not in ['observacao']:
-                        self.fields[f].widget.attrs['readonly'] = 'readonly'
-                #   self.fields[f].widget.attrs['readonly'] = 'readonly'
-
+        try:
+            if self.instance and self.instance.documento_unico:
+                if self.instance.documento_unico.situacao in [StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO]:
+                    ap = self.instance.documento_unico.aprovacao_atual()
+                    if ap != self.instance:
+                        self.fields['observacao'].widget.attrs['readonly'] = 'readonly'
+        except:
+            pass
 
 class AvaliacaoDocumentoUnicoInline(admin.TabularInline):
     model = AvaliacaoDocumentoUnico
