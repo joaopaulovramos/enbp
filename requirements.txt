@@ -88,3 +88,4 @@ mssql-django
 django-storages[azure]
 gunicorn
 django-cors-headers
+xhtml2pdf==0.2.8
