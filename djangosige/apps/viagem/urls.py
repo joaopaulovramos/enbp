@@ -95,5 +95,6 @@ urlpatterns = [
     url(r'viagem/avaliar_solicitacao_viagem/(?P<pk>[0-9]+)/$', views.AvaliarSolicitacaoViagem.as_view(), name='avaliar_solicitacao_viagem'),
     url(r'viagem/avaliar_arquivos/(?P<pk>[0-9]+)/$', views.AvaliarArquivosView.as_view(), name='avaliar_arquivos'),
 
-
+    # VIAGEM - Relatório
+    url(r'viagem/pdf_relatorio_solicitacao/(?P<pk>[0-9]+)/$', views.GerarPDFRelatorioSolicitacaoView.as_view(), name='pdf_relatorio_solicitacao'),
 ]

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-
-
+import os.path
+from django.db import IntegrityError
 from django.db.models import Q
 import pytz
 from django.forms import inlineformset_factory
-
+from django.http import HttpResponse
 
 from django.urls import reverse_lazy
 
-from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView
+from djangosige.apps.base.custom_views import CustomCreateView, CustomListView, CustomUpdateView, CustomView
 from django.shortcuts import redirect
 from django.utils import timezone
 from datetime import datetime, date, timedelta
@@ -23,6 +23,12 @@ import random
 import string
 
 from djangosige.apps.viagem.utils import *
+
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.template.loader import get_template
+
+from djangosige.configs import settings
 
 ID_TIPO_VIAGEM_REGULAR = '1'
 ID_TIPO_VIAGEM_NACIONAL = '1'
@@ -47,7 +53,7 @@ class AdicionarTipoViagemView(CustomCreateView):
     form_class = TipoViagemForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatiposviagens')
-    success_message = "Tipo de Viagem adicionado com sucesso."
+    success_message = "Tipo de Viagem Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -92,7 +98,7 @@ class AdicionarTipoSolicitacaoView(CustomCreateView):
     form_class = TipoDeSolicitacaoForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatiposolicitacao')
-    success_message = "Tipo de Solicitação adicionado com sucesso."
+    success_message = "Tipo de Solicitação Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -137,7 +143,7 @@ class AdicionarTipoTransporteView(CustomCreateView):
     form_class = TipoDeTransporteForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatipotransporte')
-    success_message = "Tipo de Transporte adicionado com sucesso."
+    success_message = "Tipo de Transporte Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -173,7 +179,7 @@ class ListMotivosView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListMotivosView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Motivo da Viagens'
+        context['title_complete'] = 'Motivo da Viagem'
         context['add_url'] = reverse_lazy('viagem:adicionarmotivo')
         return context
 
@@ -182,12 +188,12 @@ class AdicionarMotivoView(CustomCreateView):
     form_class = TipoMotivoForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listamotivos')
-    success_message = "Motivo de Viagem adicionado com sucesso."
+    success_message = "Motivo da Viagem Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarMotivoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Adicionar Motivo de Viagem'
+        context['title_complete'] = 'Adicionar Motivo da Viagem'
         context['return_url'] = reverse_lazy('viagem:listamotivos')
         return context
 
@@ -197,12 +203,12 @@ class EditarMotivoView(CustomUpdateView):
     model = MotivoDeViagemModel
     template_name = 'viagem/edit.html'
     success_url = reverse_lazy('viagem:listamotivos')
-    success_message = "Motivo de Viagem Editada com Sucesso."
+    success_message = "Motivo da Viagem Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
         context = super(EditarMotivoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Editar Motivo de Viagem'
+        context['title_complete'] = 'Editar Motivo da Viagem'
         context['return_url'] = reverse_lazy('viagem:listamotivos')
         context['id'] = self.object.id
         return context
@@ -227,7 +233,7 @@ class AdicionarTipoDespesaView(CustomCreateView):
     form_class = TipoDespesaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatipodespesa')
-    success_message = "Tipo de despesa adicionado com sucesso."
+    success_message = "Tipo de Despesa Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -272,7 +278,7 @@ class AdicionarMoedaView(CustomCreateView):
     form_class = MoedaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listamoeda')
-    success_message = "Tipo de moeda adicionado com sucesso."
+    success_message = "Tipo de moeda Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -308,7 +314,7 @@ class ListTipoPagamentoView(CustomListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Tipos de Pagamento'
+        context['title_complete'] = 'Forma de Pagamento'
         context['add_url'] = reverse_lazy('viagem:adicionartipopagamento')
         return context
 
@@ -317,12 +323,12 @@ class AdicionarTipoPagamentoView(CustomCreateView):
     form_class = TipoDePagamentoForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatipopagamento')
-    success_message = "Tipo de Pagamento adicionado com sucesso."
+    success_message = "Forma de Pagamento Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'ADICIONAR TIPO DE PAGAMENTO'
+        context['title_complete'] = 'Adicionar Forma de Pagamento'
         context['return_url'] = reverse_lazy('viagem:listatipopagamento')
         return context
 
@@ -332,12 +338,12 @@ class EditarTipoPagamentoView(CustomUpdateView):
     model = TipoDePagamentoModel
     template_name = 'viagem/edit.html'
     success_url = reverse_lazy('viagem:listatipopagamento')
-    success_message = "Tipo de Pagamento Editado com Sucesso."
+    success_message = "Forma de Pagamento Editada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
         context = super(EditarTipoPagamentoView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Edição do Tipo de Pagamento'
+        context['title_complete'] = 'Editar Forma de Pagamento'
         context['return_url'] = reverse_lazy('viagem:listatipopagamento')
         context['id'] = self.object.id
         return context
@@ -407,7 +413,7 @@ class AdicionarHorarioPreferencialView(CustomCreateView):
     form_class = HorarioPreferencialForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listahorariopreferencial')
-    success_message = "Horário Preferencial adicionado com sucesso."
+    success_message = "Horário Preferencial Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -452,7 +458,7 @@ class AdicionarTipoNecessidadeEspecialView(CustomCreateView):
     form_class = TiposNecessidadeEspecialForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatiposnecessidadeespecial')
-    success_message = "Tipo de Necessidade Especial adicionado com sucesso."
+    success_message = "Tipo de Necessidade Especial Adicionado com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_success_message(self, cleaned_data):
@@ -503,7 +509,7 @@ class AdicionarLocalidadeView(CustomCreateView):
     form_class = LocalidadeForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listalocalidades')
-    success_message = "Localidade adicionada com sucesso."
+    success_message = "Localidade Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
 
     def get_context_data(self, **kwargs):
@@ -551,8 +557,25 @@ class AdicionarTabelaDiariaView(CustomCreateView):
     form_class = TabelaDiariaForm
     template_name = 'viagem/add.html'
     success_url = reverse_lazy('viagem:listatabeladiarias')
-    success_message = "Localidade adicionada com sucesso."
+    success_message = "Tabela de Diária Adicionada com Sucesso."
     permission_codename = 'cadastrar_item_viagens'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+
+        # try:
+        #     form.valid_form()
+        # except IntegrityError as err:
+        #     messages.success(self.request, "Grupo e localidade não podem ser iguais")
+
+        if form.is_valid():
+            self.object = form.save()
+            messages.success(self.request, self.get_success_message(form.cleaned_data))
+            return redirect(self.success_url)
+        else:
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarTabelaDiariaView, self).get_context_data(**kwargs)
@@ -643,7 +666,7 @@ class AdicionarViagemView(CustomCreateView):
 
     template_name = 'viagem/add_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
-    success_message = "Solicitação de Viagem adicionada com sucesso."
+    success_message = "Solicitação de Viagem Adicionada com Sucesso."
     permission_codename = 'solicitar_viagens'
 
     def get(self, request, form_class=form_class, *args, **kwargs):
@@ -684,12 +707,12 @@ class AdicionarViagemView(CustomCreateView):
         if data_inicio < data_hoje:
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
-        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == ID_TIPO_VIAGEM_REGULAR:
-            diff_dias = data_inicio - data_hoje
-            if diff_dias.days < 15:
-                form.add_error('dada_inicio',
-                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+        tipo_solicitacao = TiposDeSolicitacaoModel.objects.get(id=request.POST['tipo_solicitacao']) 
+        # comparando a quantidade de dias entre a data atual e a data de início com o valor do campo dias_antecedencia               
+        diff_dias = data_inicio - data_hoje
+        if diff_dias.days < tipo_solicitacao.dias_antecedencia:
+            form.add_error('dada_inicio',
+                            f'Para viagens do tipo {tipo_solicitacao.nome}, solicitar com pelo menos {tipo_solicitacao.dias_antecedencia} dias de antecedência')
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
         if request.POST['tipo_viagem'] == ID_TIPO_VIAGEM_NACIONAL and data_fim:
@@ -746,7 +769,7 @@ class AdicionarViagemView(CustomCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdicionarViagemView, self).get_context_data(**kwargs)
-        context['title_complete'] = 'Adicionar Viagem'
+        context['title_complete'] = 'Adicionar Solicitação de Viagem'
         context['return_url'] = reverse_lazy('viagem:listaviagem')
 
         # usuario = Usuario.objects.get(user=self.request.user.id)
@@ -761,7 +784,7 @@ class EditarViagemView(CustomUpdateView):
     model = ViagemModel
     template_name = 'viagem/edit_viagem.html'
     success_url = reverse_lazy('viagem:listaviagem')
-    success_message = "Viagem Editada com Sucesso."
+    success_message = "Solicitação de Viagem Editada com Sucesso."
     permission_codename = 'solicitar_viagens'
 
     # form_trecho_factory = inlineformset_factory(ViagemModel, TrechoModel, form=TrechoForm, extra=0, min_num=1,
@@ -817,12 +840,13 @@ class EditarViagemView(CustomUpdateView):
         if data_inicio < data_hoje:
             form.add_error('dada_inicio', 'A viagem não pode ser anterior a hoje.')
 
-        # checando se a solicitação é "regular" (id=1) para aplicar a regra de dias de antecedência
-        if request.POST['tipo_solicitacao'] == ID_TIPO_VIAGEM_REGULAR:
-            diff_dias = data_inicio - data_hoje
-            if diff_dias.days < 15:
-                form.add_error('dada_inicio',
-                               'Para viagens regulares, solicitar com pelo menos 15 dias de antecedência')
+        tipo_solicitacao = TiposDeSolicitacaoModel.objects.get(id=request.POST['tipo_solicitacao']) 
+        # comparando a quantidade de dias entre a data atual e a data de início com o valor do campo dias_antecedencia               
+        diff_dias = data_inicio - data_hoje
+        if diff_dias.days < tipo_solicitacao.dias_antecedencia:
+            form.add_error('dada_inicio',
+                            f'Para viagens do tipo {tipo_solicitacao.nome}, solicitar com pelo menos {tipo_solicitacao.dias_antecedencia} dias de antecedência')
+
 
         # checando se a solicitação é do tipo nacional (id=1) para aplicar a regra de bagagem despachada
         if request.POST['tipo_viagem'] == ID_TIPO_VIAGEM_NACIONAL and data_fim:
@@ -895,6 +919,8 @@ class VerSolicitacaoViagem(CustomUpdateView):
 
         usuario = Usuario.objects.get(id=self.object.solicitante_id)
         context['pcd'] = usuario.pcd
+        context['trechos'] = TrechoModel.objects.filter(viagem=self.object)
+
         context['trechos'] = TrechoModel.objects.filter(viagem=self.object)
 
         return context
@@ -1059,13 +1085,13 @@ class ListHomologarViagensView(CustomListView):
         if 'ano_select' in self.request.session:
             self._ano = self.request.session['ano_select']
 
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
         user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
         for viagem in user_viagens:
             viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
 
         return user_viagens
-         
 
     # Remover items selecionados da database
     def post(self, request, *args, **kwargs):
@@ -1074,7 +1100,7 @@ class ListHomologarViagensView(CustomListView):
                 instance = self.model.objects.get(id=key)
                 if (instance.homologada):
                     instance.homologada_reembolso = True
-                    instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count()>0
+                    instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count() > 0
                 else:
                     instance.homologada = True
                 instance.save()
@@ -1090,7 +1116,7 @@ class ListHomologarViagensView(CustomListView):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Viagens'
+        context['title_complete'] = 'Homologar RH'
         return context
 
 
@@ -1104,7 +1130,8 @@ class ListPagamentoDiariasView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True)
         user_viagens = user_viagens.filter(homologada=True)
-        user_viagens = user_viagens.exclude(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
+        user_viagens = user_viagens.exclude(
+            pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
         return user_viagens
 
     def get_object(self):
@@ -1177,16 +1204,17 @@ class AprovarPagamentoDiariasView(CustomCreateView):
             self.object.viagem = viagem
             self.object.banco = cb.banco
             self.object.agencia = cb.agencia
-            self.object.conta=cb.conta
-            self.object.digito=cb.digito
-            self.object.qtd_diarias=viagem.qtd_diarias
-            self.object.valor_diaria=viagem.valor_diaria
-            self.object.valor_total_diarias=viagem.valor_total_diarias
+            self.object.conta = cb.conta
+            self.object.digito = cb.digito
+            self.object.qtd_diarias = viagem.qtd_diarias
+            self.object.valor_diaria = viagem.valor_diaria
+            self.object.valor_total_diarias = viagem.valor_total_diarias
             self.object.data_autorizacao = data_hoje
             self.object.autorizado_por = current_user.usuario
             self.object.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
+
 
 class AprovarPagamentoReembolsoView(CustomCreateView):
     form_class = AprovarPagamentoReembolsoForm
@@ -1249,8 +1277,8 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
             self.object.viagem = viagem
             self.object.banco = cb.banco
             self.object.agencia = cb.agencia
-            self.object.conta=cb.conta
-            self.object.digito=cb.digito
+            self.object.conta = cb.conta
+            self.object.digito = cb.digito
             total_recursos_empresa, total_recursos_proprios = self.calc_arquivo_pagamentos(viagem)
             self.object.total_recursos_proprios = total_recursos_proprios
             self.object.total_recursos_empresa = total_recursos_empresa
@@ -1271,6 +1299,7 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
                 total_recursos_empresa += arquivo.valor_pago_reais
         return total_recursos_empresa, total_recursos_proprios
 
+
 class ListPagamentoReembolsoView(CustomListView):
     template_name = 'viagem/list_pagamento_reembolso.html'
     model = ViagemModel
@@ -1281,7 +1310,8 @@ class ListPagamentoReembolsoView(CustomListView):
     def get_queryset(self):
         user_viagens = ViagemModel.objects.filter(homologada_reembolso=True)
         user_viagens = user_viagens.filter(tem_reembolso=True)
-        user_viagens = user_viagens.exclude(pk__in=AprovarPagamentoReembolsoModel.objects.all().values_list('viagem', flat=True))
+        user_viagens = user_viagens.exclude(
+            pk__in=AprovarPagamentoReembolsoModel.objects.all().values_list('viagem', flat=True))
 
         return user_viagens
 
@@ -1616,11 +1646,12 @@ class ListAprovarPCViagensView(CustomListView):
             self._ano = self.request.session['ano_select']
 
         current_user = self.request.user
-        
-        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes, dada_inicio__year=self._ano)
-        user_viagens = user_viagens.filter(pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
-        
-        
+
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(
+            pk__in=AprovarPagamentoDiariasModel.objects.all().values_list('viagem', flat=True))
+
         user_viagens = user_viagens.filter(finalizar_pc=1).exclude(aprovar_pc=1)
 
         return user_viagens
@@ -1651,7 +1682,7 @@ class ListAprovarPCViagensView(CustomListView):
         context['mes_selecionado'] = str(self._mes)
         context['ano_selecionado'] = str(self._ano)
         context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
-        context['title_complete'] = 'Viagens'
+        context['title_complete'] = 'Aprovar Prestação de Contas'
         return context
 
 
@@ -1820,3 +1851,85 @@ class AvaliarArquivosView(CustomUpdateView):
         context['solicitante'] = f'{usuario_solicitante.get_username()} - ' \
                                  f'{usuario_solicitante.get_full_name()} [{usuario_solicitante_id}]'
         return context
+
+
+def get_dados_autorizacoes(queryset):
+    if queryset:
+        queryset = queryset.last()
+        user_autorizador = User.objects.get(id=queryset.history_user_id)
+        usuario_autorizador = Usuario.objects.get(pk=queryset.history_user_id)
+        return {"nome": user_autorizador.get_full_name(),
+                "data": queryset.history_date,
+                "perfil": Usuario.PERFIS[int(usuario_autorizador.perfil)][1],
+                }
+
+    return None
+
+
+def fetch_resources(uri, rel):
+    return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+
+
+# def fetch_resources(uri, rel):
+#     return os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+class GerarPDFRelatorioSolicitacaoView(CustomView):
+    permission_codename = ['solicitar_viagens']
+    template_name = 'viagem/PDF_solicitacao_viagem.html'
+    dia_semana = ['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo', ]
+
+    def get(self, request, *args, **kwargs):
+        # current_user = self.request.user
+
+        viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
+        trechos = TrechoModel.objects.filter(viagem=viagem)
+        usuario = Usuario.objects.get(user=viagem.solicitante)
+
+        # TODO: pegar apenas a conta padrão
+        dados_bancarios = ContaBancaria.objects.filter(usuario_banco=usuario)
+        if dados_bancarios:
+            dados_bancarios = dados_bancarios.first()
+
+        dados_solicitante = {'nome': User.objects.get(pk=usuario.pk).get_full_name(),
+                             'nivel': Usuario.PERFIS[int(usuario.perfil)][1],
+                             'matricula': usuario.matricula,
+                             'telefone': usuario.telefone}
+
+        dia_semana_fim = "" if not viagem.dada_fim else self.dia_semana[viagem.dada_fim.weekday()]
+
+        dados_aprovacao = {}
+
+        autorizacao_sup = ViagemModel.history.filter(history_type='~', id=viagem.id, autorizada_sup=True)
+        autorizacao_dus = ViagemModel.history.filter(history_type='~', id=viagem.id, autorizada_dus=True)
+        homologacao = ViagemModel.history.filter(history_type='~', id=viagem.id, homologada=True)
+
+        dados_aprovacao["autorizacao_sup"] = get_dados_autorizacoes(autorizacao_sup)
+        dados_aprovacao["autorizacao_dus"] = get_dados_autorizacoes(autorizacao_dus)
+        dados_aprovacao["homologacao"] = get_dados_autorizacoes(homologacao)
+
+        if AprovarPagamentoDiariasModel.objects.filter(viagem=viagem).exists():
+            aprovacao_diarias = AprovarPagamentoDiariasModel.objects.filter(viagem=viagem).last()
+            user_autorizador = User.objects.get(id=aprovacao_diarias.autorizado_por_id)
+            usuario_autorizador = Usuario.objects.get(pk=aprovacao_diarias.autorizado_por_id)
+            dados_aprovacao["aprovacao_diarias"] = {"nome": user_autorizador.get_full_name(),
+                                                    "data": aprovacao_diarias.data_autorizacao,
+                                                    "perfil": Usuario.PERFIS[int(usuario_autorizador.perfil)][1],
+                                                    }
+
+        template = get_template(self.template_name)
+        context = {
+            "solicitante": dados_solicitante,
+            "dados_bancarios": dados_bancarios,
+            "viagem": viagem,
+            "trechos": trechos,
+            "dia_semana_inicio": self.dia_semana[viagem.dada_inicio.weekday()],
+            "dia_semana_fim": dia_semana_fim,
+            "dados_aprovacao": dados_aprovacao,
+        }
+        html = template.render(context)
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result, link_callback=fetch_resources)
+
+        if not pdf.err:
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        else:
+            return None

@@ -32,13 +32,15 @@ class TipoViagemForm(forms.ModelForm):
 class TipoDeSolicitacaoForm(forms.ModelForm):
     class Meta:
         model = TiposDeSolicitacaoModel
-        fields = ('nome',)
+        fields = ('nome','dias_antecedencia',)
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'size': '200'}),
+            'dias_antecedencia': forms.NumberInput(attrs={'class': 'form-control',}),
 
         }
         labels = {
             'nome': _('Descrição'),
+            'dias_antecedencia': _('Dias de Antecedência'),
         }
 
 
@@ -204,7 +206,7 @@ class ViagemForm(forms.ModelForm):
             'justificativa',
             'tipo_viagem',
             'tipo_solicitacao',
-            # 'motivo',
+            'motivo',
             # 'tipo_transporte',
             # 'categoria_passagem',
             'horario_preferencial',
@@ -234,7 +236,7 @@ class ViagemForm(forms.ModelForm):
             'tipo_viagem': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'localidade_destino': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'tipo_solicitacao': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
-            # 'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
+            'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             # 'tipo_transporte': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             # 'categoria_passagem': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
             'horario_preferencial': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
@@ -253,7 +255,7 @@ class ViagemForm(forms.ModelForm):
             'itinerario': _('Itinerário'),
             'escalas': _('Escalas'),
             'duracao': _('Duração da viagem'),
-            'dada_inicio': _('Data Inicio'),
+            'dada_inicio': _('Data Início'),
             'dada_fim': _('Data Fim'),
             # 'origem': _('Origem'),
             # 'destino': _('Destino'),
@@ -264,7 +266,7 @@ class ViagemForm(forms.ModelForm):
             'justificativa': _('Justificativa de Excepcionalidade'),
             'tipo_viagem': _('Tipo de Viagem'),
             'tipo_solicitacao': _('Tipo de Solicitação'),
-            # 'motivo': _('Motivo'),
+            'motivo': _('Motivo'),
             # 'tipo_transporte': _('Tipo de Transporte'),
             # 'categoria_passagem': _('Catergoria da Passagem'),
             'horario_preferencial': _('Horário Preferencial'),
@@ -339,7 +341,7 @@ class VerViagemForm(forms.ModelForm):
             'tipo_viagem',
             'tipo_solicitacao',
             'localidade_destino',
-            # 'motivo',
+            'motivo',
             # 'tipo_transporte',
             # 'categoria_passagem',
             'horario_preferencial',
@@ -372,7 +374,7 @@ class VerViagemForm(forms.ModelForm):
             'tipo_solicitacao': forms.Select(
                 attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
             'localidade_destino': forms.Select(attrs={'class': 'form-control select-cod-descricao'}),
-            # 'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
+            'motivo': forms.Select(attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
             # 'tipo_transporte': forms.Select(
             #     attrs={'class': 'form-control select-cod-descricao', 'disabled': 'disabled'}),
             # 'categoria_passagem': forms.Select(
@@ -404,7 +406,7 @@ class VerViagemForm(forms.ModelForm):
             'tipo_viagem': _('Tipo de Viagem'),
             'tipo_solicitacao': _('Tipo de Solicitação'),
             'localidade_destino': _('Localidade'),
-            # 'motivo': _('Motivo'),
+            'motivo': _('Motivo'),
             # 'tipo_transporte': _('Tipo de Transporte'),
             # 'categoria_passagem': _('Catergoria da Passagem'),
             'horario_preferencial': _('Horário Preferencial'),
@@ -457,7 +459,7 @@ class PrestacaoContaForm(forms.ModelForm):
         }
         labels = {
             'pagamento': _('Forma de Pagamento'),
-            'dada_inicio_realizada': _('Data realizada de inicio'),
+            'dada_inicio_realizada': _('Data realizada de início'),
             'dada_fim_realizada': _('Data realizada de fim'),
             'remarcacao_interesse_particular': _('Remarcação por interesse particular'),
             'descricao': _('Descrição da Viagem'),

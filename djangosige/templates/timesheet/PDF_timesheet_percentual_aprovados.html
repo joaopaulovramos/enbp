@@ -1,6 +1,6 @@
 <style>
     @page {
-        size: A4;
+        size: A4 landscape;
         margin: 2cm;
     }
     table#quadro tbody > tr:last-child > td {
@@ -20,7 +20,7 @@
 
             <div style="text-align: right">
                 <h2 style="margin-bottom: -20px">Horas Aprovadas - Percentual</h2>
-                <div><small>Relatório do mês de <strong>{{ mes }} de {{ ano }}</strong></small></div>
+                <div><small>Relat&oacute;rio do m&ecirc;s de <strong>{{ mes }} de {{ ano }}</strong></small></div>
                 <br/>
             </div>
 
@@ -33,7 +33,7 @@
       <thead>
         <tr style="background-color: #0a9edc; padding-top: 5px; color: #ffffff">
 
-            <th style="text-align: left">Solicitante</th>
+            <th style="text-align: left; white-space: nowrap;">Solicitante</th>
 
             {% if projetos %}
 
@@ -80,6 +80,6 @@
 <div style="text-align: center; margin: 100px 200px 0px 200px">
     <div style="border-top: black 1px solid; width: 300px; display: block; padding-top: 5px">
         <strong>{{ aprovador }}</strong><BR/>
-        SUPERINTENDENTE
+        {{ perfil }}
     </div>
 </div>

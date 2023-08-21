@@ -1629,15 +1629,15 @@ fieldset[disabled] .form-control {
   display: block;
 }
 
-@media (min-width: 768px) {
-  .modal-dialog {
-    width: 40%;
+@media (min-width: 768px) and (max-width: 1660.98px) {
+  .modal-md {
+    width: 70%;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1660.98px) {
+@media (min-width: 1661px)  {
   .modal-md {
-    width: 60%;
+    width: 900px;
   }
 }
 

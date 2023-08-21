@@ -27,10 +27,8 @@
                 <tr>
                     <th>Id</th>
                     <th>Solicitante</th>
-                    <th>Data Inicio</th>
+                    <th>Data Início</th>
                     <th>Data Fim</th>
-                    <th>Origem</th>
-                    <th>Destino</th>
                     <th>Superintendente</th>
                     <th>DUS</th>
                     <th>Homologada</th>
@@ -50,13 +48,7 @@
                    <td>{{natop.solicitante}}</td>
 
                    <td>{{natop.dada_inicio}}</td>
-                   <td>{{natop.dada_fim}}</td>
-                   <td>{{natop.origem}}</td>
-                   <td>{{natop.destino}}</td>
-
-
-
-
+                   <td>{%if natop.dada_fim%}{{natop.dada_fim}}{%else%}---{%endif%}</td>
                    <td>
                         {% if natop.autorizada_sup  %}
                             <a class="btn btn-success disabled"><span> SIM</span></a>
