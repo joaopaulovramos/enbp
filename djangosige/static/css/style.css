@@ -2287,10 +2287,16 @@ button[class*=" transition-enviar"] {
   border-color: #4cae4c
 }
 
-button[class*=" transition-cancelar"] {
+button[class*=" transition-devolver"] {
   color: #fff;
   background-color: #ec971f;
   border-color: #d58512
+}
+
+button[class*=" transition-cancelar"] {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
 }
 
 .empty-form {

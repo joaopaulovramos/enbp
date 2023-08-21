@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib import admin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group # User, 
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.forms import ValidationError
@@ -12,8 +12,13 @@ from django_cpf_cnpj.fields import CPFField, CNPJField
 from django.contrib.contenttypes.models import ContentType
 from simple_history.models import HistoricalRecords
 from djangosige.apps.cadastro.models.bancos import BANCOS
+from djangosige.apps.cadastro.models.base import Banco
+from djangosige.apps.cadastro.models.empresa import Empresa
 from djangosige.apps.fiscal.models.nota_fiscal import (MOD_NFE_ESCOLHAS,
                                                        NotaFiscal)
+from djangosige.apps.login.models import Usuario
+from djangosige.apps.viagem.forms.Form import MoedaForm
+from djangosige.apps.viagem.models.Models import MoedaModel
 
 TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO = (
     (u'0', u'Nota Fiscal (NF-e)'),
@@ -42,58 +47,70 @@ TIPO_ANEXO = (
 class StatusAnaliseFinaceira(object):
     EDICAO_RESPONSAVEL = 'Edição Responsável'
     AGUARDANDO_AVALIACAO = 'Aguardando avaliação'
+
     AGUARDANDO_GERENCIA = 'Aguardando avaliação Gerência'
     AGUARDANDO_SUPERITENDENCIA = 'Aguardando avaliação Superintendencia'
     AGUARDANDO_DIRETORIA = 'Aguardando avaliação Diretoria'
+
+    AGUARDANDO_ANALISE_ORCAMENTARIA = 'Aguardando Análise Orçamentária'
     AGUARDANDO_ANALISE_FISCAL = 'Aguardando Análise Fiscal'
     AGUARDANDO_ANALISE_FINANCEIRA = 'Aguardando Análise Financeira'
+    AGUARDANDO_PROCESSAMENTO_FINANCEIRO = 'Aguardando Processamento (Taticca)'
+    AGUARDANDO_RETORNO_FINANCEIRO = 'Aguardando Retorno Financeiro'
     APROVADO = 'Aprovado'
-    REPROVADO = 'Reprovado'
+    # REPROVADO = 'Reprovado'
     FINALIZADO = 'Finalizado'
     CANCELADO = 'Cancelado'
-    DEVOLVIDO = 'Devolvido'
+    DEVOLVIDO_RESPONSAVEL = 'Devolvido (Responsável)'
     CHOICES = (
         (EDICAO_RESPONSAVEL, EDICAO_RESPONSAVEL),
         (AGUARDANDO_AVALIACAO, AGUARDANDO_AVALIACAO),
-        (AGUARDANDO_GERENCIA, AGUARDANDO_GERENCIA),
-        (AGUARDANDO_SUPERITENDENCIA, AGUARDANDO_SUPERITENDENCIA),
-        (AGUARDANDO_DIRETORIA, AGUARDANDO_DIRETORIA),
+        # (AGUARDANDO_GERENCIA, AGUARDANDO_GERENCIA),
+        # (AGUARDANDO_SUPERITENDENCIA, AGUARDANDO_SUPERITENDENCIA),
+        # (AGUARDANDO_DIRETORIA, AGUARDANDO_DIRETORIA),
+        (AGUARDANDO_ANALISE_ORCAMENTARIA, AGUARDANDO_ANALISE_ORCAMENTARIA),
         (AGUARDANDO_ANALISE_FISCAL, AGUARDANDO_ANALISE_FISCAL),
         (AGUARDANDO_ANALISE_FINANCEIRA, AGUARDANDO_ANALISE_FINANCEIRA),
-        (REPROVADO, REPROVADO),
+        (AGUARDANDO_PROCESSAMENTO_FINANCEIRO, AGUARDANDO_PROCESSAMENTO_FINANCEIRO),
+        (AGUARDANDO_RETORNO_FINANCEIRO, AGUARDANDO_RETORNO_FINANCEIRO),
+        # (REPROVADO, REPROVADO),
         (FINALIZADO, FINALIZADO),
         (CANCELADO, CANCELADO),
         (APROVADO, APROVADO),
-        (DEVOLVIDO, DEVOLVIDO),
+        (DEVOLVIDO_RESPONSAVEL, DEVOLVIDO_RESPONSAVEL),
     )
 
 # Caso venha a surgir outros tipos de documentos
 # subir para a classe abstrata os campos em comum
+
 
 class ArquivoDocumentoUnico(models.Model):
     descricao = models.CharField(max_length=255, null=True, blank=True)
     arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_arquivo", on_delete=models.PROTECT, null=True, blank=True)
+
     class Meta:
         verbose_name = 'Arquivo do Documento Unico'
         verbose_name_plural = 'Arquivos do Documento Unico'
-        
+
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
-    
+
+
 class AvaliacaoDocumentoUnico(models.Model):
     sequencia = models.IntegerField(null=True, blank=True)
-    usuario_avaliador = models.ForeignKey(User, related_name="documento_unico_usuario_avaliador", on_delete=models.SET_NULL, null=True, blank=True)
+    usuario_avaliador = models.ForeignKey(Usuario, related_name="documento_unico_usuario_avaliador", on_delete=models.SET_NULL, null=True, blank=True)
     descricao = models.CharField(max_length=255, null=True, blank=True)
     observacao = models.CharField(max_length=1055, null=True, blank=True)
     aprovado = models.BooleanField(null=True, blank=True)
     documento_unico = models.ForeignKey('DocumentoUnicoFinanceiro', related_name="documento_unico_avaliacao", on_delete=models.PROTECT, null=True, blank=True)
+    data_avaliacao = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Avaliação para Pagamento'
         verbose_name_plural = 'Avaliações para Pagamento'
-        
+
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
 
@@ -110,6 +127,7 @@ class SituacaoContrato(object):
         (CANCELADO, CANCELADO),
     )
 
+
 class TipoContrato(models.Model):
     descricao = models.CharField('Descrição', max_length=100)
 
@@ -120,50 +138,60 @@ class TipoContrato(models.Model):
     def __str__(self):
         return self.descricao
 
+
 class Contrato(models.Model):
+    history = HistoricalRecords(history_change_reason_field=models.TextField(null=True))
     class Meta:
         verbose_name = 'Contrato'
         verbose_name_plural = 'Contratos'
     descricao = models.CharField(max_length=255, null=True, blank=True)
     arquivo = models.FileField(upload_to='janela_unica/contratos', null=True, blank=True)
+    empresa = models.ForeignKey(Empresa, on_delete=models.SET_NULL, null=True, blank=True, related_name="empresa_contrato")
     fornecedor = models.ForeignKey('cadastro.Pessoa', on_delete=models.SET_NULL,
-                                   related_name="fornecedor_contrato",  null=True, blank=True)
+                                   related_name="fornecedor_contrato", null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
     data_validade = models.DateTimeField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     tipo_contrato = models.ForeignKey(TipoContrato, related_name="tipo_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO, default='9')
+    detalhe_pagamento = models.CharField(max_length=1055, null=True, blank=True)
     situacao = FSMField(
         default=SituacaoContrato.RASCUNHO,
         verbose_name='Situação',
         choices=SituacaoContrato.CHOICES,
         protected=True,  # Impede alteração de estado por usuários sem permissão
     )
-    #TODO: Adicionar demais campos
+    # TODO: Adicionar demais campos
+
     def __str__(self) -> str:
         return f'Nº {self.pk} - {self.descricao}'
+
 
 class ArquivoSolicitacaoContrato(models.Model):
     descricao = models.CharField(max_length=255, null=True, blank=True)
     obrigatorio = models.BooleanField(default=False)
     contrato = models.ForeignKey(Contrato, related_name="contrato_arquivo_solicitacao", on_delete=models.PROTECT, null=True, blank=True)
+
     class Meta:
         verbose_name = 'Documento para fim de Pagamento'
         verbose_name_plural = 'Documentos para fins de Pagamento'
-        
+
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
+
 
 class AprovadorContrato(models.Model):
     sequencia = models.IntegerField(null=True, blank=True)
     descricao = models.CharField(max_length=255, null=True, blank=True)
-    usuario = models.ForeignKey(User, related_name="aprovador_usuario_contrato", on_delete=models.PROTECT, null=True, blank=True)
+    usuario = models.ForeignKey(Usuario, related_name="aprovador_usuario_contrato", on_delete=models.PROTECT, null=True, blank=True)
     grupo = models.ForeignKey(Group, related_name="aprovador_grupo_contrato", on_delete=models.PROTECT, null=True, blank=True)
     obrigatorio = models.BooleanField(default=False)
     contrato = models.ForeignKey('Contrato', related_name="contrato_aprovador_solicitacao", on_delete=models.PROTECT, null=True, blank=True)
+
     class Meta:
         verbose_name = 'Aprovador Solicitação'
         verbose_name_plural = 'Avaliadores para fins de Pagamento'
-        
+
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
 
@@ -171,9 +199,10 @@ class AprovadorContrato(models.Model):
 class FormaPagamentoContrato(models.Model):
     descricao = models.CharField(max_length=255, null=True, blank=True)
     # contrato = models.ForeignKey('Contrato', related_name="contrato_forma_pagamento", on_delete=models.PROTECT, null=True, blank=True)
+
     class Meta:
         verbose_name = 'Forma de Pagamento'
-        
+
     def __str__(self):
         return u'%s - %s' % (self.pk, self.descricao)
 
@@ -223,13 +252,12 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_emissao = models.DateField(null=True, blank=True)
 
-    
     # Plano de contas
     plano_conta = models.ForeignKey('financeiro.PlanoContasGrupo', related_name="nfe_entrada_analise_plano_conta", on_delete=models.PROTECT, null=True, blank=True)
 
     tipo_arquivo = models.CharField(max_length=1, null=True, blank=True,
                                     choices=TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO)
-    
+
     projeto = models.ForeignKey('norli_projeto.ExemploModel', related_name="projeto_ju", on_delete=models.CASCADE, null=True, blank=True)
 
     # Dados para o pagamento
@@ -243,7 +271,6 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     rateio = models.BooleanField(null=True, blank=True,)
     observacoes = models.CharField(max_length=1055, null=True, blank=True)
 
-
     # Dados informações financeiras
     possui_parcelamento = models.BooleanField(null=True, blank=True)
     possui_contrato = models.BooleanField(null=True, blank=True)
@@ -253,38 +280,45 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
 
     # Dados Aprovação
 
-    usuario_gerencia = models.ForeignKey(User, related_name="documento_unico_usuario_gerencia", on_delete=models.SET_NULL, null=True, blank=True)
+    usuario_gerencia = models.ForeignKey(Usuario, related_name="documento_unico_usuario_gerencia", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_gerencia = models.BooleanField(null=True, blank=True)
-    observacao_gerencia = models.CharField(max_length=1055, null=True, 
+    observacao_gerencia = models.CharField(max_length=1055, null=True,
                                            blank=True)
-    
-    usuario_superintencencia = models.ForeignKey(User, related_name="documento_unico_usuario_superintendencia", on_delete=models.SET_NULL, null=True, blank=True)
+
+    usuario_superintencencia = models.ForeignKey(Usuario, related_name="documento_unico_usuario_superintendencia", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_superintendencia = models.BooleanField(null=True, blank=True)
     observacao_superintendencia = models.CharField(max_length=1055, null=True, blank=True)
 
-    usuario_diretoria = models.ForeignKey(User, related_name="documento_unico_usuario_diretoria", on_delete=models.SET_NULL, null=True, blank=True)
+    usuario_diretoria = models.ForeignKey(Usuario, related_name="documento_unico_usuario_diretoria", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_diretoria = models.BooleanField(null=True, blank=True)
     observacao_diretoria = models.CharField(max_length=1055, null=True, blank=True)
 
+    # Analise orcamentaria
+    usuario_analise_orcamentaria = models.ForeignKey(Usuario,
+                                                     null=True, blank=True, on_delete=models.SET_NULL,
+                                                     related_name="documento_unico_usuario_analise_orcamentaria")
+    aprovado_analise_orcamentaria = models.BooleanField(null=True, blank=True)
+    observacao_analise_orcamentaria = models.CharField(max_length=1055, null=True, blank=True)
+
     # Analise financeira
-    usuario_analise_financeira = models.ForeignKey(User, related_name="documento_unico_usuario_analise_financeira", on_delete=models.SET_NULL, null=True, blank=True)
+    usuario_analise_financeira = models.ForeignKey(Usuario, related_name="documento_unico_usuario_analise_financeira", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_financeira = models.BooleanField(null=True, blank=True)
     observacao_analise_financeira = models.CharField(max_length=1055, null=True, blank=True)
     comprovante_lancamento = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
 
-
     # Analise fiscal
-    usuario_analise_fiscal = models.ForeignKey(User, related_name="documento_unico_usuario_analise_fiscal", on_delete=models.SET_NULL, null=True, blank=True)
+    data_analise_fiscal = models.DateTimeField(null=True, blank=True)
+    usuario_analise_fiscal = models.ForeignKey(Usuario, related_name="documento_unico_usuario_analise_fiscal", on_delete=models.SET_NULL, null=True, blank=True)
     aprovado_analise_fiscal = models.BooleanField(null=True, blank=True)
     observacao_analise_fiscal = models.CharField(max_length=1055, null=True, blank=True)
     comprovante_pagamento = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
 
     # Novos
-    responsavel = models.ForeignKey(User, related_name="responsavel_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+    responsavel = models.ForeignKey(Usuario, related_name="responsavel_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
     descricao = models.CharField(max_length=1055, null=True, blank=True)
 
     # Lançamentos Questor
-    usuario_lancamento =  models.CharField(max_length=255, null=True, blank=True)
+    usuario_lancamento = models.CharField(max_length=255, null=True, blank=True)
     data_lancamento = models.DateField(null=True, blank=True)
     numero_lancamento = models.CharField(max_length=255, null=True, blank=True)
 
@@ -292,16 +326,46 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     pagamento_realizado = models.BooleanField(null=True, blank=True)
     observacao_pagamento = models.CharField(max_length=1055, null=True, blank=True)
 
+    usuario_retorno_financeiro = models.ForeignKey(Usuario, related_name="documento_unico_usuario_retorno_financiero", on_delete=models.SET_NULL, null=True, blank=True)
+    aprovado_retorno_financeiro = models.BooleanField(null=True, blank=True)
+    observacao_retorno_financeiro = models.CharField(max_length=1055, null=True, blank=True)
+
+    aprovado_processamento_financeiro = models.BooleanField(null=True, blank=True)
+    usuario_processamento_financeiro = models.ForeignKey(Usuario, related_name="documento_unico_usuario_processamento_financeiro", on_delete=models.SET_NULL, null=True, blank=True)
+    observacao_processamento_financeiro = models.CharField(max_length=1055, null=True, blank=True)
+
+    # Novos
+    conta_pagadora = models.ForeignKey(Banco, related_name="conta_pagadora_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+    conta_recebedora = models.ForeignKey(Banco, related_name="conta_recebedora_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+    moeda_pagamento = models.ForeignKey(MoedaModel, related_name="moeda_pagamento_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+
+    empresa = models.ForeignKey(Empresa, related_name="empresa_documento_unico", on_delete=models.SET_NULL, null=True, blank=True)
+    valor_outros = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    valor_liquido = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    observacao_retorno_financeiro = models.CharField(max_length=1055, null=True, blank=True)
+    valor_juros = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    data_vencimento = models.DateField(null=True, blank=True)
+    valor_multa = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    data_cotacao = models.DateField(null=True, blank=True)
+    valor_juros_mora = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    valor_bruto = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    descricao_pagamento = models.CharField(max_length=1055, null=True, blank=True)
+    valor_desconto = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    documento_remessa_pagamento = models.FileField(upload_to='janela_unica/documentos/remessa', null=True, blank=True)
+    descricacao_pagamento = models.CharField(max_length=1055, null=True, blank=True)
+    comprovante_retorno = models.FileField(upload_to='janela_unica/documentos/retorno', null=True, blank=True)
+    data_pagamento = models.DateField(null=True, blank=True)
+    cotacao = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
     @property
     def tipo_documento_formatado(self):
         tipo_formatdo = ''
         if self.tipo_arquivo:
             tipo_formatdo = self.get_tipo_arquivo_display()
-        if self.tipo_anexo:
-            tipo_formatdo = tipo_formatdo + '/' +  self.get_tipo_anexo_display() 
- 
-        return tipo_formatdo
+        # if self.tipo_anexo:
+        #     tipo_formatdo = tipo_formatdo + '/' + self.get_tipo_anexo_display()
 
+        return tipo_formatdo
 
     class Meta:
         verbose_name = "Documento Janela Única"
@@ -309,8 +373,11 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             ("gerencia_documento_unico", "Aprovar documentos janela única - Gerência"),
             ("superintendencia_documento_unico", "Aprovar documentos janela única - Superintendencia"),
             ("diretoria_documento_unico", "Aprovar documentos janela única - Diretoria"),
-            ("analise_fiscal_documento_unico", "Aprovar documentos analise fiscal - Fiscal"),
-            ("analise_financeira_documento_unico", "Aprovar documentos analise financeira - Financeiro")
+            ("analise_fiscal_documento_unico", "Analise Fiscal"),
+            ("analise_financeira_documento_unico", "Analise Financeira"),
+            ("processamento_financeiro_documento_unico", "Processamento Financeiro"),
+            ("analise_orcamentaria_documento_unico", "Analise Orçamentária"),
+            ("retorno_financeiro_documento_unico", "Retorno financeiro"),
         )
 
     def __str__(self):
@@ -330,7 +397,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             if self.emit_entrada.endereco_padrao:
                 return self.emit_entrada.endereco_padrao.uf
         return ''
-    
+
     # def can_reprovar_gerencia(self):
     #     return self.observacao_gerencia
 
@@ -344,102 +411,184 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
             object_repr=str(self),
             change_message=mensagem,
             action_flag=CHANGE)
+    
+    def avaliacoes(self):
+        return AvaliacaoDocumentoUnico.objects.filter(documento_unico=self).order_by('sequencia')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,
+    def aprovacao_atual(self):
+        aprovacoe_pendentes = AvaliacaoDocumentoUnico.objects.filter(documento_unico=self, aprovado__isnull=True).order_by('sequencia')
+        ap = None
+        if aprovacoe_pendentes.exists():
+            ap = aprovacoe_pendentes.first()
+            ap.restantes = aprovacoe_pendentes.count()
+        return ap
+    
+    def pode_devolver(self, user):
+        if user.is_superuser:
+            return True
+        ap = self.aprovacao_atual()
+        if ap:
+            return ap.usuario_avaliador == user.usuario     
+        else:
+            if self.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL and user.has_perm('janela_unica.analise_fiscal_documento_unico'):
+                return True
+            if self.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA and user.has_perm('janela_unica.analise_financeira_documento_unico'):
+                return True
+            if self.situacao == StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA and user.has_perm('janela_unica.analise_orcamentaria_documento_unico'):
+                return True
+            if self.situacao == StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO and user.has_perm('janela_unica.processamento_financeiro_documento_unico'):
+                return True
+            if self.situacao == StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO and user.has_perm('janela_unica.retorno_financeiro_documento_unico'):
+                return True
+        return False
+
+    def pode_aprovar(self, user):
+        ap = self.aprovacao_atual()
+        if not ap:
+            return False
+        if user.is_superuser or ap.usuario_avaliador == user.usuario:
+            return True
+        return False
+    
+    def is_responsavel(self, user):
+        if user.is_superuser:
+            return True
+        return self.responsavel == user.usuario
+    
+    def limpar_aprovacoes(self):
+        if (self.aprovado_analise_financeira):
+            self.aprovado_analise_financeira = None
+        if (self.aprovado_analise_fiscal):
+            self.aprovado_analise_fiscal = None
+        if (self.aprovado_analise_orcamentaria):
+            self.aprovado_analise_orcamentaria = None
+        for ap in AvaliacaoDocumentoUnico.objects.filter(documento_unico=self):
+            if ap.aprovado:
+                ap.aprovado = None
+                ap.data_avaliacao = None
+                # ap.observacao = None
+                ap.save()
+    
+
+    @transition(field=situacao, source=[StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL],
                 # target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
-                target=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
-                custom=dict(button_name='Enviar para Avaliação'))
+                # target=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
+                custom=dict(button_name='Enviar para Avaliação'),
+                permission=lambda instance, user: instance.is_responsavel(user)
+                )
     def enviar_avaliacao(self, by=None, request=None):
+        if self.aprovacao_atual():
+            self.situacao = StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO
+        else:
+            self.situacao = StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA
         self.logar_detalhes(request, mensagem='Enviado para avaliação')
 
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
-                target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA,
-                permission='janela_unica.gerencia_documento_unico',
-                custom=dict(button_name='Aprovar (Gerência)'))
-    def aprovar_gerencia(self, by=None, request=None):
-        self.aprovado_gerencia = True
-        self.usuario_gerencia = request.user
-        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
-        # self.changeReason = 'Aprovado pela gerência'
-        self.logar_detalhes(request, mensagem='Aprovado pela gerência')
-
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
-                custom=dict(button_name='Aprovar'))
+                custom=dict(button_name='Aprovar'),
+                permission=lambda instance, user: instance.pode_aprovar(user))
     def aprovar_documento(self, by=None, request=None):
+        ap = self.aprovacao_atual()
+        ap.aprovado = True
+        ap.usuario_avaliador = request.user.usuario
+        ap.data_avaliacao = datetime.now()
+        # Se for o ultimo na cadeia de aprovação, muda o status do documento
+        if ap.restantes == 1:
+            self.situacao = StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA
+        ap.save()
         self.aprovado_gerencia = True
-        self.usuario_gerencia = request.user
-        #https://django-simple-history.readthedocs.io/en/2.7.0/historical_mod
+        self.usuario_gerencia = request.user.usuario
+        # https://django-simple-history.readthedocs.io/en/2.7.0/historical_mod
         # self.changeReason = 'Aprovado pela gerência'
         self.logar_detalhes(request, mensagem='Aprovado pela gerência')
 
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico',
-                custom=dict(button_name='Devolver Solictação')
+    @transition(field=situacao, source=[StatusAnaliseFinaceira.AGUARDANDO_AVALIACAO,
+                                        # StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA,
+                                        # StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL,
+                                        # StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA
+                ],
+                target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL,
+                permission=lambda instance, user: instance.pode_devolver(user),
+                custom=dict(button_name='Devolver p/ Correção')
                 # , conditions=[can_reprovar_gerencia]
-    )
-    def reprovar_gerencia(self, by=None, request=None):
-        self.aprovado_gerencia = False
-        self.usuario_gerencia = request.user
+                )
+    def devolver_documento(self, by=None, request=None):
+        motivo = ''
+        self.limpar_aprovacoes()
         self.logar_detalhes(request, mensagem='Reprovado pela gerência')
-
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, permission='janela_unica.superintendencia_documento_unico', custom=dict(button_name='Aprovar Solictação (Superintendência)'))
-    def aprovar_superintendencia(self, by=None, request=None):
-        self.aprovado_superintendencia = True
-        self.usuario_superintencencia = request.user
-        self.logar_detalhes(request, mensagem='Aprovado pela superintendência')
-
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, #target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, 
-                permission='janela_unica.superintendencia_documento_unico', custom=dict(button_name='Devolver Solicitação'))
-    def reprovar_superintendencia(self, by=None, request=None):
-        self.usuario_superintencencia = request.user
-        self.aprovado_superintendencia = False
-        self.logar_detalhes(request, mensagem='Reprovado pela superintendência')
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, permission='janela_unica.diretoria_documento_unico', custom=dict(button_name='Aprovar Solictação (Diretoria)'))
-    def aprovar_diretoria(self, by=None, request=None):
-        self.aprovado_diretoria = True
-        self.usuario_diretoria = request.user
-        self.logar_detalhes(request, mensagem='Aprovado pela diretoria')
-        '''
-        Aprovado pela diretoria
-        '''
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL,  #target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, 
-                permission='janela_unica.diretoria_documento_unico', custom=dict(button_name='Devolver Solictação'))
-    def reprovar_diretoria(self, by=None, request=None):
-        self.aprovado_diretoria = False
-        self.logar_detalhes(request, mensagem='Reprovado pela diretoria')
-
+        # self.notificar('Documento devolvido para correção', request.user)
 
     @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, permission='janela_unica.analise_fiscal_documento_unico',
-    custom=dict(button_name='Aprovar Solictação (Fiscal)'))
+                custom=dict(button_name='Aprovar Solictação (Fiscal)'))
     def aprovar_analise_fiscal(self, by=None, request=None):
         self.aprovado_analise_fiscal = True
+        self.usuario_analise_fiscal = request.user.usuario
+        if not self.data_analise_fiscal:
+            self.data_analise_fiscal = datetime.now()
         self.logar_detalhes(request, mensagem='Aprovado pela Analise Fiscal')
 
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.analise_fiscal_documento_unico', custom=dict(button_name='Aprovar Solictação (Fiscal)'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_fiscal_documento_unico', custom=dict(button_name='Devolver Solictação (Responsável)'))
     def reprovar_analise_fiscal(self, by=None, request=None):
         self.aprovado_analise_fiscal = False
+        self.usuario_analise_fiscal = request.user.usuario
+        self.limpar_aprovacoes()
         self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
 
-
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.FINALIZADO, permission='janela_unica.analise_financeira_documento_unico',
-        custom=dict(button_name='Aprovar Solictação (Financeiro)'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, permission='janela_unica.analise_financeira_documento_unico',
+                custom=dict(button_name='Aprovar Solictação (Financeiro)'))
     def aprovar_analise_financeira(self, by=None, request=None):
-        self.data_finalizacao = datetime.now()
         self.aprovado_analise_financeira = True
+        self.usuario_analise_financeira = request.user.usuario
         self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
 
-    
-    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico', custom=dict(button_name='Devolver Solictação'))
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_financeira_documento_unico', custom=dict(button_name='Devolver Solictação'))
     def reprovar_analise_financeira(self, by=None, request=None):
         self.aprovado_analise_financeira = False
+        self.usuario_analise_financeira = request.user.usuario
+        self.limpar_aprovacoes()
         self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
 
-    @transition(field=situacao, source=[StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, StatusAnaliseFinaceira.REPROVADO],
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, permission='janela_unica.processamento_financeiro_documento_unico',
+                custom=dict(button_name='Aprovar Solictação (Taticca)'))
+    def aprovar_processamento_financeiro(self, by=None, request=None):
+        self.aprovado_processamento_financeiro = True
+        self.usuario_processamento_financeiro = request.user.usuario
+        self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FINANCEIRA, permission='janela_unica.processamento_financeiro_documento_unico', custom=dict(button_name='Devolver Solictação (Financeiro)'))
+    def reprovar_processamento_financeiro(self, by=None, request=None):
+        self.aprovado_processamento_financeiro = False
+        self.usuario_processamento_financeiro = request.user.usuario
+        self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, target=StatusAnaliseFinaceira.FINALIZADO, permission='janela_unica.retorno_financeiro_documento_unico',
+                custom=dict(button_name='Finalizar Solictação'))
+    def aprovar_retorno_financeiro(self, by=None, request=None):
+        self.data_finalizacao = datetime.now()
+        self.aprovado_retorno_financeiro = True
+        self.usuario_retorno_financeiro = request.user.usuario
+        self.logar_detalhes(request, mensagem='Aprovado pelo Financeiro')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, permission='janela_unica.analise_orcamentaria_documento_unico',
+                custom=dict(button_name='Aprovar Solictação (Orçamento)'))
+    def aprovar_analise_orcamentaria(self, by=None, request=None):
+        self.aprovado_analise_orcamentaria = True
+        self.usuario_analise_orcamentaria = request.user.usuario
+        self.logar_detalhes(request, mensagem='Aprovado pela Analise Orçamentaria')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_ORCAMENTARIA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.analise_orcamentaria_documento_unico', custom=dict(button_name='Devolver  Solictação (Responsável)'))
+    def reprovar_analise_orcamentaria(self, by=None, request=None):
+        self.aprovado_analise_orcamentaria = False
+        self.usuario_analise_orcamentaria = request.user.usuario
+        self.logar_detalhes(request, mensagem='Reprovado pela Analise Fiscal')
+
+    @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_RETORNO_FINANCEIRO, target=StatusAnaliseFinaceira.AGUARDANDO_PROCESSAMENTO_FINANCEIRO, permission='janela_unica.retorno_financeiro_documento_unico', custom=dict(button_name='Devolver Solictação (Processamento)'))
+    def reprovar_retorno_financeiro(self, by=None, request=None):
+        self.aprovado_retorno_financeiro = False
+        self.usuario_retorno_financeiro = request.user.usuario
+        self.logar_detalhes(request, mensagem='Reprovado pelo Financeiro')
+
+    @transition(field=situacao, source=[StatusAnaliseFinaceira.EDICAO_RESPONSAVEL, StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL],
+                permission=lambda instance, user: instance.is_responsavel(user),
                 target=StatusAnaliseFinaceira.CANCELADO)
     def cancelar(self, by=None, request=None):
         self.data_finalizacao = datetime.now()
@@ -452,7 +601,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
 class DocumentoModel(models.Model):
     nome = models.CharField(max_length=200)
     file = models.FileField(upload_to='files/users', null=True, blank=True)
-    dono = models.ForeignKey(User, related_name="dono_doc", on_delete=models.CASCADE, null=True, blank=True)
+    dono = models.ForeignKey(Usuario, related_name="dono_doc", on_delete=models.CASCADE, null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True, )
 
     def __str__(self):
@@ -460,7 +609,59 @@ class DocumentoModel(models.Model):
 
 
 class TramitacaoModel(models.Model):
-    user_enviado = models.ForeignKey(User, related_name="user_enviado", on_delete=models.CASCADE, null=True, blank=True)
-    user_recebido = models.ForeignKey(User, related_name="user_recebido", on_delete=models.CASCADE, null=True, blank=True)
+    user_enviado = models.ForeignKey(Usuario, related_name="user_enviado", on_delete=models.CASCADE, null=True, blank=True)
+    user_recebido = models.ForeignKey(Usuario, related_name="user_recebido", on_delete=models.CASCADE, null=True, blank=True)
     data = models.DateTimeField(auto_now_add=True, blank=True)
     doc = models.ForeignKey(DocumentoModel, related_name="documento_tramitacao", on_delete=models.CASCADE)
+
+
+
+
+    # @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
+    #             target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA,
+    #             permission='janela_unica.gerencia_documento_unico',
+    #             custom=dict(button_name='Aprovar (Gerência)'))
+    # def aprovar_gerencia(self, by=None, request=None):
+    #     self.aprovado_gerencia = True
+    #     self.usuario_gerencia = request.user.usuario
+    #     # https://django-simple-history.readthedocs.io/en/2.7.0/historical_model.html#textfield-as-history-change-reason
+    #     # self.changeReason = 'Aprovado pela gerência'
+    #     self.logar_detalhes(request, mensagem='Aprovado pela gerência')
+
+    # @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL, permission='janela_unica.gerencia_documento_unico',
+    #             custom=dict(button_name='Devolver Solictação')
+    #             # , conditions=[can_reprovar_gerencia]
+    #             )
+    # def reprovar_gerencia(self, by=None, request=None):
+    #     self.aprovado_gerencia = False
+    #     self.usuario_gerencia = request.user.usuario
+    #     self.limpar_aprovacoes()
+    #     self.logar_detalhes(request, mensagem='Reprovado pela gerência')
+
+    # @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, permission='janela_unica.superintendencia_documento_unico', custom=dict(button_name='Aprovar Solictação (Superintendência)'))
+    # def aprovar_superintendencia(self, by=None, request=None):
+    #     self.aprovado_superintendencia = True
+    #     self.usuario_superintencencia = request.user.usuario
+    #     self.logar_detalhes(request, mensagem='Aprovado pela superintendência')
+
+    # @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL,  # target=StatusAnaliseFinaceira.AGUARDANDO_GERENCIA,
+    #             permission='janela_unica.superintendencia_documento_unico', custom=dict(button_name='Devolver Solicitação'))
+    # def reprovar_superintendencia(self, by=None, request=None):
+    #     self.usuario_superintencencia = request.user.usuario
+    #     self.aprovado_superintendencia = False
+    #     self.logar_detalhes(request, mensagem='Reprovado pela superintendência')
+
+    # @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.AGUARDANDO_ANALISE_FISCAL, permission='janela_unica.diretoria_documento_unico', custom=dict(button_name='Aprovar Solictação (Diretoria)'))
+    # def aprovar_diretoria(self, by=None, request=None):
+    #     self.aprovado_diretoria = True
+    #     self.usuario_diretoria = request.user.usuario
+    #     self.logar_detalhes(request, mensagem='Aprovado pela diretoria')
+    #     '''
+    #     Aprovado pela diretoria
+    #     '''
+
+    # @transition(field=situacao, source=StatusAnaliseFinaceira.AGUARDANDO_DIRETORIA, target=StatusAnaliseFinaceira.DEVOLVIDO_RESPONSAVEL,  # target=StatusAnaliseFinaceira.AGUARDANDO_SUPERITENDENCIA,
+    #             permission='janela_unica.diretoria_documento_unico', custom=dict(button_name='Devolver Solictação'))
+    # def reprovar_diretoria(self, by=None, request=None):
+    #     self.aprovado_diretoria = False
+    #     self.logar_detalhes(request, mensagem='Reprovado pela diretoria')

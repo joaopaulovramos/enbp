@@ -7,10 +7,26 @@
     </a>
 <!-- </li> -->
 {% if has_absolute_url %}
-<li>
-<a href="{{ absolute_url }}" class="btn btn-info viewsitelink">{% translate "View on site" %}</a>
-</li>{% endif %}
+<!-- <li> -->
+    <a href="{{ absolute_url }}" class="btn btn-info">
+        {% translate "View on site" %}
+    </a>
+<!-- </li> -->
+{% endif %}
 
-<a class="btn btn-info" href="/zeppelin/pdf/documentounico/{{original.pk}}/">Gerar PDF</a>
+{% if custom_top_actions %}
+{% for action in custom_top_actions %}
+    <!-- <li> -->
+<a href="{{ action.url }}"
+    class="{{action.class|default:'btn btn-info'}}">
+    {{ action.title }}
+</a>
+    <!-- </li> -->
+{% endfor %}
+{% endif %}
+<!-- FIXME: Trnasferir para o custom_action -->
+<a class="btn btn-info" href="/zeppelin/pdf/documentounico/{{original.pk}}/">
+    Gerar PDF
+</a>
 
 {% endblock %}
