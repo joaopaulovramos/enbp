@@ -89,8 +89,8 @@ class ArquivoDocumentoUnicoInline(admin.TabularInline):
             'arquivo': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
-    def __init__(self, parent_model: type | Any, admin_site: AdminSite) -> None:
-        super().__init__(parent_model, admin_site)
+    # def __init__(self, parent_model: type | Any, admin_site: AdminSite) -> None:
+    #     super().__init__(parent_model, admin_site)
 
     def has_add_permission(self, request, obj=None):
         # if obj and obj.contrato and obj.situacao in [StatusAnaliseFinaceira.EDICAO_RESPONSAVEL]:
