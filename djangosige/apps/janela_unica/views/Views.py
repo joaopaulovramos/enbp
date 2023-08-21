@@ -164,6 +164,10 @@ class GerarPDFDocumentoUnicoView(View):
             # TODO: Melhorar isso, se o arquivo não for pdf, necessário converter
             if obj.arquivo and obj.arquivo.name.endswith('.pdf'):
                 merger.append(fileobj=obj.arquivo)
+            docs = ArquivoDocumentoUnico.objects.filter(documento_unico=obj)
+            for doc in docs:
+                if doc.arquivo and doc.arquivo.name.endswith('.pdf'):
+                    merger.append(fileobj=doc.arquivo)
             merger.write(result)
             return HttpResponse(result.getvalue(), content_type='application/pdf')
         return None
