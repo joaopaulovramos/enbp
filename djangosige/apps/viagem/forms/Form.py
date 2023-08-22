@@ -296,7 +296,7 @@ class AprovarPagamentoDiariasForm(forms.ModelForm):
             'tipo_pagamento',
         )
         widgets = {
-            'tipo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+            'tipo_pagamento': forms.Select(attrs={'class': 'form-control', 'required': True}),
 
         }
         labels = {
@@ -310,7 +310,7 @@ class AprovarPagamentoReembolsoForm(forms.ModelForm):
             'tipo_pagamento',
         )
         widgets = {
-            'tipo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+            'tipo_pagamento': forms.Select(attrs={'class': 'form-control', 'required': True}),
 
         }
         labels = {
