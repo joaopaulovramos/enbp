@@ -1220,7 +1220,7 @@ class AprovarPagamentoDiariasView(CustomCreateView):
             context["pagamento_diarias_autorizado"] = True
         else:
             if (ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
-                cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+                cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
                 banco = next(b for b in BANCOS if b[0] == cb.banco)
                 if (banco):
                     context["banco"] = banco[1]
@@ -1246,7 +1246,7 @@ class AprovarPagamentoDiariasView(CustomCreateView):
                 form.add_error('tipo_pagamento', 'Usuário não tem dados bancários cadastrados no sistema.')
                 return self.form_invalid(form)
             self.object = form.save(commit=False)
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+            cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
             self.object.qtd_diarias = viagem.qtd_diarias
             self.object.viagem = viagem
             self.object.banco = cb.banco
@@ -1293,7 +1293,7 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
             context["pagamento_reembolso_autorizado"] = True
         else:
             if (ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
-                cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+                cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
                 banco = next(b for b in BANCOS if b[0] == cb.banco)
                 if (banco):
                     context["banco"] = banco[1]
@@ -1320,7 +1320,7 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
                 form.add_error('tipo_pagamento', 'Usuário não tem dados bancários cadastrados no sistema.')
                 return self.form_invalid(form)
             self.object = form.save(commit=False)
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+            cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
             self.object.qtd_diarias = viagem.qtd_diarias
             self.object.viagem = viagem
             self.object.banco = cb.banco
