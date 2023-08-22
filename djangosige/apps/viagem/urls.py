@@ -76,6 +76,7 @@ urlpatterns = [
 
     url(r'viagem/listarautorizarviagem/$', views.ListAutorizarViagensView.as_view(), name='listaautorizarviagem'),
     url(r'viagem/listarhomologarviagem/$', views.ListHomologarViagensView.as_view(), name='listahomologacaoviagem'),
+    url(r'viagem/listarhomologarprestacaodecontas/$', views.ListHomologarPrestacaoDeContasView.as_view(), name='listahomologacaoprestacaodecontas'),
     url(r'viagem/listapagamentodiarias/$', views.ListPagamentoDiariasView.as_view(), name='listapagamentodiarias'),
     url(r'viagem/aprovarpagamentodiarias/(?P<pk>[0-9]+)/$', views.AprovarPagamentoDiariasView.as_view(), name='aprovarpagamentodiarias'),
     url(r'viagem/listapagamentoreembolso/$', views.ListPagamentoReembolsoView.as_view(), name='listapagamentoreembolso'),

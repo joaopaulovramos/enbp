@@ -314,6 +314,14 @@
                                 </li>
                                 {% endif %}
 
+                                {% if perms.viagem.homologar_prestacao_de_contas  %}
+                                <li>
+                                    <a href="{% url 'viagem:listahomologacaoprestacaodecontas' %}">
+                                         <span>Homologar Prestação de Contas</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
                                 <li>
                                     <a href="{% url 'viagem:listapagamentoreembolso' %}">
                                          <span>Financeiro - Reembolso</span>
