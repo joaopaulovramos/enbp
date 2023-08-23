@@ -38,6 +38,11 @@ urlpatterns += [
     path('admin/', admin.site.urls),
 ]
 
+# import notifications.urls
+# urlpatterns += [
+#     url(r'^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+# ]
+
 
 if DEBUG is True:
     urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
