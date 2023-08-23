@@ -59,36 +59,37 @@
                   </div>
                 </div>
 
-                <div class="col-sm-12">
-                    <label>Dados Bancários</label>
-                </div>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                      <label>Dados Bancários</label>
+                      {% if form.tipo_pagamento.errors %}<label class="error">{% for error in form.tipo_pagamento.errors %}{{error}}{% endfor %}</label>{% endif %}
+                  </div>
 
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>Banco</label>
-                      <input disabled type="text" name="banco" value="{{ banco }}" class="form-control" readonly>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <div class="form-line">
+                        <label>Banco</label>
+                        <input disabled type="text" name="banco" value="{{ banco }}" class="form-control" readonly>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
-
-                      <label>Agência</label>
-                      <input disabled type="text" name="agencia" value="{{ agencia }}" class="form-control" readonly>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <div class="form-line">
+                        <label>Agência</label>
+                        <input disabled type="text" name="agencia" value="{{ agencia }}" class="form-control" readonly>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <div class="form-line">
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <div class="form-line">
 
-                      <label>Conta</label>
-                      <input disabled type="text" name="conta" value="{{ conta }}" class="form-control" readonly>
+                        <label>Conta</label>
+                        <input disabled type="text" name="conta" value="{{ conta }}" class="form-control" readonly>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -98,12 +99,13 @@
                     <div class="form-line">
 
                       <label>Tipo Pagamento</label>
+                      <label>{{form.tipo_pagamento.label}}</label>{% if form.tipo_pagamento.field.required %}<strong style="color:red;"> *</strong>{% endif %}
                       {{ form.tipo_pagamento }}
                     </div>
                   </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -113,7 +115,7 @@
                   </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -123,7 +125,7 @@
                   </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                   <div class="form-group">
                     <div class="form-line">
 
@@ -133,7 +135,7 @@
                   </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-12">
                   <div class="form-group">
                     <br style="margin-bottom: 5px;">
                     {% if pagamento_diarias_autorizado %}

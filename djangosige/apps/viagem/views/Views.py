@@ -1087,9 +1087,7 @@ class ListHomologarViagensView(CustomListView):
 
         user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
                                                   dada_inicio__year=self._ano)
-        user_viagens = user_viagens.filter(Q(homologada=False) | Q(Q(aprovar_pc='1') & Q(homologada_reembolso=False)))
-        for viagem in user_viagens:
-            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+        user_viagens = user_viagens.filter(homologada=False)
 
         return user_viagens
 
@@ -1098,11 +1096,7 @@ class ListHomologarViagensView(CustomListView):
         for key, value in request.POST.items():
             if value == "on":
                 instance = self.model.objects.get(id=key)
-                if (instance.homologada):
-                    instance.homologada_reembolso = True
-                    instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count() > 0
-                else:
-                    instance.homologada = True
+                instance.homologada = True
                 instance.save()
         return redirect(self.success_url)
 
@@ -1119,6 +1113,58 @@ class ListHomologarViagensView(CustomListView):
         context['title_complete'] = 'Homologar RH'
         return context
 
+class ListHomologarPrestacaoDeContasView(CustomListView):
+    template_name = 'viagem/list_homologar_prestacao_de_contas.html'
+    model = ViagemModel
+    context_object_name = 'all_natops'
+    success_url = reverse_lazy('viagem:listahomologacaoprestacaodecontas')
+    permission_codename = 'homologar_prestacao_de_contas'
+    _ano = datetime.datetime.now().year
+    _mes = datetime.datetime.now().month
+
+    def get_queryset(self):
+
+        # tratamento do filtro de seleção ano e mês
+        if self.request.GET.get('mes'):
+            self.request.session['mes_select'] = self.request.GET.get('mes')
+        if 'mes_select' in self.request.session:
+            self._mes = self.request.session['mes_select']
+
+        if self.request.GET.get('ano'):
+            self.request.session['ano_select'] = self.request.GET.get('ano')
+        if 'ano_select' in self.request.session:
+            self._ano = self.request.session['ano_select']
+
+        user_viagens = ViagemModel.objects.filter(autorizada_dus=True, dada_inicio__month=self._mes,
+                                                  dada_inicio__year=self._ano)
+        user_viagens = user_viagens.filter(Q(aprovar_pc='1') & Q(homologada_reembolso=False))
+        for viagem in user_viagens:
+            viagem.tem_reembolso = Arquivos.objects.filter(viagem_id=viagem.id).count() > 0
+
+        return user_viagens
+
+    # Remover items selecionados da database
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if value == "on":
+                instance = self.model.objects.get(id=key)
+                instance.homologada_reembolso = True
+                instance.tem_reembolso = Arquivos.objects.filter(viagem_id=instance.id).count() > 0
+                instance.save()
+        return redirect(self.success_url)
+
+    def get_object(self):
+        current_user = self.request.user
+        return ViagemModel.objects.get(user=current_user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ListHomologarPrestacaoDeContasView, self).get_context_data(**kwargs)
+        ano_atual = datetime.datetime.now().year
+        context['mes_selecionado'] = str(self._mes)
+        context['ano_selecionado'] = str(self._ano)
+        context['anos_disponiveis'] = [str(ano_atual), str(int(ano_atual) - 1), str(int(ano_atual) - 2)]
+        context['title_complete'] = 'Homologar Prestação de Contas'
+        return context
 
 class ListPagamentoDiariasView(CustomListView):
     template_name = 'viagem/list_pagamento_diarias.html'
@@ -1174,7 +1220,7 @@ class AprovarPagamentoDiariasView(CustomCreateView):
             context["pagamento_diarias_autorizado"] = True
         else:
             if (ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
-                cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+                cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
                 banco = next(b for b in BANCOS if b[0] == cb.banco)
                 if (banco):
                     context["banco"] = banco[1]
@@ -1197,9 +1243,10 @@ class AprovarPagamentoDiariasView(CustomCreateView):
         if form.is_valid():
             viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
             if (not ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                form.add_error('tipo_pagamento', 'Usuário não tem dados bancários cadastrados no sistema.')
                 return self.form_invalid(form)
             self.object = form.save(commit=False)
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+            cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
             self.object.qtd_diarias = viagem.qtd_diarias
             self.object.viagem = viagem
             self.object.banco = cb.banco
@@ -1246,7 +1293,7 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
             context["pagamento_reembolso_autorizado"] = True
         else:
             if (ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
-                cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+                cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
                 banco = next(b for b in BANCOS if b[0] == cb.banco)
                 if (banco):
                     context["banco"] = banco[1]
@@ -1270,9 +1317,10 @@ class AprovarPagamentoReembolsoView(CustomCreateView):
         if form.is_valid():
             viagem = ViagemModel.objects.get(pk=self.kwargs['pk'])
             if (not ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk).exists()):
+                form.add_error('tipo_pagamento', 'Usuário não tem dados bancários cadastrados no sistema.')
                 return self.form_invalid(form)
             self.object = form.save(commit=False)
-            cb = ContaBancaria.objects.get(usuario_banco=viagem.solicitante.usuario.pk)
+            cb = ContaBancaria.objects.filter(usuario_banco=viagem.solicitante.usuario.pk)[0]
             self.object.qtd_diarias = viagem.qtd_diarias
             self.object.viagem = viagem
             self.object.banco = cb.banco
