@@ -109,6 +109,7 @@ INSTALLED_APPS = [
     'fsm_admin',
     'simple_history',
     'simple_menu',
+    # 'notifications',
 ]
 
 
