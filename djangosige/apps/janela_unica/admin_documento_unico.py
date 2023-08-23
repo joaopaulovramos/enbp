@@ -126,7 +126,7 @@ class DocumentoUnicoFinanceiroForm(NorliAdminModelForm):
             'fornecedor': 'Fornecedor/funcionário',
             'contrato': 'Documento',
             'tipo_arquivo': 'Tipo Documento',
-            'numero': 'Nr. Documento',
+            'numero_documento': 'Nr. Documento',
         }
 
         widgets = {
@@ -221,7 +221,7 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         ('Dados solicitação', {
             'fields': (
                 ('pk', 'situacao', 'data_inclusao', 'responsavel'),
-                ('tipo_arquivo', 'contrato', 'numero',),
+                ('tipo_arquivo', 'contrato', 'numero_documento',),
                 ('fornecedor', 'observacoes'),
                 ('empresa', 'plano_conta', 'projeto'),
                 ('arquivo', 'data_emissao', 'valor_total'),
