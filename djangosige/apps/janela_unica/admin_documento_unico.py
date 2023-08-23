@@ -124,10 +124,14 @@ class DocumentoUnicoFinanceiroForm(NorliAdminModelForm):
             'data_emissao': 'Data de Emissão',
             'plano_conta': 'Centro de custos',
             'fornecedor': 'Fornecedor/funcionário',
+            'contrato': 'Documento',
+            'tipo_arquivo': 'Tipo Documento',
+            'numero': 'Nr. Documento',
         }
 
         widgets = {
             'data_emissao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
+             'data_inclusao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control'}),
             'observacao_gerencia': forms.Textarea(attrs={'class': 'form-control'}),
             'observacao_superintendencia': forms.Textarea(attrs={'class': 'form-control'}),
@@ -217,10 +221,10 @@ class DocumentoUnicoFinanceiroAdmin(FSMTransitionMixin, SimpleHistoryAdmin):
         ('Dados solicitação', {
             'fields': (
                 ('pk', 'situacao', 'data_inclusao', 'responsavel'),
-                ('contrato', 'fornecedor', 'observacoes'),
+                ('tipo_arquivo', 'contrato', 'numero',),
+                ('fornecedor', 'observacoes'),
                 ('empresa', 'plano_conta', 'projeto'),
-                ('tipo_arquivo', 'arquivo', ),
-                ('data_emissao', 'valor_total'),
+                ('arquivo', 'data_emissao', 'valor_total'),
 
                 # ('chave', 'numero', 'serie', 'cfop'),
                 # ('cnpj', 'data_emissao', 'valor_total'),

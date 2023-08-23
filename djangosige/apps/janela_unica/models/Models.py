@@ -22,6 +22,7 @@ from djangosige.apps.viagem.models.Models import MoedaModel
 from djangosige.apps.util import notificacoes
 
 TIPO_ARQUIVO_DOCUMENTO_UNICO_FINANCEIRO = (
+    ('8', 'Contrato'),
     (u'0', u'Nota Fiscal (NF-e)'),
     (u'1', u'DANFE'),
     (u'2', u'Boleto'),
@@ -151,7 +152,7 @@ class Contrato(models.Model):
     fornecedor = models.ForeignKey('cadastro.Pessoa', on_delete=models.SET_NULL,
                                    related_name="fornecedor_contrato", null=True, blank=True)
     data_inclusao = models.DateTimeField(auto_now_add=True)
-    data_validade = models.DateTimeField(null=True, blank=True)
+    data_validade = models.DateField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     tipo_contrato = models.ForeignKey(TipoContrato, related_name="tipo_contrato", on_delete=models.PROTECT, null=True, blank=True)
     forma_pagamento = models.CharField(max_length=1, choices=TIPO_FORMA_PAGAMENTO, default='9')
@@ -252,6 +253,7 @@ class DocumentoUnicoFinanceiro(DocumentoUnico):
     contrato = models.ForeignKey('Contrato', related_name="documento_unico_contrato", on_delete=models.PROTECT, null=True, blank=True)
     arquivo = models.FileField(upload_to='janela_unica/documentos', null=True, blank=True)
     data_emissao = models.DateField(null=True, blank=True)
+    numero_documento = models.CharField(max_length=500, null=True, blank=True)
 
     # Plano de contas
     plano_conta = models.ForeignKey('financeiro.PlanoContasGrupo', related_name="nfe_entrada_analise_plano_conta", on_delete=models.PROTECT, null=True, blank=True)

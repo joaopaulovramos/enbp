@@ -85,7 +85,8 @@ class ContratoForm(NorliAdminModelForm):
             'descricao': forms.Textarea(attrs={'class': 'form-control'}),
             'detalhe_pagamento': forms.Textarea(attrs={'class': 'form-control'}),
             'data_inclusao': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
-            'data_validade': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control datepicker'}),
+
+            'data_validade': forms.DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control'}),
         }
         labels = {
             'pk': 'Nº Contrato',
